@@ -25,9 +25,7 @@ public class Indexer extends MotorSubsystem {
 
     @Override
     public void updateLog(SysIdRoutineLog log) {
-        log.motor("SpindexerMotor")
-                .angularPosition(Units.Rotations.of(motor.getSignal(TalonFXSignal.POSITION)))
-                .angularVelocity(Units.RotationsPerSecond.of(getCurrentVelocityMetersPerSecond()))
+        log.motor("IndexerMotor")
                 .voltage(Units.Volts.of(motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
     }
 
@@ -81,7 +79,7 @@ public class Indexer extends MotorSubsystem {
         //final double targetShooterVelocityFromShootingCalculations = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
         //final double targetLoadingVelocity = targetShooterVelocityFromShootingCalculations * IndexerConstants.LOADING_SPEED_RELATIVE_TO_SHOOTING_COEFFICIENT;
         //change after nahum hahamud gomer
-        setTargetVelocity(12.1205319);
+        setTargetVelocity(0);
     }
 
     void setTargetState(IndexerConstants.IndexerState targetState) {
