@@ -25,12 +25,4 @@ public class IntakeCommands {
                 RobotContainer.INTAKE
         );
     }
-
-    public static Command getSetTargetStateCommand(double targetWheelVoltage, double targetIntakeVoltage) {
-        return new StartEndCommand(
-                () -> RobotContainer.INTAKE.setTargetState(targetWheelVoltage, targetIntakeVoltage),
-                RobotContainer.INTAKE::stop,
-                RobotContainer.INTAKE
-        );
-    }
 }
