@@ -1,33 +1,92 @@
 package frc.trigon.robot.misc.simulatedfield;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-import frc.trigon.lib.utilities.flippable.FlippablePose3d;
-import frc.trigon.lib.utilities.flippable.FlippableTranslation2d;
-
-import java.util.ArrayList;
-import java.util.List;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import frc.trigon.lib.utilities.flippable.FlippableTranslation3d;
+import frc.trigon.robot.constants.FieldConstants;
 
 public class SimulatedGamePieceConstants {
-    public static final double G_FORCE = 9.806;
+    public static final double SCORE_TOLERANCE_METERS = 0.3;
+    static final double
+            INTAKE_TOLERANCE_METERS = 0.4, // Increased slightly for folded intake sweep
+            LOADER_TOLERANCE_METERS = 0.05;
+
+    public static final FlippableTranslation3d
+            SCORE_CHECK_POSITION = new FlippableTranslation3d(new Translation3d(4.625594, FieldConstants.FIELD_WIDTH_METERS / 2, 1.4), true),
+            EJECT_FUEL_FROM_HUB_POSITION = new FlippableTranslation3d(new Translation3d(5.189474, FieldConstants.FIELD_WIDTH_METERS / 2, 0.762), true);
+
+    static final Translation3d
+            COLLECTION_CHECK_POSITION = new Translation3d(0.5, 0, 0), // Adjusted for forward intake
+            LOADER_CHECK_POSITION = new Translation3d(0, 0, 0.2); // Central loader position
+
+    static final int MAXIMUM_HELD_FUEL = 40;
+
+    // Grid definitions for 4-wide roller indexer
+    static final int INDEXER_WIDTH_CAPACITY = 4;
+    static final double INDEXER_ROW_SPACING_METERS = 0.16;
+    static final double INDEXER_COL_SPACING_METERS = 0.16;
+    static final Translation3d INDEXER_BASE_OFFSET = new Translation3d(-0.1, 0, 0.15);
+
+    private static final int
+            STARTING_FUEL_ROWS = 12,
+            STARTING_FUEL_COLUMNS = 30;
+    private static final double
+            FUEL_DIAMETER_METERS = 0.15,
+            STARTING_FUEL_X_POSITION_METERS = 7.357364,
+            STARTING_FUEL_Y_POSITION_METERS = 1.724406,
+            STARTING_FUEL_SPACING_METERS = 0.16;
+
+    private static final int
+            DEPOT_FUEL_ROWS = 6,
+            DEPOT_FUEL_COLUMNS = 4;
+    private static final Translation2d DEPOT_CENTER_POSITION = new Translation2d(0.31, 5.96);
 
     public static final double
-            FEEDER_INTAKE_TOLERANCE_METERS = 0.1,
-            INTAKE_TOLERANCE_METERS = 0.1,
-            SCORING_TOLERANCE_METERS = 0.1;
+            EJECTION_FROM_HUB_MINIMUM_VELOCITY_METERS_PER_SECOND = 4,
+            EJECTION_FROM_HUB_MAXIMUM_VELOCITY_METERS_PER_SECOND = 15;
+    public static final Rotation2d EJECTION_FROM_HUB_MAXIMUM_ANGLE = Rotation2d.fromDegrees(35);
 
-    /**
-     * Stores all the game pieces.
-     * Starts out with the game pieces the start on the field.
-     */
-    public static final ArrayList<SimulatedGamePiece>
-            STARTING_GAME_PIECES = new ArrayList<>(List.of(
-    ));
+    static {
+        initializeFuel();
+    }
 
-    public static final FlippablePose3d SCORING_LOCATION = new FlippablePose3d(0, 0, 0, new Rotation3d(), true);
-    public static final FlippableTranslation2d FEEDER_POSITION = new FlippableTranslation2d(0, 0, true);
+    private static void initializeFuel() {
+        for (int i = 0; i < STARTING_FUEL_ROWS; i++) {
+            for (int j = 0; j < STARTING_FUEL_COLUMNS; j++) {
+                new SimulatedGamePiece(
+                        STARTING_FUEL_X_POSITION_METERS + (i * STARTING_FUEL_SPACING_METERS),
+                        STARTING_FUEL_Y_POSITION_METERS + (j * STARTING_FUEL_SPACING_METERS)
+                );
+            }
+        }
+
+        // Initialize pre-loaded fuel in the new grid
+        for (int i = 0; i < 8; i++) {
+            final SimulatedGamePiece currentHeldFuel = new SimulatedGamePiece(0, 0);
+            SimulationFieldHandler.addHeldFuel(currentHeldFuel);
+        }
+
+        initializeDepotFuel(DEPOT_CENTER_POSITION.getX(), DEPOT_CENTER_POSITION.getY());
+        initializeDepotFuel(FieldConstants.FIELD_LENGTH_METERS - DEPOT_CENTER_POSITION.getX(), FieldConstants.FIELD_WIDTH_METERS - DEPOT_CENTER_POSITION.getY());
+    }
+
+    private static void initializeDepotFuel(double depotCenterX, double depotCenterY) {
+        double startX = depotCenterX - (DEPOT_FUEL_COLUMNS - 1) * STARTING_FUEL_SPACING_METERS / 2.0;
+        double startY = depotCenterY - (DEPOT_FUEL_ROWS - 1) * STARTING_FUEL_SPACING_METERS / 2.0;
+
+        for (int row = 0; row < DEPOT_FUEL_ROWS; row++) {
+            for (int col = 0; col < DEPOT_FUEL_COLUMNS; col++) {
+                new SimulatedGamePiece(
+                        startX + col * STARTING_FUEL_SPACING_METERS,
+                        startY + row * STARTING_FUEL_SPACING_METERS
+                );
+            }
+        }
+    }
 
     public enum GamePieceType {
-        GAME_PIECE_TYPE(0, 0);
+        FUEL(FUEL_DIAMETER_METERS / 2.0, 0);
 
         public final double originPointHeightOffGroundMeters;
         public final int id;
@@ -35,13 +94,6 @@ public class SimulatedGamePieceConstants {
         GamePieceType(double originPointHeightOffGroundMeters, int id) {
             this.originPointHeightOffGroundMeters = originPointHeightOffGroundMeters;
             this.id = id;
-        }
-
-        public static String getNameFromID(int id) {
-            for (int i = 0; i < values().length; i++)
-                if (values()[i].id == id)
-                    return values()[i].toString();
-            return "";
         }
     }
 }

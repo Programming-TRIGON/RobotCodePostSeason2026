@@ -2,101 +2,109 @@ package frc.trigon.robot.misc.simulatedfield;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.Timer;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.ArrayList;
 
 public class SimulatedGamePiece {
-    protected SimulatedGamePieceConstants.GamePieceType gamePieceType;
-    protected boolean isScored = false;
-    private Pose3d fieldRelativePose;
-    private Pose3d poseAtRelease;
-    private Translation3d velocityAtRelease = new Translation3d();
-    private double timestampAtRelease = 0;
-    private boolean isTouchingGround = true;
+    private static final ArrayList<SimulatedGamePiece> SIMULATED_GAME_PIECES = new ArrayList<>();
 
-    public SimulatedGamePiece(Pose3d startingPose, SimulatedGamePieceConstants.GamePieceType gamePieceType) {
-        fieldRelativePose = startingPose;
-        this.gamePieceType = gamePieceType;
+    // Represents occupied slots [row, col] in the 4-wide indexer
+    private static final ArrayList<Translation2d> OCCUPIED_INDEXER_SLOTS = new ArrayList<>();
+
+    private Translation3d fieldRelativePosition;
+    private boolean isIndexed = true;
+    private Translation2d indexerGridSlot; // X = row, Y = column
+
+    public SimulatedGamePiece(double startingPoseXMeters, double startingPoseYMeters) {
+        SimulatedGamePieceConstants.GamePieceType gamePieceType = SimulatedGamePieceConstants.GamePieceType.FUEL;
+        fieldRelativePosition = new Translation3d(startingPoseXMeters, startingPoseYMeters, gamePieceType.originPointHeightOffGroundMeters);
+        SIMULATED_GAME_PIECES.add(this);
     }
 
-    public void updatePeriodically(boolean isHeld) {
-        if (!isHeld)
-            checkScored();
-        if (!isScored && !isTouchingGround)
-            applyGravity();
+    public static ArrayList<SimulatedGamePiece> getSimulatedGamePieces() {
+        return SIMULATED_GAME_PIECES;
+    }
+
+    public static ArrayList<SimulatedGamePiece> getUnheldGamePieces() {
+        final ArrayList<SimulatedGamePiece> unheldGamePieces = new ArrayList<>(SIMULATED_GAME_PIECES);
+        unheldGamePieces.removeIf(SimulatedGamePiece::isHeld);
+        return unheldGamePieces;
+    }
+
+    public void updatePosition(Translation3d fieldRelativePosition) {
+        this.fieldRelativePosition = fieldRelativePosition;
+    }
+
+    public Translation3d getPosition() {
+        return fieldRelativePosition;
+    }
+
+    void release() {
+        if (indexerGridSlot != null) {
+            OCCUPIED_INDEXER_SLOTS.remove(indexerGridSlot);
+        }
+        indexerGridSlot = null;
+        isIndexed = false;
+    }
+
+    double getDistanceFromPositionMeters(Translation3d position) {
+        return fieldRelativePosition.getDistance(position);
+    }
+
+    boolean isIndexed() {
+        return isIndexed;
+    }
+
+    void resetIndexing() {
+        indexerGridSlot = calculateNextAvailableIndexerSlot();
+        if (indexerGridSlot != null) {
+            isIndexed = true;
+            OCCUPIED_INDEXER_SLOTS.add(indexerGridSlot);
+        } else {
+            isIndexed = false;
+        }
+    }
+
+    Translation2d getIndexerGridSlot() {
+        return indexerGridSlot;
+    }
+
+    static void logAll() {
+        Logger.recordOutput("Poses/GamePieces/Fuel", getSimulatedFuelAsPoseArray());
+    }
+
+    private static Pose3d[] getSimulatedFuelAsPoseArray() {
+        final Pose3d[] poses = new Pose3d[SimulatedGamePiece.SIMULATED_GAME_PIECES.size()];
+        for (int i = 0; i < poses.length; i++)
+            poses[i] = new Pose3d(SimulatedGamePiece.SIMULATED_GAME_PIECES.get(i).getPosition(), new Rotation3d());
+        return poses;
+    }
+
+    private boolean isHeld() {
+        return indexerGridSlot != null;
     }
 
     /**
-     * Releases the game piece from the robot.
-     *
-     * @param fieldRelativeReleaseVelocity the velocity that the object is released at, relative to the field
+     * Finds the next open row and column in the 4-wide roller indexer queue.
      */
-    public void release(Translation3d fieldRelativeReleaseVelocity) {
-        velocityAtRelease = fieldRelativeReleaseVelocity;
-        poseAtRelease = fieldRelativePose;
-        timestampAtRelease = Timer.getTimestamp();
+    private Translation2d calculateNextAvailableIndexerSlot() {
+        int targetRow = 0;
 
-        updateIsTouchingGround();
-    }
-
-    public void updatePose(Pose3d fieldRelativePose) {
-        this.fieldRelativePose = fieldRelativePose;
-    }
-
-    public Pose3d getPose() {
-        return fieldRelativePose;
-    }
-
-    public double getDistanceFromPoseMeters(Pose3d pose) {
-        return fieldRelativePose.minus(pose).getTranslation().getNorm();
-    }
-
-    public boolean isScored() {
-        return isScored;
-    }
-
-    private void applyGravity() {
-        if (poseAtRelease == null)
-            return;
-        final double timeSinceEject = Timer.getTimestamp() - timestampAtRelease;
-        this.fieldRelativePose = new Pose3d(poseAtRelease.getTranslation(), new Rotation3d()).transformBy(calculateVelocityPoseTransform(timeSinceEject));
-
-        updateIsTouchingGround();
-    }
-
-    private Transform3d calculateVelocityPoseTransform(double elapsedTime) {
-        return new Transform3d(
-                velocityAtRelease.getX() * elapsedTime,
-                velocityAtRelease.getY() * elapsedTime,
-                velocityAtRelease.getZ() * elapsedTime - ((SimulatedGamePieceConstants.G_FORCE / 2) * elapsedTime * elapsedTime),
-                poseAtRelease.getRotation()
-        );
-    }
-
-    private void checkScored() {
-        if (!isScored)
-            SimulationScoringHandler.checkGamePieceScored(this);
-    }
-
-    private void updateIsTouchingGround() {
-        if (fieldRelativePose.getZ() < gamePieceType.originPointHeightOffGroundMeters) {
-            isTouchingGround = true;
-            velocityAtRelease = new Translation3d();
-
-            final Translation3d fieldRelativeTranslation = new Translation3d(
-                    fieldRelativePose.getTranslation().getX(),
-                    fieldRelativePose.getTranslation().getY(),
-                    gamePieceType.originPointHeightOffGroundMeters
-            );
-            final Rotation3d fieldRelativeRotation = new Rotation3d(
-                    fieldRelativePose.getRotation().getX(),
-                    0,
-                    fieldRelativePose.getRotation().getZ()
-            );
-            fieldRelativePose = new Pose3d(fieldRelativeTranslation, fieldRelativeRotation);
-            return;
+        while (true) {
+            for (int col = 0; col < SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY; col++) {
+                Translation2d candidateSlot = new Translation2d(targetRow, col);
+                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot)) {
+                    return candidateSlot;
+                }
+            }
+            targetRow++;
+            // Failsafe to prevent infinite loops if loaded beyond physical reality
+            if (targetRow > (SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY) + 1) {
+                return null;
+            }
         }
-        isTouchingGround = false;
     }
 }

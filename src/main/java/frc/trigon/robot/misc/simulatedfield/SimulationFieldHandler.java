@@ -1,159 +1,137 @@
 package frc.trigon.robot.misc.simulatedfield;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.trigon.robot.RobotContainer;
-import org.littletonrobotics.junction.Logger;
+import frc.trigon.robot.misc.shootingcalculations.shootingvisualization.VisualizeFuelShootingCommand;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Handles the simulation of game pieces.
- */
 public class SimulationFieldHandler {
-    private static final ArrayList<SimulatedGamePiece> GAME_PIECES_ON_FIELD = SimulatedGamePieceConstants.STARTING_GAME_PIECES;
-    private static Integer HELD_GAME_PIECE_INDEX = null;
+    private static final ArrayList<SimulatedGamePiece> HELD_FUEL = new ArrayList<>(List.of());
 
-    public static ArrayList<SimulatedGamePiece> getSimulatedGamePieces() {
-        return GAME_PIECES_ON_FIELD;
-    }
-
-    public static boolean isHoldingGamePiece() {
-        return HELD_GAME_PIECE_INDEX != null;
+    public static boolean hasFuel() {
+        return !HELD_FUEL.isEmpty();
     }
 
     public static void update() {
         updateGamePieces();
-        logGamePieces();
+        SimulatedGamePiece.logAll();
     }
 
-    /**
-     * Updates the state of all game pieces.
-     */
     private static void updateGamePieces() {
-        updateGamePiecesPeriodically();
         updateCollection();
+        updateHeldFuelPoses();
         updateEjection();
-        updateHeldGamePiecePoses();
-    }
-
-    /**
-     * Logs the position of all the game pieces.
-     */
-    private static void logGamePieces() {
-        Logger.recordOutput("Poses/GamePieces/GamePieces", mapSimulatedGamePieceListToPoseArray(GAME_PIECES_ON_FIELD));
-    }
-
-    private static void updateGamePiecesPeriodically() {
-        for (SimulatedGamePiece gamePiece : GAME_PIECES_ON_FIELD)
-            gamePiece.updatePeriodically(HELD_GAME_PIECE_INDEX != null && HELD_GAME_PIECE_INDEX == GAME_PIECES_ON_FIELD.indexOf(gamePiece));
     }
 
     private static void updateCollection() {
-        final Pose3d robotPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose());
-        final Pose3d robotRelativeCollectionPose = new Pose3d();
-        final Pose3d collectionPose = robotPose.plus(toTransform(robotRelativeCollectionPose));
+        final Translation3d robotRelativeCollectionPosition = SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION;
+        final Translation3d collectionPose = robotRelativeToFieldRelative(robotRelativeCollectionPosition);
 
-        updateFeederCollection(robotPose);
-
-        if (isCollectingGamePiece() && HELD_GAME_PIECE_INDEX == null)
-            HELD_GAME_PIECE_INDEX = getIndexOfCollectedGamePiece(collectionPose, GAME_PIECES_ON_FIELD, SimulatedGamePieceConstants.INTAKE_TOLERANCE_METERS);
-    }
-
-    private static void updateFeederCollection(Pose3d robotPose) {
-        final double distanceFromFeeder = robotPose.toPose2d().getTranslation().getDistance(SimulatedGamePieceConstants.FEEDER_POSITION.get());
-
-        if (isCollectingGamePieceFromFeeder() && HELD_GAME_PIECE_INDEX == null &&
-                distanceFromFeeder < SimulatedGamePieceConstants.FEEDER_INTAKE_TOLERANCE_METERS) {
-            GAME_PIECES_ON_FIELD.add(new SimulatedGamePiece(new Pose3d(), SimulatedGamePieceConstants.GamePieceType.GAME_PIECE_TYPE));
-            HELD_GAME_PIECE_INDEX = GAME_PIECES_ON_FIELD.size() - 1;
+        // Assumes Intake is active (you may need to add folding logic checks here if the intake is stowed)
+        if (isCollectingFuel() && HELD_FUEL.size() < SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL) {
+            final ArrayList<SimulatedGamePiece> collectedFuel = getCollectedFuel(collectionPose);
+            for (SimulatedGamePiece fuel : collectedFuel) {
+                if (HELD_FUEL.size() >= SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL)
+                    return;
+                addHeldFuel(fuel);
+            }
         }
     }
 
-    /**
-     * Gets the index of the game piece that is being collected.
-     *
-     * @param collectionPose the pose of the collection mechanism
-     * @param gamePieceList  the list of game pieces
-     * @return the index of the game piece that is being collected
-     */
-    private static Integer getIndexOfCollectedGamePiece(Pose3d collectionPose, ArrayList<SimulatedGamePiece> gamePieceList, double intakeTolerance) {
-        for (SimulatedGamePiece gamePiece : gamePieceList)
-            if (gamePiece.getDistanceFromPoseMeters(collectionPose) <= intakeTolerance)
-                return gamePieceList.indexOf(gamePiece);
-        return null;
+    public static void addHeldFuel(SimulatedGamePiece fuel) {
+        HELD_FUEL.add(fuel);
+        fuel.resetIndexing();
     }
 
-    private static boolean isCollectingGamePiece() {
-        return false;//TODO: Implement
+    private static ArrayList<SimulatedGamePiece> getCollectedFuel(Translation3d collectionPosition) {
+        final ArrayList<SimulatedGamePiece> collectedFuel = new ArrayList<>();
+        for (SimulatedGamePiece gamePiece : SimulatedGamePiece.getUnheldGamePieces())
+            if (gamePiece.getDistanceFromPositionMeters(collectionPosition) <= SimulatedGamePieceConstants.INTAKE_TOLERANCE_METERS)
+                collectedFuel.add(gamePiece);
+        return collectedFuel;
     }
 
-    private static boolean isCollectingGamePieceFromFeeder() {
-        return false;//TODO: Implement
+    private static boolean isCollectingFuel() {
+        return RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.INTAKE); // Or whatever your folding intake triggers
     }
 
     private static void updateEjection() {
-        if (HELD_GAME_PIECE_INDEX != null && isEjectingGamePiece()) {
-            final SimulatedGamePiece heldGamePiece = GAME_PIECES_ON_FIELD.get(HELD_GAME_PIECE_INDEX);
-            ejectGamePiece(heldGamePiece);
-            HELD_GAME_PIECE_INDEX = null;
+        if (hasFuel()) {
+            final SimulatedGamePiece ejectableFuel = getEjectableFuel();
+            if (ejectableFuel != null) {
+                ejectGamePiece(ejectableFuel);
+            }
         }
     }
 
+    private static SimulatedGamePiece getEjectableFuel() {
+        final Translation3d fuelLoaderFieldRelativePose = getFuelLoaderFieldRelativePose();
+        for (SimulatedGamePiece heldFuel : HELD_FUEL) {
+            if (!heldFuel.isIndexed()) continue;
+
+            // In a dumper setup, pieces in row 0 are the ones currently being ejected
+            if (heldFuel.getIndexerGridSlot().getX() == 0) {
+                return heldFuel;
+            }
+        }
+        return null;
+    }
+
+    private static Translation3d getFuelLoaderFieldRelativePose() {
+        final Translation3d loaderPose = SimulatedGamePieceConstants.LOADER_CHECK_POSITION;
+        return robotRelativeToFieldRelative(loaderPose);
+    }
+
     private static void ejectGamePiece(SimulatedGamePiece ejectedGamePiece) {
-        final Translation3d robotSelfRelativeVelocity = new Translation3d(RobotContainer.SWERVE.getSelfRelativeVelocity());
-        final Translation3d robotRelativeReleaseVelocity = new Translation3d();//TODO:This should be extracted to a method in a different branch...
+        ejectedGamePiece.release();
+        HELD_FUEL.remove(ejectedGamePiece);
 
-        ejectedGamePiece.release(robotSelfRelativeVelocity.plus(robotRelativeReleaseVelocity).rotateBy(new Rotation3d(RobotContainer.SWERVE.getHeading())));
+        // Shift remaining pieces forward in the roller indexer
+        for (SimulatedGamePiece piece : HELD_FUEL) {
+            piece.release();
+            piece.resetIndexing();
+        }
+
+        CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(ejectedGamePiece));
     }
 
-    private static boolean isEjectingGamePiece() {
-        return false;//TODO: Implement
+    private static void updateHeldFuelPoses() {
+        for (SimulatedGamePiece heldFuel : HELD_FUEL) {
+            if (!heldFuel.isIndexed()) {
+                heldFuel.resetIndexing();
+            }
+
+            if (heldFuel.getIndexerGridSlot() != null) {
+                heldFuel.updatePosition(calculateHeldFuelFieldRelativePosition(heldFuel.getIndexerGridSlot()));
+            }
+        }
     }
 
-    /**
-     * Updates the position of the held game pieces so that they stay inside the robot.
-     */
-    private static void updateHeldGamePiecePoses() {
-        final Pose3d robotRelativeHeldGamePiecePosition = new Pose3d();
-        updateHeldGamePiecePose(robotRelativeHeldGamePiecePosition, GAME_PIECES_ON_FIELD, HELD_GAME_PIECE_INDEX);
+    private static Translation3d calculateHeldFuelFieldRelativePosition(Translation2d gridSlot) {
+        // Calculate offset based on Row (X) and Col (Y)
+        // Center the 4 columns around the robot's Y axis
+        double colOffset = (gridSlot.getY() - (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
+        double rowOffset = gridSlot.getX() * -SimulatedGamePieceConstants.INDEXER_ROW_SPACING_METERS; // Negative goes back into the robot
+
+        Translation3d indexerOffset = SimulatedGamePieceConstants.INDEXER_BASE_OFFSET
+                .plus(new Translation3d(rowOffset, colOffset, 0));
+
+        // Use the new indexer subsystem pose calculation
+        final Pose3d robotRelativeIndexerPose = RobotContainer.INDEXER.calculateComponentPose();
+
+        final Transform3d fuelOffsetFromIndexerPose = new Transform3d(
+                indexerOffset,
+                new Rotation3d()
+        );
+
+        return robotRelativeToFieldRelative(robotRelativeIndexerPose.plus(fuelOffsetFromIndexerPose).getTranslation());
     }
 
-    private static void updateHeldGamePiecePose(Pose3d robotRelativeHeldGamePiecePose, ArrayList<SimulatedGamePiece> gamePieceList, Integer heldGamePieceIndex) {
-        if (heldGamePieceIndex == null)
-            return;
-
-        final SimulatedGamePiece heldGamePiece = gamePieceList.get(heldGamePieceIndex);
-        heldGamePiece.updatePose(calculateHeldGamePieceFieldRelativePose(robotRelativeHeldGamePiecePose));
-    }
-
-    /**
-     * Calculate the position of the held game piece relative to the field.
-     *
-     * @param robotRelativeHeldGamePiecePosition the position of the held game piece relative to the robot
-     * @return the position of the held game piece relative to the field
-     */
-    private static Pose3d calculateHeldGamePieceFieldRelativePose(Pose3d robotRelativeHeldGamePiecePosition) {
-        final Pose3d robotPose3d = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose());
-        return robotPose3d.plus(toTransform(robotRelativeHeldGamePiecePosition));
-    }
-
-    /**
-     * Converts a Pose3d into a Transform3d.
-     *
-     * @param pose the target Pose3d
-     * @return the Transform3d
-     */
-    private static Transform3d toTransform(Pose3d pose) {
-        return new Transform3d(pose.getTranslation(), pose.getRotation());
-    }
-
-    private static Pose3d[] mapSimulatedGamePieceListToPoseArray(ArrayList<SimulatedGamePiece> gamePieces) {
-        final Pose3d[] poses = new Pose3d[gamePieces.size()];
-        for (int i = 0; i < poses.length; i++)
-            poses[i] = gamePieces.get(i).getPose();
-        return poses;
+    private static Translation3d robotRelativeToFieldRelative(Translation3d robotRelativePose) {
+        final Pose3d robotPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose());
+        return robotPose.plus(new Transform3d(robotRelativePose, new Rotation3d())).getTranslation();
     }
 }
