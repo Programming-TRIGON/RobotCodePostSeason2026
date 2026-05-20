@@ -35,7 +35,7 @@ public class IntakeConstants {
         FOLLOWER_ANGLE_MOTOR = new TalonFXMotor(FOLLOWER_ANGLE_MOTOR_ID, FOLLOWER_ANGLE_MOTOR_NAME, RobotConstants.CANIVORE_NAME);
 
     private static final double
-        ANGLE_MOTOR_GEAR_RATIO = 1/60,
+        ANGLE_MOTOR_GEAR_RATIO = (double) 1 /60,
         INTAKE_MOTOR_GEAR_RATIO = 1.55;
     static final boolean FOC_ENABLE = true;
     private static final MotorAlignmentValue ANGLE_FOLLOWER_TO_MASTER = MotorAlignmentValue.Opposed;
