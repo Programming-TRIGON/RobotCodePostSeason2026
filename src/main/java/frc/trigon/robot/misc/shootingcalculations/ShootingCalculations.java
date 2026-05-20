@@ -35,12 +35,8 @@ public class ShootingCalculations {
     @AutoLogOutput(key = "Shooting/CurrentFuelExitPosition")
     public Translation3d calculateCurrentFuelExitPose() {
         final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
-        final Rotation2d shooterPitch = RobotContainer.HOOD.getCurrentPitch();
+        final Rotation2d shooterPitch = RobotContainer.HOOD.getCurrentAngle();
         return calculateFieldRelativeFuelExitPose(robotPose, shooterPitch);
-    }
-
-    public Translation3d calculateTargetFuelExitPosition(Pose2d robotPose) {
-        return calculateFieldRelativeFuelExitPose(robotPose, targetShootingState.targetPitch());
     }
 
     public Translation3d calculateFieldRelativeFuelExitPose(Pose2d robotPose, Rotation2d pitch) {
@@ -69,24 +65,23 @@ public class ShootingCalculations {
         Translation2d virtualHub = physicalHubPosition;
         double distanceToVirtualHub = currentRobotPosition.getDistance(virtualHub);
 
-        ShotParameters empiricalParameters = ShootingMap.getInterpolatedParameters(distanceToVirtualHub);
+        ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualHub);
 
-        // Iterate to account for Time of Flight
-        for (int i = 0; i < 3; i++) {
-            virtualHub = physicalHubPosition.minus(robotVelocity.times(empiricalParameters.timeOfFlight()));
+        for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_HUB_CALCULATION_ITERATIONS; i++) {
+            virtualHub = physicalHubPosition.minus(robotVelocity.times(parameters.timeOfFlight()));
             distanceToVirtualHub = currentRobotPosition.getDistance(virtualHub);
-            empiricalParameters = ShootingMap.getInterpolatedParameters(distanceToVirtualHub);
+            parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualHub);
         }
 
         final Rotation2d targetYaw = virtualHub.minus(currentRobotPosition).getAngle();
 
         Logger.recordOutput("Shooting/DistanceToVirtualHub", distanceToVirtualHub);
-        Logger.recordOutput("Shooting/InterpolatedToF", empiricalParameters.timeOfFlight());
+        Logger.recordOutput("Shooting/InterpolatedTimeOfFlight", parameters.timeOfFlight());
 
         return new ShootingState(
                 targetYaw,
-                empiricalParameters.pitch(),
-                empiricalParameters.velocity()
+                parameters.pitch(),
+                parameters.velocity()
         );
     }
 }

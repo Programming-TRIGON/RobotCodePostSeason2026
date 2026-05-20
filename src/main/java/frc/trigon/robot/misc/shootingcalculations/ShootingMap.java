@@ -24,7 +24,7 @@ public class ShootingMap {
 
     public static ShotParameters getInterpolatedParameters(double distanceMeters) {
         if (INTERPOLATION_MAP.get(distanceMeters) == null)
-            return new ShotParameters(0, new Rotation2d(), 0); // Failsafe for empty map
+            return new ShotParameters(0, new Rotation2d(), 0);
         return INTERPOLATION_MAP.get(distanceMeters);
     }
 }
