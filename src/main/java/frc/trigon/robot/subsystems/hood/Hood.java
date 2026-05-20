@@ -16,7 +16,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class Hood extends MotorSubsystem {
     private final TalonFXMotor motor = HoodConstants.MOTOR;
-    private final CANcoderEncoder encoder = HoodConstants.ENCODER;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(HoodConstants.FOC_ENABLED);
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(HoodConstants.FOC_ENABLED).withUpdateFreqHz(1000);
     private Rotation2d targetAngle = Rotation2d.fromDegrees(0);
@@ -62,7 +61,6 @@ public class Hood extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         motor.update();
-        encoder.update();
 
         final Rotation2d currentAngle = getCurrentAngle();
         final Rotation2d targetProfiledAngle = getTargetProfiledAngle();
@@ -90,7 +88,7 @@ public class Hood extends MotorSubsystem {
     }
 
     public Rotation2d getCurrentAngle() {
-        return Rotation2d.fromRotations(encoder.getSignal(CANcoderSignal.POSITION));
+        return Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.POSITION));
     }
 
     void aimAtHub() {

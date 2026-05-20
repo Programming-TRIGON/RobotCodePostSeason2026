@@ -1,6 +1,5 @@
 package frc.trigon.robot.subsystems.hood;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -13,7 +12,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.hardware.phoenix6.cancoder.CANcoderEncoder;
-import frc.trigon.lib.hardware.phoenix6.cancoder.CANcoderSignal;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SingleJointedArmSimulation;
@@ -21,11 +19,8 @@ import frc.trigon.lib.utilities.mechanisms.SingleJointedArmMechanism2d;
 
 public class HoodConstants {
     private static final int MOTOR_ID = 18;
-    private static final int ENCODER_ID = 18;
     private static final String MOTOR_NAME = "HoodMotor";
-    private static final String ENCODER_NAME = "HoodAngleEncoder";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
-    static final CANcoderEncoder ENCODER = new CANcoderEncoder(ENCODER_ID, ENCODER_NAME);
 
     static final boolean FOC_ENABLED = true;
     private static final double GEAR_RATIO = 60;
@@ -69,13 +64,12 @@ public class HoodConstants {
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(1);
     static final Rotation2d
-            REST_ANGLE = Rotation2d.fromDegrees(90),
-            DELIVERY_ANGLE = Rotation2d.fromDegrees(50),
-            EJECTION_ANGLE = Rotation2d.fromDegrees(75);
+            REST_ANGLE = Rotation2d.fromDegrees(0),
+            DELIVERY_ANGLE = Rotation2d.fromDegrees(30),
+            EJECTION_ANGLE = Rotation2d.fromDegrees(40);
 
     static {
         configureMotor();
-        configureAngleEncoder();
     }
 
     private static void configureMotor() {
@@ -87,9 +81,7 @@ public class HoodConstants {
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        config.Feedback.FeedbackRemoteSensorID = ENCODER_ID;
-        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        config.Feedback.RotorToSensorRatio = GEAR_RATIO;
+        config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
@@ -123,19 +115,5 @@ public class HoodConstants {
         MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
         MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
-    }
-
-    private static void configureAngleEncoder() {
-        final CANcoderConfiguration config = new CANcoderConfiguration();
-
-        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        config.MagnetSensor.MagnetOffset = 0;
-        config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
-
-        ENCODER.applyConfiguration(config);
-        ENCODER.setSimulationInputsFromTalonFX(MOTOR);
-
-        ENCODER.registerSignal(CANcoderSignal.POSITION, 100);
-        ENCODER.registerSignal(CANcoderSignal.VELOCITY, 100);
     }
 }
