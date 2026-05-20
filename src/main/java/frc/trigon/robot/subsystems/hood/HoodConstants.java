@@ -17,19 +17,18 @@ import frc.trigon.lib.hardware.phoenix6.cancoder.CANcoderSignal;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SingleJointedArmSimulation;
-import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.lib.utilities.mechanisms.SingleJointedArmMechanism2d;
 
 public class HoodConstants {
-    private static final int MOTOR_ID = 10;
-    private static final int ENCODER_ID = 10;
+    private static final int MOTOR_ID = 17;
+    private static final int ENCODER_ID = 17;
     private static final String MOTOR_NAME = "HoodMotor";
     private static final String ENCODER_NAME = "HoodAngleEncoder";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
     static final CANcoderEncoder ENCODER = new CANcoderEncoder(ENCODER_ID, ENCODER_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 50;
+    private static final double GEAR_RATIO = 60;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
@@ -49,9 +48,6 @@ public class HoodConstants {
             MAXIMUM_ANGLE,
             SHOULD_SIMULATE_GRAVITY
     );
-    private static final double ANGLE_ENCODER_GRAVITY_OFFSET = 0;
-    static final double POSITION_OFFSET_FROM_GRAVITY_OFFSET = RobotHardwareStats.isSimulation() ? 0 - Conversions.degreesToRotations(0) : Conversions.degreesToRotations(0) - ANGLE_ENCODER_GRAVITY_OFFSET;
-
 
     private static final String MECHANISM_NAME = "HoodMechanism";
     private static final Color MECHANISM_COLOR = Color.kYellow;
@@ -92,6 +88,7 @@ public class HoodConstants {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.Feedback.FeedbackRemoteSensorID = ENCODER_ID;
+        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 0;
@@ -132,7 +129,7 @@ public class HoodConstants {
         final CANcoderConfiguration config = new CANcoderConfiguration();
 
         config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        config.MagnetSensor.MagnetOffset = ANGLE_ENCODER_GRAVITY_OFFSET;
+        config.MagnetSensor.MagnetOffset = 0;
         config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
 
         ENCODER.applyConfiguration(config);

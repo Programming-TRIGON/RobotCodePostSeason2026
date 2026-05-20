@@ -43,15 +43,15 @@ public class Hood extends MotorSubsystem {
     @Override
     public void updateLog(SysIdRoutineLog log) {
         log.motor("HoodMotor")
-                .angularPosition(Units.Rotations.of(motor.getSignal(TalonFXSignal.POSITION)))
+                .angularPosition(Units.Rotations.of(getCurrentAngle().getRotations()))
                 .angularVelocity(Units.RotationsPerSecond.of(motor.getSignal(TalonFXSignal.VELOCITY)))
                 .voltage(Units.Volts.of(motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
     }
 
     @Override
     public void updateMechanism() {
-        final Rotation2d currentAngle = Rotation2d.fromRotations(getCurrentAngle().getRotations() + HoodConstants.POSITION_OFFSET_FROM_GRAVITY_OFFSET);
-        final Rotation2d targetProfiledAngle = Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE) + HoodConstants.POSITION_OFFSET_FROM_GRAVITY_OFFSET);
+        final Rotation2d currentAngle = getCurrentAngle();
+        final Rotation2d targetProfiledAngle = Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
         HoodConstants.MECHANISM.update(
                 currentAngle,
                 targetProfiledAngle
@@ -62,6 +62,7 @@ public class Hood extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         motor.update();
+        encoder.update();
 
         final Rotation2d currentAngle = getCurrentAngle();
         final Rotation2d targetProfiledAngle = Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
