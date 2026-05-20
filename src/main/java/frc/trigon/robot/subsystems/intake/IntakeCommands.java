@@ -10,7 +10,7 @@ import java.util.Set;
 public class IntakeCommands {
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
-                (targetWheelVoltage, targetIntakeVoltage) -> RobotContainer.INTAKE.setTargetState(targetWheelVoltage, targetIntakeVoltage),
+                (targetIntakeVoltage, targetIntakeArmVoltage) -> RobotContainer.INTAKE.setTargetState(targetIntakeVoltage, targetIntakeArmVoltage),
                 false,
                 Set.of(RobotContainer.INTAKE),
                 "Debugging/WheelTargetVoltage",

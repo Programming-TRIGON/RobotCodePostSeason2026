@@ -45,6 +45,10 @@ public class Intake extends MotorSubsystem {
         IntakeConstants.INTAKE_ANGLE_MECHANISM.setTargetVelocity(0);
     }
 
+    public boolean atTargetState(IntakeConstants.IntakeState targetState) {
+        return targetState == this.targetState;
+    }
+
     void setTargetState(IntakeConstants.IntakeState targetState) {
         this.targetState = targetState;
         setTargetState(targetState.targetIntakeVoltage, targetState.targetIntakeArmVoltage);
