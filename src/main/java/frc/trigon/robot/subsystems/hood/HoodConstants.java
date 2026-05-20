@@ -20,8 +20,8 @@ import frc.trigon.lib.hardware.simulation.SingleJointedArmSimulation;
 import frc.trigon.lib.utilities.mechanisms.SingleJointedArmMechanism2d;
 
 public class HoodConstants {
-    private static final int MOTOR_ID = 17;
-    private static final int ENCODER_ID = 17;
+    private static final int MOTOR_ID = 18;
+    private static final int ENCODER_ID = 18;
     private static final String MOTOR_NAME = "HoodMotor";
     private static final String ENCODER_NAME = "HoodAngleEncoder";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
@@ -33,11 +33,11 @@ public class HoodConstants {
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
     private static final double
-            HOOD_MASS_KILOGRAMS = 1,
-            HOOD_LENGTH_METERS = 0.1;
+            HOOD_MASS_KILOGRAMS = 16,
+            HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(90),
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(50);
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(40),
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(0);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
             GEARBOX,
@@ -89,7 +89,7 @@ public class HoodConstants {
 
         config.Feedback.FeedbackRemoteSensorID = ENCODER_ID;
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
+        config.Feedback.RotorToSensorRatio = GEAR_RATIO;
 
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;

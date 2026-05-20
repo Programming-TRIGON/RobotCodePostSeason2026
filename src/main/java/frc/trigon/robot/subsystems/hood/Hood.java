@@ -51,7 +51,7 @@ public class Hood extends MotorSubsystem {
     @Override
     public void updateMechanism() {
         final Rotation2d currentAngle = getCurrentAngle();
-        final Rotation2d targetProfiledAngle = Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
+        final Rotation2d targetProfiledAngle = getTargetProfiledAngle();
         HoodConstants.MECHANISM.update(
                 currentAngle,
                 targetProfiledAngle
@@ -65,7 +65,7 @@ public class Hood extends MotorSubsystem {
         encoder.update();
 
         final Rotation2d currentAngle = getCurrentAngle();
-        final Rotation2d targetProfiledAngle = Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
+        final Rotation2d targetProfiledAngle = getTargetProfiledAngle();
         Logger.recordOutput("Hood/TargetAngleDegrees", targetAngle.getDegrees());
         Logger.recordOutput("Hood/CurrentAngleDegrees", currentAngle.getDegrees());
         Logger.recordOutput("Hood/TargetProfiledAngleDegrees", targetProfiledAngle.getDegrees());
@@ -113,6 +113,10 @@ public class Hood extends MotorSubsystem {
     void setTargetAngle(Rotation2d targetAngle) {
         this.targetAngle = targetAngle;
         motor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
+    }
+
+    private Rotation2d getTargetProfiledAngle() {
+        return Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
     }
 
     private Pose3d calculateVisualizationPose() {
