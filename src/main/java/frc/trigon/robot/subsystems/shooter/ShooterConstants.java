@@ -1,4 +1,4 @@
-package frc.trigon.robot.subsystems.Shooter;
+package frc.trigon.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
@@ -7,7 +7,6 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
@@ -20,14 +19,14 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class ShooterConstants {
     private static final int
-            MASTER_MOTOR_ID = 1,
-            FOLLOWER_MOT0R_ID = 2;
+            MASTER_MOTOR_ID = 9,
+            FOLLOWER_MOTOR_ID = 10;
     private static final String
             MASTER_MOTOR_NAME = "ShooterMasterMotor",
             FOLLOWER_MOTOR_NAME = "ShooterFollowerMotor";
     static final TalonFXMotor
             MASTER_MOTOR = new TalonFXMotor(MASTER_MOTOR_ID, MASTER_MOTOR_NAME),
-            FOLLOWER_MOTOR = new TalonFXMotor(FOLLOWER_MOT0R_ID, FOLLOWER_MOTOR_NAME);
+            FOLLOWER_MOTOR = new TalonFXMotor(FOLLOWER_MOTOR_ID, FOLLOWER_MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
     private static final int GEAR_RATIO = 2;
@@ -40,7 +39,7 @@ public class ShooterConstants {
     private static final double MOMENT_OF_INERTIA = 0.002;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, GEAR_RATIO, MOMENT_OF_INERTIA);
 
-    static final SysIdRoutine.Config SYS_ID_CONFIG = new SysIdRoutine.Config(
+    static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
             Units.Volts.of(2).per(Units.Second),
             Units.Volts.of(4),
             null
@@ -74,12 +73,12 @@ public class ShooterConstants {
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 0.011148;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0 : 0.048875;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0 : 0.24502;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0 : 0.005013;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 0 : 0;

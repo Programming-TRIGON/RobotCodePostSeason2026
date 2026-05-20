@@ -1,4 +1,4 @@
-package frc.trigon.robot.subsystems.Shooter;
+package frc.trigon.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -50,7 +50,7 @@ public class Shooter extends MotorSubsystem {
 
     @Override
     public SysIdRoutine.Config getSysIDConfig() {
-        return ShooterConstants.SYS_ID_CONFIG;
+        return ShooterConstants.SYSID_CONFIG;
     }
 
     @Override
@@ -70,11 +70,6 @@ public class Shooter extends MotorSubsystem {
     @AutoLogOutput(key = "Shooting/Conditions/ShooterAtTargetVelocity")
     public boolean atTargetVelocity() {
         return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < ShooterConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
-    }
-
-    @AutoLogOutput(key = "Shooter/IsAimingAtHub")
-    public boolean isAimingAtHub() {
-        return isAimingAtHub;
     }
 
     public double getCurrentVelocityMetersPerSecond() {
