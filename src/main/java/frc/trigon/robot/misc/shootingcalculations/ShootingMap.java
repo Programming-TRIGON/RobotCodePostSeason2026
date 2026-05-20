@@ -11,15 +11,14 @@ public class ShootingMap {
 
     static {
         // TODO: Replace with actual calibration data.
-        // Format: Distance (Meters), Velocity (m/s), Pitch (Degrees), Time of Flight (Seconds)
         addPoint(0, 0, Rotation2d.fromDegrees(0), 0);
         addPoint(0, 0, Rotation2d.fromDegrees(0), 0);
         addPoint(0, 0, Rotation2d.fromDegrees(0), 0);
         addPoint(0, 0, Rotation2d.fromDegrees(0), 0);
     }
 
-    private static void addPoint(double distance, double velocity, Rotation2d pitchDegrees, double timeOfFlight) {
-        INTERPOLATION_MAP.put(distance, new ShotParameters(velocity, pitchDegrees, timeOfFlight));
+    private static void addPoint(double distanceMeters, double velocityMetersPerSecond, Rotation2d pitch, double timeOfFlightSeconds) {
+        INTERPOLATION_MAP.put(distanceMeters, new ShotParameters(velocityMetersPerSecond, pitch, timeOfFlightSeconds));
     }
 
     public static ShotParameters getInterpolatedParameters(double distanceMeters) {
