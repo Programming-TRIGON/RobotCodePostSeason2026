@@ -34,7 +34,7 @@ public class Intake extends MotorSubsystem {
     public void updatePeriodically() {
         masterAngleMotor.update();
         intakeMotor.update();
-        Logger.recordOutput("Intake/CurrentVoltage", getCurrentIntakeArmVoltage());
+        Logger.recordOutput("Intake/CurrentArmVoltage", getCurrentIntakeArmVoltage());
     }
 
     @Override
