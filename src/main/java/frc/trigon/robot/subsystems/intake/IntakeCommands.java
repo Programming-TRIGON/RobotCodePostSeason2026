@@ -15,7 +15,7 @@ public class IntakeCommands {
                 false,
                 Set.of(RobotContainer.INTAKE),
                 "Debugging/IntakeTargetVoltage",
-                "Debugging/IntakeArmTargetVoltage"
+                "Debugging/IntakeArmTargetAngle"
         );
     }
 

@@ -60,7 +60,7 @@ public class IntakeConstants {
     static final Rotation2d
             MINIMUM_ANGLE = Rotation2d.fromDegrees(-15),
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(90);
-    private static final boolean SHOULD_ARM_SIMULATE_GRAITY = true;
+    private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
     private static final double WHEEL_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
             ANGLE_GEARBOX,
@@ -69,7 +69,7 @@ public class IntakeConstants {
             INTAKE_MASS_KILOGRAMS,
             MINIMUM_ANGLE,
             MAXIMUM_ANGLE,
-            SHOULD_ARM_SIMULATE_GRAITY
+            SHOULD_ARM_SIMULATE_GRAVITY
     );
     static final SimpleMotorSimulation INTAKE_SIMULATION = new SimpleMotorSimulation(
             INTAKE_GEARBOX,
@@ -78,8 +78,8 @@ public class IntakeConstants {
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(1.2).per(Units.Seconds),
-            Units.Volts.of(1.5),
+            Units.Volts.of(0.8).per(Units.Seconds),
+            Units.Volts.of(0.8),
             Units.Second.of(1000)
     );
 
@@ -121,6 +121,16 @@ public class IntakeConstants {
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_GEAR_RATIO;
+        config.Feedback.FeedbackRemoteSensorID = ANGLE_ENCODER.getID();
+        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 1 : 0;
+        config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.017109 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 6.9978 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.094634 : 0;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.18458 : 0;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
