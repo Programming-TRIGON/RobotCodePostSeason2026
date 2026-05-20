@@ -21,6 +21,8 @@ import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.indexer.Indexer;
+import frc.trigon.robot.subsystems.indexer.IndexerCommands;
+import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -51,6 +53,7 @@ public class RobotContainer {
     private void configureBindings() {
         bindDefaultCommands();
         bindControllerCommands();
+        INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.STOP));
     }
 
     private void bindDefaultCommands() {

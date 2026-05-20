@@ -25,15 +25,7 @@ public class IndexerCommands {
 
     public static Command getSetTargetVelocityCommand(double targetVelocityMetersPerSecond) {
         return new StartEndCommand(
-                () -> RobotContainer.INDEXER.setTargetVelocity(targetVelocityMetersPerSecond),
-                RobotContainer.INDEXER::stop,
-                RobotContainer.INDEXER
-        );
-    }
-
-    public static Command getLoadToShooterCommand() {
-        return new ExecuteEndCommand(
-                RobotContainer.INDEXER::loadToShooter,
+                () -> RobotContainer.INDEXER.setTargetVoltage(targetVelocityMetersPerSecond),
                 RobotContainer.INDEXER::stop,
                 RobotContainer.INDEXER
         );
