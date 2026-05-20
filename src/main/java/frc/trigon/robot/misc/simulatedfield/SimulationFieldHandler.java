@@ -120,7 +120,7 @@ public class SimulationFieldHandler {
                 .plus(new Translation3d(rowOffset, colOffset, 0));
 
         // Use the new indexer subsystem pose calculation
-        final Pose3d robotRelativeIndexerPose = RobotContainer.INDEXER.calculateComponentPose();
+        final Pose3d robotRelativeIndexerPose = IndexerConstants.ORIGIN_POSE;
 
         final Transform3d fuelOffsetFromIndexerPose = new Transform3d(
                 indexerOffset,
