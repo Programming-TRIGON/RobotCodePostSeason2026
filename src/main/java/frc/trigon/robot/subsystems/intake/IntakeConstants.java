@@ -46,7 +46,7 @@ public class IntakeConstants {
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue ANGLE_FOLLOWER_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double INTAKE_MOTOR_CURRENT_LIMIT = 40;
-    private static final double ANGLE_MOTORS_CURRENT_LIMIT = 30;
+    private static final double ANGLE_MOTORS_CURRENT_LIMIT = 40;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -98,11 +98,11 @@ public class IntakeConstants {
             INTAKE_MOTOR_MAXIMUM_DISPLAYABLE_VOLTAGE
     );
     static final Pose3d INTAKE_VISUALIZATION_ORIGIN_POINT = new Pose3d(
-            new Translation3d(0, 0, 0),
+            new Translation3d(0.1310139, 0, 0.06275),
             new Rotation3d(0, 0, 0)
     );
 
-    static final Rotation2d ANGLE_MOTOR_TOLERANCE = Rotation2d.fromDegrees(2);
+    static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
 
     static {
         configureMasterAngleMotor();
@@ -143,6 +143,11 @@ public class IntakeConstants {
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = ANGLE_MOTORS_CURRENT_LIMIT;
 
+        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAXIMUM_ANGLE.getRotations();
+        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MINIMUM_ANGLE.getRotations();
+
         MASTER_ANGLE_MOTOR.applyConfiguration(config);
         MASTER_ANGLE_MOTOR.setPhysicsSimulation(INTAKE_ANGLE_SIMULATION);
 
@@ -170,11 +175,8 @@ public class IntakeConstants {
         final Follower followerRequest = new Follower(MASTER_ANGLE_MOTOR.getID(), ANGLE_FOLLOWER_TO_MASTER);
         FOLLOWER_ANGLE_MOTOR.setControl(followerRequest);
 
-        FOLLOWER_ANGLE_MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
-        FOLLOWER_ANGLE_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
         FOLLOWER_ANGLE_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
         FOLLOWER_ANGLE_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
-        FOLLOWER_ANGLE_MOTOR.registerThreadedSignal(TalonFXSignal.POSITION, 100);
     }
 
     private static void configureIntakeMotor() {
@@ -203,7 +205,7 @@ public class IntakeConstants {
 
         config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         config.MagnetSensor.MagnetOffset = 0;
-        config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0;
+        config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
 
         ANGLE_ENCODER.applyConfiguration(config);
         ANGLE_ENCODER.setSimulationInputsFromTalonFX(MASTER_ANGLE_MOTOR);
@@ -217,12 +219,12 @@ public class IntakeConstants {
         INTAKE(6, Rotation2d.fromDegrees(-15)),
         LOADING(0, Rotation2d.fromDegrees(90));
 
-        public final double targetIntakeVoltage;
-        public final Rotation2d targetIntakeArmAngle;
+        public final double targetVoltage;
+        public final Rotation2d targetAngle;
 
-        IntakeState(double targetIntakeVoltage, Rotation2d targetIntakeArmAngle) {
-            this.targetIntakeVoltage = targetIntakeVoltage;
-            this.targetIntakeArmAngle = targetIntakeArmAngle;
+        IntakeState(double targetVoltage, Rotation2d targetAngle) {
+            this.targetVoltage = targetVoltage;
+            this.targetAngle = targetAngle;
         }
     }
 }
