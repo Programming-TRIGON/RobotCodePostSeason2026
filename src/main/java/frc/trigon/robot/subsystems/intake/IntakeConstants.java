@@ -120,11 +120,11 @@ public class IntakeConstants {
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_GEAR_RATIO;
         config.Feedback.FeedbackRemoteSensorID = ANGLE_ENCODER.getID();
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 1 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.017109 : 0;
@@ -136,8 +136,8 @@ public class IntakeConstants {
         config.Slot0.GravityArmPositionOffset = 0;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 5 : 0;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 5 : 0;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 1 : 0;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 2 : 0;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;

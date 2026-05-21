@@ -84,6 +84,7 @@ public class Intake extends MotorSubsystem {
     }
 
     private void setTargetIntakeVoltage(double targetIntakeVoltage) {
+        IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(targetIntakeVoltage);
         intakeMotor.setControl(voltageRequest.withOutput(targetIntakeVoltage));
     }
 
