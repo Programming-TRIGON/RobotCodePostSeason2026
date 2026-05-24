@@ -28,12 +28,6 @@ public class IndexerConstants {
             MOMENT_OF_INERTIA
     );
 
-    static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(1).per(Units.Seconds),
-            Units.Volts.of(4),
-            null
-    );
-
     private static final double MAXIMUM_DISPLAYABLE_VOLTAGE = 12;
     private static final String MECHANISM_NAME = "IndexerMechanism";
     static final SpeedMechanism2d MECHANISM = new SpeedMechanism2d(
