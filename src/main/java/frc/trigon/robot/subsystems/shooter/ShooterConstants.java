@@ -115,10 +115,6 @@ public class ShooterConstants {
 
         FOLLOWER_MOTOR.applyConfiguration(config);
 
-        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
-        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.SUPPLY_CURRENT, 100);
-        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 250);
-
         final Follower followRequest = new Follower(MASTER_MOTOR_ID, FOLLOWER_ALIGNMENT_TO_MASTER).withUpdateFreqHz(1000);
         FOLLOWER_MOTOR.setControl(followRequest);
     }
