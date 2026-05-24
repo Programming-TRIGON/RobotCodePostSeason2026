@@ -88,12 +88,12 @@ public class IntakeConstants {
             INTAKE_MOTOR_MECHANISM_NAME = "IntakeWheelMotorMechanism";
     private static final Color ANGLE_MOTOR_MECHANISM_COLOR = Color.kOrange;
     private static final double INTAKE_MOTOR_MAXIMUM_DISPLAYABLE_VOLTAGE = 12;
-    static final SingleJointedArmMechanism2d ANGLE_MOTOR_MECHANISM = new SingleJointedArmMechanism2d(
+    static final SingleJointedArmMechanism2d INTAKE_ANGLE_MOTOR_MECHANISM = new SingleJointedArmMechanism2d(
             ANGLE_MOTOR_MECHANISM_NAME,
             INTAKE_LENGTH_METERS,
             ANGLE_MOTOR_MECHANISM_COLOR
     );
-    static final SpeedMechanism2d WHEEL_MOTOR_MECHANISM = new SpeedMechanism2d(
+    static final SpeedMechanism2d INTAKE_WHEEL_MOTOR_MECHANISM = new SpeedMechanism2d(
             INTAKE_MOTOR_MECHANISM_NAME,
             INTAKE_MOTOR_MAXIMUM_DISPLAYABLE_VOLTAGE
     );

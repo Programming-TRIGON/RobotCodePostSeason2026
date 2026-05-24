@@ -33,11 +33,11 @@ public class Intake extends MotorSubsystem {
 
     @Override
     public void updateMechanism() {
-        IntakeConstants.ANGLE_MOTOR_MECHANISM.update(
+        IntakeConstants.INTAKE_ANGLE_MOTOR_MECHANISM.update(
                 getCurrentAngle(),
                 Rotation2d.fromRotations(masterAngleMotor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE))
         );
-        IntakeConstants.WHEEL_MOTOR_MECHANISM.update(intakeMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE));
+        IntakeConstants.INTAKE_WHEEL_MOTOR_MECHANISM.update(intakeMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE));
 
         Logger.recordOutput("Poses/Components/IntakePose", calculateVisualizationPose());
     }
@@ -69,7 +69,7 @@ public class Intake extends MotorSubsystem {
     public void stop() {
         masterAngleMotor.stopMotor();
         intakeMotor.stopMotor();
-        IntakeConstants.WHEEL_MOTOR_MECHANISM.setTargetVelocity(0);
+        IntakeConstants.INTAKE_WHEEL_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
     void setTargetState(IntakeConstants.IntakeState targetState) {
@@ -83,7 +83,7 @@ public class Intake extends MotorSubsystem {
     }
 
     private void setTargetVoltage(double targetVoltage) {
-        IntakeConstants.WHEEL_MOTOR_MECHANISM.setTargetVelocity(targetVoltage);
+        IntakeConstants.INTAKE_WHEEL_MOTOR_MECHANISM.setTargetVelocity(targetVoltage);
         intakeMotor.setControl(voltageRequest.withOutput(targetVoltage));
     }
 
