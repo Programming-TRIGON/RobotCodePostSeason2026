@@ -88,8 +88,13 @@ public class Shooter extends MotorSubsystem {
 
     void aimAtHub() {}
 
+    public double meterToRotations(double distanceMeters) {
+        double distanceToRotations = Conversions.distanceToRotations(distanceMeters, ShooterConstants.WHEEL_DIAMETER);
+        return distanceToRotations;
+    }
+
     public double rotationToMeters(double rotation) {
-        double rotationsToDistance = Conversions.rotationsToDistance(rotation, 0.1016);
+        double rotationsToDistance = Conversions.rotationsToDistance(rotation, ShooterConstants.WHEEL_DIAMETER);
         return rotationsToDistance;
     }
 }
