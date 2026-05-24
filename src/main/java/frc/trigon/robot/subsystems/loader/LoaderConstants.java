@@ -15,8 +15,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class LoaderConstants {
     private static final int
-            MASTER_MOTOR_ID = 13,
-            FOLLOWER_MOTOR_ID = 14;
+            MASTER_MOTOR_ID = 11,
+            FOLLOWER_MOTOR_ID = 12;
     private static final String
             MASTER_MOTOR_NAME = "LoaderMasterMotor",
             FOLLOWER_MOTOR_NAME = "LoaderFollowerMotor";
@@ -29,7 +29,7 @@ public class LoaderConstants {
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
 
     private static final int MOTOR_AMOUNT = 2;
-    private static final DCMotor GEARBOX = DCMotor.getKrakenX60(MOTOR_AMOUNT);
+    private static final DCMotor GEARBOX = DCMotor.getKrakenX44(MOTOR_AMOUNT);
     private static final double MOMENT_OF_INERTIA = 0.003;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
             GEARBOX,
@@ -37,14 +37,12 @@ public class LoaderConstants {
             MOMENT_OF_INERTIA
     );
 
-    private static final double MAXIMUM_DISPLAYABLE_VOLTAGE = 8;
+    private static final double MAXIMUM_DISPLAYABLE_VOLTAGE = 12;
     private static final String LOADER_MECHANISM_NAME = "LoaderMechanism";
     static final SpeedMechanism2d LOADER_MECHANISM = new SpeedMechanism2d(
             LOADER_MECHANISM_NAME,
             MAXIMUM_DISPLAYABLE_VOLTAGE
     );
-
-    static final double VOLTAGE_TOLERANCE = 0.1;
 
     static {
         configureLoaderMasterMotor();
@@ -62,13 +60,13 @@ public class LoaderConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.CurrentLimits.StatorCurrentLimit = 90;
+        config.CurrentLimits.StatorCurrentLimit = 50;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         MASTER_MOTOR.applyConfiguration(config);
         MASTER_MOTOR.setPhysicsSimulation(SIMULATION);
 
-        MASTER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
     }
 
     private static void configureLoaderFollowerMotor() {
@@ -82,7 +80,7 @@ public class LoaderConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.CurrentLimits.StatorCurrentLimit = 90;
+        config.CurrentLimits.StatorCurrentLimit = 50;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         FOLLOWER_MOTOR.applyConfiguration(config);
@@ -91,7 +89,7 @@ public class LoaderConstants {
         final Follower followRequest = new Follower(MASTER_MOTOR.getID(), FOLLOWER_ALIGNMENT_TO_MASTER);
         FOLLOWER_MOTOR.setControl(followRequest);
 
-        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
     }
 
     public enum LoaderState {

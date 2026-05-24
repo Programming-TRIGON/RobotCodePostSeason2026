@@ -24,12 +24,4 @@ public class LoaderCommands {
                 RobotContainer.LOADER
         );
     }
-
-    public static Command getSetTargetVoltageCommand(double targetVoltage) {
-        return new StartEndCommand(
-                () -> RobotContainer.LOADER.setTargetVoltage(targetVoltage),
-                RobotContainer.LOADER::stop,
-                RobotContainer.LOADER
-        );
-    }
 }
