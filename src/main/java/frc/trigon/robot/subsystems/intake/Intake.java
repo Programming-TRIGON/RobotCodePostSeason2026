@@ -37,9 +37,7 @@ public class Intake extends MotorSubsystem {
                 getCurrentAngle(),
                 Rotation2d.fromRotations(masterAngleMotor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE))
         );
-        IntakeConstants.INTAKE_MOTOR_MECHANISM.update(
-                intakeMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)
-        );
+        IntakeConstants.INTAKE_MOTOR_MECHANISM.update(intakeMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE));
 
         Logger.recordOutput("Poses/Components/IntakePose", calculateVisualizationPose());
     }
@@ -63,6 +61,7 @@ public class Intake extends MotorSubsystem {
     public void updatePeriodically() {
         masterAngleMotor.update();
         intakeMotor.update();
+        IntakeConstants.FOLLOWER_ANGLE_MOTOR.update();
         Logger.recordOutput("Intake/CurrentArmAngle", getCurrentAngle());
     }
 
@@ -70,7 +69,6 @@ public class Intake extends MotorSubsystem {
     public void stop() {
         masterAngleMotor.stopMotor();
         intakeMotor.stopMotor();
-        IntakeConstants.FOLLOWER_ANGLE_MOTOR.stopMotor();
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
@@ -105,4 +103,3 @@ public class Intake extends MotorSubsystem {
         return IntakeConstants.INTAKE_VISUALIZATION_ORIGIN_POINT.transformBy(pitchTransform);
     }
 }
-
