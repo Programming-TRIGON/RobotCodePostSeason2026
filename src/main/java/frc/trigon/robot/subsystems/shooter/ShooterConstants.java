@@ -19,8 +19,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class ShooterConstants {
     private static final int
-            MASTER_MOTOR_ID = 9,
-            FOLLOWER_MOTOR_ID = 10;
+            MASTER_MOTOR_ID = 16,
+            FOLLOWER_MOTOR_ID = 17;
     private static final String
             MASTER_MOTOR_NAME = "ShooterMasterMotor",
             FOLLOWER_MOTOR_NAME = "ShooterFollowerMotor";
@@ -31,7 +31,7 @@ public class ShooterConstants {
     static final boolean FOC_ENABLED = true;
     private static final int GEAR_RATIO = 2;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
-    private static final double STATOR_CURRENT_LIMIT_AMPS = 100;
+    private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
@@ -80,8 +80,8 @@ public class ShooterConstants {
         config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.24502 : 0;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.005013 : 0;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15.0 : 0;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 0;
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
         config.Feedback.VelocityFilterTimeConstant = 0.03;

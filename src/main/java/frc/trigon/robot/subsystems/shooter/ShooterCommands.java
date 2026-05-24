@@ -7,7 +7,7 @@ import frc.trigon.robot.RobotContainer;
 
 import java.util.Set;
 
-public class ShooterCommand extends Command {
+public class ShooterCommands {
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
                 RobotContainer.SHOOTER::getSetTargetVelocity,
@@ -21,6 +21,15 @@ public class ShooterCommand extends Command {
         return new StartEndCommand(
                 () -> RobotContainer.SHOOTER.getSetTargetVelocity(velocityMetersPerSecond),
                 RobotContainer.SHOOTER::stop,
+                RobotContainer.SHOOTER
+        );
+    }
+
+    public static Command getStopCommand() {
+        return new StartEndCommand(
+                RobotContainer.SHOOTER::stop,
+                () -> {
+                },
                 RobotContainer.SHOOTER
         );
     }

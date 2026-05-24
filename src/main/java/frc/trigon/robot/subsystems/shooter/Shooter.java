@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.Logger;
 public class Shooter extends MotorSubsystem {
     private final TalonFXMotor motor = ShooterConstants.MASTER_MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(ShooterConstants.FOC_ENABLED);
-    private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(ShooterConstants.FOC_ENABLED).withUpdateFreqHz(1000);
+    private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(ShooterConstants.FOC_ENABLED);
     private double targetVelocityMetersPerSecond = 0;
     private boolean isAimingAtHub = true;
 
@@ -84,4 +84,6 @@ public class Shooter extends MotorSubsystem {
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
         motor.setControl(velocityRequest.withVelocity(targetVelocityMetersPerSecond));
     }
+
+    void aimAtHub() {}
 }
