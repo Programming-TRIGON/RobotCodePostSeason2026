@@ -93,7 +93,7 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS,
             ANGLE_MOTOR_MECHANISM_COLOR
     );
-    static final SpeedMechanism2d INTAKE_MOTOR_MECHANISM = new SpeedMechanism2d(
+    static final SpeedMechanism2d WHEEL_MOTOR_MECHANISM = new SpeedMechanism2d(
             INTAKE_MOTOR_MECHANISM_NAME,
             INTAKE_MOTOR_MAXIMUM_DISPLAYABLE_VOLTAGE
     );
