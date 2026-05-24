@@ -67,6 +67,7 @@ public class LoaderConstants {
         MASTER_MOTOR.setPhysicsSimulation(SIMULATION);
 
         MASTER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
     }
 
     private static void configureLoaderFollowerMotor() {
@@ -90,6 +91,7 @@ public class LoaderConstants {
         FOLLOWER_MOTOR.setControl(followRequest);
 
         FOLLOWER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
     }
 
     public enum LoaderState {

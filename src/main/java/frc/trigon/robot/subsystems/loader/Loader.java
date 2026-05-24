@@ -7,6 +7,7 @@ import frc.trigon.robot.subsystems.MotorSubsystem;
 
 public class Loader extends MotorSubsystem {
     private final TalonFXMotor masterMotor = LoaderConstants.MASTER_MOTOR;
+    private final TalonFXMotor followerMotor = LoaderConstants.FOLLOWER_MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
 
     public Loader() {
@@ -22,7 +23,8 @@ public class Loader extends MotorSubsystem {
     @Override
     public void updateMechanism() {
         LoaderConstants.LOADER_MECHANISM.update(
-                masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)
+                masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE),
+                followerMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)
         );
     }
 
