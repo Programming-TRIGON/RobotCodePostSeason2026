@@ -51,7 +51,7 @@ public class RobotContainer {
 
     private void configureBindings() {
         bindDefaultCommands();
-        bindControllerCommands();   
+        bindControllerCommands();
     }
 
     private void bindDefaultCommands() {

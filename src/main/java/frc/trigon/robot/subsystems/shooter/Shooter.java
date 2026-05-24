@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
+import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -86,4 +87,9 @@ public class Shooter extends MotorSubsystem {
     }
 
     void aimAtHub() {}
+
+    public double rotationToMeters(double rotation) {
+        double rotationsToDistance = Conversions.rotationsToDistance(rotation, 0.1016);
+        return rotationsToDistance;
+    }
 }

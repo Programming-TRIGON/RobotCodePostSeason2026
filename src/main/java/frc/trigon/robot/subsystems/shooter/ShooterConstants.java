@@ -97,7 +97,7 @@ public class ShooterConstants {
         MASTER_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
         MASTER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
         MASTER_MOTOR.registerSignal(TalonFXSignal.SUPPLY_CURRENT, 100);
-        MASTER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 250);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
     }
 
     private static void configureFollowerMotor() {
