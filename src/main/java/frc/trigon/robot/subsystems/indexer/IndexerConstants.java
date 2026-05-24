@@ -3,6 +3,9 @@ package frc.trigon.robot.subsystems.indexer;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -26,6 +29,11 @@ public class IndexerConstants {
             GEAR_BOX,
             GEAR_RATIO,
             MOMENT_OF_INERTIA
+    );
+
+    static final Pose3d VISUALIZATION_ORIGIN_POSE = new Pose3d(
+            new Translation3d(0, 0, 0),
+            new Rotation3d(0, 0, 0)
     );
 
     private static final double MAXIMUM_DISPLAYABLE_VOLTAGE = 12;

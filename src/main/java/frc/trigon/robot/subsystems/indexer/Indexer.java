@@ -40,5 +40,4 @@ public class Indexer extends MotorSubsystem {
     void setTargetVoltage(double targetVoltage) {
         motor.setControl(voltageRequest.withOutput(targetVoltage));
     }
-
 }
