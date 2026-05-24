@@ -86,9 +86,9 @@ public class IntakeConstants {
     private static String
             ANGLE_MOTOR_MECHANISM_NAME = "IntakeAngleMotorMechanism",
             INTAKE_MOTOR_MECHANISM_NAME = "IntakeWheelMotorMechanism";
-    private static final Color ANGLE_MOTOR_MECHANISM_COLOR = Color.kGreen;
+    private static final Color ANGLE_MOTOR_MECHANISM_COLOR = Color.kOrange;
     private static final double INTAKE_MOTOR_MAXIMUM_DISPLAYABLE_VOLTAGE = 12;
-    static final SingleJointedArmMechanism2d INTAKE_ANGLE_MECHANISM = new SingleJointedArmMechanism2d(
+    static final SingleJointedArmMechanism2d ANGLE_MOTOR_MECHANISM = new SingleJointedArmMechanism2d(
             ANGLE_MOTOR_MECHANISM_NAME,
             INTAKE_LENGTH_METERS,
             ANGLE_MOTOR_MECHANISM_COLOR
@@ -188,7 +188,7 @@ public class IntakeConstants {
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        config.Feedback.RotorToSensorRatio = INTAKE_MOTOR_GEAR_RATIO;
+        config.Feedback.SensorToMechanismRatio = INTAKE_MOTOR_GEAR_RATIO;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = INTAKE_MOTOR_CURRENT_LIMIT;
@@ -217,7 +217,7 @@ public class IntakeConstants {
     public enum IntakeState {
         REST(0, Rotation2d.fromDegrees(90)),
         INTAKE(6, Rotation2d.fromDegrees(-15)),
-        LOADING(0, Rotation2d.fromDegrees(90));
+        LOAD(0, Rotation2d.fromDegrees(90));
 
         public final double targetVoltage;
         public final Rotation2d targetAngle;

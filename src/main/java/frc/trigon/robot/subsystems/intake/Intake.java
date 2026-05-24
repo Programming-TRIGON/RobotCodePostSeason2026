@@ -33,7 +33,7 @@ public class Intake extends MotorSubsystem {
 
     @Override
     public void updateMechanism() {
-        IntakeConstants.INTAKE_ANGLE_MECHANISM.update(
+        IntakeConstants.ANGLE_MOTOR_MECHANISM.update(
                 getCurrentAngle(),
                 Rotation2d.fromRotations(masterAngleMotor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE))
         );
@@ -70,6 +70,7 @@ public class Intake extends MotorSubsystem {
     public void stop() {
         masterAngleMotor.stopMotor();
         intakeMotor.stopMotor();
+        IntakeConstants.FOLLOWER_ANGLE_MOTOR.stopMotor();
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
