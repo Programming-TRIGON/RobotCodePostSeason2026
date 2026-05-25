@@ -62,6 +62,7 @@ public class Intake extends MotorSubsystem {
         masterAngleMotor.update();
         intakeMotor.update();
         IntakeConstants.FOLLOWER_ANGLE_MOTOR.update();
+        IntakeConstants.ANGLE_ENCODER.update();
         Logger.recordOutput("Intake/CurrentArmAngle", getCurrentAngle());
     }
 

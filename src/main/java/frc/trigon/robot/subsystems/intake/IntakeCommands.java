@@ -20,19 +20,19 @@ public class IntakeCommands {
         );
     }
 
+    public static Command getSetTargetStateCommand(IntakeConstants.IntakeState targetState) {
+        return new StartEndCommand(
+                () -> RobotContainer.INTAKE.setTargetState(targetState),
+                RobotContainer.INTAKE::stop,
+                RobotContainer.INTAKE
+        );
+    }
+
     public static Command getGearRatioCalculationCommand() {
         return new GearRatioCalculationCommand(
                 IntakeConstants.MASTER_ANGLE_MOTOR,
                 IntakeConstants.ANGLE_ENCODER,
                 0.5,
-                RobotContainer.INTAKE
-        );
-    }
-
-    public static Command getSetTargetStateCommand(IntakeConstants.IntakeState targetState) {
-        return new StartEndCommand(
-                () -> RobotContainer.INTAKE.setTargetState(targetState),
-                RobotContainer.INTAKE::stop,
                 RobotContainer.INTAKE
         );
     }
