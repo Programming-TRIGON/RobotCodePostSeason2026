@@ -41,18 +41,18 @@ public class IntakeConstants {
     static final CANcoderEncoder ANGLE_ENCODER = new CANcoderEncoder(ANGLE_ENCODER_ID, ANGLE_ENCODER_NAME, RobotConstants.CANIVORE_NAME);
 
     private static final double
-            ANGLE_MOTOR_GEAR_RATIO = 60,
+            ANGLE_MOTOR_GEAR_RATIO = 70,
             INTAKE_MOTOR_GEAR_RATIO = 1.55;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue ANGLE_FOLLOWER_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double INTAKE_MOTOR_CURRENT_LIMIT = 40;
-    private static final double ANGLE_MOTORS_CURRENT_LIMIT = 40;
+    private static final double ANGLE_MOTORS_CURRENT_LIMIT = 50;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
             INTAKE_MOTOR_AMOUNT = 1;
     private static final DCMotor
-            ANGLE_GEARBOX = DCMotor.getFalcon500Foc(ANGLE_MOTOR_AMOUNT),
+            ANGLE_GEARBOX = DCMotor.getKrakenX44(ANGLE_MOTOR_AMOUNT),
             INTAKE_GEARBOX = DCMotor.getKrakenX60Foc(INTAKE_MOTOR_AMOUNT);
     private static final double
             INTAKE_LENGTH_METERS = 0.369,
@@ -78,8 +78,8 @@ public class IntakeConstants {
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(0.8).per(Units.Seconds),
-            Units.Volts.of(0.8),
+            Units.Volts.of(0.6).per(Units.Seconds),
+            Units.Volts.of(1.2),
             Units.Second.of(1000)
     );
 
@@ -124,20 +124,20 @@ public class IntakeConstants {
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 45 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 55 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.017109 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 6.9978 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.094634 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.18458 : 0;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.1 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.031599 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 6.3031 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.057033 : 0;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.21824 : 0;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 3 : 0;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 3 : 0;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 0.4 : 0;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 1 : 0;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
