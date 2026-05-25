@@ -55,7 +55,7 @@ public class SimulationFieldHandler {
     }
 
     private static boolean isCollectingFuel() {
-        return RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.INTAKE); // Or whatever your folding intake triggers
+        return RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.INTAKE);
     }
 
     private static void updateEjection() {
@@ -68,7 +68,6 @@ public class SimulationFieldHandler {
     }
 
     private static SimulatedGamePiece getEjectableFuel() {
-        final Translation3d fuelLoaderFieldRelativePose = getFuelLoaderFieldRelativePose();
         for (SimulatedGamePiece heldFuel : HELD_FUEL) {
             if (!heldFuel.isIndexed()) continue;
 
@@ -78,11 +77,6 @@ public class SimulationFieldHandler {
             }
         }
         return null;
-    }
-
-    private static Translation3d getFuelLoaderFieldRelativePose() {
-        final Translation3d loaderPose = SimulatedGamePieceConstants.LOADER_CHECK_POSITION;
-        return robotRelativeToFieldRelative(loaderPose);
     }
 
     private static void ejectGamePiece(SimulatedGamePiece ejectedGamePiece) {

@@ -8,19 +8,14 @@ import frc.trigon.robot.constants.FieldConstants;
 
 public class SimulatedGamePieceConstants {
     public static final double SCORE_TOLERANCE_METERS = 0.3;
-    static final double
-            INTAKE_TOLERANCE_METERS = 0.4, // Increased slightly for folded intake sweep
-            LOADER_TOLERANCE_METERS = 0.05;
+    static final double INTAKE_TOLERANCE_METERS = 0.4;
 
     public static final FlippableTranslation3d
             SCORE_CHECK_POSITION = new FlippableTranslation3d(new Translation3d(4.625594, FieldConstants.FIELD_WIDTH_METERS / 2, 1.4), true),
             EJECT_FUEL_FROM_HUB_POSITION = new FlippableTranslation3d(new Translation3d(5.189474, FieldConstants.FIELD_WIDTH_METERS / 2, 0.762), true);
 
-    static final Translation3d
-            COLLECTION_CHECK_POSITION = new Translation3d(0.5, 0, 0), // Adjusted for forward intake
-            LOADER_CHECK_POSITION = new Translation3d(0, 0, 0.2); // Central loader position
-
-    static final int MAXIMUM_HELD_FUEL = 40;
+    static final Translation3d COLLECTION_CHECK_POSITION = new Translation3d(0.5, 0, 0); //TODO: get
+    static final int MAXIMUM_HELD_FUEL = 40; //TODO: get
 
     // Grid definitions for 4-wide roller indexer
     static final int INDEXER_WIDTH_CAPACITY = 4;
