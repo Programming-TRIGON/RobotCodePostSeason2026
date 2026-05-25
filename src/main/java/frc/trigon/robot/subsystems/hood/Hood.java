@@ -17,7 +17,7 @@ import org.littletonrobotics.junction.Logger;
 public class Hood extends MotorSubsystem {
     private final TalonFXMotor motor = HoodConstants.MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(HoodConstants.FOC_ENABLED);
-    private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(HoodConstants.FOC_ENABLED).withUpdateFreqHz(1000);
+    private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(HoodConstants.FOC_ENABLED);
     private Rotation2d targetAngle = Rotation2d.fromDegrees(0);
 
     public Hood() {

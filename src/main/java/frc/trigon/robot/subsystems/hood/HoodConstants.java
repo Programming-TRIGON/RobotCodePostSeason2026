@@ -18,17 +18,17 @@ import frc.trigon.lib.hardware.simulation.SingleJointedArmSimulation;
 import frc.trigon.lib.utilities.mechanisms.SingleJointedArmMechanism2d;
 
 public class HoodConstants {
-    private static final int MOTOR_ID = 18;
+    private static final int MOTOR_ID = 17;
     private static final String MOTOR_NAME = "HoodMotor";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 60;
+    private static final double GEAR_RATIO = 30;
 
     private static final int MOTOR_AMOUNT = 1;
-    private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
+    private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
     private static final double
-            HOOD_MASS_KILOGRAMS = 16,
+            HOOD_MASS_KILOGRAMS = 2,
             HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(60),
@@ -53,7 +53,7 @@ public class HoodConstants {
     );
     static final Pose3d HOOD_VISUALIZATION_ORIGIN_POINT = new Pose3d(
             new Translation3d(0, 0.27363801, 0.4532351),
-            new Rotation3d(0, 0, 0)
+            new Rotation3d(0, 20, 0)
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
@@ -93,7 +93,7 @@ public class HoodConstants {
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
-        config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
+        config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 20 : 0;
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 20 : 0;
