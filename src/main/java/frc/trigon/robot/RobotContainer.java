@@ -38,8 +38,8 @@ public class RobotContainer {
     );
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
-    public static final Shooter SHOOTER = new Shooter();
     public static final Loader LOADER = new Loader();
+    public static final Shooter SHOOTER = new Shooter();
     private LoggedDashboardChooser<Command> autoChooser;
 
     public RobotContainer() {
