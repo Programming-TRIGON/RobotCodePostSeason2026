@@ -26,7 +26,7 @@ public class Indexer extends MotorSubsystem {
     @Override
     public void stop() {
         motor.stopMotor();
-        updateMechanism();
+        IndexerConstants.MECHANISM.setTargetVelocity(0);
     }
 
     void setTargetState(IndexerConstants.IndexerState targetState) {
