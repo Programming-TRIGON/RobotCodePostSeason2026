@@ -26,7 +26,7 @@ public class Shooter extends MotorSubsystem {
     public void updateLog(SysIdRoutineLog log) {
         log.motor("ShooterMasterMotor")
                 .angularPosition(Units.Rotations.of(motor.getSignal(TalonFXSignal.POSITION)))
-                .angularVelocity(Units.RotationsPerSecond.of(getCurrentVelocityPerSecond()))
+                .angularVelocity(Units.RotationsPerSecond.of(getCurrentVelocityRotationPerSecond()))
                 .voltage(Units.Volts.of(motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
     }
 
@@ -72,23 +72,15 @@ public class Shooter extends MotorSubsystem {
     }
 
     public double getCurrentVelocityMetersPerSecond() {
-        return rotationToMeters(getCurrentVelocityPerSecond());
+        return rotationToMeters(getCurrentVelocityRotationPerSecond());
     }
 
-    public double getCurrentVelocityPerSecond() {
+    public double getCurrentVelocityRotationPerSecond() {
         return motor.getSignal(TalonFXSignal.VELOCITY);
     }
 
     public double getTargetVelocityMetersPerSecond() {
         return targetVelocityMetersPerSecond;
-    }
-
-    private double meterToRotations(double distanceMeters) {
-        return Conversions.distanceToRotations(distanceMeters, ShooterConstants.EFFECTIVE_WHEEL_DIAMETER);
-    }
-
-    private double rotationToMeters(double rotation) {
-        return Conversions.rotationsToDistance(rotation, ShooterConstants.EFFECTIVE_WHEEL_DIAMETER);
     }
 
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
@@ -99,4 +91,12 @@ public class Shooter extends MotorSubsystem {
     void aimAtHub() {}
 
     void aimForDelivery() {}
+
+    private double meterToRotations(double distanceMeters) {
+        return Conversions.distanceToRotations(distanceMeters, ShooterConstants.EFFECTIVE_WHEEL_DIAMETER);
+    }
+
+    private double rotationToMeters(double rotation) {
+        return Conversions.rotationsToDistance(rotation, ShooterConstants.EFFECTIVE_WHEEL_DIAMETER);
+    }
 }

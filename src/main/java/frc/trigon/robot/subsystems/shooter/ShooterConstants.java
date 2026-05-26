@@ -27,30 +27,17 @@ public class ShooterConstants {
 
     static final boolean FOC_ENABLED = true;
     static final double
-            TOP_WHEEL_DIAMETER = 0.1016,
-            BOTTOM_WHEEL_DIAMETER = 0.05;
-
-    static final double
             TOP_WHEEL_GEAR_RATIO = 2.0,
             BOTTOM_WHEEL_GEAR_RATIO = 1.0;
-
     static final double AVERAGE_GEAR_RATIO =
             (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
 
-    static final double EFFECTIVE_WHEEL_DIAMETER =
-            AVERAGE_GEAR_RATIO * 0.5 *
-                    (
-                            (TOP_WHEEL_DIAMETER / TOP_WHEEL_GEAR_RATIO) +
-                                    (BOTTOM_WHEEL_DIAMETER / BOTTOM_WHEEL_GEAR_RATIO)
-                    );
-
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
-    private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
-    private static final double MOMENT_OF_INERTIA = 0.002;
-    static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, AVERAGE_GEAR_RATIO, MOMENT_OF_INERTIA);
+        private static final double MOMENT_OF_INERTIA = 0.002;
+        static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, AVERAGE_GEAR_RATIO, MOMENT_OF_INERTIA);
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
             Units.Volts.of(2).per(Units.Second),
@@ -64,8 +51,17 @@ public class ShooterConstants {
             MECHANISM_NAME,
             MAXIMUM_DISPLAYABLE_VELOCITY
     );
-
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
+
+    static final double
+            TOP_WHEEL_DIAMETER = 0.1016,
+            BOTTOM_WHEEL_DIAMETER = 0.05;
+    static final double EFFECTIVE_WHEEL_DIAMETER =
+            AVERAGE_GEAR_RATIO * 0.5 * (
+                            (TOP_WHEEL_DIAMETER / TOP_WHEEL_GEAR_RATIO) +
+                                    (BOTTOM_WHEEL_DIAMETER / BOTTOM_WHEEL_GEAR_RATIO));
+
+    private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
 
     static {
         configureMasterMotor();
@@ -81,7 +77,7 @@ public class ShooterConstants {
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.069293 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 1 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.019646 : 0;
@@ -122,7 +118,7 @@ public class ShooterConstants {
 
         FOLLOWER_MOTOR.applyConfiguration(config);
 
-        final Follower followRequest = new Follower(MASTER_MOTOR_ID, FOLLOWER_ALIGNMENT_TO_MASTER).withUpdateFreqHz(1000);
+        final Follower followRequest = new Follower(MASTER_MOTOR_ID, FOLLOWER_ALIGNMENT_TO_MASTER);
         FOLLOWER_MOTOR.setControl(followRequest);
     }
 }
