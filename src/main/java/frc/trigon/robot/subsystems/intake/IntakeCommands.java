@@ -12,7 +12,10 @@ import java.util.Set;
 public class IntakeCommands {
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
-                (targetVoltage, targetAngleDegrees) -> RobotContainer.INTAKE.setTargetState(targetVoltage, Rotation2d.fromDegrees(targetAngleDegrees)),
+                (targetVoltage, targetAngleDegrees) -> {
+                    RobotContainer.INTAKE.setTargetVoltage(targetVoltage);
+                    RobotContainer.INTAKE.setTargetAngle(Rotation2d.fromDegrees(targetAngleDegrees));
+                },
                 false,
                 Set.of(RobotContainer.INTAKE),
                 "Debugging/IntakeTargetVoltage",

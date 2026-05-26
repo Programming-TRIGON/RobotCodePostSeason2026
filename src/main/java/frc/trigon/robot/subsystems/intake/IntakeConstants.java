@@ -45,8 +45,14 @@ public class IntakeConstants {
             INTAKE_MOTOR_GEAR_RATIO = 1.55;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue ANGLE_FOLLOWER_TO_MASTER = MotorAlignmentValue.Opposed;
-    private static final double INTAKE_MOTOR_CURRENT_LIMIT = 40;
-    private static final double ANGLE_MOTORS_CURRENT_LIMIT = 50;
+    private static final double
+            INTAKE_MOTOR_CURRENT_LIMIT = 40,
+            ANGLE_MOTORS_CURRENT_LIMIT = 50;
+    static final double
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 0.4 : 0,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 0.9 : 0;
+
+
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -136,8 +142,8 @@ public class IntakeConstants {
         config.Slot0.GravityArmPositionOffset = 0;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 0.4 : 0;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 0.9 : 0;
+        config.MotionMagic.MotionMagicCruiseVelocity = DEFAULT_MAXIMUM_VELOCITY;
+        config.MotionMagic.MotionMagicAcceleration = DEFAULT_MAXIMUM_ACCELERATION;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -215,16 +221,18 @@ public class IntakeConstants {
     }
 
     public enum IntakeState {
-        REST(0, Rotation2d.fromDegrees(90)),
-        INTAKE(6, Rotation2d.fromDegrees(-15)),
-        LOAD(0, Rotation2d.fromDegrees(90));
+        REST(0, Rotation2d.fromDegrees(90), 1),
+        INTAKE(6, Rotation2d.fromDegrees(-15), 1),
+        LOAD(0, Rotation2d.fromDegrees(90), 1);
 
         public final double targetVoltage;
         public final Rotation2d targetAngle;
+        public final double speedScalar;
 
-        IntakeState(double targetVoltage, Rotation2d targetAngle) {
+        IntakeState(double targetVoltage, Rotation2d targetAngle, double speedScalar) {
             this.targetVoltage = targetVoltage;
             this.targetAngle = targetAngle;
+            this.speedScalar = speedScalar;
         }
     }
 }
