@@ -20,8 +20,11 @@ import frc.trigon.robot.misc.objectdetection.ObjectPoseEstimator;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
+<<<<<<< HEAD
 import frc.trigon.robot.subsystems.hood.Hood;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
+=======
+>>>>>>> parent of b39ca8a (Merge branch 'main' into intake)
 import frc.trigon.robot.subsystems.intake.Intake;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
@@ -36,7 +39,10 @@ public class RobotContainer {
             CameraConstants.OBJECT_DETECTION_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
+<<<<<<< HEAD
     public static final Hood HOOD = new Hood();
+=======
+>>>>>>> parent of b39ca8a (Merge branch 'main' into intake)
     public static final Intake INTAKE = new Intake();
     private LoggedDashboardChooser<Command> autoChooser;
 
@@ -60,7 +66,10 @@ public class RobotContainer {
 
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
+<<<<<<< HEAD
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
+=======
+>>>>>>> parent of b39ca8a (Merge branch 'main' into intake)
         INTAKE.setDefaultCommand(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.REST));
     }
 
