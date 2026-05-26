@@ -23,6 +23,8 @@ import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.indexer.Indexer;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
+import frc.trigon.robot.subsystems.hood.Hood;
+import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -34,6 +36,7 @@ public class RobotContainer {
             CameraConstants.OBJECT_DETECTION_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
+    public static final Hood HOOD = new Hood();
     public static final Indexer INDEXER = new Indexer();
     private LoggedDashboardChooser<Command> autoChooser;
 
@@ -58,6 +61,7 @@ public class RobotContainer {
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
+        HOOD.setDefaultCommand(HoodCommands.getRestCommand());
     }
 
     private void bindControllerCommands() {
