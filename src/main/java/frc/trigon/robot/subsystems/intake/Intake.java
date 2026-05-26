@@ -116,7 +116,7 @@ public class Intake extends MotorSubsystem {
     }
 
     private Rotation2d getCurrentAngle() {
-        return Rotation2d.fromRotations(masterAngleMotor.getSignal(TalonFXSignal.POSITION)).minus(IntakeConstants.VISUALIZATION_OFFSET);
+        return Rotation2d.fromRotations(masterAngleMotor.getSignal(TalonFXSignal.POSITION));
     }
 
     private Pose3d calculateVisualizationPose() {
