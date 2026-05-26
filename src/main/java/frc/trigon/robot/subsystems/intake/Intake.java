@@ -82,17 +82,11 @@ public class Intake extends MotorSubsystem {
     }
 
     public boolean atState(IntakeConstants.IntakeState targetState) {
-        return atAngle(targetState.targetAngle) && targetState == this.targetState;
+        return targetState == this.targetState && atTargetState();
     }
 
     public boolean atTargetState() {
-        return atAngle(this.targetState.targetAngle);
-    }
-
-    public boolean atAngle(Rotation2d targetAngle) {
-        return Math.abs(
-                targetAngle.minus(getCurrentAngle()).getDegrees()
-        ) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
+        return targetState.targetAngle.minus(getCurrentAngle()).getDegrees() < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }
 
     void setTargetState(IntakeConstants.IntakeState targetState) {
