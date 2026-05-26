@@ -38,8 +38,6 @@ public class IndexerConstants {
             MAXIMUM_DISPLAYABLE_VOLTAGE
     );
 
-    static final double VOLTAGE_TOLERANCE = 0.2;
-
     static {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
