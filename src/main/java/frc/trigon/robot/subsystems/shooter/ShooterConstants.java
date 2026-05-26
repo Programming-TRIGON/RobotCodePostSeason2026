@@ -55,11 +55,6 @@ public class ShooterConstants {
             null
     );
 
-    static final Pose3d VISUALIZATION_ORIGIN_POSE = new Pose3d(
-            new Translation3d(0, 0, 0),
-            new Rotation3d(0, 0, 0)
-    );
-
     private static final String MECHANISM_NAME = "ShooterMechanism";
     private static final double MAXIMUM_DISPLAYABLE_VELOCITY = 15;
     static final SpeedMechanism2d MECHANISM = new SpeedMechanism2d(
