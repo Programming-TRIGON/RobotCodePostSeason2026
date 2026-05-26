@@ -88,14 +88,11 @@ public class Shooter extends MotorSubsystem {
         motor.setControl(velocityRequest.withVelocity(meterToRotations(targetVelocityMetersPerSecond)));
     }
 
-    void aimAtHub() {
+    private double meterToRotations(double distanceMeters) {
+        return Conversions.distanceToRotations(distanceMeters, ShooterConstants.EFFECTIVE_WHEEL_DIAMETER);
     }
 
-    double meterToRotations(double distanceMeters) {
-        return Conversions.distanceToRotations(distanceMeters, ShooterConstants.WHEEL_DIAMETER);
-    }
-
-    double rotationToMeters(double rotation) {
-        return Conversions.rotationsToDistance(rotation, ShooterConstants.WHEEL_DIAMETER);
+    private double rotationToMeters(double rotation) {
+        return Conversions.rotationsToDistance(rotation, ShooterConstants.EFFECTIVE_WHEEL_DIAMETER);
     }
 }
