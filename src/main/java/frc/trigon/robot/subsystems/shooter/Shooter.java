@@ -43,8 +43,8 @@ public class Shooter extends MotorSubsystem {
     }
 
     @Override
-    public void sysIDDrive(double targetDrivePower) {
-        motor.setControl(voltageRequest.withOutput(targetDrivePower));
+    public void sysIDDrive(double targetVoltage) {
+        motor.setControl(voltageRequest.withOutput(targetVoltage));
     }
 
     @Override
