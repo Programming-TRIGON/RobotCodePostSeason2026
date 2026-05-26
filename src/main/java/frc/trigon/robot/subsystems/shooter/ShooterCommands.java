@@ -10,16 +10,16 @@ import java.util.Set;
 public class ShooterCommands {
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
-                RobotContainer.SHOOTER::getSetTargetVelocity,
+                RobotContainer.SHOOTER::setTargetVelocity,
                 false,
                 Set.of(RobotContainer.SHOOTER),
                 "Debugging/TargetShooterVelocityMetersPerSecond"
         );
     }
 
-    public static Command getSetVelocityMeterPerSecondCommand(double velocityMetersPerSecond) {
+    public static Command getSetVelocityMetersPerSecondCommand(double velocityMetersPerSecond) {
         return new StartEndCommand(
-                () -> RobotContainer.SHOOTER.getSetTargetVelocity(velocityMetersPerSecond),
+                () -> RobotContainer.SHOOTER.setTargetVelocity(velocityMetersPerSecond),
                 RobotContainer.SHOOTER::stop,
                 RobotContainer.SHOOTER
         );

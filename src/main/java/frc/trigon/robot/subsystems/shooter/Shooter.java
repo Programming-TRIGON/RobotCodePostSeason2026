@@ -17,7 +17,6 @@ public class Shooter extends MotorSubsystem {
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(ShooterConstants.FOC_ENABLED);
     private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(ShooterConstants.FOC_ENABLED);
     private double targetVelocityMetersPerSecond = 0;
-    private boolean isAimingAtHub = true;
 
     public Shooter() {
         setName("Shooter");
@@ -27,7 +26,7 @@ public class Shooter extends MotorSubsystem {
     public void updateLog(SysIdRoutineLog log) {
         log.motor("ShooterMasterMotor")
                 .angularPosition(Units.Rotations.of(motor.getSignal(TalonFXSignal.POSITION)))
-                .angularVelocity(Units.RotationsPerSecond.of(getCurrentVelocityMetersPerSecond()))
+                .angularVelocity(Units.RotationsPerSecond.of(getCurrentVelocity()))
                 .voltage(Units.Volts.of(motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
     }
 
@@ -35,7 +34,6 @@ public class Shooter extends MotorSubsystem {
     public void stop() {
         motor.stopMotor();
         targetVelocityMetersPerSecond = 0;
-        isAimingAtHub = false;
     }
 
     @Override
@@ -56,7 +54,7 @@ public class Shooter extends MotorSubsystem {
     @Override
     public void updateMechanism() {
         final double currentVelocityMetersPerSecond = getCurrentVelocityMetersPerSecond();
-        final double targetProfiledVelocityMetersPerSecond = motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE);
+        final double targetProfiledVelocityMetersPerSecond = rotationToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
         ShooterConstants.MECHANISM.update(
                 currentVelocityMetersPerSecond,
                 targetProfiledVelocityMetersPerSecond
@@ -73,6 +71,10 @@ public class Shooter extends MotorSubsystem {
     }
 
     public double getCurrentVelocityMetersPerSecond() {
+        return rotationToMeters(getCurrentVelocityMetersPerSecond());
+    }
+
+    public double getCurrentVelocity() {
         return motor.getSignal(TalonFXSignal.VELOCITY);
     }
 
@@ -80,20 +82,19 @@ public class Shooter extends MotorSubsystem {
         return targetVelocityMetersPerSecond;
     }
 
-    void getSetTargetVelocity(double targetVelocityMetersPerSecond) {
+    void setTargetVelocity(double targetVelocityMetersPerSecond) {
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
-        motor.setControl(velocityRequest.withVelocity(targetVelocityMetersPerSecond));
+        motor.setControl(velocityRequest.withVelocity(meterToRotations(targetVelocityMetersPerSecond)));
     }
 
-    void aimAtHub() {}
+    void aimAtHub() {
+    }
 
     public double meterToRotations(double distanceMeters) {
-        double distanceToRotations = Conversions.distanceToRotations(distanceMeters, ShooterConstants.WHEEL_DIAMETER);
-        return distanceToRotations;
+        return Conversions.distanceToRotations(distanceMeters, ShooterConstants.WHEEL_DIAMETER);
     }
 
     public double rotationToMeters(double rotation) {
-        double rotationsToDistance = Conversions.rotationsToDistance(rotation, ShooterConstants.WHEEL_DIAMETER);
-        return rotationsToDistance;
+        return Conversions.rotationsToDistance(rotation, ShooterConstants.WHEEL_DIAMETER);
     }
 }

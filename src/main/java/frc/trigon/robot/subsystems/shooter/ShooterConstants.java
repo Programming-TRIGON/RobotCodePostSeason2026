@@ -19,8 +19,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class ShooterConstants {
     private static final int
-            MASTER_MOTOR_ID = 16,
-            FOLLOWER_MOTOR_ID = 17;
+            MASTER_MOTOR_ID = 14,
+            FOLLOWER_MOTOR_ID = 15;
     private static final String
             MASTER_MOTOR_NAME = "ShooterMasterMotor",
             FOLLOWER_MOTOR_NAME = "ShooterFollowerMotor";
@@ -29,8 +29,17 @@ public class ShooterConstants {
             FOLLOWER_MOTOR = new TalonFXMotor(FOLLOWER_MOTOR_ID, FOLLOWER_MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    static final double WHEEL_DIAMETER = 0.1016;
-    private static final int GEAR_RATIO = 2;
+    static final double
+            BIG_WHEEL_DIAMETER = 0.1016,
+            SMALL_WHEEL_DIAMETER = 0.05;
+    static final double WHEEL_DIAMETER =
+            (BIG_WHEEL_DIAMETER + SMALL_WHEEL_DIAMETER) / 2;
+    private static final int 
+            BIG_WHEEL_GEAR_RATIO = 2,
+            SMALL_WHEEL_GEAR_RATIO = 1;
+    static final double GEAR_RATIO =
+            (BIG_WHEEL_GEAR_RATIO + SMALL_WHEEL_GEAR_RATIO) / 2;
+
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
 
@@ -74,12 +83,12 @@ public class ShooterConstants {
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.011148 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.069293 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.048875 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.24502 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.005013 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.019646 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.12055 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0092472 : 0;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15.0 : 0;
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 0;
