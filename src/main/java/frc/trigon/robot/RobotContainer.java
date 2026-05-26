@@ -36,8 +36,8 @@ public class RobotContainer {
             CameraConstants.OBJECT_DETECTION_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
-    public static final Loader LOADER = new Loader();
     public static final Hood HOOD = new Hood();
+    public static final Loader LOADER = new Loader();
     private LoggedDashboardChooser<Command> autoChooser;
 
     public RobotContainer() {
@@ -60,8 +60,8 @@ public class RobotContainer {
 
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
-        LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
+        LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
     }
 
     private void bindControllerCommands() {
