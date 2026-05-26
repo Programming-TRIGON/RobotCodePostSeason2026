@@ -20,6 +20,9 @@ import frc.trigon.robot.misc.objectdetection.ObjectPoseEstimator;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
+import frc.trigon.robot.subsystems.indexer.Indexer;
+import frc.trigon.robot.subsystems.indexer.IndexerCommands;
+import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.loader.Loader;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
@@ -40,6 +43,7 @@ public class RobotContainer {
     );
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
+    public static final Indexer INDEXER = new Indexer();
     public static final Intake INTAKE = new Intake();
     public static final Loader LOADER = new Loader();
     private LoggedDashboardChooser<Command> autoChooser;
@@ -65,6 +69,7 @@ public class RobotContainer {
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
+        INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
         INTAKE.setDefaultCommand(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.REST));
         LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
     }
