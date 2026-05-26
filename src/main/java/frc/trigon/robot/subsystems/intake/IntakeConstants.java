@@ -41,18 +41,17 @@ public class IntakeConstants {
     static final CANcoderEncoder ANGLE_ENCODER = new CANcoderEncoder(ANGLE_ENCODER_ID, ANGLE_ENCODER_NAME, RobotConstants.CANIVORE_NAME);
 
     private static final double
-            ANGLE_MOTOR_GEAR_RATIO = 70,
+            ANGLE_MOTOR_TO_ENCODER_GEAR_RATIO = 76,
+            ENCODER_TO_INTAKE_GEAR_RATIO = 0.5813,
             INTAKE_MOTOR_GEAR_RATIO = 1.55;
     static final boolean FOC_ENABLED = true;
-    private static final MotorAlignmentValue ANGLE_FOLLOWER_TO_MASTER = MotorAlignmentValue.Opposed;
+    private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
             INTAKE_MOTOR_CURRENT_LIMIT = 40,
             ANGLE_MOTORS_CURRENT_LIMIT = 50;
     static final double
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 0.4 : 0,
             DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 0.9 : 0;
-
-
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -64,13 +63,13 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS = 0.369,
             INTAKE_MASS_KILOGRAMS = 6;
     static final Rotation2d
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(-15),
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(90);
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(0),
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(157.51);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
-    private static final double WHEEL_MOMENT_OF_INERTIA = 0.003;
+    private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
             ANGLE_GEARBOX,
-            ANGLE_MOTOR_GEAR_RATIO,
+            ANGLE_MOTOR_TO_ENCODER_GEAR_RATIO,
             INTAKE_LENGTH_METERS,
             INTAKE_MASS_KILOGRAMS,
             MINIMUM_ANGLE,
@@ -80,18 +79,18 @@ public class IntakeConstants {
     static final SimpleMotorSimulation INTAKE_SIMULATION = new SimpleMotorSimulation(
             INTAKE_GEARBOX,
             INTAKE_MOTOR_GEAR_RATIO,
-            WHEEL_MOMENT_OF_INERTIA
+            INTAKE_MOTOR_MOMENT_OF_INERTIA
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
             Units.Volts.of(0.6).per(Units.Seconds),
             Units.Volts.of(1.2),
-            Units.Second.of(1000)
+            null
     );
 
     private static String
             ANGLE_MOTOR_MECHANISM_NAME = "IntakeAngleMotorMechanism",
-            INTAKE_MOTOR_MECHANISM_NAME = "IntakeWheelMotorMechanism";
+            INTAKE_MOTOR_MECHANISM_NAME = "IntakeMotorMechanism";
     private static final Color ANGLE_MOTOR_MECHANISM_COLOR = Color.kOrange;
     private static final double INTAKE_MOTOR_MAXIMUM_DISPLAYABLE_VOLTAGE = 12;
     static final SingleJointedArmMechanism2d INTAKE_ANGLE_MOTOR_MECHANISM = new SingleJointedArmMechanism2d(
@@ -99,7 +98,7 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS,
             ANGLE_MOTOR_MECHANISM_COLOR
     );
-    static final SpeedMechanism2d INTAKE_WHEEL_MOTOR_MECHANISM = new SpeedMechanism2d(
+    static final SpeedMechanism2d INTAKE_MOTOR_MECHANISM = new SpeedMechanism2d(
             INTAKE_MOTOR_MECHANISM_NAME,
             INTAKE_MOTOR_MAXIMUM_DISPLAYABLE_VOLTAGE
     );
@@ -128,7 +127,8 @@ public class IntakeConstants {
 
         config.Feedback.FeedbackRemoteSensorID = ANGLE_ENCODER.getID();
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_GEAR_RATIO;
+        config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_TO_ENCODER_GEAR_RATIO;
+        config.Feedback.SensorToMechanismRatio = ENCODER_TO_INTAKE_GEAR_RATIO;
 
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 65 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
@@ -178,7 +178,7 @@ public class IntakeConstants {
 
         FOLLOWER_ANGLE_MOTOR.applyConfiguration(config);
 
-        final Follower followerRequest = new Follower(MASTER_ANGLE_MOTOR.getID(), ANGLE_FOLLOWER_TO_MASTER);
+        final Follower followerRequest = new Follower(MASTER_ANGLE_MOTOR.getID(), FOLLOWER_ALIGNMENT_TO_MASTER);
         FOLLOWER_ANGLE_MOTOR.setControl(followerRequest);
 
         FOLLOWER_ANGLE_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);

@@ -1,7 +1,6 @@
 package frc.trigon.robot.subsystems.intake;
 
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
@@ -17,7 +16,15 @@ public class Intake extends MotorSubsystem {
             masterAngleMotor = IntakeConstants.MASTER_ANGLE_MOTOR,
             intakeMotor = IntakeConstants.INTAKE_MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(IntakeConstants.FOC_ENABLED);
-    private final DynamicMotionMagicVoltage positionRequest = new DynamicMotionMagicVoltage(0, IntakeConstants.DEFAULT_MAXIMUM_VELOCITY, IntakeConstants.DEFAULT_MAXIMUM_ACCELERATION).withEnableFOC(IntakeConstants.FOC_ENABLED);
+    private final DynamicMotionMagicVoltage positionRequest = new DynamicMotionMagicVoltage(
+            0,
+            IntakeConstants.DEFAULT_MAXIMUM_VELOCITY,
+            IntakeConstants.DEFAULT_MAXIMUM_ACCELERATION
+            )
+            .withEnableFOC
+            (
+            IntakeConstants.FOC_ENABLED
+    );
     private IntakeConstants.IntakeState targetState = IntakeConstants.IntakeState.REST;
 
     public Intake() {
@@ -38,7 +45,7 @@ public class Intake extends MotorSubsystem {
                 getCurrentAngle(),
                 Rotation2d.fromRotations(masterAngleMotor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE))
         );
-        IntakeConstants.INTAKE_WHEEL_MOTOR_MECHANISM.update(intakeMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE));
+        IntakeConstants.INTAKE_MOTOR_MECHANISM.update(intakeMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE));
 
         Logger.recordOutput("Poses/Components/IntakePose", calculateVisualizationPose());
     }
@@ -61,8 +68,8 @@ public class Intake extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         masterAngleMotor.update();
-        intakeMotor.update();
         IntakeConstants.FOLLOWER_ANGLE_MOTOR.update();
+        intakeMotor.update();
         IntakeConstants.ANGLE_ENCODER.update();
         Logger.recordOutput("Intake/CurrentArmAngle", getCurrentAngle());
     }
@@ -71,7 +78,7 @@ public class Intake extends MotorSubsystem {
     public void stop() {
         masterAngleMotor.stopMotor();
         intakeMotor.stopMotor();
-        IntakeConstants.INTAKE_WHEEL_MOTOR_MECHANISM.setTargetVelocity(0);
+        IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
     public boolean atState(IntakeConstants.IntakeState targetState) {
@@ -79,11 +86,7 @@ public class Intake extends MotorSubsystem {
     }
 
     public boolean atTargetState() {
-        return calculateTargetStateDistance() < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
-    }
-
-    private double calculateTargetStateDistance() {
-        return (targetState.targetAngle).minus(getCurrentAngle()).getDegrees();
+        return targetState.targetAngle.minus(getCurrentAngle()).getDegrees() < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }
 
     void setTargetState(IntakeConstants.IntakeState targetState) {
@@ -91,25 +94,25 @@ public class Intake extends MotorSubsystem {
         setTargetState(targetState.targetVoltage, targetState.targetAngle, targetState.speedScalar);
     }
 
-    void setTargetState(double targetIntakeVoltage, Rotation2d targetIntakeArmAngle, double speedScalar) {
-        setTargetVoltage(targetIntakeVoltage);
-        setTargetAngle(targetIntakeArmAngle);
+    void setTargetState(double targetVoltage, Rotation2d targetAngle, double speedScalar) {
+        setTargetVoltage(targetVoltage);
+        setTargetAngle(targetAngle);
         scalePositionRequestSpeed(speedScalar);
+    }
+
+    void setTargetVoltage(double targetVoltage) {
+        IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(targetVoltage);
+        intakeMotor.setControl(voltageRequest.withOutput(targetVoltage));
+    }
+
+    void setTargetAngle(Rotation2d targetAngle) {
+        masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
     }
 
     private void scalePositionRequestSpeed(double speedScalar) {
         positionRequest.Velocity = IntakeConstants.DEFAULT_MAXIMUM_VELOCITY * speedScalar;
         positionRequest.Acceleration = IntakeConstants.DEFAULT_MAXIMUM_ACCELERATION * speedScalar;
         positionRequest.Jerk = positionRequest.Acceleration * 10;
-    }
-
-    void setTargetVoltage(double targetVoltage) {
-        IntakeConstants.INTAKE_WHEEL_MOTOR_MECHANISM.setTargetVelocity(targetVoltage);
-        intakeMotor.setControl(voltageRequest.withOutput(targetVoltage));
-    }
-
-    void setTargetAngle(Rotation2d targetAngle) {
-        masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
     }
 
     private Rotation2d getCurrentAngle() {
