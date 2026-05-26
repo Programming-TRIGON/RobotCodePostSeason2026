@@ -6,6 +6,7 @@ import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 
 import java.util.Set;
+import java.util.function.DoubleSupplier;
 
 public class ShooterCommands {
     public static Command getDebuggingCommand() {
@@ -17,9 +18,17 @@ public class ShooterCommands {
         );
     }
 
-    public static Command getSetVelocityMetersPerSecondCommand(double velocityMetersPerSecond) {
+    public static Command getSetTargetVelocityMetersPerSecondCommand(double velocityMetersPerSecond) {
         return new StartEndCommand(
                 () -> RobotContainer.SHOOTER.setTargetVelocity(velocityMetersPerSecond),
+                RobotContainer.SHOOTER::stop,
+                RobotContainer.SHOOTER
+        );
+    }
+
+    public static Command getSetTargetVelocityMetersPerSecondCommand(DoubleSupplier velocityMetersPerSecond) {
+        return new StartEndCommand(
+                () -> RobotContainer.SHOOTER.setTargetVelocity(velocityMetersPerSecond.getAsDouble()),
                 RobotContainer.SHOOTER::stop,
                 RobotContainer.SHOOTER
         );

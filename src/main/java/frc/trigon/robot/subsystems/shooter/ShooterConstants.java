@@ -19,8 +19,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class ShooterConstants {
     private static final int
-            MASTER_MOTOR_ID = 14,
-            FOLLOWER_MOTOR_ID = 15;
+            MASTER_MOTOR_ID = 15,
+            FOLLOWER_MOTOR_ID = 16;
     private static final String
             MASTER_MOTOR_NAME = "ShooterMasterMotor",
             FOLLOWER_MOTOR_NAME = "ShooterFollowerMotor";
@@ -32,20 +32,17 @@ public class ShooterConstants {
     static final double
             BIG_WHEEL_DIAMETER = 0.1016,
             SMALL_WHEEL_DIAMETER = 0.05;
-    static final double WHEEL_DIAMETER =
-            (BIG_WHEEL_DIAMETER + SMALL_WHEEL_DIAMETER) / 2;
+    static final double WHEEL_DIAMETER = (BIG_WHEEL_DIAMETER + SMALL_WHEEL_DIAMETER) / 2;
     private static final int 
             BIG_WHEEL_GEAR_RATIO = 2,
             SMALL_WHEEL_GEAR_RATIO = 1;
-    static final double GEAR_RATIO =
-            (BIG_WHEEL_GEAR_RATIO + SMALL_WHEEL_GEAR_RATIO) / 2;
+    static final double GEAR_RATIO = (BIG_WHEEL_GEAR_RATIO + SMALL_WHEEL_GEAR_RATIO) / 2;
 
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
-
     private static final double MOMENT_OF_INERTIA = 0.002;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, GEAR_RATIO, MOMENT_OF_INERTIA);
 
