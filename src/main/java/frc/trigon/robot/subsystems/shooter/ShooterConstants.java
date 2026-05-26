@@ -116,5 +116,8 @@ public class ShooterConstants {
 
         final Follower followRequest = new Follower(MASTER_MOTOR_ID, FOLLOWER_ALIGNMENT_TO_MASTER);
         FOLLOWER_MOTOR.setControl(followRequest);
+
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
     }
 }
