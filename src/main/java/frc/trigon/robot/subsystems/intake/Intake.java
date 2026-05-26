@@ -20,11 +20,7 @@ public class Intake extends MotorSubsystem {
             0,
             IntakeConstants.DEFAULT_MAXIMUM_VELOCITY,
             IntakeConstants.DEFAULT_MAXIMUM_ACCELERATION
-            )
-            .withEnableFOC
-            (
-            IntakeConstants.FOC_ENABLED
-    );
+    ).withEnableFOC(IntakeConstants.FOC_ENABLED);
     private IntakeConstants.IntakeState targetState = IntakeConstants.IntakeState.REST;
 
     public Intake() {

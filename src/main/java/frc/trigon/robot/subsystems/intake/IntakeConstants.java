@@ -219,11 +219,11 @@ public class IntakeConstants {
     }
 
     public enum IntakeState {
-        REST(0, Rotation2d.fromDegrees(90), 1),
-        OPEN(0, Rotation2d.fromDegrees(0), 1),
-        CLOSE(0, Rotation2d.fromDegrees(157.51), 1),
-        POWERED_OPEN(6, Rotation2d.fromDegrees(0), 1),
-        POWERED_CLOSE(6, Rotation2d.fromDegrees(157.51), 1);
+        REST(0, MAXIMUM_ANGLE, 1),
+        OPEN(0, MINIMUM_ANGLE, 1),
+        CLOSE(0, MAXIMUM_ANGLE, 1),
+        POWERED_OPEN(6, MINIMUM_ANGLE, 1),
+        POWERED_CLOSE(6, MAXIMUM_ANGLE, 1);
 
 
         public final double targetVoltage;
