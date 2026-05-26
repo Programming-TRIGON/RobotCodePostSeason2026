@@ -31,11 +31,6 @@ public class IndexerConstants {
             MOMENT_OF_INERTIA
     );
 
-    static final Pose3d VISUALIZATION_ORIGIN_POSE = new Pose3d(
-            new Translation3d(0, 0, 0),
-            new Rotation3d(0, 0, 0)
-    );
-
     private static final double MAXIMUM_DISPLAYABLE_VOLTAGE = 12;
     private static final String MECHANISM_NAME = "IndexerMechanism";
     static final SpeedMechanism2d MECHANISM = new SpeedMechanism2d(
@@ -60,7 +55,6 @@ public class IndexerConstants {
         MOTOR.setPhysicsSimulation(SIMULATION);
 
         MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
-        MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
         MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
     }
 

@@ -5,15 +5,14 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 
+import java.util.Set;
+
 public class IndexerCommands {
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
-                (targetVoltage) -> new StartEndCommand(
-                        () -> RobotContainer.INDEXER.setTargetVoltage(targetVoltage),
-                        RobotContainer.INDEXER::stop,
-                        RobotContainer.INDEXER
-                ),
+                RobotContainer.INDEXER::setTargetVoltage,
                 false,
+                Set.of(RobotContainer.INDEXER),
                 "Debugging/IndexerTargetVoltage"
         );
     }
