@@ -15,8 +15,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class LoaderConstants {
     private static final int
-            MASTER_MOTOR_ID = 13,
-            FOLLOWER_MOTOR_ID = 14;
+            MASTER_MOTOR_ID = 11,
+            FOLLOWER_MOTOR_ID = 12;
     private static final String
             MASTER_MOTOR_NAME = "LoaderMasterMotor",
             FOLLOWER_MOTOR_NAME = "LoaderFollowerMotor";
