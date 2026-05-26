@@ -23,6 +23,9 @@ import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.indexer.Indexer;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
+import frc.trigon.robot.subsystems.loader.Loader;
+import frc.trigon.robot.subsystems.loader.LoaderCommands;
+import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.hood.Hood;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.swerve.Swerve;
@@ -38,6 +41,7 @@ public class RobotContainer {
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
     public static final Indexer INDEXER = new Indexer();
+    public static final Loader LOADER = new Loader();
     private LoggedDashboardChooser<Command> autoChooser;
 
     public RobotContainer() {
@@ -62,6 +66,7 @@ public class RobotContainer {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
         INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
+        LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
     }
 
     private void bindControllerCommands() {
