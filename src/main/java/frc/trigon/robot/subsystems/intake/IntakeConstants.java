@@ -108,6 +108,7 @@ public class IntakeConstants {
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
+    static final Rotation2d VISUALIZATION_OFFSET = Rotation2d.fromDegrees(0);
 
     static {
         configureMasterAngleMotor();
