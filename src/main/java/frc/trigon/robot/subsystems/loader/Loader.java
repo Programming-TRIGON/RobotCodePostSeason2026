@@ -16,14 +16,12 @@ public class Loader extends MotorSubsystem {
     @Override
     public void stop() {
         masterMotor.stopMotor();
+        LoaderConstants.LOADER_MECHANISM.setTargetVelocity(0);
     }
 
     @Override
     public void updateMechanism() {
-        LoaderConstants.LOADER_MECHANISM.update(
-                masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE),
-                masterMotor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE)
-        );
+        LoaderConstants.LOADER_MECHANISM.update(masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE));
     }
 
     @Override
@@ -37,6 +35,7 @@ public class Loader extends MotorSubsystem {
     }
 
     void setTargetVoltage(double targetVoltage) {
+        LoaderConstants.LOADER_MECHANISM.setTargetVelocity(targetVoltage);
         masterMotor.setControl(voltageRequest.withOutput(targetVoltage));
     }
 }
