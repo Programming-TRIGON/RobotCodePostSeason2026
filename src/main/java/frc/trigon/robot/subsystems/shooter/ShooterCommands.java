@@ -28,7 +28,7 @@ public class ShooterCommands {
 
     public static Command getShootAtHubCommand() {
         return new ExecuteEndCommand(
-                RobotContainer.SHOOTER::shootAtHub,
+                RobotContainer.SHOOTER::aimAtHub,
                 RobotContainer.SHOOTER::stop,
                 RobotContainer.SHOOTER
         );
@@ -36,7 +36,7 @@ public class ShooterCommands {
 
     public static Command shootForDelivery() {
         return new ExecuteEndCommand(
-                RobotContainer.SHOOTER::shootForDelivery,
+                RobotContainer.SHOOTER::aimForDelivery,
                 RobotContainer.SHOOTER::stop,
                 RobotContainer.SHOOTER
         );
