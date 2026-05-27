@@ -18,17 +18,25 @@ public class ShooterCommands {
         );
     }
 
-    public static Command getSetTargetVelocityMetersPerSecondCommand(DoubleSupplier velocityMetersPerSecond) {
+    public static Command getSetTargetVelocityMetersPerSecondCommand(DoubleSupplier targetVelocityMetersPerSecond) {
         return new StartEndCommand(
-                () -> RobotContainer.SHOOTER.setTargetVelocity(velocityMetersPerSecond.getAsDouble()),
+                () -> RobotContainer.SHOOTER.setTargetVelocity(targetVelocityMetersPerSecond.getAsDouble()),
                 RobotContainer.SHOOTER::stop,
                 RobotContainer.SHOOTER
         );
     }
 
-    public static Command getAimAtHubCommand() {
+    public static Command getShootAtHubCommand() {
         return new ExecuteEndCommand(
                 RobotContainer.SHOOTER::shootAtHub,
+                RobotContainer.SHOOTER::stop,
+                RobotContainer.SHOOTER
+        );
+    }
+
+    public static Command shootForDelivery() {
+        return new ExecuteEndCommand(
+                RobotContainer.SHOOTER::shootForDelivery,
                 RobotContainer.SHOOTER::stop,
                 RobotContainer.SHOOTER
         );

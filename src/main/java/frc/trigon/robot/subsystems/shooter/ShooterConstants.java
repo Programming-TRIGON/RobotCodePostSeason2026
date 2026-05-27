@@ -29,8 +29,7 @@ public class ShooterConstants {
     static final double
             TOP_WHEEL_GEAR_RATIO = 2.0,
             BOTTOM_WHEEL_GEAR_RATIO = 1.0;
-    static final double AVERAGE_GEAR_RATIO =
-            (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
+    static final double AVERAGE_GEAR_RATIO = (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
 
@@ -55,8 +54,7 @@ public class ShooterConstants {
     static final double
             TOP_WHEEL_DIAMETER = 0.1016,
             BOTTOM_WHEEL_DIAMETER = 0.05;
-    static final double EFFECTIVE_WHEEL_DIAMETER =
-            AVERAGE_GEAR_RATIO * 0.5 * ((TOP_WHEEL_DIAMETER / TOP_WHEEL_GEAR_RATIO) + (BOTTOM_WHEEL_DIAMETER / BOTTOM_WHEEL_GEAR_RATIO));
+    static final double EFFECTIVE_WHEEL_DIAMETER = AVERAGE_GEAR_RATIO * 0.5 * ((TOP_WHEEL_DIAMETER / TOP_WHEEL_GEAR_RATIO) + (BOTTOM_WHEEL_DIAMETER / BOTTOM_WHEEL_GEAR_RATIO));
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {
@@ -85,7 +83,7 @@ public class ShooterConstants {
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.Feedback.SensorToMechanismRatio = AVERAGE_GEAR_RATIO;
-        config.Feedback.VelocityFilterTimeConstant = 0.03;
+        config.Feedback.VelocityFilterTimeConstant = 0.003;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = STATOR_CURRENT_LIMIT_AMPS;
