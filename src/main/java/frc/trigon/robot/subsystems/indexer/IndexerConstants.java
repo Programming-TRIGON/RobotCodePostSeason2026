@@ -1,6 +1,7 @@
 package frc.trigon.robot.subsystems.indexer;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -11,19 +12,21 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
+import frc.trigon.lib.hardware.phoenix6.talonfxs.TalonFXSMotor;
+import frc.trigon.lib.hardware.phoenix6.talonfxs.TalonFXSSignal;
 import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class IndexerConstants {
     private static final int MOTOR_ID = 12;
     private static final String MOTOR_NAME = "IndexerMotor";
-    static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
+    static final TalonFXSMotor MOTOR = new TalonFXSMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
     private static final double GEAR_RATIO = 4;
 
     private static final int MOTOR_AMOUNT = 1;
-    private static final DCMotor GEAR_BOX = DCMotor.getKrakenX60(MOTOR_AMOUNT);
+    private static final DCMotor GEAR_BOX = DCMotor.getMinion(MOTOR_AMOUNT);
     private static final double MOMENT_OF_INERTIA = 0.003;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
             GEAR_BOX,
@@ -39,12 +42,12 @@ public class IndexerConstants {
     );
 
     static {
-        final TalonFXConfiguration config = new TalonFXConfiguration();
+        final TalonFXSConfiguration config = new TalonFXSConfiguration();
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
+        config.ExternalFeedback.withSensorToMechanismRatio(GEAR_RATIO);
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 40;
@@ -52,8 +55,8 @@ public class IndexerConstants {
         MOTOR.applyConfiguration(config);
         MOTOR.setPhysicsSimulation(SIMULATION);
 
-        MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
-        MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+        MOTOR.registerSignal(TalonFXSSignal.MOTOR_VOLTAGE, 100);
+        MOTOR.registerSignal(TalonFXSSignal.STATOR_CURRENT, 100);
     }
 
     public enum IndexerState {
