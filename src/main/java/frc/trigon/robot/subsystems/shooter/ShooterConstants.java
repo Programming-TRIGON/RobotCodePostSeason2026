@@ -35,7 +35,7 @@ public class ShooterConstants {
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
-    private static final double MOMENT_OF_INERTIA = 0;
+    private static final double MOMENT_OF_INERTIA = 0.03;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, AVERAGE_GEAR_RATIO, MOMENT_OF_INERTIA);
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
@@ -83,7 +83,7 @@ public class ShooterConstants {
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.Feedback.SensorToMechanismRatio = AVERAGE_GEAR_RATIO;
-        config.Feedback.VelocityFilterTimeConstant = 0.003;
+        config.Feedback.VelocityFilterTimeConstant = 0;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = STATOR_CURRENT_LIMIT_AMPS;
