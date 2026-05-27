@@ -29,7 +29,7 @@ public class LoaderConstants {
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Aligned;
 
     private static final int MOTOR_AMOUNT = 2;
-    private static final DCMotor GEARBOX = DCMotor.getKrakenX44(MOTOR_AMOUNT);
+    private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
     private static final double MOMENT_OF_INERTIA = 0.003;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
             GEARBOX,
