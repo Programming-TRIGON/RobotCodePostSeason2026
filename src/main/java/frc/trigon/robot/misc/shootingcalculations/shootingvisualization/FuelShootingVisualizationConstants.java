@@ -1,7 +1,7 @@
 package frc.trigon.robot.misc.shootingcalculations.shootingvisualization;
 
-import edu.wpi.first.math.util.Units;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
+import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 
 public class FuelShootingVisualizationConstants {
     static final double G_FORCE = 9.794;
@@ -13,10 +13,10 @@ public class FuelShootingVisualizationConstants {
             MOMENT_OF_INERTIA = 2.0 / 5.0 * GAME_PIECE_MASS_KG * GAME_PIECE_RADIUS_METERS * GAME_PIECE_RADIUS_METERS;
 
     static final double
-            TOP_ROLLER_GEAR_RATIO = 1.5,//ShooterConstants.TOP_ROLLER_GEAR_RATIO,
-            BOTTOM_ROLLER_GEAR_RATIO = 2, //ShooterConstants.BOTTOM_ROLLER_GEAR_RATIO;
-            TOP_ROLLER_RADIUS_METERS = 0.025, //ShooterConstants.TOP_ROLLER_RADIUS_METERS,
-            BOTTOM_ROLLER_RADIUS_METERS = Units.inchesToMeters(2); //ShooterConstants.BOTTOM_ROLLER_RADIUS_METERS
+            TOP_ROLLER_GEAR_RATIO = ShooterConstants.TOP_WHEEL_GEAR_RATIO,
+            BOTTOM_ROLLER_GEAR_RATIO = ShooterConstants.BOTTOM_WHEEL_GEAR_RATIO,
+            TOP_ROLLER_RADIUS_METERS = ShooterConstants.TOP_WHEEL_DIAMETER / 2,
+            BOTTOM_ROLLER_RADIUS_METERS = ShooterConstants.BOTTOM_WHEEL_DIAMETER / 2;
 
     // Adjusted drag for symmetric drum shot
     static final double

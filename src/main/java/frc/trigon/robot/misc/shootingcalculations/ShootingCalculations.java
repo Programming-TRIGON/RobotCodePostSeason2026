@@ -2,6 +2,7 @@ package frc.trigon.robot.misc.shootingcalculations;
 
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.lib.utilities.flippable.FlippableTranslation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.FieldConstants;
@@ -40,10 +41,23 @@ public class ShootingCalculations {
         Logger.recordOutput("Shooting/TargetShootingPitchDegrees", targetShootingState.targetPitch().getDegrees());
         Logger.recordOutput("Shooting/TargetShootingVelocityMPS", targetShootingState.targetShootingVelocityMetersPerSecond());
         Logger.recordOutput("Shooting/TargetMode", currentTargetLocation.name());
+        Logger.recordOutput("Shooting/IsReadyToShoot", isReadyToShoot());
     }
 
     public ShootingState getTargetShootingState() {
         return targetShootingState;
+    }
+
+    /**
+     * @return True if the chassis, hood pitch, and shooter wheels are all at their PID setpoints.
+     */
+    @AutoLogOutput(key = "Shooting/isReadyToShoot")
+    public boolean isReadyToShoot() {
+        final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
+        final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
+        final boolean isVelocityReady = RobotContainer.SHOOTER.atTargetVelocity();
+
+        return isYawReady && isPitchReady && isVelocityReady;
     }
 
     @AutoLogOutput(key = "Shooting/CurrentFuelExitPosition")
@@ -54,32 +68,26 @@ public class ShootingCalculations {
     }
 
     public Translation3d calculateFieldRelativeFuelExitPose(Pose2d robotPose, Rotation2d pitch, int columnIndex) {
+        // 1. Calculate how far left or right the ball is from the center of the drum
+        double colOffset = (columnIndex - (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
+
+        // 2. Apply that lateral shift
+        Transform3d laneSpecificExitTransform = new Transform3d(
+                new Translation3d(0, colOffset, 0),
+                new Rotation3d()
+        );
+
+        // 3. Apply the pitch rotation to the exit pose
         final Transform3d pitchTransform = new Transform3d(
                 new Translation3d(),
                 new Rotation3d(0, -pitch.getRadians(), 0)
         );
 
-        Transform3d laneSpecificExitTransform = getLaneSpecificExitTransform(columnIndex);
+        final Pose3d baseExitPose = new Pose3d(robotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+        final Pose3d pitchedExitPose = baseExitPose.transformBy(pitchTransform);
 
-        final Pose3d shooterOriginPose = new Pose3d(robotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
-        final Pose3d pitchedShooterPose = shooterOriginPose.transformBy(pitchTransform);
-
-        return pitchedShooterPose.transformBy(laneSpecificExitTransform).getTranslation();
-    }
-
-    private static Transform3d getLaneSpecificExitTransform(int columnIndex) {
-        double colOffset = (columnIndex - (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
-
-        Translation3d laneSpecificExitTranslation = new Translation3d(
-                ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getX(),
-                ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getY() + colOffset,
-                ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getZ()
-        );
-
-        return new Transform3d(
-                laneSpecificExitTranslation,
-                ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getRotation()
-        );
+        // 4. Combine the pitched pose with the lane offset
+        return pitchedExitPose.transformBy(laneSpecificExitTransform).getTranslation();
     }
 
     private ShootingState calculateTargetShootingState() {

@@ -59,6 +59,7 @@ public class RobotContainer {
     private void configureBindings() {
         bindDefaultCommands();
         bindControllerCommands();
+//        configureSysIDBindings(SHOOTER);
     }
 
     private void bindDefaultCommands() {
@@ -75,6 +76,8 @@ public class RobotContainer {
         OperatorConstants.DRIVE_FROM_DPAD_TRIGGER.whileTrue(CommandConstants.SELF_RELATIVE_DRIVE_FROM_DPAD_COMMAND);
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
         OperatorConstants.CAMERAS_DISCONNECTED_TRIGGER.onTrue(CommandConstants.INDICATE_CAMERAS_DISCONNECTED_COMMAND);
+        OperatorConstants.DEBUGGING_TRIGGER.whileTrue(HoodCommands.getDebuggingCommand().alongWith(IndexerCommands.getDebuggingCommand(), IntakeCommands.getDebuggingCommand(), LoaderCommands.getDebuggingCommand(), ShooterCommands.getDebuggingCommand()));
+        OperatorConstants.OPERATOR_CONTROLLER.r().whileTrue(ShooterCommands.getSetTargetVelocityCommand(() -> 4));
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {
