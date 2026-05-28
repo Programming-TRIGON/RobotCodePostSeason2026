@@ -66,7 +66,7 @@ public class HoodConstants {
     static final Rotation2d
             REST_ANGLE = Rotation2d.fromDegrees(20),
             DELIVERY_ANGLE = Rotation2d.fromDegrees(50),
-            EJECTION_ANGLE = Rotation2d.fromDegrees(60);
+            EJECTION_ANGLE = Rotation2d.fromDegrees(52);
 
     static {
         configureMotor();
