@@ -4,26 +4,40 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 
 public class ShootingMap {
-    private static final InterpolatingTreeMap<Double, ShotParameters> INTERPOLATION_MAP = new InterpolatingTreeMap<>(
+    private static final InterpolatingTreeMap<Double, ShotParameters> HUB_MAP = new InterpolatingTreeMap<>(
+            (Double start, Double end, Double q) -> (q - start) / (end - start),
+            ShotParameters::interpolate
+    );
+
+    private static final InterpolatingTreeMap<Double, ShotParameters> DELIVERY_MAP = new InterpolatingTreeMap<>(
             (Double start, Double end, Double q) -> (q - start) / (end - start),
             ShotParameters::interpolate
     );
 
     static {
-        // TODO: Replace with actual calibration data.
-        addPoint(0, 0, Rotation2d.fromDegrees(0), 0);
-        addPoint(0, 0, Rotation2d.fromDegrees(0), 0);
-        addPoint(0, 0, Rotation2d.fromDegrees(0), 0);
-        addPoint(0, 0, Rotation2d.fromDegrees(0), 0);
+        addHubPoints();
+        addDeliveryPoints();
     }
 
-    private static void addPoint(double distanceMeters, double velocityMetersPerSecond, Rotation2d pitch, double timeOfFlightSeconds) {
-        INTERPOLATION_MAP.put(distanceMeters, new ShotParameters(velocityMetersPerSecond, pitch, timeOfFlightSeconds));
+    private static void addHubPoints() {
+        addPoint(HUB_MAP, 0, 0, Rotation2d.fromDegrees(0), 0);
+        addPoint(HUB_MAP, 0, 0, Rotation2d.fromDegrees(0), 0);
+    }
+    
+    private static void addDeliveryPoints() {
+        addPoint(DELIVERY_MAP, 0, 0, Rotation2d.fromDegrees(0), 0);
+        addPoint(DELIVERY_MAP, 0, 0, Rotation2d.fromDegrees(0), 0);
     }
 
-    public static ShotParameters getInterpolatedParameters(double distanceMeters) {
-        if (INTERPOLATION_MAP.get(distanceMeters) == null)
+    private static void addPoint(InterpolatingTreeMap<Double, ShotParameters> map, double distanceMeters, double velocityMetersPerSecond, Rotation2d pitch, double timeOfFlightSeconds) {
+        map.put(distanceMeters, new ShotParameters(velocityMetersPerSecond, pitch, timeOfFlightSeconds));
+    }
+
+    public static ShotParameters getInterpolatedParameters(double distanceMeters, boolean isDelivery) {
+        InterpolatingTreeMap<Double, ShotParameters> activeMap = isDelivery ? DELIVERY_MAP : HUB_MAP;
+
+        if (activeMap.get(distanceMeters) == null)
             return new ShotParameters(0, new Rotation2d(), 0);
-        return INTERPOLATION_MAP.get(distanceMeters);
+        return activeMap.get(distanceMeters);
     }
 }

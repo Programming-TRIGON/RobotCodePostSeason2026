@@ -2,6 +2,7 @@ package frc.trigon.robot.misc.shootingcalculations;
 
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.trigon.lib.utilities.flippable.FlippableTranslation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
@@ -13,13 +14,37 @@ public class ShootingCalculations {
     private static ShootingCalculations INSTANCE = null;
     private ShootingState targetShootingState = ShootingState.empty();
 
+    public enum TargetLocation {
+        HUB(FieldConstants.HUB_POSITION, false),
+        RIGHT_DELIVERY_LOCATION(FieldConstants.RIGHT_DELIVERY_POSITION, true),
+        LEFT_DELIVERY_LOCATION(FieldConstants.LEFT_DELIVERY_POSITION, true);
+
+        public final FlippableTranslation2d position;
+        public final boolean isDelivery;
+
+        TargetLocation(FlippableTranslation2d position, boolean isDelivery) {
+            this.position = position;
+            this.isDelivery = isDelivery;
+        }
+    }
+
+    // Default to the Hub
+    private TargetLocation currentTargetLocation = TargetLocation.HUB;
+
     public static ShootingCalculations getInstance() {
-        if (INSTANCE == null)
-            INSTANCE = new ShootingCalculations();
+        if (INSTANCE == null) INSTANCE = new ShootingCalculations();
         return INSTANCE;
     }
 
     private ShootingCalculations() {
+    }
+
+    public void setTargetShootingLocation(TargetLocation newTarget) {
+        this.currentTargetLocation = newTarget;
+    }
+
+    public TargetLocation getCurrentTargetShootingLocation() {
+        return currentTargetLocation;
     }
 
     public void updateCalculations() {
@@ -28,6 +53,7 @@ public class ShootingCalculations {
         Logger.recordOutput("Shooting/TargetShootingYawDegrees", targetShootingState.targetFieldRelativeYaw().getDegrees());
         Logger.recordOutput("Shooting/TargetShootingPitchDegrees", targetShootingState.targetPitch().getDegrees());
         Logger.recordOutput("Shooting/TargetShootingVelocityMPS", targetShootingState.targetShootingVelocityMetersPerSecond());
+        Logger.recordOutput("Shooting/TargetMode", currentTargetLocation.name());
     }
 
     public ShootingState getTargetShootingState() {
@@ -47,21 +73,17 @@ public class ShootingCalculations {
                 new Rotation3d(0, -pitch.getRadians(), 0)
         );
 
-        // NEW: Calculate how far left or right the ball is from the center of the drum
-        // Columns 0, 1, 2, 3 become Offsets: -1.5, -0.5, 0.5, 1.5 multiplied by the spacing
         Transform3d laneSpecificExitTransform = getLaneSpecificExitTransform(columnIndex);
 
         final Pose3d shooterOriginPose = new Pose3d(robotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
         final Pose3d pitchedShooterPose = shooterOriginPose.transformBy(pitchTransform);
 
-        // Use the new lane-specific transform to pinpoint the 3D exit location
         return pitchedShooterPose.transformBy(laneSpecificExitTransform).getTranslation();
     }
 
     private static Transform3d getLaneSpecificExitTransform(int columnIndex) {
         double colOffset = (columnIndex - (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
 
-        // Apply that lateral shift to the base shooter exit position
         Translation3d laneSpecificExitTranslation = new Translation3d(
                 ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getX(),
                 ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getY() + colOffset,
@@ -81,24 +103,26 @@ public class ShootingCalculations {
     }
 
     public ShootingState calculateTargetShootingState(Pose2d robotPose, ChassisSpeeds fieldRelativeChassisSpeeds) {
-        final Translation2d physicalHubPosition = FieldConstants.HUB_POSITION.get();
+        // Pull the physical coordinate of the active target
+        final Translation2d targetPhysicalPosition = currentTargetLocation.position.get();
         final Translation2d currentRobotPosition = robotPose.getTranslation();
         final Translation2d robotVelocity = new Translation2d(fieldRelativeChassisSpeeds.vxMetersPerSecond, fieldRelativeChassisSpeeds.vyMetersPerSecond);
 
-        Translation2d virtualHub = physicalHubPosition;
-        double distanceToVirtualHub = currentRobotPosition.getDistance(virtualHub);
+        Translation2d virtualTarget = targetPhysicalPosition;
+        double distanceToVirtualTarget = currentRobotPosition.getDistance(virtualTarget);
 
-        ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualHub);
+        // Pull from the correct interpolation map (Hub vs Delivery)
+        ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
 
         for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_HUB_CALCULATION_ITERATIONS; i++) {
-            virtualHub = physicalHubPosition.minus(robotVelocity.times(parameters.timeOfFlight()));
-            distanceToVirtualHub = currentRobotPosition.getDistance(virtualHub);
-            parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualHub);
+            virtualTarget = targetPhysicalPosition.minus(robotVelocity.times(parameters.timeOfFlight()));
+            distanceToVirtualTarget = currentRobotPosition.getDistance(virtualTarget);
+            parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
         }
 
-        final Rotation2d targetYaw = virtualHub.minus(currentRobotPosition).getAngle();
+        final Rotation2d targetYaw = virtualTarget.minus(currentRobotPosition).getAngle();
 
-        Logger.recordOutput("Shooting/DistanceToVirtualHub", distanceToVirtualHub);
+        Logger.recordOutput("Shooting/DistanceToVirtualTarget", distanceToVirtualTarget);
         Logger.recordOutput("Shooting/InterpolatedTimeOfFlight", parameters.timeOfFlight());
 
         return new ShootingState(
