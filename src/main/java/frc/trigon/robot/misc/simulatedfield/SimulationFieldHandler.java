@@ -62,37 +62,38 @@ public class SimulationFieldHandler {
 
     private static void updateEjection() {
         if (hasFuel()) {
-            final SimulatedGamePiece ejectableFuel = getEjectableFuel();
-            if (ejectableFuel != null) {
-                ejectGamePiece(ejectableFuel);
+            final List<SimulatedGamePiece> ejectableFuels = getEjectableFuels();
+            if (!ejectableFuels.isEmpty()) {
+                ejectGamePieces(ejectableFuels);
             }
         }
     }
 
-    private static SimulatedGamePiece getEjectableFuel() {
+    private static List<SimulatedGamePiece> getEjectableFuels() {
+        final List<SimulatedGamePiece> ejectable = new ArrayList<>();
         for (SimulatedGamePiece heldFuel : HELD_FUEL) {
             if (!heldFuel.isIndexed()) continue;
 
-            // In a dumper setup, pieces in row 0 are the ones currently being ejected
             if (heldFuel.getIndexerGridSlot().getX() == 0) {
-                return heldFuel;
+                ejectable.add(heldFuel);
             }
         }
-        return null;
+        return ejectable;
     }
 
-    private static void ejectGamePiece(SimulatedGamePiece ejectedGamePiece) {
-        int exitColumn = (int) ejectedGamePiece.getIndexerGridSlot().getY();
+    private static void ejectGamePieces(List<SimulatedGamePiece> ejectedGamePieces) {
+        for (SimulatedGamePiece piece : ejectedGamePieces) {
+            int exitColumn = (int) piece.getIndexerGridSlot().getY();
+            piece.release();
+            HELD_FUEL.remove(piece);
 
-        ejectedGamePiece.release();
-        HELD_FUEL.remove(ejectedGamePiece);
+            CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(piece, exitColumn));
+        }
 
         for (SimulatedGamePiece piece : HELD_FUEL) {
             piece.release();
             piece.resetIndexing();
         }
-
-        CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(ejectedGamePiece, exitColumn));
     }
 
     private static void updateHeldFuelPoses() {
