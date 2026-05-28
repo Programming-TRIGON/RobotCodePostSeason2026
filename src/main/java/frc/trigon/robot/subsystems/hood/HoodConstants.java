@@ -52,7 +52,7 @@ public class HoodConstants {
             MECHANISM_COLOR
     );
     static final Pose3d HOOD_VISUALIZATION_ORIGIN_POINT = new Pose3d(
-            new Translation3d(0, 0.27363801, 0.4532351),
+            new Translation3d(-0.2758, 0, 0.45400412),
             new Rotation3d(0, 20, 0)
     );
 
