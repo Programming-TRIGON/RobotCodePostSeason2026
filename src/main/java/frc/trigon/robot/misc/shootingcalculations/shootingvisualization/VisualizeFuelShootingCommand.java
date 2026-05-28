@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePiece;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
@@ -44,7 +43,6 @@ public class VisualizeFuelShootingCommand extends Command {
 
     @Override
     public void initialize() {
-        // PASS THE COLUMN TO THE EXIT POSE CALCULATOR
         shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose(startingColumn));
 
         currentFuelVelocity = calculateFuelExitVelocityVector();
@@ -56,12 +54,12 @@ public class VisualizeFuelShootingCommand extends Command {
 
     @Override
     public void execute() {
-        if (shotFuel.isScoredInHub() && !hasLoggedScore) {
-            System.out.println("[Sim Calibration] Shot scored! Simulated Time of Flight: " + simulatedFlightTimeSeconds + "s" +
-                    " DistanceFromHub: " + RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getDistance(FieldConstants.HUB_POSITION.get()));
-            hasLoggedScore = true;
-            ejectFromHub();
-        }
+        ShootingCalculations.TargetLocation activeTarget = SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation();
+
+        if (!activeTarget.isDelivery)
+            executeForShooting(activeTarget);
+        else
+            executeForDelivery(activeTarget);
 
         int iterations = (int) (RobotHardwareStats.getPeriodicTimeSeconds() / FuelShootingVisualizationConstants.SIMULATION_TIME_STEP_SECONDS);
         for (int i = 0; i < iterations; i++) {
@@ -79,6 +77,28 @@ public class VisualizeFuelShootingCommand extends Command {
     public void end(boolean interrupted) {
         final Translation3d currentPosition = shotFuel.getPosition();
         shotFuel.updatePosition(new Translation3d(currentPosition.getX(), currentPosition.getY(), SimulatedGamePieceConstants.GamePieceType.FUEL.originPointHeightOffGroundMeters));
+    }
+
+    private void executeForShooting(ShootingCalculations.TargetLocation activeTarget) {
+        if (shotFuel.isScoredInHub() && !hasLoggedScore) {
+            System.out.println("[Sim Calibration] Hub Shot scored! ToF: " + simulatedFlightTimeSeconds + "s" +
+                    " Distance: " + RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getDistance(activeTarget.position.get()));
+            hasLoggedScore = true;
+            ejectFromHub();
+        }
+    }
+
+    private void executeForDelivery(ShootingCalculations.TargetLocation activeTarget) {
+        if (shotFuel.getPosition().getZ() <= FuelShootingVisualizationConstants.END_SIMULATION_HEIGHT_METERS && !hasLoggedScore) {
+            double distanceMissedBy = shotFuel.getPosition().toTranslation2d().getDistance(activeTarget.position.get());
+
+            System.out.println("--- DELIVERY SIMULATION RESULT ---");
+            System.out.println("Target: " + activeTarget.name());
+            System.out.println("Missed coordinate by: " + String.format("%.2f", distanceMissedBy) + " meters");
+            System.out.println("Simulated ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s");
+
+            hasLoggedScore = true;
+        }
     }
 
     private void initializeSpin(double fuelExitVelocityMetersPerSecond) {

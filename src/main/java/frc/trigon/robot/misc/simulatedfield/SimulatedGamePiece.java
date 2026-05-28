@@ -67,9 +67,8 @@ public class SimulatedGamePiece {
         if (indexerGridSlot != null) {
             isIndexed = true;
             OCCUPIED_INDEXER_SLOTS.add(indexerGridSlot);
-        } else {
+        } else
             isIndexed = false;
-        }
     }
 
     Translation2d getIndexerGridSlot() {

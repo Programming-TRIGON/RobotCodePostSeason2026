@@ -82,13 +82,11 @@ public class SimulationFieldHandler {
     }
 
     private static void ejectGamePiece(SimulatedGamePiece ejectedGamePiece) {
-        // CAPTURE THE COLUMN BEFORE IT IS RELEASED FROM THE INDEXER
         int exitColumn = (int) ejectedGamePiece.getIndexerGridSlot().getY();
 
         ejectedGamePiece.release();
         HELD_FUEL.remove(ejectedGamePiece);
 
-        // Shift remaining pieces forward in the roller indexer
         for (SimulatedGamePiece piece : HELD_FUEL) {
             piece.release();
             piece.resetIndexing();
