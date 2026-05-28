@@ -102,7 +102,7 @@ public class IntakeConstants {
             INTAKE_MOTOR_MAXIMUM_DISPLAYABLE_VOLTAGE
     );
     static final Pose3d INTAKE_VISUALIZATION_ORIGIN_POINT = new Pose3d(
-            new Translation3d(-0.31, 0, 0.19105),
+            new Translation3d(0.31, 0, 0.19105),
             new Rotation3d(0, 0, 0)
     );
 
@@ -224,7 +224,7 @@ public class IntakeConstants {
         CLOSE(0, MAXIMUM_ANGLE, 1),
         POWERED_OPEN(6, MINIMUM_ANGLE, 1),
         POWERED_CLOSE(6, MAXIMUM_ANGLE, 1);
-        
+
         public final double targetVoltage;
         public final Rotation2d targetAngle;
         public final double speedScalar;

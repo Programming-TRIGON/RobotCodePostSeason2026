@@ -9,7 +9,6 @@ import frc.trigon.robot.misc.objectdetection.objectdetectioncamera.ObjectDetecti
 import frc.trigon.robot.misc.objectdetection.objectdetectioncamera.ObjectDetectionCameraInputsAutoLogged;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePiece;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
-import frc.trigon.robot.misc.simulatedfield.SimulationFieldHandler;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -80,12 +79,12 @@ public class SimulationObjectDetectionCameraIO extends ObjectDetectionCameraIO {
      * @return the placements of the visible objects, as a pair of the object and the rotation of the object relative to the camera
      */
     private ArrayList<Pair<SimulatedGamePiece, Rotation3d>> calculateVisibleGamePiecesRotations(Pose3d cameraPose, int objectID) {
-        final ArrayList<SimulatedGamePiece> gamePiecesOnField = SimulationFieldHandler.getSimulatedGamePieces();
+        final ArrayList<SimulatedGamePiece> gamePiecesOnField = SimulatedGamePiece.getSimulatedGamePieces();
         final ArrayList<Pair<SimulatedGamePiece, Rotation3d>> visibleObjects = new ArrayList<>();
         for (SimulatedGamePiece currentObject : gamePiecesOnField) {
-            if (currentObject.isScored())
+            if (currentObject.isScoredInHub())
                 continue;
-            final Rotation3d cameraAngleToObject = calculateCameraAngleToObject(currentObject.getPose(), cameraPose);
+            final Rotation3d cameraAngleToObject = calculateCameraAngleToObject(new Pose3d(currentObject.getPosition(), new Rotation3d()), cameraPose);
 
             if (isObjectWithinFOV(cameraAngleToObject))
                 visibleObjects.add(new Pair<>(currentObject, cameraAngleToObject));
@@ -144,7 +143,7 @@ public class SimulationObjectDetectionCameraIO extends ObjectDetectionCameraIO {
 
     private void logVisibleGamePieces(ArrayList<Pair<SimulatedGamePiece, Rotation3d>>[] visibleGamePieces) {
         for (int i = 0; i < visibleGamePieces.length; i++) {
-            final String gamePieceTypeName = SimulatedGamePieceConstants.GamePieceType.getNameFromID(i);
+            final String gamePieceTypeName = SimulatedGamePieceConstants.GamePieceType.FUEL.name();
             Logger.recordOutput(hostname + "/Visible" + gamePieceTypeName + "poses", mapSimulatedGamePieceListToPoseArray(visibleGamePieces[i]));
         }
     }
@@ -152,7 +151,7 @@ public class SimulationObjectDetectionCameraIO extends ObjectDetectionCameraIO {
     private Pose3d[] mapSimulatedGamePieceListToPoseArray(ArrayList<Pair<SimulatedGamePiece, Rotation3d>> gamePieces) {
         final Pose3d[] poses = new Pose3d[gamePieces.size()];
         for (int i = 0; i < poses.length; i++)
-            poses[i] = gamePieces.get(i).getFirst().getPose();
+            poses[i] = new Pose3d(gamePieces.get(i).getFirst().getPosition(), new Rotation3d());
 
         return poses;
     }

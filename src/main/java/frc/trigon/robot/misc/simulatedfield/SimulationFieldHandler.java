@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.shootingcalculations.shootingvisualization.VisualizeFuelShootingCommand;
+import frc.trigon.robot.subsystems.indexer.IndexerConstants;
+import frc.trigon.robot.subsystems.intake.IntakeConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +57,7 @@ public class SimulationFieldHandler {
     }
 
     private static boolean isCollectingFuel() {
-        return RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.INTAKE);
+        return RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.POWERED_OPEN);
     }
 
     private static void updateEjection() {
@@ -80,6 +82,9 @@ public class SimulationFieldHandler {
     }
 
     private static void ejectGamePiece(SimulatedGamePiece ejectedGamePiece) {
+        // CAPTURE THE COLUMN BEFORE IT IS RELEASED FROM THE INDEXER
+        int exitColumn = (int) ejectedGamePiece.getIndexerGridSlot().getY();
+
         ejectedGamePiece.release();
         HELD_FUEL.remove(ejectedGamePiece);
 
@@ -89,7 +94,8 @@ public class SimulationFieldHandler {
             piece.resetIndexing();
         }
 
-        CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(ejectedGamePiece));
+        // PASS THE COLUMN TO THE COMMAND
+        CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(ejectedGamePiece, exitColumn));
     }
 
     private static void updateHeldFuelPoses() {
@@ -98,9 +104,8 @@ public class SimulationFieldHandler {
                 heldFuel.resetIndexing();
             }
 
-            if (heldFuel.getIndexerGridSlot() != null) {
+            if (heldFuel.getIndexerGridSlot() != null)
                 heldFuel.updatePosition(calculateHeldFuelFieldRelativePosition(heldFuel.getIndexerGridSlot()));
-            }
         }
     }
 
@@ -110,11 +115,10 @@ public class SimulationFieldHandler {
         double colOffset = (gridSlot.getY() - (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
         double rowOffset = gridSlot.getX() * -SimulatedGamePieceConstants.INDEXER_ROW_SPACING_METERS; // Negative goes back into the robot
 
-        Translation3d indexerOffset = SimulatedGamePieceConstants.INDEXER_BASE_OFFSET
-                .plus(new Translation3d(rowOffset, colOffset, 0));
+        Translation3d indexerOffset = new Translation3d(rowOffset, colOffset, 0);
 
         // Use the new indexer subsystem pose calculation
-        final Pose3d robotRelativeIndexerPose = IndexerConstants.ORIGIN_POSE;
+        final Pose3d robotRelativeIndexerPose = IndexerConstants.FUEL_IN_INDEXER_POSE;
 
         final Transform3d fuelOffsetFromIndexerPose = new Transform3d(
                 indexerOffset,

@@ -26,22 +26,27 @@ public class VisualizeFuelShootingCommand extends Command {
     private final SimulatedGamePiece shotFuel;
     private Translation3d currentFuelVelocity;
     private double currentSpinRadiansPerSecond;
+    private final int startingColumn; // NEW: Track which lane the ball is in
 
     // ToF Calibration Trackers
     private double simulatedFlightTimeSeconds = 0;
     private boolean hasLoggedScore = false;
 
-    public VisualizeFuelShootingCommand(SimulatedGamePiece shotFuel) {
-        this.shotFuel = shotFuel;
+    public static InstantCommand getScheduleShotCommand(SimulatedGamePiece shotFuel, int startingColumn) {
+        return new InstantCommand(() -> CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(shotFuel, startingColumn)));
     }
 
-    public static InstantCommand getScheduleShotCommand(SimulatedGamePiece shotFuel) {
-        return new InstantCommand(() -> CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(shotFuel)));
+    public VisualizeFuelShootingCommand(SimulatedGamePiece shotFuel, int startingColumn) {
+        this.shotFuel = shotFuel;
+        this.startingColumn = startingColumn;
     }
+
 
     @Override
     public void initialize() {
-        shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose());
+        // PASS THE COLUMN TO THE EXIT POSE CALCULATOR
+        shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose(startingColumn));
+
         currentFuelVelocity = calculateFuelExitVelocityVector();
         simulatedFlightTimeSeconds = 0;
         hasLoggedScore = false;
@@ -51,7 +56,7 @@ public class VisualizeFuelShootingCommand extends Command {
 
     @Override
     public void execute() {
-        if (isScoredInHub() && !hasLoggedScore) {
+        if (shotFuel.isScoredInHub() && !hasLoggedScore) {
             System.out.println("[Sim Calibration] Shot scored! Simulated Time of Flight: " + simulatedFlightTimeSeconds + "s" +
                     " DistanceFromHub: " + RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getDistance(FieldConstants.HUB_POSITION.get()));
             hasLoggedScore = true;
@@ -157,10 +162,6 @@ public class VisualizeFuelShootingCommand extends Command {
         final Rotation3d ejectionRotation = new Rotation3d(0, 0, Units.degreesToRadians(getRandomNumber(-SimulatedGamePieceConstants.EJECTION_FROM_HUB_MAXIMUM_ANGLE.getDegrees(), SimulatedGamePieceConstants.EJECTION_FROM_HUB_MAXIMUM_ANGLE.getDegrees())) + (Flippable.isRedAlliance() ? Math.PI : 0));
         shotFuel.updatePosition(SimulatedGamePieceConstants.EJECT_FUEL_FROM_HUB_POSITION.get());
         currentFuelVelocity = ejectionPower.rotateBy(ejectionRotation);
-    }
-
-    private boolean isScoredInHub() {
-        return shotFuel.getPosition().getDistance(SimulatedGamePieceConstants.SCORE_CHECK_POSITION.get()) < SimulatedGamePieceConstants.SCORE_TOLERANCE_METERS;
     }
 
     private double getRandomNumber(double min, double max) {

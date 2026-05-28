@@ -42,6 +42,10 @@ public class SimulatedGamePiece {
         return fieldRelativePosition;
     }
 
+    public boolean isScoredInHub() {
+        return getPosition().getDistance(SimulatedGamePieceConstants.SCORE_CHECK_POSITION.get()) < SimulatedGamePieceConstants.SCORE_TOLERANCE_METERS;
+    }
+
     void release() {
         if (indexerGridSlot != null) {
             OCCUPIED_INDEXER_SLOTS.remove(indexerGridSlot);

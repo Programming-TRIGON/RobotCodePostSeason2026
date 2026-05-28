@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.FieldConstants;
+import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
+import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -33,22 +35,43 @@ public class ShootingCalculations {
     }
 
     @AutoLogOutput(key = "Shooting/CurrentFuelExitPosition")
-    public Translation3d calculateCurrentFuelExitPose() {
+    public Translation3d calculateCurrentFuelExitPose(int columnIndex) {
         final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
         final Rotation2d shooterPitch = RobotContainer.HOOD.getCurrentAngle();
-        return calculateFieldRelativeFuelExitPose(robotPose, shooterPitch);
+        return calculateFieldRelativeFuelExitPose(robotPose, shooterPitch, columnIndex);
     }
 
-    public Translation3d calculateFieldRelativeFuelExitPose(Pose2d robotPose, Rotation2d pitch) {
+    public Translation3d calculateFieldRelativeFuelExitPose(Pose2d robotPose, Rotation2d pitch, int columnIndex) {
         final Transform3d pitchTransform = new Transform3d(
                 new Translation3d(),
                 new Rotation3d(0, -pitch.getRadians(), 0)
         );
 
-        final Pose3d shooterOriginPose = new Pose3d(robotPose).transformBy(RobotContainer.SHOOTER.getComponenetPose());
+        // NEW: Calculate how far left or right the ball is from the center of the drum
+        // Columns 0, 1, 2, 3 become Offsets: -1.5, -0.5, 0.5, 1.5 multiplied by the spacing
+        Transform3d laneSpecificExitTransform = getLaneSpecificExitTransform(columnIndex);
+
+        final Pose3d shooterOriginPose = new Pose3d(robotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
         final Pose3d pitchedShooterPose = shooterOriginPose.transformBy(pitchTransform);
 
-        return pitchedShooterPose.transformBy(ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT).getTranslation();
+        // Use the new lane-specific transform to pinpoint the 3D exit location
+        return pitchedShooterPose.transformBy(laneSpecificExitTransform).getTranslation();
+    }
+
+    private static Transform3d getLaneSpecificExitTransform(int columnIndex) {
+        double colOffset = (columnIndex - (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
+
+        // Apply that lateral shift to the base shooter exit position
+        Translation3d laneSpecificExitTranslation = new Translation3d(
+                ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getX(),
+                ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getY() + colOffset,
+                ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getZ()
+        );
+
+        return new Transform3d(
+                laneSpecificExitTranslation,
+                ShootingCalculationsConstants.SHOOTER_TO_FUEL_EXIT.getRotation()
+        );
     }
 
     private ShootingState calculateTargetShootingState() {

@@ -5,6 +5,9 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -56,6 +59,10 @@ public class ShooterConstants {
             BOTTOM_WHEEL_DIAMETER = 0.05;
     static final double EFFECTIVE_WHEEL_DIAMETER = AVERAGE_GEAR_RATIO * 0.5 * ((TOP_WHEEL_DIAMETER / TOP_WHEEL_GEAR_RATIO) + (BOTTOM_WHEEL_DIAMETER / BOTTOM_WHEEL_GEAR_RATIO));
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
+    public static final Transform3d FUEL_EXIT_SHOOTER_POSE = new Transform3d(
+            new Translation3d(-0.160855914, 0, 0.462125568),
+            new Rotation3d()
+    );
 
     static {
         configureMasterMotor();

@@ -18,10 +18,9 @@ public class SimulatedGamePieceConstants {
     static final int MAXIMUM_HELD_FUEL = 40; //TODO: get
 
     // Grid definitions for 4-wide roller indexer
-    static final int INDEXER_WIDTH_CAPACITY = 4;
+    public static final int INDEXER_WIDTH_CAPACITY = 4;
     static final double INDEXER_ROW_SPACING_METERS = 0.16;
-    static final double INDEXER_COL_SPACING_METERS = 0.16;
-    static final Translation3d INDEXER_BASE_OFFSET = new Translation3d(-0.1, 0, 0.15);
+    public static final double INDEXER_COL_SPACING_METERS = 0.16;
 
     private static final int
             STARTING_FUEL_ROWS = 12,
