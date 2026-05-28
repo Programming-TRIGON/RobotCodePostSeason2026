@@ -92,7 +92,6 @@ public class SimulationFieldHandler {
             piece.resetIndexing();
         }
 
-        // PASS THE COLUMN TO THE COMMAND
         CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(ejectedGamePiece, exitColumn));
     }
 

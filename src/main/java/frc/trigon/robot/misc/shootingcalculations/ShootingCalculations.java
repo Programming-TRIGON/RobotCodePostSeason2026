@@ -14,20 +14,6 @@ public class ShootingCalculations {
     private static ShootingCalculations INSTANCE = null;
     private ShootingState targetShootingState = ShootingState.empty();
 
-    public enum TargetLocation {
-        HUB(FieldConstants.HUB_POSITION, false),
-        RIGHT_DELIVERY_LOCATION(FieldConstants.RIGHT_DELIVERY_POSITION, true),
-        LEFT_DELIVERY_LOCATION(FieldConstants.LEFT_DELIVERY_POSITION, true);
-
-        public final FlippableTranslation2d position;
-        public final boolean isDelivery;
-
-        TargetLocation(FlippableTranslation2d position, boolean isDelivery) {
-            this.position = position;
-            this.isDelivery = isDelivery;
-        }
-    }
-
     // Default to the Hub
     private TargetLocation currentTargetLocation = TargetLocation.HUB;
 
@@ -103,7 +89,6 @@ public class ShootingCalculations {
     }
 
     public ShootingState calculateTargetShootingState(Pose2d robotPose, ChassisSpeeds fieldRelativeChassisSpeeds) {
-        // Pull the physical coordinate of the active target
         final Translation2d targetPhysicalPosition = currentTargetLocation.position.get();
         final Translation2d currentRobotPosition = robotPose.getTranslation();
         final Translation2d robotVelocity = new Translation2d(fieldRelativeChassisSpeeds.vxMetersPerSecond, fieldRelativeChassisSpeeds.vyMetersPerSecond);
@@ -111,7 +96,6 @@ public class ShootingCalculations {
         Translation2d virtualTarget = targetPhysicalPosition;
         double distanceToVirtualTarget = currentRobotPosition.getDistance(virtualTarget);
 
-        // Pull from the correct interpolation map (Hub vs Delivery)
         ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
 
         for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_HUB_CALCULATION_ITERATIONS; i++) {
@@ -130,5 +114,19 @@ public class ShootingCalculations {
                 parameters.pitch(),
                 parameters.velocity()
         );
+    }
+
+    public enum TargetLocation {
+        HUB(FieldConstants.HUB_POSITION, false),
+        RIGHT_DELIVERY_LOCATION(FieldConstants.RIGHT_DELIVERY_POSITION, true),
+        LEFT_DELIVERY_LOCATION(FieldConstants.LEFT_DELIVERY_POSITION, true);
+
+        public final FlippableTranslation2d position;
+        public final boolean isDelivery;
+
+        TargetLocation(FlippableTranslation2d position, boolean isDelivery) {
+            this.position = position;
+            this.isDelivery = isDelivery;
+        }
     }
 }
