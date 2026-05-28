@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.commands.commandclasses.GamePieceAutoDriveCommand;
 import frc.trigon.robot.constants.AutonomousConstants;
-import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 import org.json.simple.parser.ParseException;
 
@@ -50,14 +48,14 @@ public class AutonomousCommands {
 
     private static Command getDriveToGamePieceCommand(FlippablePose2d[] intakeLocations) {
         return new ConditionalCommand(
-                new GamePieceAutoDriveCommand(SimulatedGamePieceConstants.GamePieceType.FUEL).onlyWhile(() -> RobotContainer.OBJECT_POSE_ESTIMATOR.getClosestObjectToRobot() != null),
+                new InstantCommand(),
                 getFindGamePieceCommand(intakeLocations),
                 AutonomousCommands::shouldCollectGamePiece
         );
     }
 
     private static boolean shouldCollectGamePiece() {
-        return RobotContainer.OBJECT_POSE_ESTIMATOR.getClosestObjectToRobot() != null;
+        return false;
     }
 
     private static Command getFindGamePieceCommand(FlippablePose2d[] intakeLocations) {
