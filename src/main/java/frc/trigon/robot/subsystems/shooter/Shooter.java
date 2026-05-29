@@ -89,9 +89,11 @@ public class Shooter extends MotorSubsystem {
     }
 
     void aimAtHub() {
+        //TODO: Implement aiming logic
     }
 
     void aimForDelivery() {
+        //TODO: Implement aiming logic
     }
 
     private double meterToRotations(double distanceMeters) {
