@@ -1,17 +1,9 @@
 package frc.trigon.robot.subsystems.indexer;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
-import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.phoenix6.talonfxs.TalonFXSMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfxs.TalonFXSSignal;
 import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
@@ -63,6 +55,8 @@ public class IndexerConstants {
         LOAD_FOR_SHOOTING(7),
         LOAD_FOR_DELIVERY(10),
         LOAD_FOR_EJECTION(5),
+        PRELOAD(3),
+        AGITATE(1),
         REST(0);
 
         public final double targetVoltage;
