@@ -48,14 +48,18 @@ public class AutonomousCommands {
 
     private static Command getDriveToGamePieceCommand(FlippablePose2d[] intakeLocations) {
         return new ConditionalCommand(
-                new InstantCommand(),
+                getcollectGamePieceCommand(),
                 getFindGamePieceCommand(intakeLocations),
                 AutonomousCommands::shouldCollectGamePiece
         );
     }
 
+    private static Command getcollectGamePieceCommand() {
+        return Commands.none(); //TODO: implement
+    }
+
     private static boolean shouldCollectGamePiece() {
-        return false;
+        return false; //TODO: implement
     }
 
     private static Command getFindGamePieceCommand(FlippablePose2d[] intakeLocations) {

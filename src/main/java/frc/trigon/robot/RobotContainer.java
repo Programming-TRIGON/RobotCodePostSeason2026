@@ -13,6 +13,7 @@ import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
+import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
@@ -34,7 +35,10 @@ import frc.trigon.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
-    public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator();
+    public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator(
+            CameraConstants.RIGHT_APRIL_TAG_CAMERA,
+            CameraConstants.LEFT_APRIL_TAG_CAMERA
+    );
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
     public static final Indexer INDEXER = new Indexer();

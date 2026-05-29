@@ -3,13 +3,35 @@ package frc.trigon.robot.constants;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
+import frc.trigon.robot.poseestimation.apriltagcamera.AprilTagCamera;
+import frc.trigon.robot.poseestimation.apriltagcamera.AprilTagCameraConstants;
+import frc.trigon.robot.poseestimation.robotposeestimator.StandardDeviations;
 
 public class CameraConstants {
-    private static final Transform3d ROBOT_CENTER_TO_OBJECT_DETECTION_CAMERA = new Transform3d(//TODO: AHAHAHAHAH
-            new Translation3d(0, 0, 0.8),
-            new Rotation3d(0, Units.degreesToRadians(30), 0)
+    private static final StandardDeviations APRIL_TAG_CAMERA_STANDARD_DEVIATIONS = new StandardDeviations(
+            0.016,
+            0.01
     );
-
-    public static final double OBJECT_POSE_ESTIMATOR_DELETION_THRESHOLD_SECONDS = 0.5;
+    private static final Transform3d
+            ROBOT_TO_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
+            new Translation3d(),
+            new Rotation3d()
+    ), //TODO: get actual transforms
+            ROBOT_TO_LEFT_APRIL_TAG_CAMERA = new Transform3d(
+                    new Translation3d(),
+                    new Rotation3d()
+            ); //TODO: get actual transforms
+    public static final AprilTagCamera
+            RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
+            AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
+            "RightAprilTagCamera",
+            ROBOT_TO_RIGHT_APRIL_TAG_CAMERA,
+            APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
+    ),
+            LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
+                    AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
+                    "LeftAprilTagCamera",
+                    ROBOT_TO_LEFT_APRIL_TAG_CAMERA,
+                    APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
+            );
 }
