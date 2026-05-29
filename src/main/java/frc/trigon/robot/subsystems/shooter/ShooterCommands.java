@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.ExecuteEndCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
+
 import java.util.Set;
 import java.util.function.DoubleSupplier;
 
@@ -14,19 +15,19 @@ public class ShooterCommands {
                 RobotContainer.SHOOTER::setTargetVelocity,
                 false,
                 Set.of(RobotContainer.SHOOTER),
-                "Debugging/TargetShooterVelocityMetersPerSecond"
+                "Debugging/ShooterTargetVelocityMetersPerSecond"
         );
     }
 
-    public static Command getSetTargetVelocityMetersPerSecondCommand(DoubleSupplier getSetTargetVelocity) {
+    public static Command getSetTargetVelocityCommand(DoubleSupplier targetVelocityMetersPerSecond) {
         return new StartEndCommand(
-                () -> RobotContainer.SHOOTER.setTargetVelocity(getSetTargetVelocity.getAsDouble()),
+                () -> RobotContainer.SHOOTER.setTargetVelocity(targetVelocityMetersPerSecond.getAsDouble()),
                 RobotContainer.SHOOTER::stop,
                 RobotContainer.SHOOTER
         );
     }
 
-    public static Command getShootAtHubCommand() {
+    public static Command getAimAtHubCommand() {
         return new ExecuteEndCommand(
                 RobotContainer.SHOOTER::aimAtHub,
                 RobotContainer.SHOOTER::stop,
@@ -34,7 +35,7 @@ public class ShooterCommands {
         );
     }
 
-    public static Command shootForDelivery() {
+    public static Command getAimForDeliverCommand() {
         return new ExecuteEndCommand(
                 RobotContainer.SHOOTER::aimForDelivery,
                 RobotContainer.SHOOTER::stop,
