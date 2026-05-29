@@ -36,6 +36,7 @@ public class OperatorConstants {
                     0,
                     INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA_INTERCEPT
             );
+    public static final double PRELOAD_TIMER = 2;
 
     public static final Trigger
             RESET_HEADING_TRIGGER = DRIVER_CONTROLLER.y(),
@@ -47,4 +48,7 @@ public class OperatorConstants {
             FORWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.up(),
             BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down(),
             CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS);
+    public static final Trigger
+            INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger(),
+            PRELOAD_TRIGGER = OPERATOR_CONTROLLER.f();
 }
