@@ -11,7 +11,7 @@ import java.util.function.DoubleUnaryOperator;
 
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
-    private static final int DRIVER_CONTROLLER_PORT = 1;
+    private static final int DRIVER_CONTROLLER_PORT = 0;
     private static final int
             DRIVER_CONTROLLER_RIGHT_STICK_EXPONENT = 1,
             DRIVER_CONTROLLER_LEFT_STICK_EXPONENT = 2;
@@ -36,6 +36,7 @@ public class OperatorConstants {
                     0,
                     INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA_INTERCEPT
             );
+    public static final double PRELOAD_TIMER = 2;
 
     public static final Trigger
             RESET_HEADING_TRIGGER = DRIVER_CONTROLLER.y(),
@@ -49,5 +50,5 @@ public class OperatorConstants {
             CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS);
     public static final Trigger
             INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger(),
-            RELOAD_TRIGGER = OPERATOR_CONTROLLER.f();
+            PRELOAD_TRIGGER = OPERATOR_CONTROLLER.f();
 }
