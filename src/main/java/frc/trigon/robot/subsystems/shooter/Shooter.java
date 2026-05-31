@@ -8,11 +8,13 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.utilities.Conversions;
+import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends MotorSubsystem {
+    private final ShootingCalculations shootingCalculations = ShootingCalculations.getInstance();
     private final TalonFXMotor motor = ShooterConstants.MASTER_MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(ShooterConstants.FOC_ENABLED);
     private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(ShooterConstants.FOC_ENABLED);
@@ -84,17 +86,19 @@ public class Shooter extends MotorSubsystem {
         return targetVelocityMetersPerSecond;
     }
 
-    void setTargetVelocity(double targetVelocityMetersPerSecond) {
-        this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
-        motor.setControl(velocityRequest.withVelocity(meterToRotations(targetVelocityMetersPerSecond)));
-    }
-
     void aimAtHub() {
-        //TODO: Implement aiming logic
+        double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
+        setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
     void aimForDelivery() {
-        //TODO: Implement aiming logic
+        double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
+        setTargetVelocity(targetVelocityMetersPerSecond);
+    }
+
+    void setTargetVelocity(double targetVelocityMetersPerSecond) {
+        this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
+        motor.setControl(velocityRequest.withVelocity(meterToRotations(targetVelocityMetersPerSecond)));
     }
 
     private double meterToRotations(double distanceMeters) {
