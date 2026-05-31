@@ -3,46 +3,84 @@ package frc.trigon.robot.commands.commandclasses;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.trigon.lib.utilities.BoundingBox;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.trigon.lib.utilities.flippable.Flippable;
-import frc.trigon.lib.utilities.zonerestricteddrive.ZoneRestriction;
+import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
-public class DriveRestrictionsCommand {
-    public interface DriveRestrictions {
+public abstract class DriveRestrictionsCommand extends ParallelCommandGroup {
 
-    }
-    private DriveRestrictions[] driveRestrictions;
-
-
-    public DriveRestrictionsCommand(DriveRestrictions... driveRestrictions) {
-
+    public enum DriveFrame {
+        FIELD_RELATIVE,
+        SELF_RELATIVE
     }
 
-   private Translation2d applyRestriction(Translation2d targetTranslation, DriveRestrictions driveRestrictions) {
-        final double
-   }
+    private final DriveFrame frame;
+    private volatile double restrictedX = 0;
+    private volatile double restrictedY = 0;
+    private volatile double restrictedTheta = 0;
 
-
-    private Translation2d calculateTargetJoystickTranslation() {
-        final Translation2d rawJoystickPosition = getRawJoystickPosition();
-
-        return new Translation2d(
-                CommandConstants.calculateDriveStickAxisValue(rawJoystickPosition.getX()),
-                CommandConstants.calculateDriveStickAxisValue(rawJoystickPosition.getY())
+    protected DriveRestrictionsCommand(DriveFrame frame) {
+        this.frame = frame;
+        addCommands(
+                buildCalculationCommand(),
+                buildDriveCommand()
         );
     }
 
-    private Translation2d getFieldRelativeJoystickPosition() {
-        return getRawJoystickPosition().rotateBy(Flippable.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero);
+    protected abstract void restrict(double shapedX, double shapedY, double shapedTheta);
+
+    protected final void setRestrictedOutput(double x, double y, double theta) {
+        this.restrictedX = x;
+        this.restrictedY = y;
+        this.restrictedTheta = theta;
     }
 
-    private Translation2d getRawJoystickPosition() {
-        final double
-                joystickX = OperatorConstants.DRIVER_CONTROLLER.getLeftX(),
-                joystickY = OperatorConstants.DRIVER_CONTROLLER.getLeftY();
-        return new Translation2d(joystickY, joystickX);
+    protected final DriveFrame getFrame() {
+        return frame;
+    }
+
+    private Command buildCalculationCommand() {
+        return new RunCommand(this::readAndRestrict);
+    }
+
+    private void readAndRestrict() {
+        final double rawX = OperatorConstants.DRIVER_CONTROLLER.getLeftY();
+        final double rawY = OperatorConstants.DRIVER_CONTROLLER.getLeftX();
+        final double rawTheta = OperatorConstants.DRIVER_CONTROLLER.getRightX();
+
+        final double shapedX = CommandConstants.calculateDriveStickAxisValue(rawX);
+        final double shapedY = CommandConstants.calculateDriveStickAxisValue(rawY);
+        final double shapedTheta = CommandConstants.calculateRotationStickAxisValue(rawTheta);
+
+        if (frame == DriveFrame.SELF_RELATIVE) {
+            final Translation2d selfRel = new Translation2d(shapedX, shapedY)
+                    .rotateBy(RobotContainer.SWERVE.getDriveRelativeAngle().unaryMinus());
+            restrict(selfRel.getX(), selfRel.getY(), shapedTheta);
+            return;
+        }
+
+        final Translation2d fieldRel = new Translation2d(shapedX, shapedY)
+                .rotateBy(Flippable.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero);
+        restrict(fieldRel.getX(), fieldRel.getY(), shapedTheta);
+    }
+
+    private Command buildDriveCommand() {
+        final Command drive = switch (frame) {
+            case FIELD_RELATIVE -> SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
+                    () -> restrictedX,
+                    () -> restrictedY,
+                    () -> restrictedTheta
+            );
+            case SELF_RELATIVE -> SwerveCommands.getClosedLoopSelfRelativeDriveCommand(
+                    () -> restrictedX,
+                    () -> restrictedY,
+                    () -> restrictedTheta
+            );
+        };
+        return drive.repeatedly().asProxy();
     }
 }
