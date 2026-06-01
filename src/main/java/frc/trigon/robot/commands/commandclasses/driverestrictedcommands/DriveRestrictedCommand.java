@@ -11,7 +11,7 @@ import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
-public abstract class DriveRestrictionsCommand extends ParallelCommandGroup {
+public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
 
     public enum DriveFrame {
         FIELD_RELATIVE,
@@ -23,7 +23,7 @@ public abstract class DriveRestrictionsCommand extends ParallelCommandGroup {
     private volatile double restrictedY = 0;
     private volatile double restrictedTheta = 0;
 
-    protected DriveRestrictionsCommand(DriveFrame frame) {
+    protected DriveRestrictedCommand(DriveFrame frame) {
         this.frame = frame;
         addCommands(
                 buildCalculationCommand(),
@@ -48,12 +48,10 @@ public abstract class DriveRestrictionsCommand extends ParallelCommandGroup {
     }
 
     private void readAndRestrict() {
-        final double rawX = OperatorConstants.DRIVER_CONTROLLER.getLeftY();
-        final double rawY = OperatorConstants.DRIVER_CONTROLLER.getLeftX();
         final double rawTheta = OperatorConstants.DRIVER_CONTROLLER.getRightX();
 
-        final double shapedX = CommandConstants.calculateDriveStickAxisValue(rawX);
-        final double shapedY = CommandConstants.calculateDriveStickAxisValue(rawY);
+        final double shapedX = calculateTargetJoystickTranslation().getX();
+        final double shapedY = calculateTargetJoystickTranslation().getY();
         final double shapedTheta = CommandConstants.calculateRotationStickAxisValue(rawTheta);
 
         if (frame == DriveFrame.SELF_RELATIVE) {
@@ -82,5 +80,23 @@ public abstract class DriveRestrictionsCommand extends ParallelCommandGroup {
             );
         };
         return drive.repeatedly().asProxy();
+    }
+
+    private Translation2d getRawJoystickPosition() {
+        final double
+                joystickX = OperatorConstants.DRIVER_CONTROLLER.getLeftX(),
+                joystickY = OperatorConstants.DRIVER_CONTROLLER.getLeftY();
+        return new Translation2d(joystickX, joystickY);
+    }
+
+    private Translation2d calculateTargetJoystickTranslation() {
+        final double
+                rawXValue = getRawJoystickPosition().getX(),
+                rawYValue = getRawJoystickPosition().getY();
+
+        return new Translation2d(
+                CommandConstants.calculateDriveStickAxisValue(rawXValue),
+                CommandConstants.calculateDriveStickAxisValue(rawYValue)
+        );
     }
 }
