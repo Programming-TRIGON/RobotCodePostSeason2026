@@ -111,7 +111,6 @@ public class ShootingCalculations {
         }
 
         final Rotation2d targetYaw = virtualTarget.minus(currentRobotPosition).getAngle();
-
         Logger.recordOutput("Shooting/DistanceToVirtualTarget", distanceToVirtualTarget);
         Logger.recordOutput("Shooting/InterpolatedTimeOfFlight", parameters.timeOfFlight());
 

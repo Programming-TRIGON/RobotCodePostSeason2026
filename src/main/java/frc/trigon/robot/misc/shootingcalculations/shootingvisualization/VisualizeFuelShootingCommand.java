@@ -39,7 +39,6 @@ public class VisualizeFuelShootingCommand extends Command {
         this.startingColumn = startingColumn;
     }
 
-
     @Override
     public void initialize() {
         shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose(startingColumn));

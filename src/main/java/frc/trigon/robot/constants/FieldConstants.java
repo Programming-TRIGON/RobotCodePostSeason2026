@@ -35,7 +35,6 @@ public class FieldConstants {
     private static final double
             BLUE_RELATIVE_DELIVERY_POSITION_X = 3.0,
             DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS = 2.2;
-
     public static final FlippableTranslation2d
             HUB_POSITION = new FlippableTranslation2d(TAG_ID_TO_POSE.get(26).getX() + (Units.inchesToMeters(47) / 2), FIELD_WIDTH_METERS / 2, true),
             RIGHT_DELIVERY_POSITION = new FlippableTranslation2d(BLUE_RELATIVE_DELIVERY_POSITION_X, (FIELD_WIDTH_METERS / 2) - DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS, true),

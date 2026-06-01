@@ -18,7 +18,6 @@ public class FuelShootingVisualizationConstants {
             TOP_ROLLER_RADIUS_METERS = ShooterConstants.TOP_WHEEL_DIAMETER / 2,
             BOTTOM_ROLLER_RADIUS_METERS = ShooterConstants.BOTTOM_WHEEL_DIAMETER / 2;
 
-    // Adjusted drag for symmetric drum shot
     static final double
             AIR_DENSITY = 1.225,
             DRAG_COEFFICIENT = 0.55,
