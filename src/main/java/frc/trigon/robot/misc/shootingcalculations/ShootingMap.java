@@ -21,11 +21,9 @@ public class ShootingMap {
 
     private static void addHubPoints() { //TODO: calibrate numbers
         addPoint(HUB_MAP, 0, 0, Rotation2d.fromDegrees(0), 0);
-        addPoint(HUB_MAP, 0, 0, Rotation2d.fromDegrees(0), 0);
     }
 
     private static void addDeliveryPoints() { //TODO: calibrate numbers
-        addPoint(DELIVERY_MAP, 0, 0, Rotation2d.fromDegrees(0), 0);
         addPoint(DELIVERY_MAP, 0, 0, Rotation2d.fromDegrees(0), 0);
     }
 

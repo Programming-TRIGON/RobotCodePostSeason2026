@@ -26,9 +26,9 @@ public class VisualizeFuelShootingCommand extends Command {
     private Translation3d currentFuelVelocity;
     private double currentSpinRadiansPerSecond;
     private final int startingColumn;
-
     private double simulatedFlightTimeSeconds = 0;
     private boolean hasLoggedScore = false;
+    private ShootingCalculations.TargetLocation lockedTarget;
 
     public static InstantCommand getScheduleShotCommand(SimulatedGamePiece shotFuel, int startingColumn) {
         return new InstantCommand(() -> CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(shotFuel, startingColumn)));
@@ -41,8 +41,9 @@ public class VisualizeFuelShootingCommand extends Command {
 
     @Override
     public void initialize() {
-        shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose(startingColumn));
+        lockedTarget = SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation();
 
+        shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose(startingColumn));
         currentFuelVelocity = calculateFuelExitVelocityVector();
         simulatedFlightTimeSeconds = 0;
         hasLoggedScore = false;
@@ -52,18 +53,16 @@ public class VisualizeFuelShootingCommand extends Command {
 
     @Override
     public void execute() {
-        ShootingCalculations.TargetLocation activeTarget = SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation();
-
-        if (!activeTarget.isDelivery)
-            executeForShooting(activeTarget);
-        else
-            executeForDelivery(activeTarget);
-
         int iterations = (int) (RobotHardwareStats.getPeriodicTimeSeconds() / FuelShootingVisualizationConstants.SIMULATION_TIME_STEP_SECONDS);
         for (int i = 0; i < iterations; i++) {
             stepSimulation();
             simulatedFlightTimeSeconds += FuelShootingVisualizationConstants.SIMULATION_TIME_STEP_SECONDS;
         }
+
+        if (!lockedTarget.isDelivery)
+            executeForShooting(lockedTarget);
+        else
+            executeForDelivery(lockedTarget);
     }
 
     @Override

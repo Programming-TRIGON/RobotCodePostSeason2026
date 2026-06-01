@@ -6,6 +6,7 @@ import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.shootingcalculations.shootingvisualization.VisualizeFuelShootingCommand;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
+import frc.trigon.robot.subsystems.loader.LoaderConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,12 +62,17 @@ public class SimulationFieldHandler {
     }
 
     private static void updateEjection() {
-        if (hasFuel()) {
+        if (hasFuel() && isShootingFuel()) {
             final List<SimulatedGamePiece> ejectableFuels = getEjectableFuels();
             if (!ejectableFuels.isEmpty()) {
                 ejectGamePieces(ejectableFuels);
             }
         }
+    }
+
+    private static boolean isShootingFuel() {
+        return (RobotContainer.LOADER.atState(LoaderConstants.LoaderState.LOAD_FOR_DELIVERY) || RobotContainer.LOADER.atState(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING)) &&
+                (RobotContainer.INDEXER.atState(IndexerConstants.IndexerState.LOAD_FOR_DELIVERY) || RobotContainer.INDEXER.atState(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING));
     }
 
     private static List<SimulatedGamePiece> getEjectableFuels() {
