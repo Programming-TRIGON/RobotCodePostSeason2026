@@ -26,7 +26,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     protected DriveRestrictedCommand(DriveFrame frame) {
         this.frame = frame;
         addCommands(
-                buildCalculationCommand(),
+                buildrestrictedDriveCalculationCommand(),
                 buildDriveCommand()
         );
     }
@@ -45,11 +45,11 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         return frame;
     }
 
-    private Command buildCalculationCommand() {
-        return new RunCommand(this::readAndRestrict);
+    private Command buildrestrictedDriveCalculationCommand() {
+        return new RunCommand(this::restrictDrive);
     }
 
-    private void readAndRestrict() {
+    private void restrictDrive() {
         final double rawTheta = OperatorConstants.DRIVER_CONTROLLER.getRightX();
 
         final double shapedX = calculateTargetJoystickTranslation().getX();

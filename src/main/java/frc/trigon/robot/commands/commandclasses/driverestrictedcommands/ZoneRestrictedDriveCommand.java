@@ -9,12 +9,6 @@ import frc.trigon.lib.utilities.zonerestricteddrive.ZoneRestriction;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.FieldConstants;
 
-/**
- * Drop-in replacement for the old {@code ZoneRestrictedDriveCommand}, now built on
- * {@link DriveRestrictedCommand}. Drives the swerve while restricting movement relative to
- * defined zones on the field. Restricted zones slow and block movement into them; containment
- * zones slow and block movement out of them. Zone restrictions are applied sequentially.
- */
 public class ZoneRestrictedDriveCommand extends DriveRestrictedCommand {
     private static final double
             ROBOT_X_WIDTH_METERS = 1, ROBOT_Y_WIDTH_METERS = 1;
@@ -29,10 +23,6 @@ public class ZoneRestrictedDriveCommand extends DriveRestrictedCommand {
 
     private final ZoneRestriction[] zoneRestrictions;
 
-    /**
-     * @param shouldRestrictToField whether to also restrict the robot to the field bounding box
-     * @param zoneRestrictions      the zones to restrict movement relative to
-     */
     public ZoneRestrictedDriveCommand(boolean shouldRestrictToField, ZoneRestriction... zoneRestrictions) {
         super(DriveFrame.FIELD_RELATIVE);
         this.zoneRestrictions = shouldRestrictToField
