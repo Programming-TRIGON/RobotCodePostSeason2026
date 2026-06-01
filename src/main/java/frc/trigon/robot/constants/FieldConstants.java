@@ -7,7 +7,9 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.*;
 import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.FilesHandler;
+import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.lib.utilities.flippable.FlippablePose2d;
+import frc.trigon.robot.RobotContainer;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,6 +31,8 @@ public class FieldConstants {
     public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createAprilTagFieldLayout();
     private static final Transform3d TAG_OFFSET = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     public static final HashMap<Integer, Pose3d> TAG_ID_TO_POSE = fieldLayoutToTagIDToPoseMap();
+
+    public static final double ALLIANCE_ZONE_LENGTH = 4.5;
 
     private static AprilTagFieldLayout createAprilTagFieldLayout() {
         try {
@@ -60,5 +64,17 @@ public class FieldConstants {
                 Rotation2d.fromDegrees(-basePose.getRotation().getDegrees()),
                 true
         );
+    }
+
+    public static boolean isRobotInAllianceZone() {
+        return isPoseInAllianceZone(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation());
+    }
+
+    public static boolean isPoseInAllianceZone(Translation2d pose) {
+        if (pose == null)
+            return false;
+        if (Flippable.isRedAlliance())
+            return pose.getX() > FieldConstants.FIELD_LENGTH_METERS - FieldConstants.ALLIANCE_ZONE_LENGTH;
+        return pose.getX() < FieldConstants.ALLIANCE_ZONE_LENGTH;
     }
 }
