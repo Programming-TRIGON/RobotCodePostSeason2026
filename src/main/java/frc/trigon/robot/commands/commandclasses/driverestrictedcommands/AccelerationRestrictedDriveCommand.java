@@ -8,8 +8,6 @@ public class AccelerationRestrictedDriveCommand extends DriveRestrictedCommand {
     private SlewRateLimiter xLimiter;
     private SlewRateLimiter yLimiter;
     private SlewRateLimiter thetaLimiter;
-    public AccelerationRestrictedDriveCommand nigger2 = new AccelerationRestrictedDriveCommand(DriveFrame.FIELD_RELATIVE, 4.0, 8.0);
-
 
     public AccelerationRestrictedDriveCommand(DriveFrame frame,
                                               double maxTranslationAcceleration,

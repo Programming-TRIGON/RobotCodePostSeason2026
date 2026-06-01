@@ -3,6 +3,7 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.trigon.lib.utilities.flippable.Flippable;
@@ -26,7 +27,13 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     protected DriveRestrictedCommand(DriveFrame frame) {
         this.frame = frame;
         addCommands(
-                buildrestrictedDriveCalculationCommand(),
+                new InstantCommand(() -> {
+                    restrictedX = 0;
+                    restrictedY = 0;
+                    restrictedTheta = 0;
+                    onInit();
+                }),
+                buildCalculationCommand(),
                 buildDriveCommand()
         );
     }
@@ -45,7 +52,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         return frame;
     }
 
-    private Command buildrestrictedDriveCalculationCommand() {
+    private Command buildCalculationCommand() {
         return new RunCommand(this::restrictDrive);
     }
 
@@ -63,9 +70,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
             return;
         }
 
-        final Translation2d fieldRel = new Translation2d(shapedX, shapedY)
-                .rotateBy(Flippable.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero);
-        restrict(fieldRel.getX(), fieldRel.getY(), shapedTheta);
+        restrict(shapedX, shapedY, shapedTheta);
     }
 
     private Command buildDriveCommand() {
@@ -86,8 +91,8 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
 
     private Translation2d getRawJoystickPosition() {
         final double
-                joystickX = OperatorConstants.DRIVER_CONTROLLER.getLeftX(),
-                joystickY = OperatorConstants.DRIVER_CONTROLLER.getLeftY();
+                joystickX = OperatorConstants.DRIVER_CONTROLLER.getLeftY(),
+                joystickY = OperatorConstants.DRIVER_CONTROLLER.getLeftX();
         return new Translation2d(joystickX, joystickY);
     }
 

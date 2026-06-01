@@ -6,14 +6,19 @@
 package frc.trigon.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.flippable.Flippable;
+import frc.trigon.lib.utilities.zonerestricteddrive.ContainmentZone;
+import frc.trigon.lib.utilities.zonerestricteddrive.RestrictedZone;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommands.AccelerationRestrictedDriveCommand;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommands.DriveRestrictedCommand;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommands.VelocityRestrictedDriveCommand;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommands.ZoneRestrictedDriveCommand;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
@@ -82,7 +87,11 @@ public class RobotContainer {
         OperatorConstants.DRIVE_FROM_DPAD_TRIGGER.whileTrue(CommandConstants.SELF_RELATIVE_DRIVE_FROM_DPAD_COMMAND);
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
         OperatorConstants.CAMERAS_DISCONNECTED_TRIGGER.onTrue(CommandConstants.INDICATE_CAMERAS_DISCONNECTED_COMMAND);
-        OperatorConstants.DRIVER_CONTROLLER.leftBumper().whileTrue(new VelocityRestrictedDriveCommand(DriveRestrictedCommand.DriveFrame.FIELD_RELATIVE, 0.6));
+        OperatorConstants.DRIVER_CONTROLLER.leftBumper().whileTrue(new ZoneRestrictedDriveCommand(
+                true,                                            // field boundary on
+                new RestrictedZone(new BoundingBox(new Translation2d(0, 0), new Translation2d(10, 5)), 0.05, 0.2)           // can't leave
+        ));
+        OperatorConstants.DRIVER_CONTROLLER.rightBumper().whileTrue(new AccelerationRestrictedDriveCommand(DriveRestrictedCommand.DriveFrame.FIELD_RELATIVE, 2, 4));
         OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
     }
 
