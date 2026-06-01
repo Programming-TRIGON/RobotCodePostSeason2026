@@ -71,6 +71,10 @@ public class Shooter extends MotorSubsystem {
 
     @AutoLogOutput(key = "Shooting/Conditions/ShooterAtTargetVelocity")
     public boolean atTargetVelocity() {
+        return atVelocity(targetVelocityMetersPerSecond);
+    }
+
+    public boolean atVelocity(double targetVelocityMetersPerSecond) {
         return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < ShooterConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
     }
 

@@ -25,9 +25,8 @@ public class VisualizeFuelShootingCommand extends Command {
     private final SimulatedGamePiece shotFuel;
     private Translation3d currentFuelVelocity;
     private double currentSpinRadiansPerSecond;
-    private final int startingColumn; // NEW: Track which lane the ball is in
+    private final int startingColumn;
 
-    // ToF Calibration Trackers
     private double simulatedFlightTimeSeconds = 0;
     private boolean hasLoggedScore = false;
 
@@ -96,6 +95,7 @@ public class VisualizeFuelShootingCommand extends Command {
             System.out.println("Target: " + activeTarget.name());
             System.out.println("Missed coordinate by: " + String.format("%.2f", distanceMissedBy) + " meters");
             System.out.println("Simulated ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s");
+            System.out.println("Distance: " + RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getDistance(activeTarget.position.get()));
 
             hasLoggedScore = true;
         }

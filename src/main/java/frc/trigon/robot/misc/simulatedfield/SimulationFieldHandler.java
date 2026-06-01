@@ -72,11 +72,10 @@ public class SimulationFieldHandler {
     private static List<SimulatedGamePiece> getEjectableFuels() {
         final List<SimulatedGamePiece> ejectable = new ArrayList<>();
         for (SimulatedGamePiece heldFuel : HELD_FUEL) {
-            if (!heldFuel.isIndexed()) continue;
-
-            if (heldFuel.getIndexerGridSlot().getX() == 0) {
+            if (!heldFuel.isIndexed())
+                continue;
+            if (heldFuel.getIndexerGridSlot().getX() == 0)
                 ejectable.add(heldFuel);
-            }
         }
         return ejectable;
     }
@@ -98,9 +97,8 @@ public class SimulationFieldHandler {
 
     private static void updateHeldFuelPoses() {
         for (SimulatedGamePiece heldFuel : HELD_FUEL) {
-            if (!heldFuel.isIndexed()) {
+            if (!heldFuel.isIndexed())
                 heldFuel.resetIndexing();
-            }
 
             if (heldFuel.getIndexerGridSlot() != null)
                 heldFuel.updatePosition(calculateHeldFuelFieldRelativePosition(heldFuel.getIndexerGridSlot()));

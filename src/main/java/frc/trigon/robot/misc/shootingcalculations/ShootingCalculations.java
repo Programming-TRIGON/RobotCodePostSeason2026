@@ -14,8 +14,6 @@ import org.littletonrobotics.junction.Logger;
 public class ShootingCalculations {
     private static ShootingCalculations INSTANCE = null;
     private ShootingState targetShootingState = ShootingState.empty();
-
-    // Default to the Hub
     private TargetLocation currentTargetLocation = TargetLocation.HUB;
 
     public static ShootingCalculations getInstance() {
@@ -55,7 +53,7 @@ public class ShootingCalculations {
     public boolean isReadyToShoot() {
         final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
-        final boolean isVelocityReady = RobotContainer.SHOOTER.atTargetVelocity();
+        final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(targetShootingState.targetShootingVelocityMetersPerSecond());
 
         return isYawReady && isPitchReady && isVelocityReady;
     }
