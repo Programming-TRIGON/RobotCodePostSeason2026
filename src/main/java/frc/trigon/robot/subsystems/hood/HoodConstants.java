@@ -31,7 +31,7 @@ public class HoodConstants {
             HOOD_MASS_KILOGRAMS = 2,
             HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(60),
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(52),
             MINIMUM_ANGLE = Rotation2d.fromDegrees(20);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
@@ -52,8 +52,8 @@ public class HoodConstants {
             MECHANISM_COLOR
     );
     static final Pose3d HOOD_VISUALIZATION_ORIGIN_POINT = new Pose3d(
-            new Translation3d(0, 0.27363801, 0.4532351),
-            new Rotation3d(0, 20, 0)
+            new Translation3d(-0.2758, 0, 0.45400412),
+            new Rotation3d(0, MINIMUM_ANGLE.getRadians(), 0)
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
@@ -66,7 +66,7 @@ public class HoodConstants {
     static final Rotation2d
             REST_ANGLE = Rotation2d.fromDegrees(20),
             DELIVERY_ANGLE = Rotation2d.fromDegrees(50),
-            EJECTION_ANGLE = Rotation2d.fromDegrees(60);
+            EJECTION_ANGLE = Rotation2d.fromDegrees(52);
 
     static {
         configureMotor();

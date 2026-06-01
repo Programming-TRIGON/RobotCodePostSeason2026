@@ -35,7 +35,7 @@ public class ShooterConstants {
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
-    private static final double MOMENT_OF_INERTIA = 0.03;
+    private static final double MOMENT_OF_INERTIA = 0.0035;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, AVERAGE_GEAR_RATIO, MOMENT_OF_INERTIA);
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
@@ -71,12 +71,12 @@ public class ShooterConstants {
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.14 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0049712 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.18542 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0086361 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.00057465 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.18557 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.010478 : 0;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15.0 : 0;
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 0;
