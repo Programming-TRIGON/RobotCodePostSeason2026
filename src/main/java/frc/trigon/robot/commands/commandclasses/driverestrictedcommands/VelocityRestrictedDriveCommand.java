@@ -1,4 +1,4 @@
-package frc.trigon.robot.commands.commandclasses;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommands;
 
 import edu.wpi.first.math.MathUtil;
 

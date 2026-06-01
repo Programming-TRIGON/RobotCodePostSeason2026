@@ -1,4 +1,4 @@
-package frc.trigon.robot.commands.commandclasses;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,6 +32,8 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     protected abstract void restrict(double shapedX, double shapedY, double shapedTheta);
+
+    protected void onInit() {}
 
     protected final void setRestrictedOutput(double x, double y, double theta) {
         this.restrictedX = x;

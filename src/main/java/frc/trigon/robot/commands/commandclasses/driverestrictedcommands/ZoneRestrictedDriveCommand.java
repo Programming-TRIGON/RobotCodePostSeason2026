@@ -1,4 +1,4 @@
-package frc.trigon.robot.commands.commandclasses;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
