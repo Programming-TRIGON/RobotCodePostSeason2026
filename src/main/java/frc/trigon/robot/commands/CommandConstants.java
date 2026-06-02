@@ -32,6 +32,10 @@ public class CommandConstants {
     private static final double
             INDICATE_ALLIANCE_SHIFT_RUMBLE_DURATION_SECONDS = 1,
             INDICATE_ALLIANCE_SHIFT_RUMBLE_POWER = 0.5;
+    private static boolean isShiftModeForced = false;
+    public static void setShiftModeForced(boolean forced) {
+        isShiftModeForced = forced;
+    }
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
@@ -96,7 +100,8 @@ public class CommandConstants {
      * @return the power to apply to the robot
      */
     public static double calculateShiftModeValue(double minimumPower) {
-        final double squaredShiftModeValue = Math.sqrt(DRIVER_CONTROLLER.getRightTriggerAxis());
+        final double triggerValue = isShiftModeForced ? 1 : DRIVER_CONTROLLER.getRightTriggerAxis();
+        final double squaredShiftModeValue = Math.sqrt(triggerValue);
         final double minimumShiftValueCoefficient = 1 - (1 / minimumPower);
 
         return 1 - squaredShiftModeValue * minimumShiftValueCoefficient;

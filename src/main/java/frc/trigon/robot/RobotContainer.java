@@ -77,6 +77,7 @@ public class RobotContainer {
     }
 
     private void bindControllerCommands() {
+        OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
         OperatorConstants.RESET_HEADING_TRIGGER.onTrue(CommandConstants.RESET_HEADING_COMMAND);
         OperatorConstants.DRIVE_FROM_DPAD_TRIGGER.whileTrue(CommandConstants.SELF_RELATIVE_DRIVE_FROM_DPAD_COMMAND);
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
@@ -84,10 +85,8 @@ public class RobotContainer {
 
         OperatorConstants.INTAKE_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
-        OperatorConstants.CLOSE_INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER).onTrue(FuelIntakeCommands.getCloseIntakeCommand());
+        OperatorConstants.CLOSE_INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER).onTrue(FuelIntakeCommands.getCloseIntakeWhileShootingCommand());
         OperatorConstants.CLOSE_INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(FuelIntakeCommands.getCloseIntakeCommand());
-
-        OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {
