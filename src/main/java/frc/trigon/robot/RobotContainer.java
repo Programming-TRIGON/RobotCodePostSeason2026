@@ -64,6 +64,7 @@ public class RobotContainer {
     private void configureBindings() {
         bindDefaultCommands();
         bindControllerCommands();
+//        configureSysIDBindings(SHOOTER);
     }
 
     private void bindDefaultCommands() {
@@ -83,10 +84,10 @@ public class RobotContainer {
 
         OperatorConstants.INTAKE_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
-        OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
-
         OperatorConstants.CLOSE_INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER).onTrue(FuelIntakeCommands.getCloseIntakeCommand());
         OperatorConstants.CLOSE_INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(FuelIntakeCommands.getCloseIntakeCommand());
+
+        OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {

@@ -1,8 +1,6 @@
 package frc.trigon.robot.subsystems.indexer;
 
 import com.ctre.phoenix6.controls.VoltageOut;
-import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
-import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.phoenix6.talonfxs.TalonFXSMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfxs.TalonFXSSignal;
 import frc.trigon.robot.subsystems.MotorSubsystem;
@@ -10,6 +8,7 @@ import frc.trigon.robot.subsystems.MotorSubsystem;
 public class Indexer extends MotorSubsystem {
     private final TalonFXSMotor motor = IndexerConstants.MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(IndexerConstants.FOC_ENABLED);
+    private IndexerConstants.IndexerState targetState = IndexerConstants.IndexerState.REST;
 
     public Indexer() {
         setName("Indexer");
@@ -31,7 +30,12 @@ public class Indexer extends MotorSubsystem {
         IndexerConstants.MECHANISM.setTargetVelocity(0);
     }
 
+    public boolean atState(IndexerConstants.IndexerState state) {
+        return this.targetState == state;
+    }
+
     void setTargetState(IndexerConstants.IndexerState targetState) {
+        this.targetState = targetState;
         setTargetVoltage(targetState.targetVoltage);
     }
 
