@@ -10,13 +10,21 @@ import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
+/**
+ * Abstract base for driving commands that modify the driver's input before sending it to the swerve.
+ */
 public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveFrame frame;
 
     private volatile double restrictedX = 0;
     private volatile double restrictedY = 0;
     private volatile double restrictedTheta = 0;
-    
+
+    /**
+     * Creates a new DriveRestrictedDriveCommand.
+     *
+     * @param frame whether the robot is driving relative to the field or to itself.
+     */
     protected DriveRestrictedCommand(DriveFrame frame) {
         this.frame = frame;
         addCommands(

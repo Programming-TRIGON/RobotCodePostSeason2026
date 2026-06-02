@@ -8,9 +8,24 @@ import frc.trigon.lib.utilities.zonerestricteddrive.ZoneRestriction;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.ZoneRestrictedDriveConstants;
 
+/**
+ * Built on {@link DriveRestrictedCommand}
+ *
+ * Drives the robot while restricting movement relative to defined zones on the field.
+ * Restricted zones slow and block movement into them.
+ * Containment zones slow and block movement out of them.
+ * All zone restrictions are applied sequentially, each further restricting the previous result.
+ * Movement parallel to or away from a zone boundary is never restricted.
+ */
 public class ZoneRestrictedDriveCommand extends DriveRestrictedCommand {
     private final ZoneRestriction[] zoneRestrictions;
 
+    /**
+     * Creates a new ZoneRestrictedDriveCommand.
+     *
+     * @param shouldRestrictToField whether to restrict the robot from leaving the field boundary
+     * @param zoneRestrictions      the zones to restrict movement relative to
+     */
     public ZoneRestrictedDriveCommand(boolean shouldRestrictToField, ZoneRestriction... zoneRestrictions) {
         super(DriveFrame.FIELD_RELATIVE);
         this.zoneRestrictions = shouldRestrictToField
