@@ -85,7 +85,7 @@ public class RobotContainer {
 
         OperatorConstants.INTAKE_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
-        OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.onTrue(FuelIntakeCommands.getCloseIntakeCommand());
+        OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.onTrue(FuelIntakeCommands.getCloseIntakeWhileShootingCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(FuelIntakeCommands.getCloseIntakeCommand());
     }
 

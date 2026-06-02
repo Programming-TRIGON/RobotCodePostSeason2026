@@ -21,14 +21,14 @@ public class FuelIntakeCommands {
 
     public static Command getCloseIntakeCommand() {
         return new ParallelCommandGroup(
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
-                new InstantCommand(() -> CommandConstants.setShiftModeForced(true))
-        ).finallyDo(() -> CommandConstants.setShiftModeForced(false));
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE)
+        );
     }
 
     public static Command getCloseIntakeWhileShootingCommand() {
         return new ParallelCommandGroup(
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE)
-        );
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE),
+                new InstantCommand(() -> CommandConstants.setShiftModeForced(true))
+        ).finallyDo(() -> CommandConstants.setShiftModeForced(false));
     }
 }
