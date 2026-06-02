@@ -4,6 +4,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,6 +16,7 @@ import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePiece;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
+import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 
 import java.util.Random;
 
@@ -78,8 +80,12 @@ public class VisualizeFuelShootingCommand extends Command {
 
     private void executeForShooting(ShootingCalculations.TargetLocation activeTarget) {
         if (shotFuel.isScoredInHub() && !hasLoggedScore) {
-            System.out.println("[Sim Calibration] Hub Shot scored! ToF: " + simulatedFlightTimeSeconds + "s" +
-                    " Distance: " + RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getDistance(activeTarget.position.get()));
+            // Calculates true distance based on the shooter rollers
+            final Pose3d baseExitPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+            final double trueDistanceToTarget = baseExitPose.getTranslation().toTranslation2d().getDistance(activeTarget.position.get());
+
+            System.out.println("[Sim Calibration] Hub Shot scored! ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s" +
+                    " True Distance: " + String.format("%.2f", trueDistanceToTarget) + "m");
             hasLoggedScore = true;
             ejectFromHub();
         }
@@ -89,11 +95,16 @@ public class VisualizeFuelShootingCommand extends Command {
         if (shotFuel.getPosition().getZ() <= FuelShootingVisualizationConstants.END_SIMULATION_HEIGHT_METERS && !hasLoggedScore) {
             double distanceMissedBy = shotFuel.getPosition().toTranslation2d().getDistance(activeTarget.position.get());
 
+            // Calculates true distance based on the shooter rollers
+            final Pose3d baseExitPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+            final double trueDistanceToTarget = baseExitPose.getTranslation().toTranslation2d().getDistance(activeTarget.position.get());
+
             System.out.println("--- DELIVERY SIMULATION RESULT ---");
             System.out.println("Target: " + activeTarget.name());
             System.out.println("Missed coordinate by: " + String.format("%.2f", distanceMissedBy) + " meters");
             System.out.println("Simulated ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s");
-            System.out.println("Distance: " + RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getDistance(activeTarget.position.get()));
+            System.out.println("True Distance: " + String.format("%.2f", trueDistanceToTarget) + "m");
+            System.out.println("----------------------------------");
 
             hasLoggedScore = true;
         }

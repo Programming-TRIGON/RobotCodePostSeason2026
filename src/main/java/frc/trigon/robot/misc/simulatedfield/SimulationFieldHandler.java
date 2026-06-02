@@ -3,10 +3,12 @@ package frc.trigon.robot.misc.simulatedfield;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.shootingcalculations.shootingvisualization.VisualizeFuelShootingCommand;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
+import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,24 @@ public class SimulationFieldHandler {
     public static void update() {
         updateGamePieces();
         SimulatedGamePiece.logAll();
+    }
+
+    /**
+     * Teleports the simulated robot so that the Shooter Exit is an exact distance away from a target.
+     * Use this purely for rapid simulation calibration of the ShootingMap.
+     */
+    public static void teleportRobotForCalibration(ShootingCalculations.TargetLocation targetLocation, double exactShooterDistanceMeters) {
+        final Translation2d targetPos = targetLocation.position.get();
+        final Rotation2d robotRotation = new Rotation2d(); // Assume pointing straight down the X axis
+        final Translation2d shooterOffsetFromChassis = ShooterConstants.FUEL_EXIT_SHOOTER_POSE.getTranslation().toTranslation2d();
+
+        // Calculate where the center of the robot needs to be so the shooter is at the exact distance
+        final Translation2d newRobotPosition = targetPos
+                .minus(new Translation2d(exactShooterDistanceMeters, 0))
+                .minus(shooterOffsetFromChassis);
+
+        // Uses the newly verified custom estimator reset function
+        RobotContainer.ROBOT_POSE_ESTIMATOR.resetPose(new Pose2d(newRobotPosition, robotRotation));
     }
 
     private static void updateGamePieces() {
