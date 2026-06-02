@@ -1,12 +1,9 @@
 package frc.trigon.robot.commands.commandfactories;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.FieldConstants;
-import frc.trigon.robot.constants.OperatorConstants;
+import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
@@ -14,47 +11,33 @@ import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 
-import static frc.trigon.robot.subsystems.swerve.SwerveCommands.getClosedLoopFieldRelativeDriveCommand;
-
 public class ShootingCommands {
+    private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
 
-    private static final FlippableRotation2d HUB_ANGLE =
-            FlippableRotation2d.fromDegrees(90, true);
-
-    private static final FlippableRotation2d RIGHT_DELIVERY_ANGLE =
-            FlippableRotation2d.fromDegrees(70, true);
-
-    private static final FlippableRotation2d LEFT_DELIVERY_ANGLE =
-            FlippableRotation2d.fromDegrees(110, true);
-
-    public static Command getShootOrDeliverCommand() {
+    public static Command getShootCommand() {
         return new ConditionalCommand(
-                getShootToHubCommand(),
+                getShootAtHubCommand(),
                 getShootForDeliveryCommand(),
                 FieldConstants::isRobotInAllianceZone
         );
     }
 
-    private static Command getShootToHubCommand() {
+    private static Command getShootAtHubCommand() {
         return new ParallelCommandGroup(
-                ShooterCommands.getAimAtHubCommand(),
-                HoodCommands.getAimAtHubCommand(),
-                getDriveToHubAngleCommand(),
+                getAimAtHubCommand(),
                 GeneralCommands.runWhen(
                         getLoadForShootingCommand(),
-                        ShootingCommands::isReadyToShoot
+                        SHOOTING_CALCULATIONS::isReadyToShoot
                 )
         );
     }
 
     private static Command getShootForDeliveryCommand() {
         return new ParallelCommandGroup(
-                ShooterCommands.getAimForDeliveryCommand(),
-                HoodCommands.getAimForDeliveryCommand(),
-                getDriveToDeliveryAngleCommand(),
+                getAimForDeliveryCommand(),
                 GeneralCommands.runWhen(
                         getLoadForShootingCommand(),
-                        ShootingCommands::isReadyToShoot
+                        SHOOTING_CALCULATIONS::isReadyToShoot
                 )
         );
     }
@@ -66,31 +49,52 @@ public class ShootingCommands {
         );
     }
 
-    private static Command getDriveToHubAngleCommand() {
-        return getClosedLoopFieldRelativeDriveCommand(
-                OperatorConstants.DRIVER_CONTROLLER::getLeftX,
-                OperatorConstants.DRIVER_CONTROLLER::getLeftY,
-                () -> HUB_ANGLE
+    private static Command getAimAtHubCommand() {
+        return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
+                new ParallelCommandGroup(
+                        new RunCommand(ShootingCommands::updateShootingCalculations),
+                        getTargetShootingAtHubLocationCommand(),
+                        HoodCommands.getAimAtHubCommand(),
+                        ShooterCommands.getAimAtHubCommand()
+                )
         );
     }
 
-    private static Command getDriveToDeliveryAngleCommand() {
-        return getClosedLoopFieldRelativeDriveCommand(
-                OperatorConstants.DRIVER_CONTROLLER::getLeftX,
-                OperatorConstants.DRIVER_CONTROLLER::getLeftY,
-                ShootingCommands::getDeliveryAngle
+    private static Command getTargetShootingAtHubLocationCommand() {
+        return new InstantCommand(
+                () -> SHOOTING_CALCULATIONS.setTargetShootingLocation(ShootingCalculations.TargetLocation.HUB)
         );
     }
 
-    private static FlippableRotation2d getDeliveryAngle() {
-        return FieldConstants.isRobotInAllianceZone()
-                ? RIGHT_DELIVERY_ANGLE
-                : LEFT_DELIVERY_ANGLE;
+    private static Command getAimForDeliveryCommand() {
+        return new ParallelCommandGroup(
+                getTargetShootingForDeliveryLocationCommand(),
+                HoodCommands.getAimForDeliveryCommand(),
+                ShooterCommands.getAimForDeliveryCommand()
+        );
     }
 
-    private static boolean isReadyToShoot() {
-        return RobotContainer.SHOOTER.atTargetVelocity()
-                && RobotContainer.HOOD.atTargetAngle()
-                && RobotContainer.SWERVE.atAngle(HUB_ANGLE);
+    private static Command getTargetShootingForDeliveryLocationCommand() {
+        return GeneralCommands.getContinuousConditionalCommand(
+                getTargetShootingForDeliveryRightLocationCommand(),
+                getTargetShootingForDeliveryLeftLocationCommand(),
+                () -> RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getY() > FieldConstants.FIELD_WIDTH_METERS / 2
+        );
+    }
+
+    private static Command getTargetShootingForDeliveryRightLocationCommand() {
+        return new InstantCommand(
+                () -> SHOOTING_CALCULATIONS.setTargetShootingLocation(ShootingCalculations.TargetLocation.RIGHT_DELIVERY_LOCATION)
+        );
+    }
+
+    private static Command getTargetShootingForDeliveryLeftLocationCommand() {
+        return new InstantCommand(
+                () -> SHOOTING_CALCULATIONS.setTargetShootingLocation(ShootingCalculations.TargetLocation.LEFT_DELIVERY_LOCATION)
+        );
+    }
+
+    private static void updateShootingCalculations() {
+        SHOOTING_CALCULATIONS.updateCalculations();
     }
 }

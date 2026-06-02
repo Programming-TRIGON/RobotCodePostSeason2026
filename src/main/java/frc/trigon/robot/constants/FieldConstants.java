@@ -34,7 +34,7 @@ public class FieldConstants {
     private static final Transform3d TAG_OFFSET = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     public static final HashMap<Integer, Pose3d> TAG_ID_TO_POSE = fieldLayoutToTagIDToPoseMap();
 
-    public static final double ALLIANCE_ZONE_LENGTH = 4.5;
+    public static final double ALLIANCE_ZONE_LENGTH_METERS = 4.5;
     private static final double
             BLUE_RELATIVE_DELIVERY_POSITION_X = 3.0,
             DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS = 2.2;
@@ -83,7 +83,7 @@ public class FieldConstants {
         if (pose == null)
             return false;
         if (Flippable.isRedAlliance())
-            return pose.getX() > FieldConstants.FIELD_LENGTH_METERS - FieldConstants.ALLIANCE_ZONE_LENGTH;
-        return pose.getX() < FieldConstants.ALLIANCE_ZONE_LENGTH;
+            return pose.getX() > FieldConstants.FIELD_LENGTH_METERS - FieldConstants.ALLIANCE_ZONE_LENGTH_METERS;
+        return pose.getX() < FieldConstants.ALLIANCE_ZONE_LENGTH_METERS;
     }
 }
