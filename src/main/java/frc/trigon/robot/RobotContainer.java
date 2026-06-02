@@ -6,19 +6,11 @@
 package frc.trigon.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.flippable.Flippable;
-import frc.trigon.lib.utilities.zonerestricteddrive.ContainmentZone;
-import frc.trigon.lib.utilities.zonerestricteddrive.RestrictedZone;
 import frc.trigon.robot.commands.CommandConstants;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommands.AccelerationRestrictedDriveCommand;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommands.DriveRestrictedCommand;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommands.VelocityRestrictedDriveCommand;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommands.ZoneRestrictedDriveCommand;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
