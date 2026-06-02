@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class FuelIntakeCommands {
     public static Command getPreloadCommand() {
         return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState),
+                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.PRELOAD),
                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.PRELOAD)
         ).withTimeout(OperatorConstants.PRELOAD_TIMER);
     }
