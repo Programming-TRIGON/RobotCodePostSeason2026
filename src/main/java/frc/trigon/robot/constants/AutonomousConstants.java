@@ -1,6 +1,7 @@
 package frc.trigon.robot.constants;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
@@ -83,6 +85,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        //TODO: Implement
+        NamedCommands.registerCommand("CollectCommand",new PrintCommand("Collecting"));
+        NamedCommands.registerCommand("ShootCommand", new PrintCommand("Shooting"));
     }
 }

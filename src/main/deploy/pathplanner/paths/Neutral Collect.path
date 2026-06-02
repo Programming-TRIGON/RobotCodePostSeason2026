@@ -1,0 +1,106 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.359550013646288,
+        "y": 7.003461892740174
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.467625529364363,
+        "y": 6.60984013164312
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Start"
+    },
+    {
+      "anchor": {
+        "x": 7.761468454330423,
+        "y": 3.1460421784024755
+      },
+      "prevControl": {
+        "x": 7.7275367269884985,
+        "y": 3.5929937067057294
+      },
+      "nextControl": {
+        "x": 7.852638472320675,
+        "y": 1.9451431358762452
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.897262042849345,
+        "y": 3.2556472320778753
+      },
+      "prevControl": {
+        "x": 9.123690105524677,
+        "y": 2.1778204036739366
+      },
+      "nextControl": {
+        "x": 8.83950098456796,
+        "y": 3.5305973310943037
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.897262042849345,
+        "y": 7.171609409115721
+      },
+      "prevControl": {
+        "x": 8.912166678090339,
+        "y": 7.523973247080638
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "FinishCollect"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2.5897409539473673,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "CollectCommand",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 2.7388614887267915,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 400.0,
+    "maxAngularAcceleration": 400.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 4.0,
+    "rotation": 25.6398169363605
+  },
+  "reversed": false,
+  "folder": "First Auto",
+  "idealStartingState": {
+    "velocity": 4.0,
+    "rotation": -73.52216891971507
+  },
+  "useDefaultConstraints": true
+}
