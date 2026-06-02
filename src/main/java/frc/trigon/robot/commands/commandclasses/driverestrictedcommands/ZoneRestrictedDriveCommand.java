@@ -11,7 +11,8 @@ import frc.trigon.robot.constants.FieldConstants;
 
 public class ZoneRestrictedDriveCommand extends DriveRestrictedCommand {
     private static final double
-            ROBOT_X_WIDTH_METERS = 1, ROBOT_Y_WIDTH_METERS = 1;
+            ROBOT_X_WIDTH_METERS = 1,
+            ROBOT_Y_WIDTH_METERS = 1;
     private static final double
             FIELD_BOUNDARY_MINIMUM_DISTANCE_METERS = 0.1,
             FIELD_BOUNDARY_BRAKING_ZONE_DISTANCE_METERS = 0.3;

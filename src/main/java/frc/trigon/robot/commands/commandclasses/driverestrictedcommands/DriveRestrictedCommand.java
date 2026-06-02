@@ -13,17 +13,12 @@ import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
 public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
-
-    public enum DriveFrame {
-        FIELD_RELATIVE,
-        SELF_RELATIVE
-    }
-
     private final DriveFrame frame;
+
     private volatile double restrictedX = 0;
     private volatile double restrictedY = 0;
     private volatile double restrictedTheta = 0;
-
+    
     protected DriveRestrictedCommand(DriveFrame frame) {
         this.frame = frame;
         addCommands(
@@ -40,7 +35,8 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
 
     protected abstract void restrict(double shapedX, double shapedY, double shapedTheta);
 
-    protected void onInit() {}
+    protected void onInit() {
+    }
 
     protected final void setRestrictedOutput(double x, double y, double theta) {
         this.restrictedX = x;
@@ -59,9 +55,11 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private void restrictDrive() {
         final double rawTheta = OperatorConstants.DRIVER_CONTROLLER.getRightX();
 
-        final double shapedX = calculateTargetJoystickTranslation().getX();
-        final double shapedY = calculateTargetJoystickTranslation().getY();
-        final double shapedTheta = CommandConstants.calculateRotationStickAxisValue(rawTheta);
+        final Translation2d shapedTranslation = calculateTargetJoystickTranslation();
+        final double
+                shapedX = shapedTranslation.getX(),
+                shapedY = shapedTranslation.getY(),
+                shapedTheta = CommandConstants.calculateRotationStickAxisValue(rawTheta);
 
         if (frame == DriveFrame.SELF_RELATIVE) {
             final Translation2d selfRel = new Translation2d(shapedX, shapedY)
@@ -97,13 +95,19 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     private Translation2d calculateTargetJoystickTranslation() {
+        final Translation2d rawPosition = getRawJoystickPosition();
         final double
-                rawXValue = getRawJoystickPosition().getX(),
-                rawYValue = getRawJoystickPosition().getY();
+                rawXValue = rawPosition.getX(),
+                rawYValue = rawPosition.getY();
 
         return new Translation2d(
                 CommandConstants.calculateDriveStickAxisValue(rawXValue),
                 CommandConstants.calculateDriveStickAxisValue(rawYValue)
         );
+    }
+
+    public enum DriveFrame {
+        FIELD_RELATIVE,
+        SELF_RELATIVE
     }
 }
