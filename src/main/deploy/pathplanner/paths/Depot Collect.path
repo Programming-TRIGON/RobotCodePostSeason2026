@@ -112,7 +112,7 @@
   "folder": "First Auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -25.779787566335866
+    "rotation": 141.88444677827286
   },
   "useDefaultConstraints": true
 }
