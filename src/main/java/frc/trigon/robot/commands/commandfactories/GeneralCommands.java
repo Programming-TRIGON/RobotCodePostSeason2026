@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.MotorSubsystem;
+import frc.trigon.robot.subsystems.hood.HoodCommands;
+import frc.trigon.robot.subsystems.indexer.IndexerCommands;
+import frc.trigon.robot.subsystems.intake.IntakeCommands;
+import frc.trigon.robot.subsystems.loader.LoaderCommands;
+import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
 import java.util.function.BooleanSupplier;
@@ -13,6 +18,16 @@ import java.util.function.BooleanSupplier;
  * These are different from {@link CommandConstants} because they create new commands that use some form of logic instead of only constructing an existing command with parameters.
  */
 public class GeneralCommands {
+    public static Command getDebuggingCommand() {
+        return new ParallelCommandGroup(
+                HoodCommands.getDebuggingCommand(),
+                IndexerCommands.getDebuggingCommand(),
+                IntakeCommands.getDebuggingCommand(),
+                LoaderCommands.getDebuggingCommand(),
+                ShooterCommands.getDebuggingCommand()
+        );
+    }
+
     public static Command getFieldRelativeDriveCommand() {
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),

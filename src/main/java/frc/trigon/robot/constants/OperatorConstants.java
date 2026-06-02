@@ -50,5 +50,7 @@ public class OperatorConstants {
             CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS);
     public static final Trigger
             INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger(),
-            PRELOAD_TRIGGER = OPERATOR_CONTROLLER.f();
+            PRELOAD_TRIGGER = OPERATOR_CONTROLLER.f(),
+            CLOSE_INTAKE_TRIGGER = DRIVER_CONTROLLER.leftBumper(),
+            SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightTrigger();
 }
