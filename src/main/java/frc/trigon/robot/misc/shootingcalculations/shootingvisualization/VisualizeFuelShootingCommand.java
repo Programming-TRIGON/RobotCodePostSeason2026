@@ -1,10 +1,10 @@
 package frc.trigon.robot.misc.shootingcalculations.shootingvisualization;
 
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +31,7 @@ public class VisualizeFuelShootingCommand extends Command {
     private double simulatedFlightTimeSeconds = 0;
     private boolean hasLoggedScore = false;
     private ShootingCalculations.TargetLocation lockedTarget;
+    private double trueDistanceAtLaunchMeters;
 
     public static InstantCommand getScheduleShotCommand(SimulatedGamePiece shotFuel, int startingColumn) {
         return new InstantCommand(() -> CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(shotFuel, startingColumn)));
@@ -44,6 +45,9 @@ public class VisualizeFuelShootingCommand extends Command {
     @Override
     public void initialize() {
         lockedTarget = SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation();
+
+        final Pose3d baseExitPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+        trueDistanceAtLaunchMeters = baseExitPose.getTranslation().toTranslation2d().getDistance(lockedTarget.position.get());
 
         shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose(startingColumn));
         currentFuelVelocity = calculateFuelExitVelocityVector();
@@ -62,7 +66,7 @@ public class VisualizeFuelShootingCommand extends Command {
         }
 
         if (!lockedTarget.isDelivery)
-            executeForShooting(lockedTarget);
+            executeForShooting();
         else
             executeForDelivery(lockedTarget);
     }
@@ -78,14 +82,10 @@ public class VisualizeFuelShootingCommand extends Command {
         shotFuel.updatePosition(new Translation3d(currentPosition.getX(), currentPosition.getY(), SimulatedGamePieceConstants.GamePieceType.FUEL.originPointHeightOffGroundMeters));
     }
 
-    private void executeForShooting(ShootingCalculations.TargetLocation activeTarget) {
+    private void executeForShooting() {
         if (shotFuel.isScoredInHub() && !hasLoggedScore) {
-            // Calculates true distance based on the shooter rollers
-            final Pose3d baseExitPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
-            final double trueDistanceToTarget = baseExitPose.getTranslation().toTranslation2d().getDistance(activeTarget.position.get());
-
             System.out.println("[Sim Calibration] Hub Shot scored! ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s" +
-                    " True Distance: " + String.format("%.2f", trueDistanceToTarget) + "m");
+                    " True Distance: " + String.format("%.2f", trueDistanceAtLaunchMeters) + "m");
             hasLoggedScore = true;
             ejectFromHub();
         }
@@ -95,15 +95,11 @@ public class VisualizeFuelShootingCommand extends Command {
         if (shotFuel.getPosition().getZ() <= FuelShootingVisualizationConstants.END_SIMULATION_HEIGHT_METERS && !hasLoggedScore) {
             double distanceMissedBy = shotFuel.getPosition().toTranslation2d().getDistance(activeTarget.position.get());
 
-            // Calculates true distance based on the shooter rollers
-            final Pose3d baseExitPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
-            final double trueDistanceToTarget = baseExitPose.getTranslation().toTranslation2d().getDistance(activeTarget.position.get());
-
             System.out.println("--- DELIVERY SIMULATION RESULT ---");
             System.out.println("Target: " + activeTarget.name());
             System.out.println("Missed coordinate by: " + String.format("%.2f", distanceMissedBy) + " meters");
             System.out.println("Simulated ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s");
-            System.out.println("True Distance: " + String.format("%.2f", trueDistanceToTarget) + "m");
+            System.out.println("True Distance Fired From: " + String.format("%.2f", trueDistanceAtLaunchMeters) + "m");
             System.out.println("----------------------------------");
 
             hasLoggedScore = true;
