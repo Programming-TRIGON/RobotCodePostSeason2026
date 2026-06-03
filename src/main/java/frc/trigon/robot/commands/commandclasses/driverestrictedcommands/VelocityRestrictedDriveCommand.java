@@ -12,7 +12,8 @@ public class VelocityRestrictedDriveCommand extends DriveRestrictedCommand {
     /**
      * Creates a new VelocityRestrictedDriveCommand.
      *
-     * @param maximumTranslationVelocity maximum linear velocity, has to be between 1 and 0.
+     * @param frame whether the robot is driving relative to the field or to itself.
+     * @param maximumTranslationVelocity maximum linear velocity, has to be between 0 and 1.
      */
     public VelocityRestrictedDriveCommand(DriveFrame frame, double maximumTranslationVelocity) {
         this(frame, maximumTranslationVelocity, 1.0);
@@ -21,8 +22,9 @@ public class VelocityRestrictedDriveCommand extends DriveRestrictedCommand {
     /**
      * Creates a new VelocityRestrictedDriveCommand.
      *
-     * @param maximumTranslationVelocity maximum linear velocity, needs to be between 1 and 0.
-     * @param maximumThetaVelocity       maximum rotational velocity, needs to be between 1 and 0.
+     * @param frame whether the robot is driving relative to the field or to itself.
+     * @param maximumTranslationVelocity maximum linear velocity, needs to be between 0 and 1.
+     * @param maximumThetaVelocity       maximum rotational velocity, needs to be between 0 and 1.
      */
     public VelocityRestrictedDriveCommand(DriveFrame frame, double maximumTranslationVelocity, double maximumThetaVelocity) {
         super(frame);

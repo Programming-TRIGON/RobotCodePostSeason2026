@@ -113,6 +113,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
 
     /**
      * An enum that is used to represent whether the robot is driving relative to the field or relative to itself.
+     * The enum is used to decide which method of driving gets restricted.
      */
     public enum DriveFrame {
         FIELD_RELATIVE,
