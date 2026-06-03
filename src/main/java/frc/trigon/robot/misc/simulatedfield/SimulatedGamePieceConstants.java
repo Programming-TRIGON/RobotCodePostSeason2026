@@ -21,12 +21,17 @@ public class SimulatedGamePieceConstants {
     public static final int INDEXER_WIDTH_CAPACITY = 4;
     static final double INDEXER_ROW_SPACING_METERS = 0.16;
     public static final double INDEXER_COL_SPACING_METERS = 0.16;
+    // Visual and Organic Simulation Tuning
+    public static final double DEAD_SPACE_PROBABILITY = 0.25;
+    public static final double STACKING_NESTLE_FACTOR = 0.85;
+    public static final double ORGANIC_SCATTER_METERS = 0.04;
 
     private static final int
             STARTING_FUEL_ROWS = 12,
             STARTING_FUEL_COLUMNS = 30;
+    public static final double FUEL_DIAMETER_METERS = 0.15;
+
     private static final double
-            FUEL_DIAMETER_METERS = 0.15,
             STARTING_FUEL_X_POSITION_METERS = 7.357364,
             STARTING_FUEL_Y_POSITION_METERS = 1.724406,
             STARTING_FUEL_SPACING_METERS = 0.16;

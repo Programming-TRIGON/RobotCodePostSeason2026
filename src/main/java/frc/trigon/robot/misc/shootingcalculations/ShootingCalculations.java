@@ -66,16 +66,13 @@ public class ShootingCalculations {
     }
 
     public Translation3d calculateFieldRelativeFuelExitPose(Pose2d robotPose, Rotation2d pitch, int columnIndex) {
-        // 1. Calculate how far left or right the ball is from the center of the drum
         double colOffset = (columnIndex - (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
 
-        // 2. Apply that lateral shift
         Transform3d laneSpecificExitTransform = new Transform3d(
                 new Translation3d(0, colOffset, 0),
                 new Rotation3d()
         );
 
-        // 3. Apply the pitch rotation to the exit pose
         final Transform3d pitchTransform = new Transform3d(
                 new Translation3d(),
                 new Rotation3d(0, -pitch.getRadians(), 0)
@@ -84,7 +81,6 @@ public class ShootingCalculations {
         final Pose3d baseExitPose = new Pose3d(robotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
         final Pose3d pitchedExitPose = baseExitPose.transformBy(pitchTransform);
 
-        // 4. Combine the pitched pose with the lane offset
         return pitchedExitPose.transformBy(laneSpecificExitTransform).getTranslation();
     }
 
@@ -96,21 +92,25 @@ public class ShootingCalculations {
 
     public ShootingState calculateTargetShootingState(Pose2d robotPose, ChassisSpeeds fieldRelativeChassisSpeeds) {
         final Translation2d targetPhysicalPosition = currentTargetLocation.position.get();
-        final Translation2d currentRobotPosition = robotPose.getTranslation();
         final Translation2d robotVelocity = new Translation2d(fieldRelativeChassisSpeeds.vxMetersPerSecond, fieldRelativeChassisSpeeds.vyMetersPerSecond);
 
+        // Uses exact shooter exit for both ToF interpolation AND Swerve aim Angle
+        final Pose3d baseExitPose = new Pose3d(robotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+        final Translation2d shooterExitFieldPosition = baseExitPose.getTranslation().toTranslation2d();
+
         Translation2d virtualTarget = targetPhysicalPosition;
-        double distanceToVirtualTarget = currentRobotPosition.getDistance(virtualTarget);
+        double distanceToVirtualTarget = shooterExitFieldPosition.getDistance(virtualTarget);
 
         ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
 
         for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_HUB_CALCULATION_ITERATIONS; i++) {
             virtualTarget = targetPhysicalPosition.minus(robotVelocity.times(parameters.timeOfFlight()));
-            distanceToVirtualTarget = currentRobotPosition.getDistance(virtualTarget);
+            distanceToVirtualTarget = shooterExitFieldPosition.getDistance(virtualTarget);
             parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
         }
 
-        final Rotation2d targetYaw = virtualTarget.minus(currentRobotPosition).getAngle();
+        final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle();
+
         Logger.recordOutput("Shooting/DistanceToVirtualTarget", distanceToVirtualTarget);
         Logger.recordOutput("Shooting/InterpolatedTimeOfFlight", parameters.timeOfFlight());
 
