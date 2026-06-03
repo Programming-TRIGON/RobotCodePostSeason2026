@@ -12,9 +12,11 @@ import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SimulationFieldHandler {
     private static final ArrayList<SimulatedGamePiece> HELD_FUEL = new ArrayList<>(List.of());
+    private static final double INDEXER_RAMP_ANGLE_RADS = Math.toRadians(19.8);
 
     public static boolean hasFuel() {
         return !HELD_FUEL.isEmpty();
@@ -31,15 +33,13 @@ public class SimulationFieldHandler {
      */
     public static void teleportRobotForCalibration(ShootingCalculations.TargetLocation targetLocation, double exactShooterDistanceMeters) {
         final Translation2d targetPos = targetLocation.position.get();
-        final Rotation2d robotRotation = new Rotation2d(); // Assume pointing straight down the X axis
+        final Rotation2d robotRotation = new Rotation2d();
         final Translation2d shooterOffsetFromChassis = ShooterConstants.FUEL_EXIT_SHOOTER_POSE.getTranslation().toTranslation2d();
 
-        // Calculate where the center of the robot needs to be so the shooter is at the exact distance
         final Translation2d newRobotPosition = targetPos
                 .minus(new Translation2d(exactShooterDistanceMeters, 0))
                 .minus(shooterOffsetFromChassis);
 
-        // Uses the newly verified custom estimator reset function
         RobotContainer.ROBOT_POSE_ESTIMATOR.resetPose(new Pose2d(newRobotPosition, robotRotation));
     }
 
@@ -53,7 +53,6 @@ public class SimulationFieldHandler {
         final Translation3d robotRelativeCollectionPosition = SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION;
         final Translation3d collectionPose = robotRelativeToFieldRelative(robotRelativeCollectionPosition);
 
-        // Assumes Intake is active (you may need to add folding logic checks here if the intake is stowed)
         if (isCollectingFuel() && HELD_FUEL.size() < SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL) {
             final ArrayList<SimulatedGamePiece> collectedFuel = getCollectedFuel(collectionPose);
             for (SimulatedGamePiece fuel : collectedFuel) {
@@ -100,6 +99,8 @@ public class SimulationFieldHandler {
         for (SimulatedGamePiece heldFuel : HELD_FUEL) {
             if (!heldFuel.isIndexed())
                 continue;
+
+            // Only fire the balls that managed to reach the absolute front of the line
             if (heldFuel.getIndexerGridSlot().getX() == 0)
                 ejectable.add(heldFuel);
         }
@@ -132,14 +133,101 @@ public class SimulationFieldHandler {
     }
 
     private static Translation3d calculateHeldFuelFieldRelativePosition(Translation2d gridSlot) {
-        // Calculate offset based on Row (X) and Col (Y)
-        // Center the 4 columns around the robot's Y axis
-        double colOffset = (gridSlot.getY() - (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
-        double rowOffset = gridSlot.getX() * -SimulatedGamePieceConstants.INDEXER_ROW_SPACING_METERS; // Negative goes back into the robot
+        int row = (int) gridSlot.getX();
+        int col = (int) gridSlot.getY();
 
-        Translation3d indexerOffset = new Translation3d(rowOffset, colOffset, 0);
+        // 1. Calculate the exact mathematical offsets
+        double yOffset = calculateWidthOffsetY(col);
+        Translation2d profileOffsetXZ = calculateProfileOffsetXZ(row);
 
-        // Use the new indexer subsystem pose calculation
+        Translation3d exactOffset = new Translation3d(profileOffsetXZ.getX(), yOffset, profileOffsetXZ.getY());
+
+        // 2. Apply visual adjustments
+        Translation3d scatteredOffset = applyOrganicScatter(exactOffset, row, col);
+
+        // 3. Transform to Field Space
+        return convertIndexerOffsetToFieldRelative(scatteredOffset);
+    }
+
+    /**
+     * Calculates the Left/Right (Y) offset to center the 4 columns around the robot's center.
+     */
+    private static double calculateWidthOffsetY(int col) {
+        double centerOffset = (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1) / 2.0;
+        return (col - centerOffset) * SimulatedGamePieceConstants.INDEXER_COL_SPACING_METERS;
+    }
+
+    /**
+     * Calculates the Depth (X) and Height (Z) offset based on the ramp and stacking logic.
+     * Returned as a Translation2d where X = Depth and Y = Height.
+     */
+    private static Translation2d calculateProfileOffsetXZ(int row) {
+        boolean isStacked = row >= 4;
+        int effectiveRow = isStacked ? row - 2 : row;
+
+        Translation2d baseOffset = getBaseProfileOffset(effectiveRow);
+
+        if (isStacked) {
+            return baseOffset.plus(getStackingShift());
+        }
+
+        return baseOffset;
+    }
+
+    /**
+     * Calculates the position of a game piece assuming it is resting directly on the physical
+     * plastic of the loader (flat) or the indexer (ramp).
+     */
+    private static Translation2d getBaseProfileOffset(int effectiveRow) {
+        double spacing = SimulatedGamePieceConstants.INDEXER_ROW_SPACING_METERS;
+
+        if (effectiveRow <= 1) {
+            // Flat Section (Loader)
+            return new Translation2d(effectiveRow * -spacing, 0);
+        }
+
+        // Ramp Section (Indexer)
+        double flatDist = 1 * -spacing;
+        double rampDist = (effectiveRow - 1) * spacing;
+
+        double xOffset = flatDist - (rampDist * Math.cos(INDEXER_RAMP_ANGLE_RADS));
+        double zOffset = rampDist * Math.sin(INDEXER_RAMP_ANGLE_RADS);
+
+        return new Translation2d(xOffset, zOffset);
+    }
+
+    /**
+     * Calculates the perpendicular offset required to stack a ball on top of another ball
+     * that is resting on the 19.8 degree ramp.
+     */
+    private static Translation2d getStackingShift() {
+        double stackHeight = SimulatedGamePieceConstants.FUEL_DIAMETER_METERS * 0.85; // nestle slightly
+
+        double xShift = -stackHeight * Math.sin(INDEXER_RAMP_ANGLE_RADS);
+        double zShift = stackHeight * Math.cos(INDEXER_RAMP_ANGLE_RADS);
+
+        return new Translation2d(xShift, zShift);
+    }
+
+    /**
+     * Applies a deterministic random scatter to simulate a messy pile of game pieces.
+     */
+    private static Translation3d applyOrganicScatter(Translation3d baseOffset, int row, int col) {
+        Random scatterRNG = new Random(row * 100L + col);
+        double xScatter = (scatterRNG.nextDouble() - 0.5) * 0.04;
+        double yScatter = (scatterRNG.nextDouble() - 0.5) * 0.04;
+
+        return new Translation3d(
+                baseOffset.getX() + xScatter,
+                baseOffset.getY() + yScatter,
+                baseOffset.getZ()
+        );
+    }
+
+    /**
+     * Takes the local 3D offset inside the indexer and translates it into global field coordinates.
+     */
+    private static Translation3d convertIndexerOffsetToFieldRelative(Translation3d indexerOffset) {
         final Pose3d robotRelativeIndexerPose = IndexerConstants.FUEL_IN_INDEXER_POSE;
 
         final Transform3d fuelOffsetFromIndexerPose = new Transform3d(
@@ -147,7 +235,8 @@ public class SimulationFieldHandler {
                 new Rotation3d()
         );
 
-        return robotRelativeToFieldRelative(robotRelativeIndexerPose.plus(fuelOffsetFromIndexerPose).getTranslation());
+        Translation3d robotRelativeFuelPosition = robotRelativeIndexerPose.plus(fuelOffsetFromIndexerPose).getTranslation();
+        return robotRelativeToFieldRelative(robotRelativeFuelPosition);
     }
 
     private static Translation3d robotRelativeToFieldRelative(Translation3d robotRelativePose) {

@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SimulatedGamePiece {
     private static final ArrayList<SimulatedGamePiece> SIMULATED_GAME_PIECES = new ArrayList<>();
@@ -99,13 +100,19 @@ public class SimulatedGamePiece {
         while (true) {
             for (int col = 0; col < SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY; col++) {
                 Translation2d candidateSlot = new Translation2d(targetRow, col);
-                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot)) {
+
+                // ORGANIC BUNCHING: 25% chance a slot is "dead space" forcing balls into a loose pile.
+                // Seeded so the dead space stays consistent for that specific slot.
+                boolean isDeadSpace = new Random(targetRow * 31L + col * 17L).nextDouble() < 0.25;
+
+                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot) && !isDeadSpace) {
                     return candidateSlot;
                 }
             }
             targetRow++;
-            // Failsafe to prevent infinite loops if loaded beyond physical reality
-            if (targetRow > (SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY) + 1) {
+
+            // Failsafe to prevent infinite loops if loaded beyond capacity
+            if (targetRow > (SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY) + 3) {
                 return null;
             }
         }
