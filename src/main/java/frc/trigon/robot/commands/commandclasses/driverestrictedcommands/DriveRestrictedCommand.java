@@ -15,7 +15,6 @@ import frc.trigon.robot.subsystems.swerve.SwerveCommands;
  */
 public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveFrame frame;
-
     private double restrictedX = 0;
     private double restrictedY = 0;
     private double restrictedTheta = 0;
@@ -34,8 +33,8 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
                     restrictedTheta = 0;
                     onInit();
                 }),
-                buildCalculationCommand(),
-                buildDriveCommand()
+                getRestrictDriveCommand(),
+                getDriveCommand()
         );
     }
 
@@ -54,7 +53,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         return frame;
     }
 
-    private Command buildCalculationCommand() {
+    private Command getRestrictDriveCommand() {
         return new RunCommand(this::restrictDrive);
     }
 
@@ -77,7 +76,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         restrict(shapedX, shapedY, shapedTheta);
     }
 
-    private Command buildDriveCommand() {
+    private Command getDriveCommand() {
         final Command drive = switch (frame) {
             case FIELD_RELATIVE -> SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                     () -> restrictedX,
@@ -113,7 +112,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     /**
-     * An enum that is used for when the robot is driving relative to the field or relative to itself.
+     * An enum that is used to represent whether the robot is driving relative to the field or relative to itself.
      */
     public enum DriveFrame {
         FIELD_RELATIVE,
