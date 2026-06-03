@@ -32,10 +32,7 @@ public class CommandConstants {
     private static final double
             INDICATE_ALLIANCE_SHIFT_RUMBLE_DURATION_SECONDS = 1,
             INDICATE_ALLIANCE_SHIFT_RUMBLE_POWER = 0.5;
-    private static boolean isShiftModeForced = false;
-    public static void setShiftModeForced(boolean forced) {
-        isShiftModeForced = forced;
-    }
+    public static final double PRELOAD_TIMER_SECONDS = 2;
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
@@ -72,6 +69,18 @@ public class CommandConstants {
                     RobotContainer.SWERVE
             );
 
+    public static Command getSlowDriveCommand(double slowdownMultiplier) {
+        final double squaredSlowdown = Math.sqrt(slowdownMultiplier);
+        final double translationDivisor = 1 - squaredSlowdown * (1 - (1 / MINIMUM_TRANSLATION_SHIFT_POWER));
+        final double rotationDivisor = 1 - squaredSlowdown * (1 - (1 / MINIMUM_ROTATION_SHIFT_POWER));
+
+        return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
+                () -> DRIVER_CONTROLLER.getLeftY() / translationDivisor,
+                () -> DRIVER_CONTROLLER.getLeftX() / translationDivisor,
+                () -> DRIVER_CONTROLLER.getRightX() / rotationDivisor
+        );
+    }
+
     /**
      * Calculates the target drive power from an axis value by dividing it by the shift mode value.
      *
@@ -100,8 +109,7 @@ public class CommandConstants {
      * @return the power to apply to the robot
      */
     public static double calculateShiftModeValue(double minimumPower) {
-        final double triggerValue = isShiftModeForced ? 1 : DRIVER_CONTROLLER.getRightTriggerAxis();
-        final double squaredShiftModeValue = Math.sqrt(triggerValue);
+        final double squaredShiftModeValue = Math.sqrt(DRIVER_CONTROLLER.getRightTriggerAxis());
         final double minimumShiftValueCoefficient = 1 - (1 / minimumPower);
 
         return 1 - squaredShiftModeValue * minimumShiftValueCoefficient;

@@ -36,7 +36,6 @@ public class OperatorConstants {
                     0,
                     INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA_INTERCEPT
             );
-    public static final double PRELOAD_TIMER = 2;
 
     public static final Trigger
             RESET_HEADING_TRIGGER = DRIVER_CONTROLLER.y(),
@@ -52,7 +51,7 @@ public class OperatorConstants {
             INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger(),
             PRELOAD_TRIGGER = OPERATOR_CONTROLLER.f(),
             CLOSE_INTAKE_TRIGGER = DRIVER_CONTROLLER.leftBumper(),
-            SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightTrigger(),
+            SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightBumper(),
             CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(SHOOTING_TRIGGER),
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(SHOOTING_TRIGGER.negate());
 }

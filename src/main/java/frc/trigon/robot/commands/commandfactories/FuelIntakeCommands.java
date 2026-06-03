@@ -16,19 +16,13 @@ public class FuelIntakeCommands {
         return new ParallelCommandGroup(
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.PRELOAD),
                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.PRELOAD)
-        ).withTimeout(OperatorConstants.PRELOAD_TIMER);
-    }
-
-    public static Command getCloseIntakeCommand() {
-        return new ParallelCommandGroup(
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE)
-        );
+        ).withTimeout(CommandConstants.PRELOAD_TIMER_SECONDS);
     }
 
     public static Command getCloseIntakeWhileShootingCommand() {
         return new ParallelCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE),
-                new InstantCommand(() -> CommandConstants.setShiftModeForced(true))
-        ).finallyDo(() -> CommandConstants.setShiftModeForced(false));
+                CommandConstants.getSlowDriveCommand(1)
+        );
     }
 }
