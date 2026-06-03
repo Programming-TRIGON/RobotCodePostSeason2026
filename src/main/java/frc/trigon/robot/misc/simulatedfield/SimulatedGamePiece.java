@@ -101,20 +101,16 @@ public class SimulatedGamePiece {
             for (int col = 0; col < SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY; col++) {
                 Translation2d candidateSlot = new Translation2d(targetRow, col);
 
-                // ORGANIC BUNCHING: 25% chance a slot is "dead space" forcing balls into a loose pile.
-                // Seeded so the dead space stays consistent for that specific slot.
-                boolean isDeadSpace = new Random(targetRow * 31L + col * 17L).nextDouble() < 0.25;
-
-                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot) && !isDeadSpace) {
+                // ORGANIC BUNCHING: Uses tuning constant to force balls into a loose pile.
+                boolean isDeadSpace = new Random(targetRow * 31L + col * 17L).nextDouble() < SimulatedGamePieceConstants.DEAD_SPACE_PROBABILITY;
+                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot) && !isDeadSpace)
                     return candidateSlot;
-                }
             }
             targetRow++;
 
             // Failsafe to prevent infinite loops if loaded beyond capacity
-            if (targetRow > (SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY) + 3) {
+            if (targetRow > (SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY) + 3)
                 return null;
-            }
         }
     }
 }

@@ -201,7 +201,7 @@ public class SimulationFieldHandler {
      * that is resting on the 19.8 degree ramp.
      */
     private static Translation2d getStackingShift() {
-        double stackHeight = SimulatedGamePieceConstants.FUEL_DIAMETER_METERS * 0.85; // nestle slightly
+        double stackHeight = SimulatedGamePieceConstants.FUEL_DIAMETER_METERS * SimulatedGamePieceConstants.STACKING_NESTLE_FACTOR;
 
         double xShift = -stackHeight * Math.sin(INDEXER_RAMP_ANGLE_RADS);
         double zShift = stackHeight * Math.cos(INDEXER_RAMP_ANGLE_RADS);
@@ -214,8 +214,8 @@ public class SimulationFieldHandler {
      */
     private static Translation3d applyOrganicScatter(Translation3d baseOffset, int row, int col) {
         Random scatterRNG = new Random(row * 100L + col);
-        double xScatter = (scatterRNG.nextDouble() - 0.5) * 0.04;
-        double yScatter = (scatterRNG.nextDouble() - 0.5) * 0.04;
+        double xScatter = (scatterRNG.nextDouble() - 0.5) * SimulatedGamePieceConstants.ORGANIC_SCATTER_METERS;
+        double yScatter = (scatterRNG.nextDouble() - 0.5) * SimulatedGamePieceConstants.ORGANIC_SCATTER_METERS;
 
         return new Translation3d(
                 baseOffset.getX() + xScatter,
