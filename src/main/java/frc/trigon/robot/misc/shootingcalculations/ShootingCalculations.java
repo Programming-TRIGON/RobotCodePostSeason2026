@@ -109,7 +109,6 @@ public class ShootingCalculations {
             parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
         }
 
-        // SWERVE AIMING FIX: Angle is now calculated from the shooter exit pose, not chassis center
         final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle();
 
         Logger.recordOutput("Shooting/DistanceToVirtualTarget", distanceToVirtualTarget);
