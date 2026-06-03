@@ -2,18 +2,17 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommands;
 
 import edu.wpi.first.math.MathUtil;
 
-
 /**
- * Built on {@link DriveRestrictedCommand}
- *
- * Caps the magnitude of the driver's translation input. Rotation can optionally be capped too.
+ * A command that caps the linear and rotational velocity of the robot.
  */
 public class VelocityRestrictedDriveCommand extends DriveRestrictedCommand {
     private final double maximumTranslationPower;
     private final double maximumThetaPower;
 
     /**
-     * @param maximumTranslationPower maximum translation magnitude as a fraction of full power, in (0, 1]
+     * Creates a new VelocityRestrictedDriveCommand.
+     *
+     * @param maximumTranslationPower maximum linear velocity.
      */
     public VelocityRestrictedDriveCommand(DriveFrame frame, double maximumTranslationPower) {
         this(frame, maximumTranslationPower, 1.0);
@@ -22,8 +21,8 @@ public class VelocityRestrictedDriveCommand extends DriveRestrictedCommand {
     /**
      * Creates a new VelocityRestrictedDriveCommand.
      *
-     * @param maximumTranslationPower maximum translation magnitude as a fraction of full power, in (0, 1]
-     * @param maximumThetaPower       maximum rotation magnitude as a fraction of full power, in (0, 1]
+     * @param maximumTranslationPower maximum linear velocity.
+     * @param maximumThetaPower       maximum rotational velocity.
      */
     public VelocityRestrictedDriveCommand(DriveFrame frame, double maximumTranslationPower, double maximumThetaPower) {
         super(frame);
@@ -39,8 +38,7 @@ public class VelocityRestrictedDriveCommand extends DriveRestrictedCommand {
         if (norm > maximumTranslationPower) {
             final double scale = maximumTranslationPower / norm;
             setRestrictedOutput(shapedX * scale, shapedY * scale, cappedTheta);
-        } else {
+        } else
             setRestrictedOutput(shapedX, shapedY, cappedTheta);
-        }
     }
 }

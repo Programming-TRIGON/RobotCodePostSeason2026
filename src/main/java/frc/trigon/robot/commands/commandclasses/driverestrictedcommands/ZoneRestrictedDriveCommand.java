@@ -9,9 +9,7 @@ import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.ZoneRestrictedDriveConstants;
 
 /**
- * Built on {@link DriveRestrictedCommand}
- *
- * Drives the robot while restricting movement relative to defined zones on the field.
+ * A command that drives the robot while restricting movement relative to defined zones on the field.
  * Restricted zones slow and block movement into them.
  * Containment zones slow and block movement out of them.
  * All zone restrictions are applied sequentially, each further restricting the previous result.

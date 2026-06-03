@@ -16,9 +16,9 @@ import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveFrame frame;
 
-    private volatile double restrictedX = 0;
-    private volatile double restrictedY = 0;
-    private volatile double restrictedTheta = 0;
+    private double restrictedX = 0;
+    private double restrictedY = 0;
+    private double restrictedTheta = 0;
 
     /**
      * Creates a new DriveRestrictedDriveCommand.
@@ -112,6 +112,9 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         );
     }
 
+    /**
+     * An enum that is used for when the robot is driving relative to the field or relative to itself.
+     */
     public enum DriveFrame {
         FIELD_RELATIVE,
         SELF_RELATIVE

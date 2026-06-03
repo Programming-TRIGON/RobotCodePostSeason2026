@@ -3,8 +3,7 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommands;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 
 /**
- * Smooths the driver's input by limiting how fast each axis can change per second.
- * Each axis has its own slew-rate limiter.
+ * A command that smooths the driver's input by limiting how fast each axis can accelerate.
  */
 public class AccelerationRestrictedDriveCommand extends DriveRestrictedCommand {
     private final double maximumTranslationAcceleration;
@@ -16,12 +15,10 @@ public class AccelerationRestrictedDriveCommand extends DriveRestrictedCommand {
     /**
      * Creates a new AccelerationRestrictedDriveCommand.
      *
-     * @param maximumTranslationAcceleration maximum change in translation power per second
-     * @param maximumThetaAcceleration       maximum change in rotation power per second
+     * @param maximumTranslationAcceleration maximum linear acceleration.
+     * @param maximumThetaAcceleration       maximum rotational acceleration.
      */
-    public AccelerationRestrictedDriveCommand(DriveFrame frame,
-                                              double maximumTranslationAcceleration,
-                                              double maximumThetaAcceleration) {
+    public AccelerationRestrictedDriveCommand(DriveFrame frame, double maximumTranslationAcceleration, double maximumThetaAcceleration) {
         super(frame);
         this.maximumTranslationAcceleration = maximumTranslationAcceleration;
         this.maximumThetaAcceleration = maximumThetaAcceleration;
