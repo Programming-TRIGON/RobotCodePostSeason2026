@@ -18,6 +18,8 @@ import java.util.function.BooleanSupplier;
  * These are different from {@link CommandConstants} because they create new commands that use some form of logic instead of only constructing an existing command with parameters.
  */
 public class GeneralCommands {
+    public static double SWERVE_SPEED_MULTIPLIER = CommandConstants.DEFAULT_SWERVE_SPEED_MULTIPLIER;
+
     public static Command getDebuggingCommand() {
         return new ParallelCommandGroup(
                 HoodCommands.getDebuggingCommand(),
