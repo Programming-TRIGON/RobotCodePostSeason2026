@@ -17,6 +17,7 @@ import java.util.Random;
 public class SimulationFieldHandler {
     private static final ArrayList<SimulatedGamePiece> HELD_FUEL = new ArrayList<>(List.of());
     private static final double INDEXER_RAMP_ANGLE_RADS = Math.toRadians(19.8);
+    private static final int ROWS_PER_LAYER = 4; // Max depth into the robot before stacking up
 
     public static boolean hasFuel() {
         return !HELD_FUEL.isEmpty();
@@ -100,7 +101,6 @@ public class SimulationFieldHandler {
             if (!heldFuel.isIndexed())
                 continue;
 
-            // Only fire the balls that managed to reach the absolute front of the line
             if (heldFuel.getIndexerGridSlot().getX() == 0)
                 ejectable.add(heldFuel);
         }
@@ -136,16 +136,12 @@ public class SimulationFieldHandler {
         int row = (int) gridSlot.getX();
         int col = (int) gridSlot.getY();
 
-        // 1. Calculate the exact mathematical offsets
         double yOffset = calculateWidthOffsetY(col);
         Translation2d profileOffsetXZ = calculateProfileOffsetXZ(row);
 
         Translation3d exactOffset = new Translation3d(profileOffsetXZ.getX(), yOffset, profileOffsetXZ.getY());
-
-        // 2. Apply visual adjustments
         Translation3d scatteredOffset = applyOrganicScatter(exactOffset, row, col);
 
-        // 3. Transform to Field Space
         return convertIndexerOffsetToFieldRelative(scatteredOffset);
     }
 
@@ -162,56 +158,44 @@ public class SimulationFieldHandler {
      * Returned as a Translation2d where X = Depth and Y = Height.
      */
     private static Translation2d calculateProfileOffsetXZ(int row) {
-        boolean isStacked = row >= 4;
-        int effectiveRow = isStacked ? row - 2 : row;
+        int layer = row / ROWS_PER_LAYER;
+        int localRow = row % ROWS_PER_LAYER;
 
-        Translation2d baseOffset = getBaseProfileOffset(effectiveRow);
+        Translation2d baseOffset = getBaseProfileOffset(localRow);
 
-        if (isStacked) {
-            return baseOffset.plus(getStackingShift());
+        if (layer > 0) {
+            // Stack vertically for each new layer
+            double stackHeight = SimulatedGamePieceConstants.FUEL_DIAMETER_METERS * SimulatedGamePieceConstants.STACKING_NESTLE_FACTOR;
+
+            double zShift = layer * stackHeight;
+            // Shift X slightly backward per layer so the pile naturally leans against itself inside the hopper
+            double xShift = layer * (SimulatedGamePieceConstants.FUEL_DIAMETER_METERS * 0.15) * SimulatedGamePieceConstants.INDEXER_BACKWARD_DIRECTION;
+
+            return baseOffset.plus(new Translation2d(xShift, zShift));
         }
 
         return baseOffset;
     }
 
-    /**
-     * Calculates the position of a game piece assuming it is resting directly on the physical
-     * plastic of the loader (flat) or the indexer (ramp).
-     */
-    private static Translation2d getBaseProfileOffset(int effectiveRow) {
+    private static Translation2d getBaseProfileOffset(int localRow) {
         double spacing = SimulatedGamePieceConstants.INDEXER_ROW_SPACING_METERS;
+        double dir = SimulatedGamePieceConstants.INDEXER_BACKWARD_DIRECTION;
 
-        if (effectiveRow <= 1) {
-            // Flat Section (Loader)
-            return new Translation2d(effectiveRow * -spacing, 0);
+        if (localRow <= 1) {
+            // Flat Section (First two rows)
+            return new Translation2d(localRow * spacing * dir, 0);
         }
 
-        // Ramp Section (Indexer)
-        double flatDist = 1 * -spacing;
-        double rampDist = (effectiveRow - 1) * spacing;
+        // Ramp Section
+        double flatDist = 1 * spacing * dir;
+        double rampDist = (localRow - 1) * spacing;
 
-        double xOffset = flatDist - (rampDist * Math.cos(INDEXER_RAMP_ANGLE_RADS));
+        double xOffset = flatDist + (rampDist * Math.cos(INDEXER_RAMP_ANGLE_RADS) * dir);
         double zOffset = rampDist * Math.sin(INDEXER_RAMP_ANGLE_RADS);
 
         return new Translation2d(xOffset, zOffset);
     }
 
-    /**
-     * Calculates the perpendicular offset required to stack a ball on top of another ball
-     * that is resting on the 19.8 degree ramp.
-     */
-    private static Translation2d getStackingShift() {
-        double stackHeight = SimulatedGamePieceConstants.FUEL_DIAMETER_METERS * SimulatedGamePieceConstants.STACKING_NESTLE_FACTOR;
-
-        double xShift = -stackHeight * Math.sin(INDEXER_RAMP_ANGLE_RADS);
-        double zShift = stackHeight * Math.cos(INDEXER_RAMP_ANGLE_RADS);
-
-        return new Translation2d(xShift, zShift);
-    }
-
-    /**
-     * Applies a deterministic random scatter to simulate a messy pile of game pieces.
-     */
     private static Translation3d applyOrganicScatter(Translation3d baseOffset, int row, int col) {
         Random scatterRNG = new Random(row * 100L + col);
         double xScatter = (scatterRNG.nextDouble() - 0.5) * SimulatedGamePieceConstants.ORGANIC_SCATTER_METERS;
@@ -224,9 +208,6 @@ public class SimulationFieldHandler {
         );
     }
 
-    /**
-     * Takes the local 3D offset inside the indexer and translates it into global field coordinates.
-     */
     private static Translation3d convertIndexerOffsetToFieldRelative(Translation3d indexerOffset) {
         final Pose3d robotRelativeIndexerPose = IndexerConstants.FUEL_IN_INDEXER_POSE;
 
