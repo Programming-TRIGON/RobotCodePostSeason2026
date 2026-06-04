@@ -91,12 +91,7 @@ public class Hood extends MotorSubsystem {
         return Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.POSITION));
     }
 
-    void aimAtHub() {
-        final Rotation2d targetAngleFromShootingCalculations = shootingCalculations.getTargetShootingState().targetPitch();
-        setTargetAngle(targetAngleFromShootingCalculations);
-    }
-
-    void aimForDelivery() {
+    void aim() {
         final Rotation2d targetAngleFromShootingCalculations = shootingCalculations.getTargetShootingState().targetPitch();
         setTargetAngle(targetAngleFromShootingCalculations);
     }

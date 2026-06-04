@@ -90,12 +90,7 @@ public class Shooter extends MotorSubsystem {
         return targetVelocityMetersPerSecond;
     }
 
-    void aimAtHub() {
-        double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
-        setTargetVelocity(targetVelocityMetersPerSecond);
-    }
-
-    void aimForDelivery() {
+    void aim() {
         double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
         setTargetVelocity(targetVelocityMetersPerSecond);
     }

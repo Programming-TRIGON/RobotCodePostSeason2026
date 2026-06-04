@@ -20,17 +20,9 @@ public class HoodCommands {
         );
     }
 
-    public static Command getAimAtHubCommand() {
+    public static Command getAimCommand() {
         return new ExecuteEndCommand(
-                RobotContainer.HOOD::aimAtHub,
-                RobotContainer.HOOD::stop,
-                RobotContainer.HOOD
-        );
-    }
-
-    public static Command getAimForDeliveryCommand() {
-        return new ExecuteEndCommand(
-                RobotContainer.HOOD::aimForDelivery,
+                RobotContainer.HOOD::aim,
                 RobotContainer.HOOD::stop,
                 RobotContainer.HOOD
         );

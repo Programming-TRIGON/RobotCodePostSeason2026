@@ -14,6 +14,7 @@ import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
+import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
@@ -35,8 +36,10 @@ import frc.trigon.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
-    public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator();
-
+    public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator(
+            CameraConstants.RIGHT_APRIL_TAG_CAMERA,
+            CameraConstants.LEFT_APRIL_TAG_CAMERA
+    );
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
     public static final Indexer INDEXER = new Indexer();
@@ -83,8 +86,8 @@ public class RobotContainer {
         OperatorConstants.CLOSE_TO_HUB_SETPOINT_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.CLOSE_TO_HUB));
         OperatorConstants.RIGHT_CORNER_TO_HUB_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_CORNER_TO_HUB));
         OperatorConstants.LEFT_CORNER_TO_HUB_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_CORNER_TO_HUB));
-        OperatorConstants.RIGHT_CORNER_TO_TOWER_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_CORNER_TO_TOWER));
-        OperatorConstants.LEFT_CORNER_TO_TOWER_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_CORNER_TO_TOWER));
+        OperatorConstants.TOP_RIGHT_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_CORNER_TO_TOWER));
+        OperatorConstants.TOP_LEFT_TOWER_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_CORNER_TO_TOWER));
         OperatorConstants.FIXED_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getFixedShootingCommand());
         OperatorConstants.FIXED_DELIVERY_TRIGGER.whileTrue(ShootingCommands.getFixedDeliveryShootingCommand());
     }
