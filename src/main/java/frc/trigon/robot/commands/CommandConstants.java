@@ -34,8 +34,8 @@ public class CommandConstants {
             INDICATE_ALLIANCE_SHIFT_RUMBLE_POWER = 0.5;
     public static final double PRELOAD_TIMER_SECONDS = 2;
     public static final double
-            DEFAULT_SWERVE_SPEED_MODIFIER = 1,
-            PRECISION_SWERVE_SPEED_MODIFIER = 0.5;
+            DEFAULT_SWERVE_SPEED_MULTIPLIER = 1,
+            CLOSE_INTAKE_SWERVE_SPEED_MULTIPLIER = 0.5;
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),

@@ -21,7 +21,7 @@ public class FuelIntakeCommands {
     public static Command getCloseIntakeWhileShootingCommand() {
         return new ParallelCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE),
-                new InstantCommand(() -> CommandConstants.setSpeedMultiplier(CommandConstants.PRECISION_SWERVE_SPEED_MODIFIER))
-        ).finallyDo(() -> CommandConstants.setSpeedMultiplier(CommandConstants.DEFAULT_SWERVE_SPEED_MODIFIER));
+                new InstantCommand(() -> CommandConstants.setSpeedMultiplier(CommandConstants.CLOSE_INTAKE_SWERVE_SPEED_MULTIPLIER))
+        ).finallyDo(() -> CommandConstants.setSpeedMultiplier(CommandConstants.DEFAULT_SWERVE_SPEED_MULTIPLIER));
     }
 }
