@@ -13,6 +13,8 @@ import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
 import java.util.function.BooleanSupplier;
 
+import static frc.trigon.robot.commands.CommandConstants.SHIFT_FORCE_INTAKE_WHILE_SHOOTING;
+
 /**
  * A class that contains the general commands of the robot, such as commands that alter a command or commands that affect all subsystems.
  * These are different from {@link CommandConstants} because they create new commands that use some form of logic instead of only constructing an existing command with parameters.

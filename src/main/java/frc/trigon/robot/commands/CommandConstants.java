@@ -33,6 +33,7 @@ public class CommandConstants {
             INDICATE_ALLIANCE_SHIFT_RUMBLE_DURATION_SECONDS = 1,
             INDICATE_ALLIANCE_SHIFT_RUMBLE_POWER = 0.5;
     public static final double PRELOAD_TIMER_SECONDS = 2;
+    public static final double SHIFT_FORCE_INTAKE_WHILE_SHOOTING = 1;
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
@@ -68,17 +69,12 @@ public class CommandConstants {
                     (omegaRadiansPerSecond) -> RobotContainer.SWERVE.selfRelativeDrive(new ChassisSpeeds(0, 0, omegaRadiansPerSecond)),
                     RobotContainer.SWERVE
             );
+    public static final double DEFAULT_SPEED_MULTIPLIER = 1;
+    public static double speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
+    public static final double SPEED_MULTIPLIER_INTAKE_WHILE_SHOOTING = 0.5;
 
-    public static Command getSlowDriveCommand(double slowdownMultiplier) {
-        final double squaredSlowdown = Math.sqrt(slowdownMultiplier);
-        final double translationDivisor = 1 - squaredSlowdown * (1 - (1 / MINIMUM_TRANSLATION_SHIFT_POWER));
-        final double rotationDivisor = 1 - squaredSlowdown * (1 - (1 / MINIMUM_ROTATION_SHIFT_POWER));
-
-        return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
-                () -> DRIVER_CONTROLLER.getLeftY() / translationDivisor,
-                () -> DRIVER_CONTROLLER.getLeftX() / translationDivisor,
-                () -> DRIVER_CONTROLLER.getRightX() / rotationDivisor
-        );
+    public static void setSpeedMultiplier(double speedMultiplier) {
+        CommandConstants.speedMultiplier = speedMultiplier;
     }
 
     /**
@@ -88,7 +84,7 @@ public class CommandConstants {
      * @return the drive power
      */
     public static double calculateDriveStickAxisValue(double axisValue) {
-        return axisValue / OperatorConstants.TRANSLATION_STICK_SPEED_DIVIDER / calculateShiftModeValue(MINIMUM_TRANSLATION_SHIFT_POWER);
+        return speedMultiplier * axisValue / OperatorConstants.TRANSLATION_STICK_SPEED_DIVIDER / calculateShiftModeValue(MINIMUM_TRANSLATION_SHIFT_POWER);
     }
 
     /**
