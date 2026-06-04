@@ -70,7 +70,6 @@ public class CommandConstants {
                     (omegaRadiansPerSecond) -> RobotContainer.SWERVE.selfRelativeDrive(new ChassisSpeeds(0, 0, omegaRadiansPerSecond)),
                     RobotContainer.SWERVE
             );
-    public static double speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
 
     /**
      * Sets the speed multiplier applied to the drive stick values, scaling the robot's driving speed.
@@ -80,7 +79,7 @@ public class CommandConstants {
      */
 
     public static void setSpeedMultiplier(double speedMultiplier) {
-        CommandConstants.speedMultiplier = speedMultiplier;
+        GeneralCommands.speedMultiplier = speedMultiplier;
     }
 
     /**
@@ -90,7 +89,7 @@ public class CommandConstants {
      * @return the drive power
      */
     public static double calculateDriveStickAxisValue(double axisValue) {
-        return speedMultiplier * axisValue / OperatorConstants.TRANSLATION_STICK_SPEED_DIVIDER / calculateShiftModeValue(MINIMUM_TRANSLATION_SHIFT_POWER);
+        return GeneralCommands.speedMultiplier * axisValue / OperatorConstants.TRANSLATION_STICK_SPEED_DIVIDER / calculateShiftModeValue(MINIMUM_TRANSLATION_SHIFT_POWER);
     }
 
     /**

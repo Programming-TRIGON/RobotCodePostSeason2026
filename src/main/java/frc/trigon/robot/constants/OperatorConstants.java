@@ -48,8 +48,7 @@ public class OperatorConstants {
             BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down(),
             CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS);
     public static final Trigger
-            OPERATOR_TRIGGER = OPERATOR_CONTROLLER.c(),
-            INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger(),
+            INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.c()),
             PRELOAD_TRIGGER = OPERATOR_CONTROLLER.f(),
             CLOSE_INTAKE_TRIGGER = DRIVER_CONTROLLER.leftBumper().or(OPERATOR_CONTROLLER.z()),
             SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightBumper().or(OPERATOR_CONTROLLER.s()),

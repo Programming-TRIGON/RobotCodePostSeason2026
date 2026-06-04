@@ -30,7 +30,6 @@ public class Swerve extends MotorSubsystem {
     private final SwerveModule[] swerveModules = SwerveConstants.SWERVE_MODULES;
     private final Phoenix6SignalThread phoenix6SignalThread = Phoenix6SignalThread.getInstance();
     public Pose2d targetPathPlannerPose = new Pose2d();
-    public static double speedMultiplier = CommandConstants.DEFAULT_SPEED_MULTIPLIER;
 
     public Swerve() {
         setName("Swerve");

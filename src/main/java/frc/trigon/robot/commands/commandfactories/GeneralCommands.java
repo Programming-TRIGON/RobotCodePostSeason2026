@@ -13,11 +13,14 @@ import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
 import java.util.function.BooleanSupplier;
 
+
 /**
  * A class that contains the general commands of the robot, such as commands that alter a command or commands that affect all subsystems.
  * These are different from {@link CommandConstants} because they create new commands that use some form of logic instead of only constructing an existing command with parameters.
  */
 public class GeneralCommands {
+    public static double speedMultiplier = CommandConstants.DEFAULT_SPEED_MULTIPLIER;
+
     public static Command getDebuggingCommand() {
         return new ParallelCommandGroup(
                 HoodCommands.getDebuggingCommand(),
