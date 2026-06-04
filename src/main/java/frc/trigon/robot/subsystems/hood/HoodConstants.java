@@ -1,7 +1,10 @@
 package frc.trigon.robot.subsystems.hood;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.*;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -11,7 +14,6 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
-import frc.trigon.lib.hardware.phoenix6.cancoder.CANcoderEncoder;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SingleJointedArmSimulation;
@@ -31,7 +33,7 @@ public class HoodConstants {
             HOOD_MASS_KILOGRAMS = 2,
             HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(52),
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(62),
             MINIMUM_ANGLE = Rotation2d.fromDegrees(20);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
@@ -63,10 +65,7 @@ public class HoodConstants {
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(1);
-    static final Rotation2d
-            REST_ANGLE = Rotation2d.fromDegrees(20),
-            DELIVERY_ANGLE = Rotation2d.fromDegrees(50),
-            EJECTION_ANGLE = Rotation2d.fromDegrees(52);
+    static final Rotation2d REST_ANGLE = MINIMUM_ANGLE;
 
     static {
         configureMotor();

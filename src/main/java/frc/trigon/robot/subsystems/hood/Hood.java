@@ -6,15 +6,15 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.trigon.lib.hardware.phoenix6.cancoder.CANcoderEncoder;
-import frc.trigon.lib.hardware.phoenix6.cancoder.CANcoderSignal;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
+import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Hood extends MotorSubsystem {
+    private final ShootingCalculations shootingCalculations = ShootingCalculations.getInstance();
     private final TalonFXMotor motor = HoodConstants.MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(HoodConstants.FOC_ENABLED);
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(HoodConstants.FOC_ENABLED);
@@ -92,16 +92,13 @@ public class Hood extends MotorSubsystem {
     }
 
     void aimAtHub() {
-//        final Rotation2d targetAngleFromShootingCalculations = shootingCalculations.getTargetShootingState().targetPitch();
-//        setTargetAngle(targetAngleFromShootingCalculations);
+        final Rotation2d targetAngleFromShootingCalculations = shootingCalculations.getTargetShootingState().targetPitch();
+        setTargetAngle(targetAngleFromShootingCalculations);
     }
 
     void aimForDelivery() {
-        setTargetAngle(HoodConstants.DELIVERY_ANGLE);
-    }
-
-    void aimForEjection() {
-        setTargetAngle(HoodConstants.EJECTION_ANGLE);
+        final Rotation2d targetAngleFromShootingCalculations = shootingCalculations.getTargetShootingState().targetPitch();
+        setTargetAngle(targetAngleFromShootingCalculations);
     }
 
     void rest() {
