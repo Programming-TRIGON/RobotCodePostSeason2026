@@ -95,6 +95,7 @@ public class LoaderConstants {
     public enum LoaderState {
         LOAD_FOR_DELIVERY(6),
         LOAD_FOR_SHOOTING(4),
+        PRELOAD(2),
         REST(0);
 
         public final double targetVoltage;
