@@ -23,6 +23,12 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
     }
 
     @Override
+    public void reset() {
+        translationLimiter.reset(0);
+        thetaLimiter.reset(0);
+    }
+
+    @Override
     public Translation2d applyRestrictionToTranslation(Translation2d targetTranslation) {
         final double targetMagnitude = targetTranslation.getNorm();
         final double limitedMagnitude = translationLimiter.calculate(targetMagnitude);

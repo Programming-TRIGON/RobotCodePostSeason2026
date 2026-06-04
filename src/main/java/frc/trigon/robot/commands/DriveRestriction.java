@@ -22,4 +22,10 @@ public interface DriveRestriction {
     default double applyRestrictionToTheta(double targetTheta) {
         return targetTheta;
     }
+
+    /**
+     * Resets the restricted values.
+     */
+    default void reset() {}
+
 }

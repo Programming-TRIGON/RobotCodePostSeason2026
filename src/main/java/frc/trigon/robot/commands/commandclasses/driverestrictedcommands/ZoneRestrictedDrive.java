@@ -19,7 +19,6 @@ import frc.trigon.robot.constants.ZoneRestrictedDriveConstants;
  */
 public class ZoneRestrictedDrive implements DriveRestriction {
     private final ZoneRestriction[] zoneRestrictions;
-    private Translation2d cashedRestrictedTranslation;
 
     /**
      * Creates a new ZoneRestrictedDriveCommand.

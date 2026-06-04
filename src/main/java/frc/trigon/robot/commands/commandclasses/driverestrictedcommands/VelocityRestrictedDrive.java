@@ -26,7 +26,7 @@ public class VelocityRestrictedDrive implements DriveRestriction {
     public Translation2d applyRestrictionToTranslation(Translation2d targetTranslation) {
         final double norm = targetTranslation.getNorm();
         if (norm > maximumTranslationVelocity) {
-            return targetTranslation.times(maximumTranslationVelocity/norm);
+            return targetTranslation.times(maximumTranslationVelocity / norm);
         }
         return targetTranslation;
     }
