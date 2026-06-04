@@ -32,6 +32,10 @@ public class CommandConstants {
     private static final double
             INDICATE_ALLIANCE_SHIFT_RUMBLE_DURATION_SECONDS = 1,
             INDICATE_ALLIANCE_SHIFT_RUMBLE_POWER = 0.5;
+    public static final double PRELOAD_TIMER_SECONDS = 2;
+    public static final double
+            DEFAULT_SWERVE_SPEED_MULTIPLIER = 1,
+            CLOSE_INTAKE_SWERVE_SPEED_MULTIPLIER = 0.5;
 
     public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 40;
     public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(67);
@@ -72,13 +76,23 @@ public class CommandConstants {
             );
 
     /**
+     * Sets the speed multiplier applied to the drive stick values, scaling the robot's driving speed.
+     * A value of 1 keeps the regular speed, while lower values make the robot drive slower (0 stops driving).
+     *
+     * @param speedMultiplier the multiplier to scale the driving speed by, from 0 (stopped) to 1 (full speed)
+     */
+    public static void setSpeedMultiplier(double speedMultiplier) {
+        GeneralCommands.SWERVE_SPEED_MULTIPLIER = speedMultiplier;
+    }
+
+    /**
      * Calculates the target drive power from an axis value by dividing it by the shift mode value.
      *
      * @param axisValue the stick's value
      * @return the drive power
      */
     public static double calculateDriveStickAxisValue(double axisValue) {
-        return axisValue / OperatorConstants.TRANSLATION_STICK_SPEED_DIVIDER / calculateShiftModeValue(MINIMUM_TRANSLATION_SHIFT_POWER);
+        return GeneralCommands.SWERVE_SPEED_MULTIPLIER * axisValue / OperatorConstants.TRANSLATION_STICK_SPEED_DIVIDER / calculateShiftModeValue(MINIMUM_TRANSLATION_SHIFT_POWER);
     }
 
     /**
