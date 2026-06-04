@@ -10,6 +10,13 @@ import frc.trigon.robot.commands.DriveRestriction;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
+/**
+ * A command that drives the robot relative to itself while restricting its movement.
+ * Acceleration restriction {@link AccelerationRestrictedDrive}.
+ * Velocity restriction {@link VelocityRestrictedDrive}.
+ * Zone restriction {@link ZoneRestrictedDrive}.
+ * All restrictions are applied sequentially, each further restricting the previous result.
+ */
 public class SelfRelativeDriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveRestriction[] driveRestrictions;
     private double
@@ -17,6 +24,11 @@ public class SelfRelativeDriveRestrictedCommand extends ParallelCommandGroup {
             restrictedY,
             restrictedTheta;
 
+    /**
+     * Drives the robot relative to itself and restricts its movement.
+     *
+     * @param driveRestrictions Restrictions that restrict the robots movement.
+     */
     public SelfRelativeDriveRestrictedCommand(DriveRestriction... driveRestrictions) {
         this.driveRestrictions = driveRestrictions;
         addCommands(
