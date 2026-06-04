@@ -18,8 +18,8 @@ public class VelocityRestrictedDrive implements DriveRestriction {
      * @param maximumThetaVelocity       Maximum rotational velocity, has to between 0 and 1.
      */
     public VelocityRestrictedDrive(double maximumTranslationVelocity, double maximumThetaVelocity) {
-        this.maximumTranslationVelocity = maximumTranslationVelocity;
-        this.maximumThetaVelocity = maximumThetaVelocity;
+        this.maximumTranslationVelocity = MathUtil.clamp(maximumTranslationVelocity, 0, 1);
+        this.maximumThetaVelocity = MathUtil.clamp(maximumThetaVelocity, 0, 1);
     }
 
     @Override

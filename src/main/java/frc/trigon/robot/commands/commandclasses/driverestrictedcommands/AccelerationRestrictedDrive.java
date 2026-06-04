@@ -15,7 +15,7 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
      * A restriction that limits the maximum linear and rotational acceleration.
      *
      * @param maximumTranslationAcceleration Maximum linear acceleration.
-     * @param maximumThetaAcceleration       Maximum rotational velocity.
+     * @param maximumThetaAcceleration       Maximum rotational acceleration.
      */
     public AccelerationRestrictedDrive(double maximumTranslationAcceleration, double maximumThetaAcceleration) {
         this.translationLimiter = new SlewRateLimiter(maximumTranslationAcceleration);

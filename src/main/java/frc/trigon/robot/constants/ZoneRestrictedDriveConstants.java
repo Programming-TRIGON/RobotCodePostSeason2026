@@ -2,8 +2,6 @@ package frc.trigon.robot.constants;
 
 import frc.trigon.lib.utilities.zonerestricteddrive.ContainmentZone;
 
-import java.awt.geom.Rectangle2D;
-
 public class ZoneRestrictedDriveConstants {
     public static final double
             ROBOT_X_WIDTH_METERS = 1,
