@@ -109,7 +109,7 @@ public class ShootingCalculations {
             parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
         }
 
-        final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle();
+        final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle().rotateBy(Rotation2d.k180deg);
 
         Logger.recordOutput("Shooting/DistanceToVirtualTarget", distanceToVirtualTarget);
         Logger.recordOutput("Shooting/InterpolatedTimeOfFlight", parameters.timeOfFlight());
