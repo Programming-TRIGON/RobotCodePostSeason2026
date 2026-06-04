@@ -14,22 +14,35 @@ public class SimulatedGamePieceConstants {
             SCORE_CHECK_POSITION = new FlippableTranslation3d(new Translation3d(4.625594, FieldConstants.FIELD_WIDTH_METERS / 2, 1.4), true),
             EJECT_FUEL_FROM_HUB_POSITION = new FlippableTranslation3d(new Translation3d(5.189474, FieldConstants.FIELD_WIDTH_METERS / 2, 0.762), true);
 
-    static final Translation3d COLLECTION_CHECK_POSITION = new Translation3d(0.5, 0, 0); //TODO: get
+    static final Translation3d COLLECTION_CHECK_POSITION = new Translation3d(0.4, 0, 0); //TODO: get
     static final int MAXIMUM_HELD_FUEL = 40; //TODO: get
 
-    // Grid definitions for 4-wide roller indexer
+    // Indexer width: still used by ShootingCalculations to lay out the per-column shooter exit lanes.
     public static final int INDEXER_WIDTH_CAPACITY = 4;
-    static final double INDEXER_ROW_SPACING_METERS = 0.16;
     public static final double INDEXER_COL_SPACING_METERS = 0.16;
-    // Visual and Organic Simulation Tuning
-    public static final double DEAD_SPACE_PROBABILITY = 0.25;
-    public static final double STACKING_NESTLE_FACTOR = 0.85;
-    public static final double ORGANIC_SCATTER_METERS = 0.04;
+
+    // 3D hopper volume definition. Fuel fills the bottom layer first (depth x width),
+    // then stacks upward layer by layer, keeping the pile inside the hopper bounds.
+    // depth * width * height should be >= MAXIMUM_HELD_FUEL so every held piece gets a cell.
+    public static final int
+            HOPPER_DEPTH_CAPACITY = 4,   // cells along robot X (front-to-back)
+            HOPPER_WIDTH_CAPACITY = 4,   // cells along robot Y (left-to-right)
+            HOPPER_HEIGHT_CAPACITY = 4;  // stacked layers along Z
+
+    // Physical spacing between cell centers inside the hopper.
+    public static final double
+            HOPPER_DEPTH_SPACING_METERS = 0.15,
+            HOPPER_WIDTH_SPACING_METERS = 0.15,
+            HOPPER_LAYER_SPACING_METERS = 0.13; // < ball diameter so layers nestle slightly
+
+    // Visual jitter so the pile reads as loose balls rather than a perfect lattice.
+    public static final double ORGANIC_SCATTER_METERS = 0.02;
+
+    public static final double FUEL_DIAMETER_METERS = 0.15;
 
     private static final int
             STARTING_FUEL_ROWS = 12,
             STARTING_FUEL_COLUMNS = 30;
-    public static final double FUEL_DIAMETER_METERS = 0.15;
 
     private static final double
             STARTING_FUEL_X_POSITION_METERS = 7.357364,
@@ -60,7 +73,7 @@ public class SimulatedGamePieceConstants {
             }
         }
 
-        // Initialize pre-loaded fuel in the new grid
+        // Initialize pre-loaded fuel in the hopper.
         for (int i = 0; i < 8; i++) {
             final SimulatedGamePiece currentHeldFuel = new SimulatedGamePiece(0, 0);
             SimulationFieldHandler.addHeldFuel(currentHeldFuel);

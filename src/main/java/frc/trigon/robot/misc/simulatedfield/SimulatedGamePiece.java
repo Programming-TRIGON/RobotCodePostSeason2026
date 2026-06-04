@@ -2,22 +2,20 @@ package frc.trigon.robot.misc.simulatedfield;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class SimulatedGamePiece {
     private static final ArrayList<SimulatedGamePiece> SIMULATED_GAME_PIECES = new ArrayList<>();
 
-    // Represents occupied slots [row, col] in the 4-wide indexer
-    private static final ArrayList<Translation2d> OCCUPIED_INDEXER_SLOTS = new ArrayList<>();
+    // Represents occupied cells in the 3D hopper volume (depth, width, height).
+    private static final ArrayList<HopperCell> OCCUPIED_HOPPER_CELLS = new ArrayList<>();
 
     private Translation3d fieldRelativePosition;
     private boolean isIndexed = true;
-    private Translation2d indexerGridSlot; // X = row, Y = column
+    private HopperCell hopperCell; // null when not held
 
     public SimulatedGamePiece(double startingPoseXMeters, double startingPoseYMeters) {
         SimulatedGamePieceConstants.GamePieceType gamePieceType = SimulatedGamePieceConstants.GamePieceType.FUEL;
@@ -48,10 +46,9 @@ public class SimulatedGamePiece {
     }
 
     void release() {
-        if (indexerGridSlot != null) {
-            OCCUPIED_INDEXER_SLOTS.remove(indexerGridSlot);
-        }
-        indexerGridSlot = null;
+        if (hopperCell != null)
+            OCCUPIED_HOPPER_CELLS.remove(hopperCell);
+        hopperCell = null;
         isIndexed = false;
     }
 
@@ -64,16 +61,16 @@ public class SimulatedGamePiece {
     }
 
     void resetIndexing() {
-        indexerGridSlot = calculateNextAvailableIndexerSlot();
-        if (indexerGridSlot != null) {
+        hopperCell = calculateNextAvailableHopperCell();
+        if (hopperCell != null) {
             isIndexed = true;
-            OCCUPIED_INDEXER_SLOTS.add(indexerGridSlot);
+            OCCUPIED_HOPPER_CELLS.add(hopperCell);
         } else
             isIndexed = false;
     }
 
-    Translation2d getIndexerGridSlot() {
-        return indexerGridSlot;
+    HopperCell getHopperCell() {
+        return hopperCell;
     }
 
     static void logAll() {
@@ -88,29 +85,39 @@ public class SimulatedGamePiece {
     }
 
     private boolean isHeld() {
-        return indexerGridSlot != null;
+        return hopperCell != null;
     }
 
     /**
-     * Finds the next open row and column in the 4-wide roller indexer queue.
+     * Finds the next open cell in the hopper, filling it like a real bin: the floor layer is
+     * filled first (front-to-back across the depth, then across the width), and only once a
+     * layer is full does fuel begin stacking on the layer above it. This keeps the pile inside
+     * the hopper volume instead of climbing diagonally up one side.
      */
-    private Translation2d calculateNextAvailableIndexerSlot() {
-        int targetRow = 0;
+    private static HopperCell calculateNextAvailableHopperCell() {
+        final int depth = SimulatedGamePieceConstants.HOPPER_DEPTH_CAPACITY;
+        final int width = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
+        final int maxLayers = SimulatedGamePieceConstants.HOPPER_HEIGHT_CAPACITY;
 
-        while (true) {
-            for (int col = 0; col < SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY; col++) {
-                Translation2d candidateSlot = new Translation2d(targetRow, col);
-
-                // ORGANIC BUNCHING: Uses tuning constant to force balls into a loose pile.
-                boolean isDeadSpace = new Random(targetRow * 31L + col * 17L).nextDouble() < SimulatedGamePieceConstants.DEAD_SPACE_PROBABILITY;
-                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot) && !isDeadSpace)
-                    return candidateSlot;
+        for (int layer = 0; layer < maxLayers; layer++) {
+            for (int depthIndex = 0; depthIndex < depth; depthIndex++) {
+                for (int widthIndex = 0; widthIndex < width; widthIndex++) {
+                    final HopperCell candidate = new HopperCell(depthIndex, widthIndex, layer);
+                    if (!OCCUPIED_HOPPER_CELLS.contains(candidate))
+                        return candidate;
+                }
             }
-            targetRow++;
-
-            // Failsafe to prevent infinite loops if loaded beyond capacity
-            if (targetRow > (SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY) + 3)
-                return null;
         }
+
+        return null;
+    }
+
+    /**
+     * A discrete cell inside the hopper grid.
+     * depthIndex runs front (0) to back along the robot's X axis,
+     * widthIndex runs across the robot's Y axis,
+     * layerIndex runs bottom (0) to top along Z.
+     */
+    record HopperCell(int depthIndex, int widthIndex, int layerIndex) {
     }
 }
