@@ -97,6 +97,10 @@ public class SimulatedGamePiece {
     private Translation2d calculateNextAvailableIndexerSlot() {
         int targetRow = 0;
 
+        // Dynamically calculate how many rows we theoretically need, factoring in the dead space
+        double usableSpaceRatio = 1.0 - SimulatedGamePieceConstants.DEAD_SPACE_PROBABILITY;
+        int maxTheoreticalRows = (int) Math.ceil(SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY * usableSpaceRatio));
+
         while (true) {
             for (int col = 0; col < SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY; col++) {
                 Translation2d candidateSlot = new Translation2d(targetRow, col);
@@ -108,8 +112,8 @@ public class SimulatedGamePiece {
             }
             targetRow++;
 
-            // Failsafe to prevent infinite loops if loaded beyond capacity
-            if (targetRow > (SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY) + 3)
+            // Failsafe with a 5-row buffer above the theoretical maximum
+            if (targetRow > maxTheoreticalRows + 5)
                 return null;
         }
     }

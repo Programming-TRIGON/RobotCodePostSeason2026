@@ -169,7 +169,7 @@ public class SimulationFieldHandler {
 
             double zShift = layer * stackHeight;
             // Shift X slightly backward per layer so the pile naturally leans against itself inside the hopper
-            double xShift = layer * (SimulatedGamePieceConstants.FUEL_DIAMETER_METERS * 0.15) * SimulatedGamePieceConstants.INDEXER_BACKWARD_DIRECTION;
+            double xShift = layer * (SimulatedGamePieceConstants.FUEL_DIAMETER_METERS * SimulatedGamePieceConstants.LAYER_BACKSHIFT_FACTOR) * SimulatedGamePieceConstants.INDEXER_BACKWARD_DIRECTION;
 
             return baseOffset.plus(new Translation2d(xShift, zShift));
         }
@@ -179,18 +179,18 @@ public class SimulationFieldHandler {
 
     private static Translation2d getBaseProfileOffset(int localRow) {
         double spacing = SimulatedGamePieceConstants.INDEXER_ROW_SPACING_METERS;
-        double dir = SimulatedGamePieceConstants.INDEXER_BACKWARD_DIRECTION;
+        double backwardDirection = SimulatedGamePieceConstants.INDEXER_BACKWARD_DIRECTION;
 
         if (localRow <= 1) {
             // Flat Section (First two rows)
-            return new Translation2d(localRow * spacing * dir, 0);
+            return new Translation2d(localRow * spacing * backwardDirection, 0);
         }
 
         // Ramp Section
-        double flatDist = 1 * spacing * dir;
+        double flatDist = 1 * spacing * backwardDirection;
         double rampDist = (localRow - 1) * spacing;
 
-        double xOffset = flatDist + (rampDist * Math.cos(INDEXER_RAMP_ANGLE_RADS) * dir);
+        double xOffset = flatDist + (rampDist * Math.cos(INDEXER_RAMP_ANGLE_RADS) * backwardDirection);
         double zOffset = rampDist * Math.sin(INDEXER_RAMP_ANGLE_RADS);
 
         return new Translation2d(xOffset, zOffset);

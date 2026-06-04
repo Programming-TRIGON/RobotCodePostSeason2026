@@ -27,6 +27,7 @@ public class SimulatedGamePieceConstants {
     public static final double DEAD_SPACE_PROBABILITY = 0.40;
     public static final double STACKING_NESTLE_FACTOR = 0.85;
     public static final double ORGANIC_SCATTER_METERS = 0.04;
+    public static final double LAYER_BACKSHIFT_FACTOR = 0.15;
 
     private static final int
             STARTING_FUEL_ROWS = 12,
