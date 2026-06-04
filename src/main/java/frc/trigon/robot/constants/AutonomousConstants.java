@@ -29,7 +29,21 @@ public class AutonomousConstants {
     public static final String DEFAULT_AUTO_NAME = "DefaultAutoName";
     public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
     public static final double FEEDFORWARD_SCALAR = 0.5;//TODO: Calibrate
-    public static final PathConstraints DRIVE_TO_SCORING_LOCATION_CONSTRAINTS = new PathConstraints(2.5, 4.5, Units.degreesToRadians(450), Units.degreesToRadians(900));
+    public static final PathConstraints
+            DRIVE_TO_SCORING_LOCATION_CONSTRAINTS = new PathConstraints(2.5, 2.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
+            DRIVE_IN_AUTONOMOUS_CONSTRAINTS = new PathConstraints(3, 3, Units.degreesToRadians(100), Units.degreesToRadians(100)),
+            DRIVE_SLOWLY_IN_AUTONOMOUS_CONSTRAINTS = new PathConstraints(1.5, 1, Units.degreesToRadians(100), Units.degreesToRadians(100)),
+            DRIVE_FOR_INTAKING_CONSTRAINTS = new PathConstraints(3, 3, Units.degreesToRadians(500), Units.degreesToRadians(900));
+
+    public static final double
+            TOTAL_MATCH_TIME_SECONDS = 160,
+            AUTONOMOUS_TIME_SECONDS = 20,
+            DEPOT_COLLECTION_TIMEOUT_SECONDS = 4,
+            NEUTRAL_ZONE_COLLECTION_TIMEOUT_SECONDS = 2,
+            SCORING_TIMEOUT_SECONDS = 2.5,
+            NORMAL_DRIVE_TIMEOUT = 4;
+    public static final double START_INTAKING_X = 6.3;
+
 
     private static final PIDConstants
             AUTO_TRANSLATION_PID_CONSTANTS = RobotHardwareStats.isSimulation() ?
@@ -85,7 +99,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand",new PrintCommand("Collecting"));
+        NamedCommands.registerCommand("CollectCommand", new PrintCommand("Collecting"));
         NamedCommands.registerCommand("ShootCommand", new PrintCommand("Shooting"));
     }
 }

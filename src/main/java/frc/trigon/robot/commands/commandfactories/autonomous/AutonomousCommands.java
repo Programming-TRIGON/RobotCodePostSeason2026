@@ -1,4 +1,4 @@
-package frc.trigon.robot.commands.commandfactories;
+package frc.trigon.robot.commands.commandfactories.autonomous;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
