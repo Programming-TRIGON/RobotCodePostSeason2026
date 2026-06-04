@@ -78,21 +78,15 @@ public class ShootingCommands {
     private static Command getLoadForShootingIfReadyToShootCommand() {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(),
-                SHOOTING_CALCULATIONS::isReadyToShoot
+                ShootingCommands::isReadyToFixedShoot
         );
     }
 
     private static Command getLoadForDeliveryIfReadyToShootCommand() {
         return GeneralCommands.runWhen(
                 getLoadForDeliveryCommand(),
-                SHOOTING_CALCULATIONS::isReadyToShoot
-        );
-    }
+                ShootingCommands::isReadyToFixedDelivery
 
-    private static Command getLoadForShootingCommand() {
-        return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
-                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING)
         );
     }
 
@@ -105,8 +99,8 @@ public class ShootingCommands {
 
     private static Command getAimForShootingStateCommand() {
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
-                OperatorConstants.DRIVER_CONTROLLER::getLeftX,
                 OperatorConstants.DRIVER_CONTROLLER::getLeftY,
+                OperatorConstants.DRIVER_CONTROLLER::getLeftX,
                 () -> new FlippableRotation2d(SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw(), false)
         );
     }
@@ -120,8 +114,8 @@ public class ShootingCommands {
     private static Command getAimForFixedShootingStateCommand() {
         return new ParallelCommandGroup(
                 SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
-                        OperatorConstants.DRIVER_CONTROLLER::getLeftX,
                         OperatorConstants.DRIVER_CONTROLLER::getLeftY,
+                        OperatorConstants.DRIVER_CONTROLLER::getLeftX,
                         () -> new FlippableRotation2d(FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw(), false)
                 ),
                 HoodCommands.getSetTargetAngleCommand(() -> FIXED_SHOOTING_STATE.targetState.targetPitch()),
@@ -133,6 +127,28 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 HoodCommands.getSetTargetAngleCommand(() -> CommandConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
                 ShooterCommands.getSetTargetVelocityCommand(() -> CommandConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND)
+        );
+    }
+
+    private static boolean isReadyToFixedDelivery() {
+        final boolean isPitchReady = RobotContainer.HOOD.atAngle(CommandConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH);
+        final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(CommandConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND);
+
+        return isPitchReady && isVelocityReady;
+    }
+
+    private static boolean isReadyToFixedShoot() {
+        final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw(), false));
+        final boolean isPitchReady = RobotContainer.HOOD.atAngle(FIXED_SHOOTING_STATE.targetState.targetPitch());
+        final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(FIXED_SHOOTING_STATE.targetState.targetShootingVelocityMetersPerSecond());
+
+        return isYawReady && isPitchReady && isVelocityReady;
+    }
+
+    private static Command getLoadForShootingCommand() {
+        return new ParallelCommandGroup(
+                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
+                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING)
         );
     }
 
