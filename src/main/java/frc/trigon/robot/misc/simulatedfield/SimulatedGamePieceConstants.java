@@ -15,7 +15,8 @@ public class SimulatedGamePieceConstants {
             EJECT_FUEL_FROM_HUB_POSITION = new FlippableTranslation3d(new Translation3d(5.189474, FieldConstants.FIELD_WIDTH_METERS / 2, 0.762), true);
 
     static final Translation3d COLLECTION_CHECK_POSITION = new Translation3d(0.5, 0, 0); //TODO: get
-    static final int MAXIMUM_HELD_FUEL = 40; //TODO: get
+
+    public static final int MAXIMUM_INDEXER_ROWS = 12;
 
     // Grid definitions for 4-wide roller indexer
     public static final int INDEXER_WIDTH_CAPACITY = 4;

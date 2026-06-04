@@ -91,30 +91,42 @@ public class SimulatedGamePiece {
         return indexerGridSlot != null;
     }
 
+    public static boolean hasAvailableSpace() {
+        int targetRow = 0;
+        while (targetRow < SimulatedGamePieceConstants.MAXIMUM_INDEXER_ROWS) {
+            for (int col = 0; col < SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY; col++) {
+                Translation2d candidateSlot = new Translation2d(targetRow, col);
+                boolean isDeadSpace = new Random(targetRow * 31L + col * 17L).nextDouble() < SimulatedGamePieceConstants.DEAD_SPACE_PROBABILITY;
+
+                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot) && !isDeadSpace)
+                    return true;
+            }
+            targetRow++;
+        }
+        return false;
+    }
+
     /**
      * Finds the next open row and column in the 4-wide roller indexer queue.
      */
     private Translation2d calculateNextAvailableIndexerSlot() {
         int targetRow = 0;
 
-        // Dynamically calculate how many rows we theoretically need, factoring in the dead space
-        double usableSpaceRatio = 1.0 - SimulatedGamePieceConstants.DEAD_SPACE_PROBABILITY;
-        int maxTheoreticalRows = (int) Math.ceil(SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / (SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY * usableSpaceRatio));
-
-        while (true) {
+        // FIXED: Now accurately limits based on physical CAD space instead of ball count
+        while (targetRow < SimulatedGamePieceConstants.MAXIMUM_INDEXER_ROWS) {
             for (int col = 0; col < SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY; col++) {
                 Translation2d candidateSlot = new Translation2d(targetRow, col);
 
                 // ORGANIC BUNCHING: Uses tuning constant to force balls into a loose pile.
                 boolean isDeadSpace = new Random(targetRow * 31L + col * 17L).nextDouble() < SimulatedGamePieceConstants.DEAD_SPACE_PROBABILITY;
-                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot) && !isDeadSpace)
+
+                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot) && !isDeadSpace) {
                     return candidateSlot;
+                }
             }
             targetRow++;
-
-            // Failsafe with a 5-row buffer above the theoretical maximum
-            if (targetRow > maxTheoreticalRows + 5)
-                return null;
         }
+
+        return null; // Hopper is physically full, no slots available
     }
 }

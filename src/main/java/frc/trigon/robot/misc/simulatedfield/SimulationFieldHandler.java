@@ -54,11 +54,15 @@ public class SimulationFieldHandler {
         final Translation3d robotRelativeCollectionPosition = SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION;
         final Translation3d collectionPose = robotRelativeToFieldRelative(robotRelativeCollectionPosition);
 
-        if (isCollectingFuel() && HELD_FUEL.size() < SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL) {
+        // FIXED: Checks if there is physical space in the hopper, regardless of ball count
+        if (isCollectingFuel() && SimulatedGamePiece.hasAvailableSpace()) {
             final ArrayList<SimulatedGamePiece> collectedFuel = getCollectedFuel(collectionPose);
             for (SimulatedGamePiece fuel : collectedFuel) {
-                if (HELD_FUEL.size() >= SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL)
+
+                // Stop instantly if the last ball filled the final physical slot
+                if (!SimulatedGamePiece.hasAvailableSpace())
                     return;
+
                 addHeldFuel(fuel);
             }
         }
