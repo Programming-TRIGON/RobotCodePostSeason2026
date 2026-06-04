@@ -1,9 +1,7 @@
 package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.*;
-import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
-import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
@@ -23,8 +21,7 @@ public class FuelIntakeCommands {
     public static Command getCloseIntakeWhileShootingCommand() {
         return new ParallelCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE),
-                new InstantCommand(() -> CommandConstants.setSpeedMultiplier(CommandConstants.SPEED_MULTIPLIER_INTAKE_WHILE_SHOOTING))
-        ).finallyDo(() -> CommandConstants.setSpeedMultiplier(CommandConstants.DEFAULT_SPEED_MULTIPLIER))
-                .andThen(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN));
+                new InstantCommand(() -> CommandConstants.setSpeedMultiplier(CommandConstants.SLOW_DRIVE_SPEED_MULTIPLIER))
+        ).finallyDo(() -> CommandConstants.setSpeedMultiplier(CommandConstants.DEFAULT_SPEED_MULTIPLIER));
     }
 }

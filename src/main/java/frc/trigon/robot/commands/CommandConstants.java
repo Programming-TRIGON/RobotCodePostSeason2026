@@ -33,7 +33,8 @@ public class CommandConstants {
             INDICATE_ALLIANCE_SHIFT_RUMBLE_DURATION_SECONDS = 1,
             INDICATE_ALLIANCE_SHIFT_RUMBLE_POWER = 0.5;
     public static final double PRELOAD_TIMER_SECONDS = 2;
-    public static final double SHIFT_FORCE_INTAKE_WHILE_SHOOTING = 1;
+    public static final double DEFAULT_SPEED_MULTIPLIER = 1;
+    public static final double SLOW_DRIVE_SPEED_MULTIPLIER = 0.5;
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
@@ -69,9 +70,14 @@ public class CommandConstants {
                     (omegaRadiansPerSecond) -> RobotContainer.SWERVE.selfRelativeDrive(new ChassisSpeeds(0, 0, omegaRadiansPerSecond)),
                     RobotContainer.SWERVE
             );
-    public static final double DEFAULT_SPEED_MULTIPLIER = 1;
     public static double speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
-    public static final double SPEED_MULTIPLIER_INTAKE_WHILE_SHOOTING = 0.5;
+
+    /**
+     * Sets the speed multiplier applied to the drive stick values, scaling the robot's driving speed.
+     * A value of 1 keeps the regular speed, while lower values make the robot drive slower (0 stops driving).
+     *
+     * @param speedMultiplier the multiplier to scale the driving speed by, from 0 (stopped) to 1 (full speed)
+     */
 
     public static void setSpeedMultiplier(double speedMultiplier) {
         CommandConstants.speedMultiplier = speedMultiplier;
