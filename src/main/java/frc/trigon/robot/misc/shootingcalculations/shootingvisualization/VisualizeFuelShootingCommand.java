@@ -124,9 +124,9 @@ public class VisualizeFuelShootingCommand extends Command {
     private Translation3d calculateShootingVelocityVector() {
         final double fuelExitSpeedMetersPerSecond = RobotContainer.SHOOTER.getCurrentVelocityMetersPerSecond();
         final Rotation2d dumperPitch = RobotContainer.HOOD.getCurrentAngle();
-        final Rotation2d chassisFieldRelativeAngle = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation();
+        final Rotation2d shooterExitFieldRelativeAngle = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation().rotateBy(Rotation2d.k180deg);
 
-        return new Translation3d(fuelExitSpeedMetersPerSecond, new Rotation3d(0, -dumperPitch.getRadians(), chassisFieldRelativeAngle.getRadians()));
+        return new Translation3d(fuelExitSpeedMetersPerSecond, new Rotation3d(0, -dumperPitch.getRadians(), shooterExitFieldRelativeAngle.getRadians()));
     }
 
     private void stepSimulation() {
