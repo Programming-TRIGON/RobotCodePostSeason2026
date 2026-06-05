@@ -19,9 +19,9 @@ public class ShooterCommands {
         );
     }
 
-    public static Command getSetTargetVelocityCommand(double targetVelocityMetersPerSecond) {
+    public static Command getSetTargetVelocityCommand(DoubleSupplier targetVelocityMetersPerSecond) {
         return new StartEndCommand(
-                () -> RobotContainer.SHOOTER.setTargetVelocity(targetVelocityMetersPerSecond),
+                () -> RobotContainer.SHOOTER.setTargetVelocity(targetVelocityMetersPerSecond.getAsDouble()),
                 RobotContainer.SHOOTER::stop,
                 RobotContainer.SHOOTER
         );

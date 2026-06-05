@@ -21,12 +21,13 @@ import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
 
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
-    private static FixedShootingPosition TARGET_FIXED_SHOOTING_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
+    private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
 
     public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
@@ -57,10 +58,11 @@ public class ShootingCommands {
     public static Command getFixedShootingAtHubCommand() {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
-                        getLoadForFixedShootingWhenReadyCommand(),
-                        getAimSwerveCommand(() -> TARGET_FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw()),
-                        HoodCommands.getSetTargetAngleCommand(TARGET_FIXED_SHOOTING_STATE.targetState.targetPitch()),
-                        ShooterCommands.getSetTargetVelocityCommand(TARGET_FIXED_SHOOTING_STATE.targetState.targetShootingVelocityMetersPerSecond())
+                        getLoadForFixedShootingAtHubWhenReadyCommand(),
+                        getAimSwerveCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
+                        HoodCommands.getSetTargetAngleCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
+                        ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
+                        new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name()))
                 )
         );
     }
@@ -75,13 +77,13 @@ public class ShootingCommands {
     }
 
     public static Command getSetFixedShootingStateCommand(FixedShootingPosition targetState) {
-        return new InstantCommand(() -> setTargetFixedShootingState(targetState));
+        return new InstantCommand(() -> setTargetFixedShootingAtHubState(targetState)).alongWith(new InstantCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", targetState.name())));
     }
 
-    private static Command getLoadForFixedShootingWhenReadyCommand() {
+    private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(),
-                ShootingCommands::isReadyForFixedShooting
+                ShootingCommands::isReadyForFixedShootingAtHub
         );
     }
 
@@ -141,8 +143,8 @@ public class ShootingCommands {
 
     private static Command getAimForFixedDeliveryCommand() {
         return new ParallelCommandGroup(
-                HoodCommands.getSetTargetAngleCommand(HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
-                ShooterCommands.getSetTargetVelocityCommand(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND)
+                HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
+                ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND)
         );
     }
 
@@ -153,10 +155,10 @@ public class ShootingCommands {
         return isPitchReady && isVelocityReady;
     }
 
-    private static boolean isReadyForFixedShooting() {
-        final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(TARGET_FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw(), false));
-        final boolean isPitchReady = RobotContainer.HOOD.atAngle(TARGET_FIXED_SHOOTING_STATE.targetState.targetPitch());
-        final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_STATE.targetState.targetShootingVelocityMetersPerSecond());
+    private static boolean isReadyForFixedShootingAtHub() {
+        final boolean isYawReady = RobotContainer.SWERVE.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw);
+        final boolean isPitchReady = RobotContainer.HOOD.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch);
+        final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
 
         return isYawReady && isPitchReady && isVelocityReady;
     }
@@ -175,21 +177,25 @@ public class ShootingCommands {
         return ShootingCalculations.TargetShootingLocation.LEFT_DELIVERY_LOCATION;
     }
 
-    private static void setTargetFixedShootingState(FixedShootingPosition targetFixedShootingState) {
-        TARGET_FIXED_SHOOTING_STATE = targetFixedShootingState;
+    private static void setTargetFixedShootingAtHubState(FixedShootingPosition targetFixedShootingAtHubState) {
+        TARGET_FIXED_SHOOTING_AT_HUB_STATE = targetFixedShootingAtHubState;
     }
 
-    public enum FixedShootingPosition {//TODO: Get all values from shooting calculations
-        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(45), 5),
-        RIGHT_TRENCH(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(34), 10),
-        LEFT_TRENCH(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(23), 8),
-        BACK_RIGHT(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(29), 9),
-        BACK_LEFT(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(23), 6);
+    public enum FixedShootingPosition {//TODO: Get all values from shooting calculations IRL
+        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(180 - 6.339), Rotation2d.fromDegrees(59.965), 6.866),
+        RIGHT_TRENCH(Rotation2d.fromDegrees(-97.76), Rotation2d.fromDegrees(59.427), 7.108),
+        LEFT_TRENCH(Rotation2d.fromDegrees(97.76), Rotation2d.fromDegrees(59.427), 7.108),
+        BACK_RIGHT(Rotation2d.fromDegrees(-138.785), Rotation2d.fromDegrees(57.079), 8.349),
+        BACK_LEFT(Rotation2d.fromDegrees(138.785), Rotation2d.fromDegrees(57.079), 8.349);
 
-        private final ShootingState targetState;
+        private final FlippableRotation2d targetFieldRelativeYaw;
+        private final Rotation2d targetPitch;
+        private final double targetShootingVelocityMetersPerSecond;
 
         FixedShootingPosition(Rotation2d targetFieldRelativeYaw, Rotation2d targetPitch, double targetShootingVelocityMetersPerSecond) {
-            this.targetState = new ShootingState(targetFieldRelativeYaw, targetPitch, targetShootingVelocityMetersPerSecond);
+            this.targetFieldRelativeYaw = new FlippableRotation2d(targetFieldRelativeYaw, true);
+            this.targetPitch = targetPitch;
+            this.targetShootingVelocityMetersPerSecond = targetShootingVelocityMetersPerSecond;
         }
     }
 }
