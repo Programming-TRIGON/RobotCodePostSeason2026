@@ -86,4 +86,10 @@ public class FieldConstants {
             return pose.getX() > FieldConstants.FIELD_LENGTH_METERS - FieldConstants.ALLIANCE_ZONE_LENGTH_METERS;
         return pose.getX() < FieldConstants.ALLIANCE_ZONE_LENGTH_METERS;
     }
+
+    public static boolean isRight() {
+        if (Flippable.isRedAlliance())
+            return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getY() > FieldConstants.FIELD_WIDTH_METERS / 2;
+        return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getY() < FieldConstants.FIELD_WIDTH_METERS / 2;
+    }
 }

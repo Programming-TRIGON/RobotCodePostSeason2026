@@ -20,9 +20,9 @@ public class HoodCommands {
         );
     }
 
-    public static Command getAimCommand() {
+    public static Command getAimForShootingCommand() {
         return new ExecuteEndCommand(
-                RobotContainer.HOOD::aim,
+                RobotContainer.HOOD::aimForShooting,
                 RobotContainer.HOOD::stop,
                 RobotContainer.HOOD
         );

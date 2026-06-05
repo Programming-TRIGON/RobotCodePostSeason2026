@@ -37,9 +37,6 @@ public class CommandConstants {
             DEFAULT_SWERVE_SPEED_MULTIPLIER = 1,
             CLOSE_INTAKE_SWERVE_SPEED_MULTIPLIER = 0.5;
 
-    public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 40;
-    public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(67);
-
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
             INDICATE_CAMERAS_DISCONNECTED_COMMAND = new InstantCommand(() -> OperatorConstants.DRIVER_CONTROLLER.rumble(
