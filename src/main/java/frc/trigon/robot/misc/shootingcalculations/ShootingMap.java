@@ -19,14 +19,12 @@ public class ShootingMap {
         addDeliveryPoints();
     }
 
-    private static void addHubPoints() { //TODO: calibrate numbers, these are example numbers gotten from desmos
-        addPoint(HUB_MAP, 1.68309, 5.76, Rotation2d.fromDegrees(62), 0.622);
-        addPoint(HUB_MAP, 2.4989, 6.36, Rotation2d.fromDegrees(62), 0.83365);
-        addPoint(HUB_MAP, 3.09163, 6.8, Rotation2d.fromDegrees(61), 0.937);
-        addPoint(HUB_MAP, 3.51759, 7.06, Rotation2d.fromDegrees(59), 0.96708);
-        addPoint(HUB_MAP, 4.21847, 7.56, Rotation2d.fromDegrees(59), 1.083);
-        addPoint(HUB_MAP, 4.73, 7.86, Rotation2d.fromDegrees(58), 1.13);
-
+    private static void addHubPoints() { //TODO: calibrate real robot numbers
+        addPoint(HUB_MAP, 2, 6.2, Rotation2d.fromDegrees(62), 0.76);
+        addPoint(HUB_MAP, 3, 6.85, Rotation2d.fromDegrees(60), 0.92);
+        addPoint(HUB_MAP, 4, 7.75, Rotation2d.fromDegrees(58), 1.06);
+        addPoint(HUB_MAP, 5, 8.4, Rotation2d.fromDegrees(57), 1.16);
+        addPoint(HUB_MAP, 6, 9.2, Rotation2d.fromDegrees(57), 1.3);
     }
 
     private static void addDeliveryPoints() { //TODO: calibrate numbers, these are example numbers gotten from desmos

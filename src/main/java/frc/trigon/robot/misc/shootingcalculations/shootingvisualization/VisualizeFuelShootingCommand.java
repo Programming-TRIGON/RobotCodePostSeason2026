@@ -30,7 +30,7 @@ public class VisualizeFuelShootingCommand extends Command {
     private final int startingColumn;
     private double simulatedFlightTimeSeconds = 0;
     private boolean hasLoggedScore = false;
-    private ShootingCalculations.TargetLocation lockedTarget;
+    private ShootingCalculations.TargetShootingLocation lockedTarget;
     private double trueDistanceAtLaunchMeters;
 
     public static InstantCommand getScheduleShotCommand(SimulatedGamePiece shotFuel, int startingColumn) {
@@ -91,7 +91,7 @@ public class VisualizeFuelShootingCommand extends Command {
         }
     }
 
-    private void executeForDelivery(ShootingCalculations.TargetLocation activeTarget) {
+    private void executeForDelivery(ShootingCalculations.TargetShootingLocation activeTarget) {
         if (shotFuel.getPosition().getZ() <= FuelShootingVisualizationConstants.END_SIMULATION_HEIGHT_METERS && !hasLoggedScore) {
             double distanceMissedBy = shotFuel.getPosition().toTranslation2d().getDistance(activeTarget.position.get());
 

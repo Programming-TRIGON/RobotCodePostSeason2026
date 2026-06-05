@@ -28,6 +28,20 @@ public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_STATE = FixedShootingPosition.CLOSE_TO_HUB;
 
+    public static Command getCalibrateShootingCalculationsCommand() {
+        return new ParallelCommandGroup(
+                HoodCommands.getDebuggingCommand(),
+                ShooterCommands.getDebuggingCommand(),
+                GeneralCommands.runWhen(
+                        new ParallelCommandGroup(
+                                IndexerCommands.getDebuggingCommand(),
+                                LoaderCommands.getDebuggingCommand()
+                        ),
+                        () -> RobotContainer.HOOD.atTargetAngle() && RobotContainer.SHOOTER.atTargetVelocity()
+                )
+        );
+    }
+
     public static Command getShootingCommand() {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
@@ -43,7 +57,6 @@ public class ShootingCommands {
     public static Command getFixedShootingAtHubCommand() {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
-                        getUpdateShootingCalculationsCommand(),
                         getLoadForFixedShootingWhenReadyCommand(),
                         getAimSwerveCommand(() -> TARGET_FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw()),
                         HoodCommands.getSetTargetAngleCommand(TARGET_FIXED_SHOOTING_STATE.targetState.targetPitch()),
@@ -55,7 +68,6 @@ public class ShootingCommands {
     public static Command getFixedDeliveryShootingCommand() {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
-                        getUpdateShootingCalculationsCommand(),
                         getLoadForDeliveryWhenReadyCommand(),
                         getAimForFixedDeliveryCommand()
                 )
@@ -153,14 +165,14 @@ public class ShootingCommands {
         SHOOTING_CALCULATIONS.updateCalculations();
     }
 
-    private static ShootingCalculations.TargetLocation getTargetLocation() {
+    private static ShootingCalculations.TargetShootingLocation getTargetLocation() {
         if (FieldConstants.isRobotInAllianceZone())
-            return ShootingCalculations.TargetLocation.HUB;
+            return ShootingCalculations.TargetShootingLocation.HUB;
 
         if (FieldConstants.isRight())
-            return ShootingCalculations.TargetLocation.RIGHT_DELIVERY_LOCATION;
+            return ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION;
 
-        return ShootingCalculations.TargetLocation.LEFT_DELIVERY_LOCATION;
+        return ShootingCalculations.TargetShootingLocation.LEFT_DELIVERY_LOCATION;
     }
 
     private static void setTargetFixedShootingState(FixedShootingPosition targetFixedShootingState) {
@@ -171,8 +183,8 @@ public class ShootingCommands {
         CLOSE_TO_HUB(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(45), 5),
         RIGHT_TRENCH(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(34), 10),
         LEFT_TRENCH(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(23), 8),
-        TOP_RIGHT(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(29), 9),
-        TOP_LEFT(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(23), 6);
+        BACK_RIGHT(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(29), 9),
+        BACK_LEFT(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(23), 6);
 
         private final ShootingState targetState;
 

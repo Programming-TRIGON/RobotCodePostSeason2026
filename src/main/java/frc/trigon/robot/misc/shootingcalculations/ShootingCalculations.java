@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.Logger;
 public class ShootingCalculations {
     private static ShootingCalculations INSTANCE = null;
     private ShootingState targetShootingState = ShootingState.empty();
-    private TargetLocation currentTargetLocation = TargetLocation.HUB;
+    private TargetShootingLocation currentTargetShootingLocation = TargetShootingLocation.HUB;
 
     public static ShootingCalculations getInstance() {
         if (INSTANCE == null) INSTANCE = new ShootingCalculations();
@@ -24,12 +24,12 @@ public class ShootingCalculations {
     private ShootingCalculations() {
     }
 
-    public void setTargetShootingLocation(TargetLocation newTarget) {
-        this.currentTargetLocation = newTarget;
+    public void setTargetShootingLocation(TargetShootingLocation newTarget) {
+        this.currentTargetShootingLocation = newTarget;
     }
 
-    public TargetLocation getCurrentTargetShootingLocation() {
-        return currentTargetLocation;
+    public TargetShootingLocation getCurrentTargetShootingLocation() {
+        return currentTargetShootingLocation;
     }
 
     public void updateCalculations() {
@@ -38,7 +38,7 @@ public class ShootingCalculations {
         Logger.recordOutput("ShootingCalculations/TargetShootingYawDegrees", targetShootingState.targetFieldRelativeYaw().getDegrees());
         Logger.recordOutput("ShootingCalculations/TargetShootingPitchDegrees", targetShootingState.targetPitch().getDegrees());
         Logger.recordOutput("ShootingCalculations/TargetShootingVelocityMPS", targetShootingState.targetShootingVelocityMetersPerSecond());
-        Logger.recordOutput("ShootingCalculations/TargetMode", currentTargetLocation.name());
+        Logger.recordOutput("ShootingCalculations/TargetMode", currentTargetShootingLocation.name());
         Logger.recordOutput("ShootingCalculations/Conditions/SwerveAtTargetAngle", RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false)));
     }
 
@@ -91,7 +91,7 @@ public class ShootingCalculations {
     }
 
     public ShootingState calculateTargetShootingState(Pose2d robotPose, ChassisSpeeds fieldRelativeChassisSpeeds) {
-        final Translation2d targetPhysicalPosition = currentTargetLocation.position.get();
+        final Translation2d targetPhysicalPosition = currentTargetShootingLocation.position.get();
         final Translation2d robotVelocity = new Translation2d(fieldRelativeChassisSpeeds.vxMetersPerSecond, fieldRelativeChassisSpeeds.vyMetersPerSecond);
 
         // Uses exact shooter exit for both ToF interpolation AND Swerve aim Angle
@@ -101,12 +101,12 @@ public class ShootingCalculations {
         Translation2d virtualTarget = targetPhysicalPosition;
         double distanceToVirtualTarget = shooterExitFieldPosition.getDistance(virtualTarget);
 
-        ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
+        ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetShootingLocation.isDelivery);
 
         for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_HUB_CALCULATION_ITERATIONS; i++) {
             virtualTarget = targetPhysicalPosition.minus(robotVelocity.times(parameters.timeOfFlight()));
             distanceToVirtualTarget = shooterExitFieldPosition.getDistance(virtualTarget);
-            parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
+            parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetShootingLocation.isDelivery);
         }
 
         final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle().rotateBy(Rotation2d.k180deg);
@@ -121,7 +121,7 @@ public class ShootingCalculations {
         );
     }
 
-    public enum TargetLocation {
+    public enum TargetShootingLocation {
         HUB(FieldConstants.HUB_POSITION, false),
         RIGHT_DELIVERY_LOCATION(FieldConstants.RIGHT_DELIVERY_POSITION, true),
         LEFT_DELIVERY_LOCATION(FieldConstants.LEFT_DELIVERY_POSITION, true);
@@ -129,7 +129,7 @@ public class ShootingCalculations {
         public final FlippableTranslation2d position;
         public final boolean isDelivery;
 
-        TargetLocation(FlippableTranslation2d position, boolean isDelivery) {
+        TargetShootingLocation(FlippableTranslation2d position, boolean isDelivery) {
             this.position = position;
             this.isDelivery = isDelivery;
         }
