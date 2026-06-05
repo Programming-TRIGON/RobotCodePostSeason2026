@@ -8,7 +8,6 @@ import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class HoodCommands {
     public static Command getDebuggingCommand() {
@@ -36,9 +35,9 @@ public class HoodCommands {
         );
     }
 
-    public static Command getSetTargetAngleCommand(Rotation2d targetAngleSupplier) {
+    public static Command getSetTargetAngleCommand(Rotation2d targetAngle) {
         return new StartEndCommand(
-                () -> RobotContainer.HOOD.setTargetAngle(targetAngleSupplier),
+                () -> RobotContainer.HOOD.setTargetAngle(targetAngle),
                 RobotContainer.HOOD::stop,
                 RobotContainer.HOOD
         );
