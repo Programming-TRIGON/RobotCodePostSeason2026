@@ -2,7 +2,6 @@ package frc.trigon.robot.misc.simulatedfield;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import org.littletonrobotics.junction.Logger;
 
@@ -12,12 +11,12 @@ import java.util.Random;
 public class SimulatedGamePiece {
     private static final ArrayList<SimulatedGamePiece> SIMULATED_GAME_PIECES = new ArrayList<>();
 
-    // Represents occupied slots [row, col] in the 4-wide indexer
-    private static final ArrayList<Translation2d> OCCUPIED_INDEXER_SLOTS = new ArrayList<>();
+    // Represents occupied cells in the 3D hopper volume (depth, width, height).
+    private static final ArrayList<HopperCell> OCCUPIED_HOPPER_CELLS = new ArrayList<>();
 
     private Translation3d fieldRelativePosition;
     private boolean isIndexed = true;
-    private Translation2d indexerGridSlot; // X = row, Y = column
+    private HopperCell hopperCell; // null when not held
 
     public SimulatedGamePiece(double startingPoseXMeters, double startingPoseYMeters) {
         SimulatedGamePieceConstants.GamePieceType gamePieceType = SimulatedGamePieceConstants.GamePieceType.FUEL;
@@ -48,10 +47,9 @@ public class SimulatedGamePiece {
     }
 
     void release() {
-        if (indexerGridSlot != null) {
-            OCCUPIED_INDEXER_SLOTS.remove(indexerGridSlot);
-        }
-        indexerGridSlot = null;
+        if (hopperCell != null)
+            OCCUPIED_HOPPER_CELLS.remove(hopperCell);
+        hopperCell = null;
         isIndexed = false;
     }
 
@@ -64,16 +62,16 @@ public class SimulatedGamePiece {
     }
 
     void resetIndexing() {
-        indexerGridSlot = calculateNextAvailableIndexerSlot();
-        if (indexerGridSlot != null) {
+        hopperCell = calculateNextAvailableHopperCell();
+        if (hopperCell != null) {
             isIndexed = true;
-            OCCUPIED_INDEXER_SLOTS.add(indexerGridSlot);
+            OCCUPIED_HOPPER_CELLS.add(hopperCell);
         } else
             isIndexed = false;
     }
 
-    Translation2d getIndexerGridSlot() {
-        return indexerGridSlot;
+    HopperCell getHopperCell() {
+        return hopperCell;
     }
 
     static void logAll() {
@@ -88,29 +86,98 @@ public class SimulatedGamePiece {
     }
 
     private boolean isHeld() {
-        return indexerGridSlot != null;
+        // Held membership is owned by SimulationFieldHandler's HELD_FUEL list, NOT by whether a
+        // hopper cell happens to be allocated. A held piece that couldn't get a cell (full hopper)
+        // must still count as held, or getUnheldGamePieces() would expose it as loose fuel and it
+        // could be collected twice.
+        return SimulationFieldHandler.isHeld(this);
     }
 
     /**
-     * Finds the next open row and column in the 4-wide roller indexer queue.
+     * Finds the next open cell in the hopper, filling it like a real bin:
+     * <p>
+     * - The floor layer (layer 0) is filled front-to-back. Each row only accepts a randomized
+     * number of balls (between {@link SimulatedGamePieceConstants#MINIMUM_BALLS_PER_ROW} and the
+     * full width), so rows look uneven instead of a perfect 4-wide grid.
+     * <p>
+     * - The very front row (depth 0) is the flat shooter-feed section and stays a single layer.
+     * The second row stacks to a reduced height, and the rear rows stack to full height, so the
+     * pile tapers down toward the shooter.
      */
-    private Translation2d calculateNextAvailableIndexerSlot() {
-        int targetRow = 0;
+    private static HopperCell calculateNextAvailableHopperCell() {
+        final int depth = SimulatedGamePieceConstants.HOPPER_DEPTH_CAPACITY;
+        final int maxLayers = SimulatedGamePieceConstants.HOPPER_HEIGHT_CAPACITY;
 
-        while (true) {
-            for (int col = 0; col < SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY; col++) {
-                Translation2d candidateSlot = new Translation2d(targetRow, col);
+        for (int layer = 0; layer < maxLayers; layer++) {
+            for (int depthIndex = 0; depthIndex < depth; depthIndex++) {
+                if (!canRowHoldLayer(depthIndex, layer))
+                    continue;
 
-                // ORGANIC BUNCHING: Uses tuning constant to force balls into a loose pile.
-                boolean isDeadSpace = new Random(targetRow * 31L + col * 17L).nextDouble() < SimulatedGamePieceConstants.DEAD_SPACE_PROBABILITY;
-                if (!OCCUPIED_INDEXER_SLOTS.contains(candidateSlot) && !isDeadSpace)
-                    return candidateSlot;
+                final HopperCell freeCell = findFreeCellInRow(depthIndex, layer);
+                if (freeCell != null)
+                    return freeCell;
             }
-            targetRow++;
-
-            // Failsafe to prevent infinite loops if loaded beyond capacity
-            if (targetRow > (SimulatedGamePieceConstants.MAXIMUM_HELD_FUEL / SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY) + 3)
-                return null;
         }
+
+        return null;
+    }
+
+    /**
+     * Per-row stacking limit. The very front row (shooter feed) is a single flat layer. The
+     * second row may stack, but only to a reduced height so it tapers down toward the shooter.
+     * The remaining rear rows stack to the full hopper height.
+     */
+    private static boolean canRowHoldLayer(int depthIndex, int layer) {
+        if (layer == 0)
+            return true;
+        if (depthIndex < SimulatedGamePieceConstants.NON_STACKING_ROW_COUNT)
+            return false;
+        if (depthIndex == SimulatedGamePieceConstants.NON_STACKING_ROW_COUNT)
+            return layer < SimulatedGamePieceConstants.SECOND_ROW_MAX_LAYERS;
+        return true;
+    }
+
+    /**
+     * Returns the first open cell within a row's randomized, centered set of occupied columns,
+     * or null if that row+layer is already full.
+     */
+    private static HopperCell findFreeCellInRow(int depthIndex, int layer) {
+        final int ballsInRow = calculateRowCapacity(depthIndex);
+        final int width = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
+
+        // Center the occupied columns within the full width so partial rows sit in the middle.
+        final int startColumn = (width - ballsInRow) / 2;
+
+        for (int offset = 0; offset < ballsInRow; offset++) {
+            final int widthIndex = startColumn + offset;
+            final HopperCell candidate = new HopperCell(depthIndex, widthIndex, layer);
+            if (!OCCUPIED_HOPPER_CELLS.contains(candidate))
+                return candidate;
+        }
+
+        return null;
+    }
+
+    /**
+     * Deterministically picks how many balls a given depth row holds, so the count is stable
+     * frame to frame but varies from row to row (e.g. sometimes only 2 or 3 across instead of the
+     * full 4). The width is keyed on depthIndex ONLY, never the layer, so an upper layer can never
+     * be wider than the layer beneath it (which would leave balls unsupported).
+     */
+    private static int calculateRowCapacity(int depthIndex) {
+        final int width = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
+        final int minimum = SimulatedGamePieceConstants.MINIMUM_BALLS_PER_ROW;
+
+        final Random rowRNG = new Random(depthIndex * 92821L + SimulatedGamePieceConstants.ROW_CAPACITY_SEED);
+        return minimum + rowRNG.nextInt(width - minimum + 1);
+    }
+
+    /**
+     * A discrete cell inside the hopper grid.
+     * depthIndex runs front (0) to back along the robot's X axis,
+     * widthIndex runs across the robot's Y axis,
+     * layerIndex runs bottom (0) to top along Z.
+     */
+    record HopperCell(int depthIndex, int widthIndex, int layerIndex) {
     }
 }
