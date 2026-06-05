@@ -22,7 +22,7 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
     }
 
     @Override
-    public void reset() {
+    public void init() {
         translationLimiter.reset(0);
         rotationLimiter.reset(0);
     }
