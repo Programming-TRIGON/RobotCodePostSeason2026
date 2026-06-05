@@ -11,7 +11,6 @@ import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
-import frc.trigon.robot.misc.shootingcalculations.ShootingState;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
@@ -47,7 +46,11 @@ public class ShootingCommands {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
-                        getLoadForShootingWhenReadyCommand(),
+                        GeneralCommands.getContinuousConditionalCommand(
+                                getLoadForDeliveryWhenReadyCommand(),
+                                getLoadForShootingWhenReadyCommand(),
+                                () -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery
+                        ),
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimForShootingCommand()
@@ -68,11 +71,11 @@ public class ShootingCommands {
     }
 
     public static Command getFixedDeliveryShootingCommand() {
-        return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
-                new ParallelCommandGroup(
-                        getLoadForDeliveryWhenReadyCommand(),
-                        getAimForFixedDeliveryCommand()
-                )
+        return new ParallelCommandGroup(
+                getLoadForFixedDeliveryWhenReadyCommand(),
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedDelivery", isReadyForFixedDelivery())),
+                HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
+                ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND)
         );
     }
 
@@ -88,6 +91,13 @@ public class ShootingCommands {
     }
 
     private static Command getLoadForDeliveryWhenReadyCommand() {
+        return GeneralCommands.runWhen(
+                getLoadForDeliveryCommand(),
+                SHOOTING_CALCULATIONS::isReadyToShoot
+        );
+    }
+
+    private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
                 getLoadForDeliveryCommand(),
                 ShootingCommands::isReadyForFixedDelivery
@@ -138,13 +148,6 @@ public class ShootingCommands {
         return GeneralCommands.runWhen(
                 new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(getTargetLocation())),
                 () -> getTargetLocation() != SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation()
-        );
-    }
-
-    private static Command getAimForFixedDeliveryCommand() {
-        return new ParallelCommandGroup(
-                HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
-                ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND)
         );
     }
 

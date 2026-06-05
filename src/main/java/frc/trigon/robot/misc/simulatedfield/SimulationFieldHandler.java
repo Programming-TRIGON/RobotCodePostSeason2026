@@ -41,11 +41,13 @@ public class SimulationFieldHandler {
      */
     public static void teleportRobotForSimulationShootingMapCalibration(ShootingCalculations.TargetShootingLocation targetShootingLocation, double exactShooterDistanceMeters) {
         final Translation2d targetPos = targetShootingLocation.position.get();
-        final Rotation2d newRobotRotation = Flippable.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg;
-        final Translation2d shooterOffsetFromChassis = ShooterConstants.FUEL_EXIT_SHOOTER_POSE.getTranslation().toTranslation2d();
+        final boolean shouldFlip = Flippable.isRedAlliance() != targetShootingLocation.isDelivery;
+        final Rotation2d newRobotRotation = shouldFlip ? Rotation2d.kZero : Rotation2d.k180deg;
+
+        final Translation2d shooterOffsetFromChassis = ShooterConstants.FUEL_EXIT_SHOOTER_POSE.getTranslation().toTranslation2d().rotateBy(newRobotRotation);
 
         final Translation2d newRobotPosition = targetPos
-                .minus(new Translation2d(Flippable.isRedAlliance() ? -exactShooterDistanceMeters : exactShooterDistanceMeters, 0))
+                .minus(new Translation2d(shouldFlip ? -exactShooterDistanceMeters : exactShooterDistanceMeters, 0))
                 .minus(shooterOffsetFromChassis);
 
         RobotContainer.ROBOT_POSE_ESTIMATOR.resetPose(new Pose2d(newRobotPosition, newRobotRotation));

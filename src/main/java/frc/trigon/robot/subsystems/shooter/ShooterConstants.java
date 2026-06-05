@@ -63,7 +63,7 @@ public class ShooterConstants {
             new Translation3d(-0.160855914, 0, 0.462125568),
             new Rotation3d()
     );
-    public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 5;
+    public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 7.208;
 
     static {
         configureMasterMotor();

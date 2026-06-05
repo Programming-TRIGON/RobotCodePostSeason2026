@@ -27,13 +27,12 @@ public class ShootingMap {
         addPoint(HUB_MAP, 6, 9.2, Rotation2d.fromDegrees(57), 1.3);
     }
 
-    private static void addDeliveryPoints() { //TODO: calibrate numbers, these are example numbers gotten from desmos
-        addPoint(DELIVERY_MAP, 3.00913, 5, Rotation2d.fromDegrees(46), 0.86624);
-        addPoint(DELIVERY_MAP, 4.16762, 6, Rotation2d.fromDegrees(45), 0.98223);
-        addPoint(DELIVERY_MAP, 5.18138, 6.76, Rotation2d.fromDegrees(44), 1.065478);
-        addPoint(DELIVERY_MAP, 6.36517, 7.56, Rotation2d.fromDegrees(43), 1.15121);
-        addPoint(DELIVERY_MAP, 8.66555, 8.95, Rotation2d.fromDegrees(40), 1.264);
-        addPoint(DELIVERY_MAP, 10.49719, 10, Rotation2d.fromDegrees(37), 1.31457);
+    private static void addDeliveryPoints() { //TODO: calibrate real robot numbers
+        addPoint(DELIVERY_MAP, 3, 5.65, Rotation2d.fromDegrees(20), 0.540);
+        addPoint(DELIVERY_MAP, 5, 7.1, Rotation2d.fromDegrees(30), 0.8);
+        addPoint(DELIVERY_MAP, 7, 8.7, Rotation2d.fromDegrees(33), 1);
+        addPoint(DELIVERY_MAP, 10, 10.6, Rotation2d.fromDegrees(40), 1.34);
+
     }
 
     private static void addPoint(InterpolatingTreeMap<Double, ShotParameters> map, double distanceMeters, double velocityMetersPerSecond, Rotation2d pitch, double timeOfFlightSeconds) {
