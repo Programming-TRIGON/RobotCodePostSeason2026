@@ -24,7 +24,7 @@ public class SimulatedGamePieceConstants {
     // 3D hopper volume definition. Fuel fills the bottom layer first (depth x width),
     // then stacks upward on the rear rows, keeping the pile inside the hopper bounds.
     public static final int
-            HOPPER_DEPTH_CAPACITY = 5,   // cells along robot X (front-to-back)
+            HOPPER_DEPTH_CAPACITY = 6,   // cells along robot X (front-to-back); one extra row reaches the wheels
             HOPPER_WIDTH_CAPACITY = 4,   // max cells along robot Y (left-to-right)
             HOPPER_HEIGHT_CAPACITY = 3;  // max stacked layers along Z (removed one from the top)
 
@@ -56,7 +56,7 @@ public class SimulatedGamePieceConstants {
     // The indexer is a ~19 degree ramp; rows climb it as the depth index increases, EXCEPT the
     // rearmost rows, which form a flat shelf at the top of the ramp (no further climb).
     public static final Rotation2d INDEXER_RAMP_ANGLE = Rotation2d.fromDegrees(19);
-    public static final int FLAT_BACK_ROW_COUNT = 2;
+    public static final int FLAT_BACK_ROW_COUNT = 3;
 
     // Hopper placement relative to the indexer anchor point (robot-relative meters).
     // The anchor only uses the indexer pose's TRANSLATION; fill axes are clean robot axes
@@ -65,6 +65,11 @@ public class SimulatedGamePieceConstants {
     public static final Translation3d HOPPER_ANCHOR_OFFSET = new Translation3d(0.0, 0.0, 0.0);
     // +1 fills/climbs toward the front (+X) with the shooter at the back; -1 reverses it.
     public static final double HOPPER_DEPTH_DIRECTION = 1.0;
+
+    // After adding the extra row, this small nudge seats the whole pile snug against the back
+    // shooter wheels so the front row touches them instead of leaving a sliver of a gap.
+    // Increase to push the pile further into the wheels; decrease (or zero) to back it off.
+    public static final double SHOOTER_WHEEL_SNUG_NUDGE_METERS = 0.10;
 
     // Visual jitter so the pile reads as loose balls rather than a perfect lattice.
     public static final double ORGANIC_SCATTER_METERS = 0.02;

@@ -206,8 +206,11 @@ public class SimulationFieldHandler {
             xOffset += sideSign * SimulatedGamePieceConstants.NEST_DEPTH_SHIFT_METERS;
         }
 
-        // Flip onto the hopper side and apply the tunable anchor offset.
-        xOffset = xOffset * SimulatedGamePieceConstants.HOPPER_DEPTH_DIRECTION + SimulatedGamePieceConstants.HOPPER_ANCHOR_OFFSET.getX();
+        // Flip onto the hopper side, nudge the pile snug against the shooter wheels, and apply
+        // the tunable anchor offset. The nudge acts opposite the fill direction so the front row
+        // seats against the wheels. With the extra depth row, the pile now physically reaches them.
+        final double snugNudge = SimulatedGamePieceConstants.SHOOTER_WHEEL_SNUG_NUDGE_METERS;
+        xOffset = (xOffset - snugNudge) * SimulatedGamePieceConstants.HOPPER_DEPTH_DIRECTION + SimulatedGamePieceConstants.HOPPER_ANCHOR_OFFSET.getX();
         final double finalY = yOffset + SimulatedGamePieceConstants.HOPPER_ANCHOR_OFFSET.getY();
         final double finalZ = zOffset + SimulatedGamePieceConstants.HOPPER_ANCHOR_OFFSET.getZ();
 
