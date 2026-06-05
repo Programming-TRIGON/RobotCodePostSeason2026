@@ -161,47 +161,49 @@ public class SimulationFieldHandler {
      * <p>
      * - Width (Y) is centered so the pile is symmetric about the robot center.
      * <p>
-     * - The flat front rows (shooter feed) sit on the floor: depth recedes linearly, height stays 0.
+     * - Rows climb the ~19 degree indexer ramp as the depth index grows, EXCEPT the rearmost
+     * FLAT_BACK_ROW_COUNT rows, which hold the height of the last sloped row to form a flat shelf.
      * <p>
-     * - The rear rows ride the ~19 degree indexer ramp: as the depth index grows past the flat
-     * section, the balls recede less in X (cos) and gain height in Z (sin). Stacked layers are
-     * offset along the ramp normal so they nestle on the slope rather than sitting straight up.
+     * - Stacked layers nest into the pockets between the balls below: each higher layer is shifted
+     * half a cell sideways (alternating per layer), nudged slightly in depth, and raised by less
+     * than a full layer height, so the pile looks settled instead of balls floating straight up.
      * <p>
-     * Finally the whole pile is shifted by HOPPER_ANCHOR_OFFSET and flipped by HOPPER_DEPTH_DIRECTION
-     * so it sits on the hopper side of the robot, away from the shooter.
+     * Finally the pile is flipped by HOPPER_DEPTH_DIRECTION and shifted by HOPPER_ANCHOR_OFFSET.
      */
     private static Translation3d calculateHopperCellOffset(SimulatedGamePiece.HopperCell cell) {
         final double widthCenter = (SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY - 1) / 2.0;
-        final double yOffset = (cell.widthIndex() - widthCenter) * SimulatedGamePieceConstants.HOPPER_WIDTH_SPACING_METERS;
+        double yOffset = (cell.widthIndex() - widthCenter) * SimulatedGamePieceConstants.HOPPER_WIDTH_SPACING_METERS;
 
-        final int flatRows = SimulatedGamePieceConstants.NON_STACKING_ROW_COUNT;
         final double depthSpacing = SimulatedGamePieceConstants.HOPPER_DEPTH_SPACING_METERS;
+        final double rampCos = SimulatedGamePieceConstants.INDEXER_RAMP_ANGLE.getCos();
+        final double rampSin = SimulatedGamePieceConstants.INDEXER_RAMP_ANGLE.getSin();
 
-        double xOffset;
-        double zOffset;
+        // Depth index at which the ramp stops climbing and the flat back shelf begins.
+        final int lastClimbingRow = SimulatedGamePieceConstants.HOPPER_DEPTH_CAPACITY
+                - SimulatedGamePieceConstants.FLAT_BACK_ROW_COUNT - 1;
 
-        if (cell.depthIndex() < flatRows) {
-            // Flat shooter-feed floor.
-            xOffset = cell.depthIndex() * depthSpacing;
-            zOffset = 0.0;
-        } else {
-            // Rear rows climb the ramp, starting from where the flat section ends.
-            final double flatSectionX = (flatRows - 1) * depthSpacing;
-            final int rampSteps = cell.depthIndex() - (flatRows - 1);
-            final double alongRamp = rampSteps * depthSpacing;
+        // Number of ramp steps this row has climbed (capped at the flat-shelf start).
+        final int climbSteps = Math.min(cell.depthIndex(), Math.max(lastClimbingRow, 0));
+        final double alongRamp = climbSteps * depthSpacing;
 
-            final double rampCos = SimulatedGamePieceConstants.INDEXER_RAMP_ANGLE.getCos();
-            final double rampSin = SimulatedGamePieceConstants.INDEXER_RAMP_ANGLE.getSin();
+        // Depth that continues advancing along the floor even on the flat shelf.
+        double xOffset = alongRamp * rampCos;
+        double zOffset = alongRamp * rampSin;
+        if (cell.depthIndex() > lastClimbingRow) {
+            final int flatSteps = cell.depthIndex() - lastClimbingRow;
+            xOffset += flatSteps * depthSpacing; // shelf extends back at constant height
+        }
 
-            xOffset = flatSectionX + alongRamp * rampCos;
-            zOffset = alongRamp * rampSin;
+        // Natural nesting for stacked layers.
+        if (cell.layerIndex() > 0) {
+            final double rise = cell.layerIndex() * SimulatedGamePieceConstants.HOPPER_LAYER_SPACING_METERS
+                    * SimulatedGamePieceConstants.NEST_VERTICAL_FACTOR;
+            zOffset += rise;
 
-            // Stack along the ramp normal so stacked balls rest on the slope.
-            if (cell.layerIndex() > 0) {
-                final double stackDistance = cell.layerIndex() * SimulatedGamePieceConstants.HOPPER_LAYER_SPACING_METERS;
-                xOffset += -stackDistance * rampSin; // normal points back-and-up
-                zOffset += stackDistance * rampCos;
-            }
+            // Alternate the sideways nestle direction each layer so the stack doesn't lean.
+            final double sideSign = (cell.layerIndex() % 2 == 1) ? 1.0 : -1.0;
+            yOffset += sideSign * SimulatedGamePieceConstants.NEST_WIDTH_SHIFT_METERS;
+            xOffset += sideSign * SimulatedGamePieceConstants.NEST_DEPTH_SHIFT_METERS;
         }
 
         // Flip onto the hopper side and apply the tunable anchor offset.

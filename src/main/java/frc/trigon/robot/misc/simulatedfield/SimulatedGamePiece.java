@@ -96,9 +96,9 @@ public class SimulatedGamePiece {
      * number of balls (between {@link SimulatedGamePieceConstants#MINIMUM_BALLS_PER_ROW} and the
      * full width), so rows look uneven instead of a perfect 4-wide grid.
      * <p>
-     * - The front rows (depth index below {@link SimulatedGamePieceConstants#NON_STACKING_ROW_COUNT})
-     * are the flat shooter-feed section and never receive a second layer. Only the rear rows, which
-     * sit on the indexer ramp, are allowed to stack upward.
+     * - The very front row (depth 0) is the flat shooter-feed section and stays a single layer.
+     * The second row stacks to a reduced height, and the rear rows stack to full height, so the
+     * pile tapers down toward the shooter.
      */
     private static HopperCell calculateNextAvailableHopperCell() {
         final int depth = SimulatedGamePieceConstants.HOPPER_DEPTH_CAPACITY;
@@ -119,12 +119,18 @@ public class SimulatedGamePiece {
     }
 
     /**
-     * The flat front rows (shooter feed) hold a single layer only. Rear rows on the ramp may stack.
+     * Per-row stacking limit. The very front row (shooter feed) is a single flat layer. The
+     * second row may stack, but only to a reduced height so it tapers down toward the shooter.
+     * The remaining rear rows stack to the full hopper height.
      */
     private static boolean canRowHoldLayer(int depthIndex, int layer) {
         if (layer == 0)
             return true;
-        return depthIndex >= SimulatedGamePieceConstants.NON_STACKING_ROW_COUNT;
+        if (depthIndex < SimulatedGamePieceConstants.NON_STACKING_ROW_COUNT)
+            return false;
+        if (depthIndex == SimulatedGamePieceConstants.NON_STACKING_ROW_COUNT)
+            return layer < SimulatedGamePieceConstants.SECOND_ROW_MAX_LAYERS;
+        return true;
     }
 
     /**
