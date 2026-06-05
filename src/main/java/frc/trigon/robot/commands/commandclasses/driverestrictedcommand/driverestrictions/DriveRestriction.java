@@ -1,4 +1,4 @@
-package frc.trigon.robot.commands;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions;
 
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -16,16 +16,16 @@ public interface DriveRestriction {
     /**
      * Applies a restriction to the target rotation of the robot.
      *
-     * @param targetTheta The target rotation of the robot.
+     * @param targetRotation The target rotation of the robot.
      * @return The restricted target rotation of the robot.
      */
-    default double applyRestrictionToTheta(double targetTheta) {
-        return targetTheta;
+    default double applyRestrictionToRotation(double targetRotation) {
+        return targetRotation;
     }
 
     /**
-     * Resets the restricted values.
+     * Is run everytime the command is used.
+     * Used to reset the values so past values don't affect the command.
      */
-    default void reset() {}
-
+    default void init() {}
 }

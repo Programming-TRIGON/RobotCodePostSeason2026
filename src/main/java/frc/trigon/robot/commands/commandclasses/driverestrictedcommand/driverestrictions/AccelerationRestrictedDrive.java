@@ -1,31 +1,30 @@
-package frc.trigon.robot.commands.commandclasses.driverestrictedcommands;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.trigon.robot.commands.DriveRestriction;
 
 /**
  * A restriction that limits the linear and rotational acceleration of the robot.
  */
 public class AccelerationRestrictedDrive implements DriveRestriction {
     private final SlewRateLimiter translationLimiter;
-    private final SlewRateLimiter thetaLimiter;
+    private final SlewRateLimiter rotationLimiter;
 
     /**
      * A restriction that limits the maximum linear and rotational acceleration.
      *
      * @param maximumTranslationAcceleration Maximum linear acceleration.
-     * @param maximumThetaAcceleration       Maximum rotational acceleration.
+     * @param maximumRotationAcceleration       Maximum rotational acceleration.
      */
-    public AccelerationRestrictedDrive(double maximumTranslationAcceleration, double maximumThetaAcceleration) {
+    public AccelerationRestrictedDrive(double maximumTranslationAcceleration, double maximumRotationAcceleration) {
         this.translationLimiter = new SlewRateLimiter(maximumTranslationAcceleration);
-        this.thetaLimiter = new SlewRateLimiter(maximumThetaAcceleration);
+        this.rotationLimiter = new SlewRateLimiter(maximumRotationAcceleration);
     }
 
     @Override
     public void reset() {
         translationLimiter.reset(0);
-        thetaLimiter.reset(0);
+        rotationLimiter.reset(0);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
     }
 
     @Override
-    public double applyRestrictionToTheta(double targetTheta) {
-        return thetaLimiter.calculate(targetTheta);
+    public double applyRestrictionToRotation(double targetRotation) {
+        return rotationLimiter.calculate(targetRotation);
     }
 }
