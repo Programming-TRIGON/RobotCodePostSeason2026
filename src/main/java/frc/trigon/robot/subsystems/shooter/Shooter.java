@@ -69,7 +69,7 @@ public class Shooter extends MotorSubsystem {
         Logger.recordOutput("Shooter/TargetProfiledVelocityMetersPerSecond", targetProfiledVelocityMetersPerSecond);
     }
 
-    @AutoLogOutput(key = "Shooting/Conditions/ShooterAtTargetVelocity")
+    @AutoLogOutput(key = "ShootingCalculations/Conditions/ShooterAtTargetVelocity")
     public boolean atTargetVelocity() {
         return atVelocity(targetVelocityMetersPerSecond);
     }

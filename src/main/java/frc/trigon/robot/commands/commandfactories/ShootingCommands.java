@@ -34,7 +34,7 @@ public class ShootingCommands {
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(),
                         getSetTargetShootingLocationCommand(),
-                        getAimSwerveCommand(() -> TARGET_FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw()),
+                        getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimForShootingCommand()
                 )
         );
@@ -116,7 +116,7 @@ public class ShootingCommands {
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftX()),
-                () -> rotationSupplier.get().getRadians()
+                () -> new FlippableRotation2d(rotationSupplier.get(), false)
         );
     }
 
@@ -124,18 +124,6 @@ public class ShootingCommands {
         return GeneralCommands.runWhen(
                 new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(getTargetLocation())),
                 () -> getTargetLocation() != SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation()
-        );
-    }
-
-    private static Command getAimForFixedShootingCommand() {
-        return new ParallelCommandGroup(
-                SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
-                        () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),
-                        () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftX()),
-                        () -> new FlippableRotation2d(TARGET_FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw(), false)
-                ),
-                HoodCommands.getSetTargetAngleCommand(TARGET_FIXED_SHOOTING_STATE.targetState.targetPitch()),
-                ShooterCommands.getSetTargetVelocityCommand(TARGET_FIXED_SHOOTING_STATE.targetState.targetShootingVelocityMetersPerSecond())
         );
     }
 

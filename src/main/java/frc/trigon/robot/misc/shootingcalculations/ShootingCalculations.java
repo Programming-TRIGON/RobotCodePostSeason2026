@@ -35,11 +35,11 @@ public class ShootingCalculations {
     public void updateCalculations() {
         targetShootingState = calculateTargetShootingState();
 
-        Logger.recordOutput("Shooting/TargetShootingYawDegrees", targetShootingState.targetFieldRelativeYaw().getDegrees());
-        Logger.recordOutput("Shooting/TargetShootingPitchDegrees", targetShootingState.targetPitch().getDegrees());
-        Logger.recordOutput("Shooting/TargetShootingVelocityMPS", targetShootingState.targetShootingVelocityMetersPerSecond());
-        Logger.recordOutput("Shooting/TargetMode", currentTargetLocation.name());
-        Logger.recordOutput("Shooting/IsReadyToShoot", isReadyToShoot());
+        Logger.recordOutput("ShootingCalculations/TargetShootingYawDegrees", targetShootingState.targetFieldRelativeYaw().getDegrees());
+        Logger.recordOutput("ShootingCalculations/TargetShootingPitchDegrees", targetShootingState.targetPitch().getDegrees());
+        Logger.recordOutput("ShootingCalculations/TargetShootingVelocityMPS", targetShootingState.targetShootingVelocityMetersPerSecond());
+        Logger.recordOutput("ShootingCalculations/TargetMode", currentTargetLocation.name());
+        Logger.recordOutput("ShootingCalculations/Conditions/SwerveAtTargetAngle", RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false)));
     }
 
     public ShootingState getTargetShootingState() {
@@ -49,7 +49,7 @@ public class ShootingCalculations {
     /**
      * @return True if the chassis, hood pitch, and shooter wheels are all at their PID setpoints.
      */
-    @AutoLogOutput(key = "Shooting/isReadyToShoot")
+    @AutoLogOutput(key = "ShootingCalculations/isReadyToShoot")
     public boolean isReadyToShoot() {
         final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
@@ -58,7 +58,7 @@ public class ShootingCalculations {
         return isYawReady && isPitchReady && isVelocityReady;
     }
 
-    @AutoLogOutput(key = "Shooting/CurrentFuelExitPosition")
+    @AutoLogOutput(key = "ShootingCalculations/CurrentFuelExitPosition")
     public Translation3d calculateCurrentFuelExitPose(int columnIndex) {
         final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
         final Rotation2d shooterPitch = RobotContainer.HOOD.getCurrentAngle();
@@ -111,8 +111,8 @@ public class ShootingCalculations {
 
         final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle().rotateBy(Rotation2d.k180deg);
 
-        Logger.recordOutput("Shooting/DistanceToVirtualTarget", distanceToVirtualTarget);
-        Logger.recordOutput("Shooting/InterpolatedTimeOfFlight", parameters.timeOfFlight());
+        Logger.recordOutput("ShootingCalculations/DistanceToVirtualTarget", distanceToVirtualTarget);
+        Logger.recordOutput("ShootingCalculations/InterpolatedTimeOfFlight", parameters.timeOfFlight());
 
         return new ShootingState(
                 targetYaw,
