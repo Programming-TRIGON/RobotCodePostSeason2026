@@ -42,6 +42,8 @@ public class LoaderConstants {
             MAXIMUM_DISPLAYABLE_VOLTAGE
     );
 
+    public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 3.5;
+
     static {
         configureLoaderMasterMotor();
         configureLoaderFollowerMotor();

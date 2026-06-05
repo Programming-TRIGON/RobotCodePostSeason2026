@@ -69,7 +69,7 @@ public class Shooter extends MotorSubsystem {
         Logger.recordOutput("Shooter/TargetProfiledVelocityMetersPerSecond", targetProfiledVelocityMetersPerSecond);
     }
 
-    @AutoLogOutput(key = "Shooting/Conditions/ShooterAtTargetVelocity")
+    @AutoLogOutput(key = "ShootingCalculations/Conditions/ShooterAtTargetVelocity")
     public boolean atTargetVelocity() {
         return atVelocity(targetVelocityMetersPerSecond);
     }
@@ -90,12 +90,7 @@ public class Shooter extends MotorSubsystem {
         return targetVelocityMetersPerSecond;
     }
 
-    void aimAtHub() {
-        double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
-        setTargetVelocity(targetVelocityMetersPerSecond);
-    }
-
-    void aimForDelivery() {
+    void aimForShooting() {
         double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
         setTargetVelocity(targetVelocityMetersPerSecond);
     }

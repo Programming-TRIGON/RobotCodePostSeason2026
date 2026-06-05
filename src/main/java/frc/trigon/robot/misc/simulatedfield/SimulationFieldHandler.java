@@ -2,6 +2,7 @@ package frc.trigon.robot.misc.simulatedfield;
 
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.shootingcalculations.shootingvisualization.VisualizeFuelShootingCommand;
@@ -38,16 +39,18 @@ public class SimulationFieldHandler {
      * Teleports the simulated robot so that the Shooter Exit is an exact distance away from a target.
      * Use this purely for rapid simulation calibration of the ShootingMap.
      */
-    public static void teleportRobotForCalibration(ShootingCalculations.TargetLocation targetLocation, double exactShooterDistanceMeters) {
-        final Translation2d targetPos = targetLocation.position.get();
-        final Rotation2d robotRotation = new Rotation2d();
-        final Translation2d shooterOffsetFromChassis = ShooterConstants.FUEL_EXIT_SHOOTER_POSE.getTranslation().toTranslation2d();
+    public static void teleportRobotForSimulationShootingMapCalibration(ShootingCalculations.TargetShootingLocation targetShootingLocation, double exactShooterDistanceMeters) {
+        final Translation2d targetPos = targetShootingLocation.position.get();
+        final boolean shouldFlip = Flippable.isRedAlliance() != targetShootingLocation.isDelivery;
+        final Rotation2d newRobotRotation = shouldFlip ? Rotation2d.kZero : Rotation2d.k180deg;
+
+        final Translation2d shooterOffsetFromChassis = ShooterConstants.FUEL_EXIT_SHOOTER_POSE.getTranslation().toTranslation2d().rotateBy(newRobotRotation);
 
         final Translation2d newRobotPosition = targetPos
-                .minus(new Translation2d(exactShooterDistanceMeters, 0))
+                .minus(new Translation2d(shouldFlip ? -exactShooterDistanceMeters : exactShooterDistanceMeters, 0))
                 .minus(shooterOffsetFromChassis);
 
-        RobotContainer.ROBOT_POSE_ESTIMATOR.resetPose(new Pose2d(newRobotPosition, robotRotation));
+        RobotContainer.ROBOT_POSE_ESTIMATOR.resetPose(new Pose2d(newRobotPosition, newRobotRotation));
     }
 
     private static void updateGamePieces() {
@@ -97,8 +100,8 @@ public class SimulationFieldHandler {
     }
 
     private static boolean isShootingFuel() {
-        return (RobotContainer.LOADER.atState(LoaderConstants.LoaderState.LOAD_FOR_DELIVERY) || RobotContainer.LOADER.atState(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING)) &&
-                (RobotContainer.INDEXER.atState(IndexerConstants.IndexerState.LOAD_FOR_DELIVERY) || RobotContainer.INDEXER.atState(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING));
+        return RobotContainer.LOADER.getCurrentVoltage() > LoaderConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
+                && RobotContainer.INDEXER.getCurrentVoltage() > IndexerConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD;
     }
 
     private static List<SimulatedGamePiece> getEjectableFuels() {

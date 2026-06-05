@@ -8,7 +8,9 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.FilesHandler;
+import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.lib.utilities.flippable.FlippablePose2d;
+import frc.trigon.robot.RobotContainer;
 import frc.trigon.lib.utilities.flippable.FlippableTranslation2d;
 
 import java.io.IOException;
@@ -32,6 +34,7 @@ public class FieldConstants {
     private static final Transform3d TAG_OFFSET = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     public static final HashMap<Integer, Pose3d> TAG_ID_TO_POSE = fieldLayoutToTagIDToPoseMap();
 
+    public static final double ALLIANCE_ZONE_LENGTH_METERS = 4.5;
     private static final double
             BLUE_RELATIVE_DELIVERY_POSITION_X = 3.0,
             DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS = 2.2;
@@ -70,5 +73,23 @@ public class FieldConstants {
                 Rotation2d.fromDegrees(-basePose.getRotation().getDegrees()),
                 true
         );
+    }
+
+    public static boolean isRobotInAllianceZone() {
+        return isPoseInAllianceZone(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation());
+    }
+
+    public static boolean isPoseInAllianceZone(Translation2d pose) {
+        if (pose == null)
+            return false;
+        if (Flippable.isRedAlliance())
+            return pose.getX() > FieldConstants.FIELD_LENGTH_METERS - FieldConstants.ALLIANCE_ZONE_LENGTH_METERS;
+        return pose.getX() < FieldConstants.ALLIANCE_ZONE_LENGTH_METERS;
+    }
+
+    public static boolean isRight() {
+        if (Flippable.isRedAlliance())
+            return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getY() > FieldConstants.FIELD_WIDTH_METERS / 2;
+        return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getY() < FieldConstants.FIELD_WIDTH_METERS / 2;
     }
 }
