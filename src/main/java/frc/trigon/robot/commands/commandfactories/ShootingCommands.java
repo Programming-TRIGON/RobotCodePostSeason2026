@@ -1,7 +1,10 @@
 package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
@@ -19,6 +22,8 @@ import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
+import java.util.function.Supplier;
+
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_STATE = FixedShootingPosition.CLOSE_TO_HUB;
@@ -29,7 +34,7 @@ public class ShootingCommands {
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(),
                         getSetTargetShootingLocationCommand(),
-                        getAimForShootingStateCommand(),
+                        getAimSwerveCommand(() -> TARGET_FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw()),
                         getAimForShootingCommand()
                 )
         );
@@ -40,7 +45,9 @@ public class ShootingCommands {
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
                         getLoadForFixedShootingWhenReadyCommand(),
-                        getAimForFixedShootingCommand()
+                        getAimSwerveCommand(() -> TARGET_FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw()),
+                        HoodCommands.getSetTargetAngleCommand(TARGET_FIXED_SHOOTING_STATE.targetState.targetPitch()),
+                        ShooterCommands.getSetTargetVelocityCommand(TARGET_FIXED_SHOOTING_STATE.targetState.targetShootingVelocityMetersPerSecond())
                 )
         );
     }
@@ -49,10 +56,7 @@ public class ShootingCommands {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
-                        GeneralCommands.runWhen(
-                                getLoadForDeliveryCommand(),
-                                ShootingCommands::isReadyForFixedDelivery
-                        ),
+                        getLoadForDeliveryWhenReadyCommand(),
                         getAimForFixedDeliveryCommand()
                 )
         );
@@ -66,6 +70,13 @@ public class ShootingCommands {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(),
                 ShootingCommands::isReadyForFixedShooting
+        );
+    }
+
+    private static Command getLoadForDeliveryWhenReadyCommand() {
+        return GeneralCommands.runWhen(
+                getLoadForDeliveryCommand(),
+                ShootingCommands::isReadyForFixedDelivery
         );
     }
 
@@ -101,11 +112,11 @@ public class ShootingCommands {
         );
     }
 
-    private static Command getAimForShootingStateCommand() {
+    private static Command getAimSwerveCommand(Supplier<Rotation2d> rotationSupplier) {
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftX()),
-                () -> new FlippableRotation2d(SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw(), false)
+                () -> rotationSupplier.get().getRadians()
         );
     }
 
