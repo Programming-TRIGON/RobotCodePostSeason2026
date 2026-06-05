@@ -26,9 +26,9 @@ import java.util.function.Supplier;
 
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
-    private static FixedShootingPosition TARGET_FIXED_SHOOTING_STATE = FixedShootingPosition.CLOSE_TO_HUB;
+    private static FixedShootingPosition TARGET_FIXED_SHOOTING_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
 
-    public static Command getCalibrateShootingCalculationsCommand() {
+    public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
                 HoodCommands.getDebuggingCommand(),
                 ShooterCommands.getDebuggingCommand(),
@@ -180,7 +180,7 @@ public class ShootingCommands {
     }
 
     public enum FixedShootingPosition {//TODO: Get all values from shooting calculations
-        CLOSE_TO_HUB(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(45), 5),
+        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(45), 5),
         RIGHT_TRENCH(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(34), 10),
         LEFT_TRENCH(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(23), 8),
         BACK_RIGHT(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(29), 9),
