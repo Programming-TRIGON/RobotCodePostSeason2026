@@ -1,12 +1,10 @@
 package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
@@ -29,10 +27,10 @@ public class ShootingCommands {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
-                        getLoadForShootingWhenReadyToShootCommand(),
+                        getLoadForShootingWhenReadyCommand(),
                         getSetTargetShootingLocationCommand(),
                         getAimForShootingStateCommand(),
-                        getAimCommand()
+                        getAimForShootingCommand()
                 )
         );
     }
@@ -41,8 +39,11 @@ public class ShootingCommands {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
-                        getLoadForFixedShootingWhenReadyToShootCommand(),
-                        getAimForFixedShootingStateCommand()
+                        GeneralCommands.runWhen(
+                                getLoadForShootingCommand(),
+                                ShootingCommands::isReadyForFixedShooting
+                        ),
+                        getAimForFixedShootingCommand()
                 )
         );
     }
@@ -51,8 +52,11 @@ public class ShootingCommands {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
-                        getLoadForFixedDeliveryWhenReadyToShootCommand(),
-                        getAimForFixedDeliveryStateCommand()
+                        GeneralCommands.runWhen(
+                                getLoadForDeliveryCommand(),
+                                ShootingCommands::isReadyForFixedDelivery
+                        ),
+                        getAimForFixedDeliveryCommand()
                 )
         );
     }
@@ -65,29 +69,14 @@ public class ShootingCommands {
         return new RunCommand(ShootingCommands::updateShootingCalculations);
     }
 
-    private static Command getAimCommand() {
+    private static Command getAimForShootingCommand() {
         return new ParallelCommandGroup(
                 HoodCommands.getAimForShootingCommand(),
                 ShooterCommands.getAimForShootingCommand()
         );
     }
 
-    private static Command getLoadForFixedShootingWhenReadyToShootCommand() {
-        return GeneralCommands.runWhen(
-                getLoadForShootingCommand(),
-                ShootingCommands::isReadyForFixedShooting
-        );
-    }
-
-    private static Command getLoadForFixedDeliveryWhenReadyToShootCommand() {
-        return GeneralCommands.runWhen(
-                getLoadForDeliveryCommand(),
-                ShootingCommands::isReadyForFixedDelivery
-
-        );
-    }
-
-    private static Command getLoadForShootingWhenReadyToShootCommand() {
+    private static Command getLoadForShootingWhenReadyCommand() {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(),
                 SHOOTING_CALCULATIONS::isReadyToShoot
@@ -103,34 +92,36 @@ public class ShootingCommands {
 
     private static Command getAimForShootingStateCommand() {
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
-                () -> -OperatorConstants.DRIVER_CONTROLLER.getLeftY(),
-                () -> -OperatorConstants.DRIVER_CONTROLLER.getLeftX(),
+                () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),
+                () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftX()),
                 () -> new FlippableRotation2d(SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw(), false)
         );
     }
 
     private static Command getSetTargetShootingLocationCommand() {
-        return new RunCommand(
-                () -> SHOOTING_CALCULATIONS.setTargetShootingLocation(getTargetLocation())
-        );
+        return new ConditionalCommand(
+                new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(getTargetLocation())),
+                new InstantCommand(),
+                () -> getTargetLocation() != SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation()
+        ).repeatedly();
     }
 
-    private static Command getAimForFixedShootingStateCommand() {
+    private static Command getAimForFixedShootingCommand() {
         return new ParallelCommandGroup(
                 SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
-                        () -> -OperatorConstants.DRIVER_CONTROLLER.getLeftY(),
-                        () -> -OperatorConstants.DRIVER_CONTROLLER.getLeftX(),
+                        () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),
+                        () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftX()),
                         () -> new FlippableRotation2d(FIXED_SHOOTING_STATE.targetState.targetFieldRelativeYaw(), false)
                 ),
-                HoodCommands.getSetTargetAngleCommand(() -> FIXED_SHOOTING_STATE.targetState.targetPitch()),
-                ShooterCommands.getSetTargetVelocityCommand(() -> FIXED_SHOOTING_STATE.targetState.targetShootingVelocityMetersPerSecond())
+                HoodCommands.getSetTargetAngleCommand(FIXED_SHOOTING_STATE.targetState.targetPitch()),
+                ShooterCommands.getSetTargetVelocityCommand(FIXED_SHOOTING_STATE.targetState.targetShootingVelocityMetersPerSecond())
         );
     }
 
-    private static Command getAimForFixedDeliveryStateCommand() {
+    private static Command getAimForFixedDeliveryCommand() {
         return new ParallelCommandGroup(
-                HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
-                ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND)
+                HoodCommands.getSetTargetAngleCommand(HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
+                ShooterCommands.getSetTargetVelocityCommand(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND)
         );
     }
 
@@ -175,11 +166,11 @@ public class ShootingCommands {
     }
 
     public enum FixedShootingPosition {//TODO: Get all values from shooting calculations
-        CLOSE_TO_HUB(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0), 60),
-        RIGHT_CORNER_TO_HUB(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0), 50),
-        LEFT_CORNER_TO_HUB(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0), 40),
-        RIGHT_CORNER_TO_TOWER(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0), 30),
-        LEFT_CORNER_TO_TOWER(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0), 6.7);
+        CLOSE_TO_HUB(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(45), 5),
+        RIGHT_CORNER_TO_HUB(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(34), 10),
+        LEFT_CORNER_TO_HUB(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(23), 8),
+        RIGHT_CORNER_TO_TOWER(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(12), 9),
+        LEFT_CORNER_TO_TOWER(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(23), 6);
 
         private final ShootingState targetState;
 

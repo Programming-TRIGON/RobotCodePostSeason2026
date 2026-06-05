@@ -68,7 +68,6 @@ public class HoodConstants {
     static final Rotation2d REST_ANGLE = MINIMUM_ANGLE;
     public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(6.7);
 
-
     static {
         configureMotor();
     }

@@ -65,7 +65,6 @@ public class ShooterConstants {
     );
     public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 40;
 
-
     static {
         configureMasterMotor();
         configureFollowerMotor();

@@ -79,14 +79,15 @@ public class RobotContainer {
 
     private void bindControllerCommands() {
         OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
+        
         OperatorConstants.RESET_HEADING_TRIGGER.onTrue(CommandConstants.RESET_HEADING_COMMAND);
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
         OperatorConstants.CAMERAS_DISCONNECTED_TRIGGER.onTrue(CommandConstants.INDICATE_CAMERAS_DISCONNECTED_COMMAND);
         OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
         OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
         OperatorConstants.CLOSE_TO_HUB_SETPOINT_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.CLOSE_TO_HUB));
-        OperatorConstants.RIGHT_CORNER_TO_HUB_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_CORNER_TO_HUB));
-        OperatorConstants.LEFT_CORNER_TO_HUB_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_CORNER_TO_HUB));
+        OperatorConstants.RIGHT_TREMCG_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_CORNER_TO_HUB));
+        OperatorConstants.LEFT_TRENCH_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_CORNER_TO_HUB));
         OperatorConstants.TOP_RIGHT_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_CORNER_TO_TOWER));
         OperatorConstants.TOP_LEFT_TOWER_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_CORNER_TO_TOWER));
         OperatorConstants.FIXED_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getFixedShootingCommand());
