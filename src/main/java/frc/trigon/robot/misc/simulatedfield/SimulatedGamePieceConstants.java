@@ -22,18 +22,38 @@ public class SimulatedGamePieceConstants {
     public static final double INDEXER_COL_SPACING_METERS = 0.16;
 
     // 3D hopper volume definition. Fuel fills the bottom layer first (depth x width),
-    // then stacks upward layer by layer, keeping the pile inside the hopper bounds.
-    // depth * width * height should be >= MAXIMUM_HELD_FUEL so every held piece gets a cell.
+    // then stacks upward on the rear (ramp) rows only, keeping the pile inside the hopper bounds.
     public static final int
-            HOPPER_DEPTH_CAPACITY = 4,   // cells along robot X (front-to-back)
-            HOPPER_WIDTH_CAPACITY = 4,   // cells along robot Y (left-to-right)
-            HOPPER_HEIGHT_CAPACITY = 4;  // stacked layers along Z
+            HOPPER_DEPTH_CAPACITY = 5,   // cells along robot X (front-to-back). One row deeper than before.
+            HOPPER_WIDTH_CAPACITY = 4,   // max cells along robot Y (left-to-right)
+            HOPPER_HEIGHT_CAPACITY = 4;  // stacked layers along Z (rear rows only)
 
     // Physical spacing between cell centers inside the hopper.
     public static final double
             HOPPER_DEPTH_SPACING_METERS = 0.15,
             HOPPER_WIDTH_SPACING_METERS = 0.15,
             HOPPER_LAYER_SPACING_METERS = 0.13; // < ball diameter so layers nestle slightly
+
+    // Row-fill randomness: rows hold a random count in [MINIMUM_BALLS_PER_ROW, HOPPER_WIDTH_CAPACITY],
+    // so the pile is uneven (sometimes only 2 or 3 across) instead of a perfect grid.
+    public static final int MINIMUM_BALLS_PER_ROW = 2;
+    // Change this to reshuffle which rows end up short/full without touching anything else.
+    public static final long ROW_CAPACITY_SEED = 7L;
+
+    // The front rows form the flat shooter-feed floor and never stack. Rows from this index
+    // back ride the indexer ramp and may stack on top of each other.
+    public static final int NON_STACKING_ROW_COUNT = 2;
+
+    // The indexer is a ~19 degree ramp; rear rows climb it as their depth index increases.
+    public static final Rotation2d INDEXER_RAMP_ANGLE = Rotation2d.fromDegrees(19);
+
+    // Hopper placement relative to the indexer anchor point (robot-relative meters).
+    // The anchor only uses the indexer pose's TRANSLATION; fill axes are clean robot axes
+    // (X forward, Y left, Z up) so the pile orientation never depends on the pose's rotation.
+    // Tune these to slide/raise the whole pile if it is not seated correctly in the chassis.
+    public static final Translation3d HOPPER_ANCHOR_OFFSET = new Translation3d(0.0, 0.0, 0.0);
+    // +1 fills/climbs toward the front (+X) with the shooter at the back; -1 reverses it.
+    public static final double HOPPER_DEPTH_DIRECTION = 1.0;
 
     // Visual jitter so the pile reads as loose balls rather than a perfect lattice.
     public static final double ORGANIC_SCATTER_METERS = 0.02;

@@ -100,7 +100,7 @@ public class SimulationFieldHandler {
                 continue;
 
             final SimulatedGamePiece.HopperCell cell = heldFuel.getHopperCell();
-            // Only fire the balls sitting at the very front of the bottom layer.
+            // Only fire the balls sitting at the very front (shooter-feed) row of the bottom layer.
             if (cell.layerIndex() == 0 && cell.depthIndex() == 0)
                 ejectable.add(heldFuel);
         }
@@ -146,7 +146,7 @@ public class SimulationFieldHandler {
 
     /**
      * Converts a discrete hopper cell into a field-relative position by:
-     * 1. computing the cell's centered offset inside the hopper volume,
+     * 1. computing the cell's offset inside the hopper volume (flat front rows, sloped rear rows),
      * 2. applying a small deterministic scatter so the pile looks organic,
      * 3. transforming the robot-relative offset into field coordinates.
      */
@@ -157,18 +157,59 @@ public class SimulationFieldHandler {
     }
 
     /**
-     * Centers the grid around the hopper origin so the pile is symmetric about the robot center
-     * in depth and width, and grows upward in height.
+     * Builds the robot-relative offset for a cell:
+     * <p>
+     * - Width (Y) is centered so the pile is symmetric about the robot center.
+     * <p>
+     * - The flat front rows (shooter feed) sit on the floor: depth recedes linearly, height stays 0.
+     * <p>
+     * - The rear rows ride the ~19 degree indexer ramp: as the depth index grows past the flat
+     * section, the balls recede less in X (cos) and gain height in Z (sin). Stacked layers are
+     * offset along the ramp normal so they nestle on the slope rather than sitting straight up.
+     * <p>
+     * Finally the whole pile is shifted by HOPPER_ANCHOR_OFFSET and flipped by HOPPER_DEPTH_DIRECTION
+     * so it sits on the hopper side of the robot, away from the shooter.
      */
     private static Translation3d calculateHopperCellOffset(SimulatedGamePiece.HopperCell cell) {
-        final double depthCenter = (SimulatedGamePieceConstants.HOPPER_DEPTH_CAPACITY - 1) / 2.0;
         final double widthCenter = (SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY - 1) / 2.0;
-
-        final double xOffset = (cell.depthIndex() - depthCenter) * SimulatedGamePieceConstants.HOPPER_DEPTH_SPACING_METERS;
         final double yOffset = (cell.widthIndex() - widthCenter) * SimulatedGamePieceConstants.HOPPER_WIDTH_SPACING_METERS;
-        final double zOffset = cell.layerIndex() * SimulatedGamePieceConstants.HOPPER_LAYER_SPACING_METERS;
 
-        return new Translation3d(xOffset, yOffset, zOffset);
+        final int flatRows = SimulatedGamePieceConstants.NON_STACKING_ROW_COUNT;
+        final double depthSpacing = SimulatedGamePieceConstants.HOPPER_DEPTH_SPACING_METERS;
+
+        double xOffset;
+        double zOffset;
+
+        if (cell.depthIndex() < flatRows) {
+            // Flat shooter-feed floor.
+            xOffset = cell.depthIndex() * depthSpacing;
+            zOffset = 0.0;
+        } else {
+            // Rear rows climb the ramp, starting from where the flat section ends.
+            final double flatSectionX = (flatRows - 1) * depthSpacing;
+            final int rampSteps = cell.depthIndex() - (flatRows - 1);
+            final double alongRamp = rampSteps * depthSpacing;
+
+            final double rampCos = SimulatedGamePieceConstants.INDEXER_RAMP_ANGLE.getCos();
+            final double rampSin = SimulatedGamePieceConstants.INDEXER_RAMP_ANGLE.getSin();
+
+            xOffset = flatSectionX + alongRamp * rampCos;
+            zOffset = alongRamp * rampSin;
+
+            // Stack along the ramp normal so stacked balls rest on the slope.
+            if (cell.layerIndex() > 0) {
+                final double stackDistance = cell.layerIndex() * SimulatedGamePieceConstants.HOPPER_LAYER_SPACING_METERS;
+                xOffset += -stackDistance * rampSin; // normal points back-and-up
+                zOffset += stackDistance * rampCos;
+            }
+        }
+
+        // Flip onto the hopper side and apply the tunable anchor offset.
+        xOffset = xOffset * SimulatedGamePieceConstants.HOPPER_DEPTH_DIRECTION + SimulatedGamePieceConstants.HOPPER_ANCHOR_OFFSET.getX();
+        final double finalY = yOffset + SimulatedGamePieceConstants.HOPPER_ANCHOR_OFFSET.getY();
+        final double finalZ = zOffset + SimulatedGamePieceConstants.HOPPER_ANCHOR_OFFSET.getZ();
+
+        return new Translation3d(xOffset, finalY, finalZ);
     }
 
     /**
@@ -188,17 +229,15 @@ public class SimulationFieldHandler {
     }
 
     /**
-     * Takes the local 3D offset inside the hopper and translates it into global field coordinates.
+     * Adds the local hopper offset to the indexer anchor and converts to field coordinates.
+     * <p>
+     * Only the anchor pose's TRANSLATION is used. The offset is kept in clean robot axes
+     * (X forward, Y left, Z up), so the pile's orientation is fully defined by this code's own
+     * ramp math and never skews if FUEL_IN_INDEXER_POSE happens to carry a rotation.
      */
     private static Translation3d convertHopperOffsetToFieldRelative(Translation3d hopperOffset) {
-        final Pose3d robotRelativeIndexerPose = IndexerConstants.FUEL_IN_INDEXER_POSE;
-
-        final Transform3d fuelOffsetFromIndexerPose = new Transform3d(
-                hopperOffset,
-                new Rotation3d()
-        );
-
-        Translation3d robotRelativeFuelPosition = robotRelativeIndexerPose.plus(fuelOffsetFromIndexerPose).getTranslation();
+        final Translation3d anchorTranslation = IndexerConstants.FUEL_IN_INDEXER_POSE.getTranslation();
+        final Translation3d robotRelativeFuelPosition = anchorTranslation.plus(hopperOffset);
         return robotRelativeToFieldRelative(robotRelativeFuelPosition);
     }
 

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SimulatedGamePiece {
     private static final ArrayList<SimulatedGamePiece> SIMULATED_GAME_PIECES = new ArrayList<>();
@@ -89,27 +90,74 @@ public class SimulatedGamePiece {
     }
 
     /**
-     * Finds the next open cell in the hopper, filling it like a real bin: the floor layer is
-     * filled first (front-to-back across the depth, then across the width), and only once a
-     * layer is full does fuel begin stacking on the layer above it. This keeps the pile inside
-     * the hopper volume instead of climbing diagonally up one side.
+     * Finds the next open cell in the hopper, filling it like a real bin:
+     * <p>
+     * - The floor layer (layer 0) is filled front-to-back. Each row only accepts a randomized
+     * number of balls (between {@link SimulatedGamePieceConstants#MINIMUM_BALLS_PER_ROW} and the
+     * full width), so rows look uneven instead of a perfect 4-wide grid.
+     * <p>
+     * - The front rows (depth index below {@link SimulatedGamePieceConstants#NON_STACKING_ROW_COUNT})
+     * are the flat shooter-feed section and never receive a second layer. Only the rear rows, which
+     * sit on the indexer ramp, are allowed to stack upward.
      */
     private static HopperCell calculateNextAvailableHopperCell() {
         final int depth = SimulatedGamePieceConstants.HOPPER_DEPTH_CAPACITY;
-        final int width = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
         final int maxLayers = SimulatedGamePieceConstants.HOPPER_HEIGHT_CAPACITY;
 
         for (int layer = 0; layer < maxLayers; layer++) {
             for (int depthIndex = 0; depthIndex < depth; depthIndex++) {
-                for (int widthIndex = 0; widthIndex < width; widthIndex++) {
-                    final HopperCell candidate = new HopperCell(depthIndex, widthIndex, layer);
-                    if (!OCCUPIED_HOPPER_CELLS.contains(candidate))
-                        return candidate;
-                }
+                if (!canRowHoldLayer(depthIndex, layer))
+                    continue;
+
+                final HopperCell freeCell = findFreeCellInRow(depthIndex, layer);
+                if (freeCell != null)
+                    return freeCell;
             }
         }
 
         return null;
+    }
+
+    /**
+     * The flat front rows (shooter feed) hold a single layer only. Rear rows on the ramp may stack.
+     */
+    private static boolean canRowHoldLayer(int depthIndex, int layer) {
+        if (layer == 0)
+            return true;
+        return depthIndex >= SimulatedGamePieceConstants.NON_STACKING_ROW_COUNT;
+    }
+
+    /**
+     * Returns the first open cell within a row's randomized, centered set of occupied columns,
+     * or null if that row+layer is already full.
+     */
+    private static HopperCell findFreeCellInRow(int depthIndex, int layer) {
+        final int ballsInRow = calculateRowCapacity(depthIndex, layer);
+        final int width = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
+
+        // Center the occupied columns within the full width so partial rows sit in the middle.
+        final int startColumn = (width - ballsInRow) / 2;
+
+        for (int offset = 0; offset < ballsInRow; offset++) {
+            final int widthIndex = startColumn + offset;
+            final HopperCell candidate = new HopperCell(depthIndex, widthIndex, layer);
+            if (!OCCUPIED_HOPPER_CELLS.contains(candidate))
+                return candidate;
+        }
+
+        return null;
+    }
+
+    /**
+     * Deterministically picks how many balls a given row holds, so the count is stable frame to
+     * frame but varies from row to row (e.g. sometimes only 2 or 3 across instead of the full 4).
+     */
+    private static int calculateRowCapacity(int depthIndex, int layer) {
+        final int width = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
+        final int minimum = SimulatedGamePieceConstants.MINIMUM_BALLS_PER_ROW;
+
+        final Random rowRNG = new Random(depthIndex * 92821L + layer * 53L + SimulatedGamePieceConstants.ROW_CAPACITY_SEED);
+        return minimum + rowRNG.nextInt(width - minimum + 1);
     }
 
     /**
