@@ -86,7 +86,11 @@ public class SimulatedGamePiece {
     }
 
     private boolean isHeld() {
-        return hopperCell != null;
+        // Held membership is owned by SimulationFieldHandler's HELD_FUEL list, NOT by whether a
+        // hopper cell happens to be allocated. A held piece that couldn't get a cell (full hopper)
+        // must still count as held, or getUnheldGamePieces() would expose it as loose fuel and it
+        // could be collected twice.
+        return SimulationFieldHandler.isHeld(this);
     }
 
     /**
@@ -138,7 +142,7 @@ public class SimulatedGamePiece {
      * or null if that row+layer is already full.
      */
     private static HopperCell findFreeCellInRow(int depthIndex, int layer) {
-        final int ballsInRow = calculateRowCapacity(depthIndex, layer);
+        final int ballsInRow = calculateRowCapacity(depthIndex);
         final int width = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
 
         // Center the occupied columns within the full width so partial rows sit in the middle.
@@ -155,14 +159,16 @@ public class SimulatedGamePiece {
     }
 
     /**
-     * Deterministically picks how many balls a given row holds, so the count is stable frame to
-     * frame but varies from row to row (e.g. sometimes only 2 or 3 across instead of the full 4).
+     * Deterministically picks how many balls a given depth row holds, so the count is stable
+     * frame to frame but varies from row to row (e.g. sometimes only 2 or 3 across instead of the
+     * full 4). The width is keyed on depthIndex ONLY, never the layer, so an upper layer can never
+     * be wider than the layer beneath it (which would leave balls unsupported).
      */
-    private static int calculateRowCapacity(int depthIndex, int layer) {
+    private static int calculateRowCapacity(int depthIndex) {
         final int width = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
         final int minimum = SimulatedGamePieceConstants.MINIMUM_BALLS_PER_ROW;
 
-        final Random rowRNG = new Random(depthIndex * 92821L + layer * 53L + SimulatedGamePieceConstants.ROW_CAPACITY_SEED);
+        final Random rowRNG = new Random(depthIndex * 92821L + SimulatedGamePieceConstants.ROW_CAPACITY_SEED);
         return minimum + rowRNG.nextInt(width - minimum + 1);
     }
 

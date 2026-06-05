@@ -21,6 +21,14 @@ public class SimulationFieldHandler {
         return !HELD_FUEL.isEmpty();
     }
 
+    /**
+     * Authoritative held-state check: a piece is held if and only if it is in the HELD_FUEL list,
+     * regardless of whether it currently has a hopper cell allocated.
+     */
+    public static boolean isHeld(SimulatedGamePiece fuel) {
+        return HELD_FUEL.contains(fuel);
+    }
+
     public static void update() {
         updateGamePieces();
         SimulatedGamePiece.logAll();
@@ -124,14 +132,22 @@ public class SimulationFieldHandler {
     }
 
     /**
-     * Maps a hopper width cell to one of the shooter's exit lanes. The hopper width and the
-     * indexer exit-lane width may differ, so clamp into the valid lane range.
+     * Maps a hopper width cell to one of the shooter's exit lanes by RELATIVE position across the
+     * two widths, so a wider hopper spreads evenly across the lanes instead of dumping every extra
+     * right-side column into the last lane. Reduces to identity when the widths match.
      */
     private static int mapWidthIndexToExitColumn(int widthIndex) {
-        final int maxColumn = SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY - 1;
-        if (widthIndex < 0)
+        final int hopperWidth = SimulatedGamePieceConstants.HOPPER_WIDTH_CAPACITY;
+        final int exitLanes = SimulatedGamePieceConstants.INDEXER_WIDTH_CAPACITY;
+
+        if (hopperWidth <= 1 || exitLanes <= 1)
             return 0;
-        return Math.min(widthIndex, maxColumn);
+
+        // Normalize the hopper column to [0, 1], scale to the exit-lane span, and round to a lane.
+        final double relativePosition = (double) widthIndex / (hopperWidth - 1);
+        final int lane = (int) Math.round(relativePosition * (exitLanes - 1));
+
+        return Math.max(0, Math.min(lane, exitLanes - 1));
     }
 
     private static void updateHeldFuelPoses() {
