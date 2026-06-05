@@ -86,7 +86,7 @@ public class RobotContainer {
         OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
         OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
         OperatorConstants.CLOSE_TO_HUB_SETPOINT_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.CLOSE_TO_HUB));
-        OperatorConstants.RIGHT_TRENCH_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_CORNER_TO_HUB));
+        OperatorConstants.RIGHT_TRENCH_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_TRENCH));
         OperatorConstants.LEFT_TRENCH_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_TRENCH));
         OperatorConstants.TOP_RIGHT_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.TOP_RIGHT));
         OperatorConstants.TOP_LEFT_SETTER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.TOP_LEFT));
