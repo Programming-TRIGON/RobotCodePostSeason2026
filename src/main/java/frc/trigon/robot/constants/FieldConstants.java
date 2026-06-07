@@ -221,6 +221,8 @@ public class FieldConstants {
     private static Pose2d getPredictedRobotPose() {return RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS);}
 
     private static void logTrenchBoundingBoxes() {
+        if (currentHoodBoundingBox == null || predictedHoodBoundingBox == null)
+            return;
         getRightHoodElevationRestrictedZoneBoundingBox().log("Zones/RightHoodElevationRestrictedZone");
         getLeftHoodElevationRestrictedZoneBoundingBox().log("Zones/LeftHoodElevationRestrictedZone");
         getSweptHoodBoundingBox().log("Zones/SweptHoodBoundingBox");

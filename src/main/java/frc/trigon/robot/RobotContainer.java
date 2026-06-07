@@ -103,7 +103,6 @@ public class RobotContainer {
         OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.onTrue(FuelIntakeCommands.getCloseIntakeWhileShootingCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
 
-        new Trigger(FieldConstants::isHoodInTrenchZone).whileTrue(HoodCommands.getRestCommand());
     }
 
     private void bindSafetyTriggers() {
