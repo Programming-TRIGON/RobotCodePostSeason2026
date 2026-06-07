@@ -18,6 +18,9 @@ import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.commands.commandfactories.autonomous.GeneralAutonomousCommands;
+import frc.trigon.robot.subsystems.intake.IntakeCommands;
+import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -102,7 +105,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand", new PrintCommand("Collecting"));
-        NamedCommands.registerCommand("ShootCommand", new PrintCommand("Shooting"));
+        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN));
+        NamedCommands.registerCommand("ShootCommand", GeneralAutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
     }
 }

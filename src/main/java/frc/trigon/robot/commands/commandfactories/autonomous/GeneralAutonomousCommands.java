@@ -66,6 +66,10 @@ public class GeneralAutonomousCommands {
         ).withTimeout(timeout + AutonomousConstants.NORMAL_DRIVE_TIMEOUT);
     }
 
+    public static Command getTimedScoreCommand(double timeout) {
+        return ShootingCommands.getShootingCommand().withTimeout(timeout);
+    }
+
     public static Command getCollectFromDepotCommand(boolean shootWhileDriving, double collectionTimeout) {
         return SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(
                 () -> FieldConstants.DEPOT_POSITION,
