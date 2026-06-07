@@ -94,8 +94,6 @@ public class FieldConstants {
         return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getY() < FieldConstants.FIELD_WIDTH_METERS / 2;
     }
 
-    //TODO get the actual bounding box cuz this one is not working
-// 619mm side-to-side (width), 256mm front-to-back (length, closed state).
     private static final double
             HOOD_OFFSET_X_METERS = -150 / 1000.0,
             HOOD_OFFSET_Y_METERS = 484.6 / 1000.0,
@@ -103,7 +101,7 @@ public class FieldConstants {
             HOOD_LENGTH_METERS = 256 / 1000.0;
 
 
-    private static final double TRENCH_POSE_PREDICTION_TIME_SECONDS = 0.4; //ask how much time does it take for the hood to lower it elf to a 20-degree angle
+    private static final double TRENCH_POSE_PREDICTION_TIME_SECONDS = 0.2;
 
     private static final double
             BLUE_RIGHT_TRENCH_ARM_MIN_X = 4.000,
@@ -177,7 +175,7 @@ public class FieldConstants {
     private static BoundingBox getHoodBoundingBox(Pose2d robotPose) {
         final Transform2d hoodOffset = new Transform2d(HOOD_OFFSET_X_METERS, HOOD_OFFSET_Y_METERS, Rotation2d.kZero);
         final Pose2d hoodPose = robotPose.transformBy(hoodOffset);
-            return new BoundingBox(hoodPose, HOOD_LENGTH_METERS, HOOD_WIDTH_METERS);
+            return new BoundingBox(hoodPose, HOOD_LENGTH_METERS, HOOD_WIDTH_METERS).expandedBy(0.1);
     }
 
     private static Pose2d getRobotPose() {
