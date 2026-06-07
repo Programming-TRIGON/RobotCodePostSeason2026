@@ -34,7 +34,6 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotPeriodic() {
-        FieldConstants.logTrenchBoundingBoxes(); //TODO ask where to put this
         Threads.setCurrentThreadPriority(true, 99);
         Phoenix6Inputs.refreshAllInputs();
         commandScheduler.run();

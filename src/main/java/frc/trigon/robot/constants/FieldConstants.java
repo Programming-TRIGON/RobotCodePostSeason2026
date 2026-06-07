@@ -30,6 +30,7 @@ public class FieldConstants {
             //Tags to ignore
     );
 
+    private static final double MILLIMETERS_PER_METER = 1000.0;
     private static final boolean SHOULD_USE_HOME_TAG_LAYOUT = false;
     public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createAprilTagFieldLayout();
     private static final Transform3d TAG_OFFSET = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
@@ -95,73 +96,110 @@ public class FieldConstants {
     }
 
     private static final double
-            HOOD_OFFSET_X_METERS = -150 / 1000.0,
-            HOOD_OFFSET_Y_METERS = 484.6 / 1000.0,
-            HOOD_WIDTH_METERS = 619 / 1000.0,
-            HOOD_LENGTH_METERS = 256 / 1000.0;
-
+            HOOD_OFFSET_X_METERS = -150 / MILLIMETERS_PER_METER,
+            HOOD_OFFSET_Y_METERS = 484.6 / MILLIMETERS_PER_METER,
+            HOOD_WIDTH_METERS = 619 / MILLIMETERS_PER_METER,
+            HOOD_LENGTH_METERS = 256 / MILLIMETERS_PER_METER,
+            HOOD_BOUNDING_BOX_EXPANSION_METERS = 0.1;
 
     private static final double TRENCH_POSE_PREDICTION_TIME_SECONDS = 0.2;
 
     private static final double
-            BLUE_RIGHT_TRENCH_ARM_MIN_X = 4.000,
-            BLUE_RIGHT_TRENCH_ARM_MAX_X = 5.223,
-            BLUE_RIGHT_TRENCH_ARM_MIN_Y = 0.000,
-            BLUE_RIGHT_TRENCH_ARM_MAX_Y = 1.28;
+            BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_X = 4.000,
+            BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_X = 5.223,
+            BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_Y = 0.000,
+            BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_Y = 1.28;
 
     private static final double
-            BLUE_LEFT_TRENCH_ARM_MIN_X = BLUE_RIGHT_TRENCH_ARM_MIN_X,
-            BLUE_LEFT_TRENCH_ARM_MAX_X = BLUE_RIGHT_TRENCH_ARM_MAX_X,
-            BLUE_LEFT_TRENCH_ARM_MIN_Y = FIELD_WIDTH_METERS - BLUE_RIGHT_TRENCH_ARM_MAX_Y,
-            BLUE_LEFT_TRENCH_ARM_MAX_Y = FIELD_WIDTH_METERS - BLUE_RIGHT_TRENCH_ARM_MIN_Y;
+            BLUE_LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_X = BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_X,
+            BLUE_LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_X = BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_X,
+            BLUE_LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_Y = FIELD_WIDTH_METERS - BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_Y,
+            BLUE_LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_Y = FIELD_WIDTH_METERS - BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_Y;
 
-    private static final double
-            RED_LEFT_TRENCH_ARM_MIN_X = FIELD_LENGTH_METERS - BLUE_RIGHT_TRENCH_ARM_MAX_X,
-            RED_LEFT_TRENCH_ARM_MAX_X = FIELD_LENGTH_METERS - BLUE_RIGHT_TRENCH_ARM_MIN_X,
-            RED_LEFT_TRENCH_ARM_MIN_Y = BLUE_RIGHT_TRENCH_ARM_MIN_Y,
-            RED_LEFT_TRENCH_ARM_MAX_Y = BLUE_RIGHT_TRENCH_ARM_MAX_Y;
-
-    private static final double
-            RED_RIGHT_TRENCH_ARM_MIN_X = FIELD_LENGTH_METERS - BLUE_RIGHT_TRENCH_ARM_MAX_X,
-            RED_RIGHT_TRENCH_ARM_MAX_X = FIELD_LENGTH_METERS - BLUE_RIGHT_TRENCH_ARM_MIN_X,
-            RED_RIGHT_TRENCH_ARM_MIN_Y = BLUE_LEFT_TRENCH_ARM_MIN_Y,
-            RED_RIGHT_TRENCH_ARM_MAX_Y = BLUE_LEFT_TRENCH_ARM_MAX_Y;
-
-    public static final BoundingBox
-            BLUE_ALLIANCE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
-            new Translation2d(BLUE_RIGHT_TRENCH_ARM_MIN_X, BLUE_RIGHT_TRENCH_ARM_MIN_Y),
-            new Translation2d(BLUE_RIGHT_TRENCH_ARM_MAX_X, BLUE_RIGHT_TRENCH_ARM_MAX_Y)
+    private static final FlippableTranslation2d
+            RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_CORNER_A = new FlippableTranslation2d(
+            BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_X,
+            BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_Y,
+            true
     ),
-            BLUE_ALLIANCE_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    new Translation2d(BLUE_LEFT_TRENCH_ARM_MIN_X, BLUE_LEFT_TRENCH_ARM_MIN_Y),
-                    new Translation2d(BLUE_LEFT_TRENCH_ARM_MAX_X, BLUE_LEFT_TRENCH_ARM_MAX_Y)
+            RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_CORNER_B = new FlippableTranslation2d(
+                    BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_X,
+                    BLUE_RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_Y,
+                    true
             ),
-            RED_ALLIANCE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    new Translation2d(RED_RIGHT_TRENCH_ARM_MIN_X, RED_RIGHT_TRENCH_ARM_MIN_Y),
-                    new Translation2d(RED_RIGHT_TRENCH_ARM_MAX_X, RED_RIGHT_TRENCH_ARM_MAX_Y)
+            LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_CORNER_A = new FlippableTranslation2d(
+                    BLUE_LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_X,
+                    BLUE_LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_MIN_Y,
+                    true
             ),
-            RED_ALLIANCE_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    new Translation2d(RED_LEFT_TRENCH_ARM_MIN_X, RED_LEFT_TRENCH_ARM_MIN_Y),
-                    new Translation2d(RED_LEFT_TRENCH_ARM_MAX_X, RED_LEFT_TRENCH_ARM_MAX_Y)
+            LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_CORNER_B = new FlippableTranslation2d(
+                    BLUE_LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_X,
+                    BLUE_LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_MAX_Y,
+                    true
             );
 
-    /**
-     * Checks whether the hood is currently over a trench, or is predicted to be
-     * over a trench within the prediction time based on the robot's velocity.
-     * The hood should be lowered while this is true so that it does not hit the trench.
-     *
-     * @return whether the hood is in or approaching a trench
-     */
-    public static boolean isHoodInTrenchZone() {
-        return isHoodBoundingBoxInTrenchZone(getHoodBoundingBox(getRobotPose()))
-                || isHoodBoundingBoxInTrenchZone(getHoodBoundingBox(getPredictedRobotPose()));
+    private static BoundingBox getRightHoodElevationRestrictedZoneBoundingBox() {
+        return new BoundingBox(
+                RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_CORNER_A.get(),
+                RIGHT_HOOD_ELEVATION_RESTRICTED_ZONE_CORNER_B.get()
+        );
     }
 
-    private static boolean isHoodBoundingBoxInTrenchZone(BoundingBox hoodBoundingBox) {
-        return hoodBoundingBox.overlaps(BLUE_ALLIANCE_RIGHT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(BLUE_ALLIANCE_LEFT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(RED_ALLIANCE_RIGHT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(RED_ALLIANCE_LEFT_TRENCH_BOUNDING_BOX);
+    private static BoundingBox getLeftHoodElevationRestrictedZoneBoundingBox() {
+        return new BoundingBox(
+                LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_CORNER_A.get(),
+                LEFT_HOOD_ELEVATION_RESTRICTED_ZONE_CORNER_B.get()
+        );
+    }
+
+    private static BoundingBox currentHoodBoundingBox = null;
+    private static BoundingBox predictedHoodBoundingBox = null;
+
+    /**
+     * Recalculates the cached current and predicted hood bounding boxes and logs the trench detection state.
+     * Should be called once per loop, before the trench trigger is polled.
+     */
+    public static void updateTrenchDetection() {
+        currentHoodBoundingBox = getHoodBoundingBox(getRobotPose());
+        predictedHoodBoundingBox = getHoodBoundingBox(getPredictedRobotPose());
+
+        logTrenchBoundingBoxes();
+        Logger.recordOutput("Zones/IsHoodInTrenchZone", isHoodInTrenchZone());
+    }
+
+    /**
+     * Checks whether the hood overlaps a trench anywhere along its predicted path of travel.
+     * Instead of sampling only the current and predicted poses, this checks the entire swept area
+     * between them, so a fast pass-through where the hood is before the trench now and past it in
+     * the prediction is still caught.
+     *
+     * @return whether the hood is in or passing through a trench
+     */
+    public static boolean isHoodInTrenchZone() {
+        if (currentHoodBoundingBox == null || predictedHoodBoundingBox == null)
+            return false;
+        return isHoodBoundingBoxInRestrictedElevationZone(getSweptHoodBoundingBox());
+    }
+
+    private static BoundingBox getSweptHoodBoundingBox() {
+        final Translation2d
+                currentCenter = currentHoodBoundingBox.getCenter().getTranslation(),
+                predictedCenter = predictedHoodBoundingBox.getCenter().getTranslation();
+        final Translation2d travel = predictedCenter.minus(currentCenter);
+        final Rotation2d travelDirection = travel.getNorm() < 1e-6 ? currentHoodBoundingBox.getCenter().getRotation() : travel.getAngle();
+        final Translation2d sweptCenter = currentCenter.plus(travel.div(2));
+
+        final double
+                sweptLength = travel.getNorm() + HOOD_LENGTH_METERS,
+                sweptWidth = HOOD_WIDTH_METERS;
+
+        return new BoundingBox(new Pose2d(sweptCenter, travelDirection), sweptLength, sweptWidth)
+                .expandedBy(HOOD_BOUNDING_BOX_EXPANSION_METERS);
+    }
+
+    private static boolean isHoodBoundingBoxInRestrictedElevationZone(BoundingBox hoodBoundingBox) {
+        return hoodBoundingBox.overlaps(getRightHoodElevationRestrictedZoneBoundingBox())
+                || hoodBoundingBox.overlaps(getLeftHoodElevationRestrictedZoneBoundingBox());
     }
 
     /**
@@ -175,29 +213,18 @@ public class FieldConstants {
     private static BoundingBox getHoodBoundingBox(Pose2d robotPose) {
         final Transform2d hoodOffset = new Transform2d(HOOD_OFFSET_X_METERS, HOOD_OFFSET_Y_METERS, Rotation2d.kZero);
         final Pose2d hoodPose = robotPose.transformBy(hoodOffset);
-            return new BoundingBox(hoodPose, HOOD_LENGTH_METERS, HOOD_WIDTH_METERS).expandedBy(0.1);
+        return new BoundingBox(hoodPose, HOOD_LENGTH_METERS, HOOD_WIDTH_METERS).expandedBy(HOOD_BOUNDING_BOX_EXPANSION_METERS);
     }
 
-    private static Pose2d getRobotPose() {
-        return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
-    }
+    private static Pose2d getRobotPose() {return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();}
 
-    private static Pose2d getPredictedRobotPose() {
-        return RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS);
-    }
+    private static Pose2d getPredictedRobotPose() {return RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS);}
 
-    /**
-     * Logs all trench arm bounding boxes and the current hood bounding box for visualization in AdvantageScope.
-     */
-    public static void logTrenchBoundingBoxes() {
-        BLUE_ALLIANCE_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/BlueRightTrenchArm");
-        BLUE_ALLIANCE_LEFT_TRENCH_BOUNDING_BOX.log("Zones/BlueLeftTrenchArm");
-        RED_ALLIANCE_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/RedRightTrenchArm");
-        RED_ALLIANCE_LEFT_TRENCH_BOUNDING_BOX.log("Zones/RedLeftTrenchArm");
-
-        getHoodBoundingBox(getRobotPose()).log("Zones/HoodBoundingBox");
-        getHoodBoundingBox(getPredictedRobotPose()).log("Zones/PredictedHoodBoundingBox");
-
-        Logger.recordOutput("Zones/IsHoodInTrenchZone", isHoodInTrenchZone());
+    private static void logTrenchBoundingBoxes() {
+        getRightHoodElevationRestrictedZoneBoundingBox().log("Zones/RightHoodElevationRestrictedZone");
+        getLeftHoodElevationRestrictedZoneBoundingBox().log("Zones/LeftHoodElevationRestrictedZone");
+        getSweptHoodBoundingBox().log("Zones/SweptHoodBoundingBox");
+        currentHoodBoundingBox.log("Zones/HoodBoundingBox");
+        predictedHoodBoundingBox.log("Zones/PredictedHoodBoundingBox");
     }
 }
