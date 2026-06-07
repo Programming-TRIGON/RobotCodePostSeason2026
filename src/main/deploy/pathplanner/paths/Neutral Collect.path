@@ -80,7 +80,7 @@
     {
       "name": "CollectCommand",
       "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 0.0,
+      "endWaypointRelativePos": 3.0,
       "command": null
     }
   ],
