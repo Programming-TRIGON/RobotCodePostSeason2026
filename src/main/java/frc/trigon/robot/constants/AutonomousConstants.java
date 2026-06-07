@@ -105,7 +105,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN));
+        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         NamedCommands.registerCommand("ShootCommand", GeneralAutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
     }
 }
