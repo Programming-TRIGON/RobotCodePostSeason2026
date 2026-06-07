@@ -43,4 +43,8 @@ public class HoodCommands {
                 RobotContainer.HOOD
         );
     }
+
+    public static Command getLowerForTrenchCommand() {
+        return getRestCommand();
+    }
 }
