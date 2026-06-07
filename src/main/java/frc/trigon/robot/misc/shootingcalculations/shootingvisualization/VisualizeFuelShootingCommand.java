@@ -30,7 +30,7 @@ public class VisualizeFuelShootingCommand extends Command {
     private final int startingColumn;
     private double simulatedFlightTimeSeconds = 0;
     private boolean hasLoggedScore = false;
-    private ShootingCalculations.TargetLocation lockedTarget;
+    private ShootingCalculations.TargetShootingLocation lockedTarget;
     private double trueDistanceAtLaunchMeters;
 
     public static InstantCommand getScheduleShotCommand(SimulatedGamePiece shotFuel, int startingColumn) {
@@ -91,7 +91,7 @@ public class VisualizeFuelShootingCommand extends Command {
         }
     }
 
-    private void executeForDelivery(ShootingCalculations.TargetLocation activeTarget) {
+    private void executeForDelivery(ShootingCalculations.TargetShootingLocation activeTarget) {
         if (shotFuel.getPosition().getZ() <= FuelShootingVisualizationConstants.END_SIMULATION_HEIGHT_METERS && !hasLoggedScore) {
             double distanceMissedBy = shotFuel.getPosition().toTranslation2d().getDistance(activeTarget.position.get());
 
@@ -124,9 +124,9 @@ public class VisualizeFuelShootingCommand extends Command {
     private Translation3d calculateShootingVelocityVector() {
         final double fuelExitSpeedMetersPerSecond = RobotContainer.SHOOTER.getCurrentVelocityMetersPerSecond();
         final Rotation2d dumperPitch = RobotContainer.HOOD.getCurrentAngle();
-        final Rotation2d chassisFieldRelativeAngle = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation();
+        final Rotation2d shooterExitFieldRelativeAngle = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation().rotateBy(Rotation2d.k180deg);
 
-        return new Translation3d(fuelExitSpeedMetersPerSecond, new Rotation3d(0, -dumperPitch.getRadians(), chassisFieldRelativeAngle.getRadians()));
+        return new Translation3d(fuelExitSpeedMetersPerSecond, new Rotation3d(0, -dumperPitch.getRadians(), shooterExitFieldRelativeAngle.getRadians()));
     }
 
     private void stepSimulation() {

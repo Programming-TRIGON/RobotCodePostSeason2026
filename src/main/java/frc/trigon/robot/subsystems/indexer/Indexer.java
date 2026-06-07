@@ -8,7 +8,6 @@ import frc.trigon.robot.subsystems.MotorSubsystem;
 public class Indexer extends MotorSubsystem {
     private final TalonFXSMotor motor = IndexerConstants.MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(IndexerConstants.FOC_ENABLED);
-    private IndexerConstants.IndexerState targetState = IndexerConstants.IndexerState.REST;
 
     public Indexer() {
         setName("Indexer");
@@ -30,12 +29,11 @@ public class Indexer extends MotorSubsystem {
         IndexerConstants.MECHANISM.setTargetVelocity(0);
     }
 
-    public boolean atState(IndexerConstants.IndexerState state) {
-        return this.targetState == state;
+    public double getCurrentVoltage() {
+        return motor.getSignal(TalonFXSSignal.MOTOR_VOLTAGE);
     }
 
     void setTargetState(IndexerConstants.IndexerState targetState) {
-        this.targetState = targetState;
         setTargetVoltage(targetState.targetVoltage);
     }
 

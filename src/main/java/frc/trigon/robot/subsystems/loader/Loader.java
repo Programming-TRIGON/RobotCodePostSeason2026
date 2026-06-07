@@ -8,7 +8,6 @@ import frc.trigon.robot.subsystems.MotorSubsystem;
 public class Loader extends MotorSubsystem {
     private final TalonFXMotor masterMotor = LoaderConstants.MASTER_MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
-    private LoaderConstants.LoaderState targetState = LoaderConstants.LoaderState.REST;
 
     public Loader() {
         setName("Loader");
@@ -31,12 +30,11 @@ public class Loader extends MotorSubsystem {
         LoaderConstants.FOLLOWER_MOTOR.update();
     }
 
-    public boolean atState(LoaderConstants.LoaderState state) {
-        return this.targetState == state;
+    public double getCurrentVoltage() {
+        return masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE);
     }
 
     void setTargetState(LoaderConstants.LoaderState targetState) {
-        this.targetState = targetState;
         setTargetVoltage(targetState.targetVoltage);
     }
 

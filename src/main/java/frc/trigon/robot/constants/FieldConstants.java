@@ -52,6 +52,8 @@ public class FieldConstants {
             TRENCH_ALLIANCE_ENTRY_AUTONOMOUS_X = 3.4,
             TRENCH_NEUTRAL_ENTRY_AUTONOMOUS_X = 5.58,
             TRENCH_ENTRY_Y = 7.48,
+            ALLIANCE_ZONE_LENGTH_METERS = 4.5;
+    private static final double
             BLUE_RELATIVE_DELIVERY_POSITION_X = 3.0,
             DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS = 2.2;
 
@@ -135,7 +137,13 @@ public class FieldConstants {
         if (pose == null)
             return false;
         if (Flippable.isRedAlliance())
-            return pose.getX() > FieldConstants.FIELD_LENGTH_METERS - FieldConstants.ALLIANCE_ZONE_LENGTH;
-        return pose.getX() < FieldConstants.ALLIANCE_ZONE_LENGTH;
+            return pose.getX() > FieldConstants.FIELD_LENGTH_METERS - FieldConstants.ALLIANCE_ZONE_LENGTH_METERS;
+        return pose.getX() < FieldConstants.ALLIANCE_ZONE_LENGTH_METERS;
+    }
+
+    public static boolean isRight() {
+        if (Flippable.isRedAlliance())
+            return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getY() > FieldConstants.FIELD_WIDTH_METERS / 2;
+        return RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation().getY() < FieldConstants.FIELD_WIDTH_METERS / 2;
     }
 }
