@@ -79,7 +79,7 @@ public class GeneralAutonomousCommands {
 
     private static Command getShootAtHubCommand() {
         return GeneralCommands.runWhen(
-                ShootingCommands.getShootAtHubCommand(),
+                ShootingCommands.getFixedShootingAtHubCommand(),
                 FieldConstants::isRobotInAllianceZone,
                 AutonomousConstants.AUTONOMOUS_SHOOTING_DURATION_SECONDS
         );
@@ -87,10 +87,10 @@ public class GeneralAutonomousCommands {
 
     private static Command getDeliverWhileDrivingCommand() {
         return GeneralCommands.getContinuousConditionalCommand(
-                ShootingCommands.getAimAtHubWithoutHoodCommand(),
+                ShootingCommands.getFixedDeliveryShootingCommand(),
                 GeneralCommands.getContinuousConditionalCommand(
-                        ShootingCommands.getShootAtHubCommand(),
-                        ShootingCommands.getDeliveryCommand(),
+                        ShootingCommands.getFixedShootingAtHubCommand(),
+                        ShootingCommands.getFixedDeliveryShootingCommand(),
                         FieldConstants::isRobotInAllianceZone
                 ),
                 FieldConstants::isRobotInDeliveryZone
