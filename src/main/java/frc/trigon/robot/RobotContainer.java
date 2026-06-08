@@ -19,6 +19,7 @@ import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
 import frc.trigon.robot.constants.OperatorConstants;
+import frc.trigon.robot.misc.TrenchDetection;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
@@ -68,7 +69,6 @@ public class RobotContainer {
     private void configureBindings() {
         bindDefaultCommands();
         bindControllerCommands();
-        bindSafetyTriggers();
 //        configureSysIDBindings(SHOOTER);
     }
 
@@ -102,11 +102,7 @@ public class RobotContainer {
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.onTrue(FuelIntakeCommands.getCloseIntakeWhileShootingCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
-
-    }
-
-    private void bindSafetyTriggers() {
-        bindHoodElevationRestrictedZoneTrigger();
+        OperatorConstants.HOOD_ELEVATION_RESTRICTED_ZONE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {
@@ -130,10 +126,5 @@ public class RobotContainer {
 
     private void buildAutoChooser() {
         autoChooser = new LoggedDashboardChooser<>("AutoChooser", AutoBuilder.buildAutoChooser());
-    }
-
-    private void bindHoodElevationRestrictedZoneTrigger() {
-        new Trigger(FieldConstants::isHoodInTrenchZone)
-                .whileTrue(HoodCommands.getRestCommand());
     }
 }

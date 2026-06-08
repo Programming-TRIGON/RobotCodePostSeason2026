@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.misc.TrenchDetection;
 
 import java.util.function.DoubleUnaryOperator;
 
@@ -62,5 +63,6 @@ public class OperatorConstants {
             CLOSE_INTAKE_TRIGGER = DRIVER_CONTROLLER.leftBumper().or(OPERATOR_CONTROLLER.z()),
             CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(SHOOTING_TRIGGER),
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(SHOOTING_TRIGGER.negate()),
-            INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(SHOOTING_TRIGGER.and(CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.negate())).or(OPERATOR_CONTROLLER.z());
+            INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(SHOOTING_TRIGGER.and(CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.negate())).or(OPERATOR_CONTROLLER.z()),
+            HOOD_ELEVATION_RESTRICTED_ZONE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone);
 }

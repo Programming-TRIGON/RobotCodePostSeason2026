@@ -2,6 +2,7 @@ package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.commands.NetworkTablesCommand;
+import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.OperatorConstants;
@@ -24,6 +25,8 @@ import java.util.function.BooleanSupplier;
  */
 public class GeneralCommands {
     public static double SWERVE_SPEED_MULTIPLIER = CommandConstants.DEFAULT_SWERVE_SPEED_MULTIPLIER;
+    public static BoundingBox CURRENT_HOOD_BOUNDING_BOX = null;
+    public static BoundingBox PREDICT_HOOD_BOUNDING_BOX = null;
 
     public static Command getDebuggingCommand() {
         return new ParallelCommandGroup(
