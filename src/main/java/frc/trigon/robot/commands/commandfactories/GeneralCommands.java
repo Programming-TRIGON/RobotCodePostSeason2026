@@ -25,8 +25,6 @@ import java.util.function.BooleanSupplier;
  */
 public class GeneralCommands {
     public static double SWERVE_SPEED_MULTIPLIER = CommandConstants.DEFAULT_SWERVE_SPEED_MULTIPLIER;
-    public static BoundingBox CURRENT_HOOD_BOUNDING_BOX = null;
-    public static BoundingBox PREDICT_HOOD_BOUNDING_BOX = null;
 
     public static Command getDebuggingCommand() {
         return new ParallelCommandGroup(
