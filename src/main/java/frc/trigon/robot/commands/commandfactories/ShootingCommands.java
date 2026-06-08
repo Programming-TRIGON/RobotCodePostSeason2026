@@ -62,7 +62,6 @@ public class ShootingCommands {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getLoadForFixedShootingAtHubWhenReadyCommand(),
-                        getAimSwerveCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
                         HoodCommands.getSetTargetAngleCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
                         ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                         new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name())),
@@ -168,11 +167,10 @@ public class ShootingCommands {
     }
 
     private static boolean isReadyForFixedShootingAtHub() {
-        final boolean isYawReady = RobotContainer.SWERVE.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw);
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch);
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
 
-        return isYawReady && isPitchReady && isVelocityReady;
+        return isPitchReady && isVelocityReady;
     }
 
     private static void updateShootingCalculations() {
@@ -194,18 +192,16 @@ public class ShootingCommands {
     }
 
     public enum FixedShootingPosition {//TODO: Get all values from shooting calculations IRL
-        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(180 - 6.339), Rotation2d.fromDegrees(59.965), 6.866),
-        RIGHT_TRENCH(Rotation2d.fromDegrees(-97.76), Rotation2d.fromDegrees(59.427), 7.108),
-        LEFT_TRENCH(Rotation2d.fromDegrees(97.76), Rotation2d.fromDegrees(59.427), 7.108),
-        BACK_RIGHT(Rotation2d.fromDegrees(-138.785), Rotation2d.fromDegrees(57.079), 8.349),
-        BACK_LEFT(Rotation2d.fromDegrees(138.785), Rotation2d.fromDegrees(57.079), 8.349);
+        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(59.965), 6.866),
+        RIGHT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
+        LEFT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
+        BACK_RIGHT(Rotation2d.fromDegrees(57.079), 8.349),
+        BACK_LEFT(Rotation2d.fromDegrees(57.079), 8.349);
 
-        private final FlippableRotation2d targetFieldRelativeYaw;
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;
 
-        FixedShootingPosition(Rotation2d targetFieldRelativeYaw, Rotation2d targetPitch, double targetShootingVelocityMetersPerSecond) {
-            this.targetFieldRelativeYaw = new FlippableRotation2d(targetFieldRelativeYaw, true);
+        FixedShootingPosition(Rotation2d targetPitch, double targetShootingVelocityMetersPerSecond) {
             this.targetPitch = targetPitch;
             this.targetShootingVelocityMetersPerSecond = targetShootingVelocityMetersPerSecond;
         }
