@@ -3,7 +3,6 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerest
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.trigon.lib.utilities.BoundingBox;
 
 /**
@@ -23,11 +22,11 @@ public class ContainmentZone implements ZoneRestriction {
      * @param brakingZoneDistanceMeters when the robot is closer than this to the boundary,
      *                                  motion toward the boundary is progressively scaled down, smoothly stopping at the minimum distance.
      */
-    public ContainmentZone(BoundingBox boundingBox, double minimumDistanceMeters, double brakingZoneDistanceMeters) {
-        this.boundingBox = boundingBox;
-        this.minimumDistanceMeters = Math.max(0, minimumDistanceMeters);
-        this.brakingZoneDistanceMeters = Math.max(this.minimumDistanceMeters, brakingZoneDistanceMeters);
-    }
+        public ContainmentZone(BoundingBox boundingBox, double minimumDistanceMeters, double brakingZoneDistanceMeters) {
+            this.boundingBox = boundingBox;
+            this.minimumDistanceMeters = Math.max(0, minimumDistanceMeters);
+            this.brakingZoneDistanceMeters = Math.max(this.minimumDistanceMeters, brakingZoneDistanceMeters);
+        }
 
     @Override
     public BoundingBox getBoundingBox() {
@@ -110,55 +109,55 @@ public class ContainmentZone implements ZoneRestriction {
     /**
      * Applies braking to the X velocity component based on the robot's proximity to the zone's X walls.
      *
-     * @param xVelocity                        the X velocity component in the zone's coordinate frame
+     * @param xVelocityMetersPerSecond                        the X velocity component in the zone's coordinate frame
      * @param zoneRelativeRobotCenterPositionX the robot's center X coordinate in the zone's coordinate frame
      * @param robotBoundingBox                 the robot's bounding box
      * @param zoneCenter                       the center pose of the containment zone
      * @return the braked X velocity component
      */
-    private double applyXAxisBraking(double xVelocity, double zoneRelativeRobotCenterPositionX, BoundingBox robotBoundingBox, Pose2d zoneCenter) {
+    private double applyXAxisBraking(double xVelocityMetersPerSecond, double zoneRelativeRobotCenterPositionX, BoundingBox robotBoundingBox, Pose2d zoneCenter) {
         final double
                 zoneHalfXWidth = boundingBox.getXWidth() / 2,
                 robotHalfXProjection = calculateRobotXProjection(robotBoundingBox, zoneCenter) / 2;
-        return applyAxisBraking(xVelocity, zoneRelativeRobotCenterPositionX, zoneHalfXWidth, robotHalfXProjection);
+        return applyAxisBraking(xVelocityMetersPerSecond, zoneRelativeRobotCenterPositionX, zoneHalfXWidth, robotHalfXProjection);
     }
 
     /**
      * Applies braking to the Y velocity component based on the robot's proximity to the zone's Y walls.
      *
-     * @param yVelocity                        the Y velocity component in the zone's coordinate frame
+     * @param yVelocityMetersPerSecond                        the Y velocity component in the zone's coordinate frame
      * @param zoneRelativeRobotCenterPositionY the robot's center Y coordinate in the zone's coordinate frame
      * @param robotBoundingBox                 the robot's bounding box
      * @param zoneCenter                       the center pose of the containment zone
      * @return the braked Y velocity component
      */
-    private double applyYAxisBraking(double yVelocity, double zoneRelativeRobotCenterPositionY, BoundingBox robotBoundingBox, Pose2d zoneCenter) {
+    private double applyYAxisBraking(double yVelocityMetersPerSecond, double zoneRelativeRobotCenterPositionY, BoundingBox robotBoundingBox, Pose2d zoneCenter) {
         final double
                 zoneHalfYWidth = boundingBox.getYWidth() / 2,
                 robotHalfYProjection = calculateRobotYProjection(robotBoundingBox, zoneCenter) / 2;
-        return applyAxisBraking(yVelocity, zoneRelativeRobotCenterPositionY, zoneHalfYWidth, robotHalfYProjection);
+        return applyAxisBraking(yVelocityMetersPerSecond, zoneRelativeRobotCenterPositionY, zoneHalfYWidth, robotHalfYProjection);
     }
 
     /**
-     * Applies braking to a single velocity component based on the robot's position along an axis.
+     * Applies braking to a single velocityMetersPerSecond component based on the robot's position along an axis.
      * Only restricts movement toward a wall that is within the braking zone.
      *
-     * @param velocity                        the velocity component to restrict
+     * @param velocityMetersPerSecond                        the velocityMetersPerSecond component to restrict
      * @param zoneRelativeRobotCenterPosition the robot's center position along the axis in the zone's coordinate frame
      * @param zoneHalfWidth                   the half-width of the zone along the axis
      * @param robotHalfProjection             the robot's projected half-length along the axis
-     * @return the braked velocity component
+     * @return the braked velocityMetersPerSecond component
      */
-    private double applyAxisBraking(double velocity, double zoneRelativeRobotCenterPosition, double zoneHalfWidth, double robotHalfProjection) {
+    private double applyAxisBraking(double velocityMetersPerSecond, double zoneRelativeRobotCenterPosition, double zoneHalfWidth, double robotHalfProjection) {
         final double
                 distanceToUpperWallMeters = calculateDistanceToUpperWall(zoneRelativeRobotCenterPosition, zoneHalfWidth, robotHalfProjection),
                 distanceToLowerWallMeters = calculateDistanceToLowerWall(zoneRelativeRobotCenterPosition, zoneHalfWidth, robotHalfProjection);
 
-        if (velocity > 0 && distanceToUpperWallMeters < brakingZoneDistanceMeters)
-            return velocity * calculateBrakingScale(distanceToUpperWallMeters);
-        if (velocity < 0 && distanceToLowerWallMeters < brakingZoneDistanceMeters)
-            return velocity * calculateBrakingScale(distanceToLowerWallMeters);
-        return velocity;
+        if (velocityMetersPerSecond > 0 && distanceToUpperWallMeters < brakingZoneDistanceMeters)
+            return velocityMetersPerSecond * calculateBrakingScale(distanceToUpperWallMeters);
+        if (velocityMetersPerSecond < 0 && distanceToLowerWallMeters < brakingZoneDistanceMeters)
+            return velocityMetersPerSecond * calculateBrakingScale(distanceToLowerWallMeters);
+        return velocityMetersPerSecond;
     }
 
     /**
