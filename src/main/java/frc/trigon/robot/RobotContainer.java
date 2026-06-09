@@ -99,7 +99,7 @@ public class RobotContainer {
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.onTrue(FuelIntakeCommands.getCloseIntakeWhileShootingCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
-        OperatorConstants.HOOD_ELEVATION_RESTRICTED_ZONE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
+        OperatorConstants.RESTRICT_HOOD_ANGLE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {

@@ -64,5 +64,5 @@ public class OperatorConstants {
             CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(SHOOTING_TRIGGER),
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(SHOOTING_TRIGGER.negate()),
             INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(SHOOTING_TRIGGER.and(CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.negate())).or(OPERATOR_CONTROLLER.z()),
-            HOOD_ELEVATION_RESTRICTED_ZONE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone);
+            RESTRICT_HOOD_ANGLE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone);
 }

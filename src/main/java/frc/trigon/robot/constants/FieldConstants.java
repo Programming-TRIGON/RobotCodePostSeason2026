@@ -34,7 +34,7 @@ public class FieldConstants {
     private static final Transform3d TAG_OFFSET = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     public static final HashMap<Integer, Pose3d> TAG_ID_TO_POSE = fieldLayoutToTagIDToPoseMap();
 
-    public static final double MM_TO_METERS = 1000.0;
+    public static final double MILLIMETERS_TO_METERS = 1000.0;
     public static final double ALLIANCE_ZONE_LENGTH_METERS = 4.5;
     private static final double
             BLUE_RELATIVE_DELIVERY_POSITION_X = 3.0,
@@ -45,38 +45,37 @@ public class FieldConstants {
             LEFT_DELIVERY_POSITION = new FlippableTranslation2d(BLUE_RELATIVE_DELIVERY_POSITION_X, (FIELD_WIDTH_METERS / 2) + DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS, true);
 
     /**
-     * The trench bounding box coordinates in meters, blue-alliance-relative.
-     * CLOSE trench runs along the south wall (Y ~0), FAR trench mirrors it along the north wall.
-     * X range (4.000–5.223) spans the trench structure width along the field length.
-     * Y range (0.000–1.28) spans the trench arm width from the field wall inward.
+     * The trench bounding box coordinates in meters.
+     * LEFT trench runs along the south wall (Y ~0) — left side from the driver's perspective.
+     * RIGHT trench mirrors it along the other wall — right side from the driver's perspective.
      */
     public static final double
-            CLOSE_TRENCH_MINIMUM_X = 4.000,
-            CLOSE_TRENCH_MAXIMUM_X = 5.223,
-            CLOSE_TRENCH_MINIMUM_Y = 0.000,
-            CLOSE_TRENCH_MAXIMUM_Y = 1.28;
+            LEFT_TRENCH_MINIMUM_X = 4.000,
+            LEFT_TRENCH_MAXIMUM_X = 5.223,
+            LEFT_TRENCH_MINIMUM_Y = 0.000,
+            LEFT_TRENCH_MAXIMUM_Y = 1.28;
     private static final double
-            FAR_TRENCH_MINIMUM_X = CLOSE_TRENCH_MINIMUM_X,
-            FAR_TRENCH_MAXIMUM_X = CLOSE_TRENCH_MAXIMUM_X,
-            FAR_TRENCH_MINIMUM_Y = FIELD_WIDTH_METERS - CLOSE_TRENCH_MAXIMUM_Y,
-            FAR_TRENCH_MAXIMUM_Y = FIELD_WIDTH_METERS - CLOSE_TRENCH_MINIMUM_Y;
+            RIGHT_TRENCH_MINIMUM_X = LEFT_TRENCH_MINIMUM_X,
+            RIGHT_TRENCH_MAXIMUM_X = LEFT_TRENCH_MAXIMUM_X,
+            RIGHT_TRENCH_MINIMUM_Y = FIELD_WIDTH_METERS - LEFT_TRENCH_MAXIMUM_Y,
+            RIGHT_TRENCH_MAXIMUM_Y = FIELD_WIDTH_METERS - LEFT_TRENCH_MINIMUM_Y;
 
     public static final BoundingBox
-            BLUE_CLOSE_TRENCH_BOUNDING_BOX = new BoundingBox(
-            new Translation2d(CLOSE_TRENCH_MINIMUM_X, CLOSE_TRENCH_MINIMUM_Y),
-            new Translation2d(CLOSE_TRENCH_MAXIMUM_X, CLOSE_TRENCH_MAXIMUM_Y)
+            BLUE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
+            new Translation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y),
+            new Translation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y)
     ),
-            BLUE_FAR_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    new Translation2d(FAR_TRENCH_MINIMUM_X, FAR_TRENCH_MINIMUM_Y),
-                    new Translation2d(FAR_TRENCH_MAXIMUM_X, FAR_TRENCH_MAXIMUM_Y)
+            BLUE_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
+                    new Translation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y),
+                    new Translation2d(LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MAXIMUM_Y)
             ),
-            RED_CLOSE_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    FlippingUtil.flipFieldPosition(new Translation2d(CLOSE_TRENCH_MINIMUM_X, CLOSE_TRENCH_MINIMUM_Y)),
-                    FlippingUtil.flipFieldPosition(new Translation2d(CLOSE_TRENCH_MAXIMUM_X, CLOSE_TRENCH_MAXIMUM_Y))
+            RED_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
+                    FlippingUtil.flipFieldPosition(new Translation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y)),
+                    FlippingUtil.flipFieldPosition(new Translation2d(LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MAXIMUM_Y))
             ),
-            RED_FAR_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    FlippingUtil.flipFieldPosition(new Translation2d(FAR_TRENCH_MINIMUM_X, FAR_TRENCH_MINIMUM_Y)),
-                    FlippingUtil.flipFieldPosition(new Translation2d(FAR_TRENCH_MAXIMUM_X, FAR_TRENCH_MAXIMUM_Y))
+            RED_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
+                    FlippingUtil.flipFieldPosition(new Translation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y)),
+                    FlippingUtil.flipFieldPosition(new Translation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y))
             );
 
     private static AprilTagFieldLayout createAprilTagFieldLayout() {
