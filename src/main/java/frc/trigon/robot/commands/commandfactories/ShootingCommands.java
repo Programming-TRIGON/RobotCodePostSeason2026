@@ -156,7 +156,7 @@ public class ShootingCommands {
         return GeneralCommands.runWhen(
                 new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(getTargetLocation())),
                 () -> getTargetLocation() != SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation()
-        );
+        ).repeatedly();
     }
 
     private static boolean isReadyForFixedDelivery() {
