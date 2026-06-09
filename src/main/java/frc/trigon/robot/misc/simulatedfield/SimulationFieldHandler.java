@@ -59,6 +59,7 @@ public class SimulationFieldHandler {
         updateCollection();
         updateHeldFuelPoses();
         updateEjection();
+        updateIntakeEjection();
     }
 
     private static void updateCollection() {
@@ -111,6 +112,34 @@ public class SimulationFieldHandler {
         // Fire the whole front row at once (up to one ball per exit lane), then re-settle the pile.
         ejectGamePieces(ejectableFuels);
         lastEjectionTimestampSeconds = now;
+    }
+
+    /**
+     * Handles ejecting fuel backward through the intake: when the loader, indexer, and intake are
+     * all running in reverse, all held fuel is released and dropped at the intake's collection
+     * position so pieces appear at the front of the robot rather than at the shooter exit.
+     */
+    private static void updateIntakeEjection() {
+        if (!hasFuel() || !isEjectingThroughIntake())
+            return;
+
+        final Translation3d ejectPosition = robotRelativeToFieldRelative(SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION);
+        final ArrayList<SimulatedGamePiece> toEject = new ArrayList<>(HELD_FUEL);
+        for (SimulatedGamePiece piece : toEject) {
+            piece.release();
+            piece.updatePosition(ejectPosition);
+            HELD_FUEL.remove(piece);
+        }
+    }
+
+    /**
+     * Returns true when the robot is actively reverse-ejecting through the intake:
+     * loader, indexer, and intake all spinning backwards.
+     */
+    private static boolean isEjectingThroughIntake() {
+        return RobotContainer.LOADER.getCurrentVoltage() < -LoaderConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
+                && RobotContainer.INDEXER.getCurrentVoltage() < -IndexerConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
+                && RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.POWERED_OPEN);
     }
 
     /**
