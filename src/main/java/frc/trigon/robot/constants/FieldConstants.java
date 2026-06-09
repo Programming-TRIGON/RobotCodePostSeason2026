@@ -59,7 +59,6 @@ public class FieldConstants {
             RIGHT_TRENCH_MAXIMUM_X = LEFT_TRENCH_MAXIMUM_X,
             RIGHT_TRENCH_MINIMUM_Y = FIELD_WIDTH_METERS - LEFT_TRENCH_MAXIMUM_Y,
             RIGHT_TRENCH_MAXIMUM_Y = FIELD_WIDTH_METERS - LEFT_TRENCH_MINIMUM_Y;
-
     public static final BoundingBox
             BLUE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
             new Translation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y),

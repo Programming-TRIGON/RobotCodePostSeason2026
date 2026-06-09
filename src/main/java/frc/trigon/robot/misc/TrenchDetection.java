@@ -41,7 +41,6 @@ public class TrenchDetection {
         final BoundingBox
                 currentHoodBox = getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()),
                 predictedHoodBox = getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS));
-
         FieldConstants.BLUE_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/BlueRightTrench");
         FieldConstants.BLUE_LEFT_TRENCH_BOUNDING_BOX.log("Zones/BlueLeftTrench");
         FieldConstants.RED_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/RedRightTrench");
