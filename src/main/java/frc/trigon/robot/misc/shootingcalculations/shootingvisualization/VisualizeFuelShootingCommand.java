@@ -1,10 +1,7 @@
 package frc.trigon.robot.misc.shootingcalculations.shootingvisualization;
 
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,12 +42,14 @@ public class VisualizeFuelShootingCommand extends Command {
     @Override
     public void initialize() {
         lockedTarget = SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation();
+        final Pose2d launchRobotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
 
-        final Pose3d baseExitPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+        final Pose3d baseExitPose = new Pose3d(launchRobotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
         trueDistanceAtLaunchMeters = baseExitPose.getTranslation().toTranslation2d().getDistance(lockedTarget.position.get());
 
-        shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose(startingColumn));
-        currentFuelVelocity = calculateFuelExitVelocityVector();
+        final Rotation2d shooterPitch = RobotContainer.HOOD.getCurrentAngle();
+        shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateFieldRelativeFuelExitPose(launchRobotPose, shooterPitch, startingColumn));
+        currentFuelVelocity = calculateFuelExitVelocityVector(launchRobotPose);
         simulatedFlightTimeSeconds = 0;
         hasLoggedScore = false;
 
@@ -115,16 +114,22 @@ public class VisualizeFuelShootingCommand extends Command {
         currentSpinRadiansPerSecond = (spinConstant * fuelExitVelocityMetersPerSecond) / (FuelShootingVisualizationConstants.GAME_PIECE_RADIUS_METERS);
     }
 
-    private Translation3d calculateFuelExitVelocityVector() {
-        final Translation3d shootingVelocityVector = calculateShootingVelocityVector();
+    private Translation3d calculateFuelExitVelocityVector(Pose2d launchRobotPose) {
+        final Translation3d shootingVelocityVector = calculateShootingVelocityVector(launchRobotPose);
         final Translation3d robotVelocityVector = new Translation3d(RobotContainer.SWERVE.getFieldRelativeVelocity());
         return shootingVelocityVector.plus(robotVelocityVector);
     }
 
-    private Translation3d calculateShootingVelocityVector() {
+    private Translation3d calculateShootingVelocityVector(Pose2d launchRobotPose) {
         final double fuelExitSpeedMetersPerSecond = RobotContainer.SHOOTER.getCurrentVelocityMetersPerSecond();
         final Rotation2d dumperPitch = RobotContainer.HOOD.getCurrentAngle();
-        final Rotation2d shooterExitFieldRelativeAngle = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation().rotateBy(Rotation2d.k180deg);
+
+        // Derive the shooter's field-relative facing directly from FUEL_EXIT_SHOOTER_POSE using
+        // the snapshotted pose so the velocity direction is consistent with the exit-position
+        // transform. FUEL_EXIT_SHOOTER_POSE already encodes the 180° backward-facing mounting,
+        // so the old manual .rotateBy(k180deg) was double-counting the flip.
+        final Pose3d exitPose = new Pose3d(launchRobotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+        final Rotation2d shooterExitFieldRelativeAngle = exitPose.getRotation().toRotation2d();
 
         return new Translation3d(fuelExitSpeedMetersPerSecond, new Rotation3d(0, -dumperPitch.getRadians(), shooterExitFieldRelativeAngle.getRadians()));
     }
