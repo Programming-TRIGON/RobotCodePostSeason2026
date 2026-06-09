@@ -1,4 +1,4 @@
-package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.zonerestrictions;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,21 +15,20 @@ public class ContainmentZone implements ZoneRestriction {
     private final double minimumDistanceMeters, brakingZoneDistanceMeters;
 
     /**
-     * Constructs a new ContainmentZone object.
+     * Creates a new ContainmentZone.
      *
-     * @param boundingBox               the bounding box of the containment zone
-     * @param minimumDistanceMeters     the distance from the zone boundary that the robot cannot cross
-     * @param brakingZoneDistanceMeters the distance from the zone boundary at which braking begins
+     * @param boundingBox               the area the robot must stay inside
+     * @param minimumDistanceMeters     the robot is never allowed closer than this
+     *                                  to the zone boundary. Motion toward the boundary is fully
+     *                                  blocked at this distance.
+     * @param brakingZoneDistanceMeters when the robot is closer than this to the
+     *                                  boundary, motion toward the boundary is progressively scaled
+     *                                  down, smoothly stopping at the minimum distance.
      */
     public ContainmentZone(BoundingBox boundingBox, double minimumDistanceMeters, double brakingZoneDistanceMeters) {
         this.boundingBox = boundingBox;
-        this.minimumDistanceMeters = minimumDistanceMeters;
-        this.brakingZoneDistanceMeters = brakingZoneDistanceMeters;
-
-        if (minimumDistanceMeters < 0 || brakingZoneDistanceMeters < 0)
-            DriverStation.reportWarning("ContainmentZone distances must be non-negative", false);
-        if (minimumDistanceMeters > brakingZoneDistanceMeters)
-            DriverStation.reportWarning("ContainmentZone minimum distance cannot be greater than braking zone distance", false);
+        this.minimumDistanceMeters = Math.max(0, minimumDistanceMeters);
+        this.brakingZoneDistanceMeters = Math.max(this.minimumDistanceMeters, brakingZoneDistanceMeters);
     }
 
     @Override

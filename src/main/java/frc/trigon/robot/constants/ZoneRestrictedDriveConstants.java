@@ -1,9 +1,8 @@
 package frc.trigon.robot.constants;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.trigon.lib.utilities.BoundingBox;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.zonerestrictions.ContainmentZone;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.ContainmentZone;
 
 public class ZoneRestrictedDriveConstants {
     public static final BoundingBox ROBOT_RELATIVE_BOUNDING_BOX = new BoundingBox(new Translation2d(), new Translation2d());

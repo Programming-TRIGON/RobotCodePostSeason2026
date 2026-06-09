@@ -12,7 +12,7 @@ public class FieldRelativeDriveRestrictedCommand extends DriveRestrictedCommand 
     /**
      * Constructs a command that drives the robot relative to the field and restricts its movement.
      *
-     * @param driveRestrictions Restricts the robot's movement.
+     * @param driveRestrictions restricts the robot's movement
      */
     public FieldRelativeDriveRestrictedCommand(DriveRestriction... driveRestrictions) {
         super(driveRestrictions);
@@ -24,6 +24,6 @@ public class FieldRelativeDriveRestrictedCommand extends DriveRestrictedCommand 
                 () -> restrictedX,
                 () -> restrictedY,
                 () -> restrictedRotation
-        ).asProxy();
+        );
     }
 }

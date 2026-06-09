@@ -14,7 +14,7 @@ public class SelfRelativeDriveRestrictedCommand extends DriveRestrictedCommand {
     /**
      * Constructs a command that drives the robot relative to itself and restricts its movement.
      *
-     * @param driveRestrictions Restricts the robot's movement.
+     * @param driveRestrictions restricts the robot's movement
      */
     public SelfRelativeDriveRestrictedCommand(DriveRestriction... driveRestrictions) {
         super(driveRestrictions);
@@ -26,7 +26,7 @@ public class SelfRelativeDriveRestrictedCommand extends DriveRestrictedCommand {
                 () -> restrictedX,
                 () -> restrictedY,
                 () -> restrictedRotation
-        ).asProxy();
+        );
     }
 
     @Override

@@ -4,7 +4,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
- * A restriction that limits the linear and rotational acceleration of the robot.
+ * A restriction that caps how the robot's linear and rotational acceleration.
+ * Useful for protecting top-heavy or extended mechanisms from tipping or damage caused by sudden joystick inputs.
  */
 public class AccelerationRestrictedDrive implements DriveRestriction {
     private final SlewRateLimiter translationLimiter;
@@ -13,8 +14,8 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
     /**
      * A restriction that limits the maximum linear and rotational acceleration.
      *
-     * @param maximumTranslationAcceleration Maximum linear acceleration.
-     * @param maximumRotationAcceleration       Maximum rotational acceleration.
+     * @param maximumTranslationAcceleration maximum linear acceleration
+     * @param maximumRotationAcceleration    maximum rotational acceleration
      */
     public AccelerationRestrictedDrive(double maximumTranslationAcceleration, double maximumRotationAcceleration) {
         this.translationLimiter = new SlewRateLimiter(maximumTranslationAcceleration);

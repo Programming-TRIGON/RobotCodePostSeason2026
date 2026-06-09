@@ -1,4 +1,4 @@
-package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.zonerestrictions;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;

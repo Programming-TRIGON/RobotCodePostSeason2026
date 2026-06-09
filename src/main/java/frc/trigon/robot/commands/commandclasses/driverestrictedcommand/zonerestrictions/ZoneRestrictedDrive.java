@@ -1,24 +1,20 @@
-package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.zonerestrictions;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.trigon.lib.utilities.BoundingBox;
-import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.DriveRestriction;
 import frc.trigon.robot.constants.ZoneRestrictedDriveConstants;
 
 /**
- * A restriction that restricts movement relative to defined zones on the field.
- * Restricted zones {@link RestrictedZone}.
- * Containment zones {@link ContainmentZone}.
+ * Restricts the robot's movement based on defined zones on the field.
  * All zone restrictions are applied sequentially, each further restricting the previous result.
- * Movement parallel to or away from a zone boundary is never restricted.
+ * Useful for keeping the robot inside the field boundary or out of specific regions such as opponent protected areas.
  */
 public class ZoneRestrictedDrive implements DriveRestriction {
     private final ZoneRestriction[] zoneRestrictions;
 
     /**
-     * Creates a new ZoneRestrictedDriveCommand.
+     * Creates a new zone restriction.
      *
      * @param shouldRestrictToField whether to restrict the robot from leaving the field boundary
      * @param zoneRestrictions      the zones to restrict movement relative to
@@ -33,10 +29,10 @@ public class ZoneRestrictedDrive implements DriveRestriction {
     @Override
     public Translation2d applyRestrictionToTranslation(Translation2d targetTranslation) {
         final BoundingBox robotBox = getRobotBoundingBox();
-        Translation2d translation = targetTranslation.unaryMinus();
+        Translation2d translation = targetTranslation;
         for (ZoneRestriction zone : zoneRestrictions)
             translation = zone.applyRestriction(translation, robotBox);
-        return translation.unaryMinus();
+        return translation;
     }
 
     private static ZoneRestriction[] getZoneRestrictionsWithFieldRestriction(ZoneRestriction[] zones) {

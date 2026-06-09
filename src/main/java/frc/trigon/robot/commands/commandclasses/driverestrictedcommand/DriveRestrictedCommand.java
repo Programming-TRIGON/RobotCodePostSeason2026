@@ -23,7 +23,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     /**
      * Constructs a command that drives the robot and restricts its movement.
      *
-     * @param driveRestrictions Restricts the robot's movement.
+     * @param driveRestrictions the restrictions to apply, in order. Each receives the output of the previous one.
      */
     protected DriveRestrictedCommand(DriveRestriction... driveRestrictions) {
         this.driveRestrictions = driveRestrictions;
@@ -63,7 +63,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     /**
-     * Calculates the target translation based on driver input.
+     * Calculates the target joystick translation based on driver input.
      *
      * @return the target translation
      */
@@ -80,9 +80,9 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     /**
-     * Gets the raw joystick position of the controller
+     * Gets the raw joystick position of the controller.
      *
-     * @return the joysticks position as a Translation2D.
+     * @return the joysticks position as a Translation2D
      */
     private Translation2d getRawJoystickPosition() {
         final double
