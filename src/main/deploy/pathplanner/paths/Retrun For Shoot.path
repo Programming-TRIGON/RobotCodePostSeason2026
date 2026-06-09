@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.886570240669502,
-        "y": 7.1104195552782326
+        "x": 7.409955476044487,
+        "y": 7.1358584518188835
       },
       "isLocked": false,
       "linkedName": "FinishCollect"
@@ -20,44 +20,44 @@
         "y": 7.484417644650655
       },
       "prevControl": {
-        "x": 6.374451752652463,
-        "y": 7.344466097309873
+        "x": 5.755880090486171,
+        "y": 7.55891009973382
       },
       "nextControl": {
-        "x": 3.9257322110476407,
-        "y": 7.5982879929635265
+        "x": 4.775570165915179,
+        "y": 7.459093119476591
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.9952941912299855,
-        "y": 7.155801946870452
+        "x": 3.066494285300926,
+        "y": 7.003461892740174
       },
       "prevControl": {
-        "x": 3.3274190093809035,
-        "y": 7.594426099408079
+        "x": 3.5849481036551056,
+        "y": 7.650388663938558
       },
       "nextControl": {
-        "x": 2.447884126791228,
-        "y": 6.432859057682591
+        "x": 2.844536904924759,
+        "y": 6.726503432126981
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.9952941912299855,
-        "y": 5.121974959061135
+        "x": 2.8528663917824075,
+        "y": 6.7682035590277785
       },
       "prevControl": {
-        "x": 3.687125842088625,
-        "y": 5.821484002519193
+        "x": 2.8621840334143878,
+        "y": 7.063758115663927
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FinishShoot"
+      "linkedName": "FinishShooting"
     }
   ],
   "rotationTargets": [
@@ -66,20 +66,13 @@
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.548057154605264,
+      "waypointRelativePos": 1.760865542763158,
       "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "ShootCommand",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 4.0,
