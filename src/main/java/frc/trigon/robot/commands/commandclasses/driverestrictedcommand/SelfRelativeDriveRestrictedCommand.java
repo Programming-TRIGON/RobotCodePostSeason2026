@@ -31,6 +31,6 @@ public class SelfRelativeDriveRestrictedCommand extends DriveRestrictedCommand {
 
     @Override
     protected Translation2d selfRelativeDrive(Translation2d targetTranslation) {
-        return targetTranslation.rotateBy(RobotContainer.SWERVE.getDriveRelativeAngle());
+        return targetTranslation.rotateBy(RobotContainer.SWERVE.getDriveRelativeAngle().unaryMinus());
     }
 }
