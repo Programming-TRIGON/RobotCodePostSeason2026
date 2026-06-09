@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 /**
  * A restriction that caps how the robot's linear and rotational acceleration.
- * Useful for protecting top-heavy or extended mechanisms from tipping or damage caused by sudden joystick inputs.
+ * Used for protecting top-heavy or extended mechanisms from tipping or damage caused by sudden joystick inputs.
  */
 public class AccelerationRestrictedDrive implements DriveRestriction {
     private final SlewRateLimiter translationLimiter;

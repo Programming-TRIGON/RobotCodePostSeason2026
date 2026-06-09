@@ -6,7 +6,7 @@ import frc.trigon.robot.subsystems.swerve.SwerveConstants;
 
 /**
  * A restriction that caps the robot's maximum linear and rotational velocity.
- * Useful for precise actions like scoring approaches or fine alignment, where full driver speed would overshoot.
+ * Used for precise actions like scoring approaches or fine alignment, where full driver speed would overshoot.
  */
 public class VelocityRestrictedDrive implements DriveRestriction {
     private final double maximumTranslationVelocity;
@@ -26,9 +26,8 @@ public class VelocityRestrictedDrive implements DriveRestriction {
     @Override
     public Translation2d applyRestrictionToTranslation(Translation2d targetTranslation) {
         final double translationMagnitude = targetTranslation.getNorm();
-        if (translationMagnitude > maximumTranslationVelocity) {
+        if (translationMagnitude > maximumTranslationVelocity)
             return targetTranslation.times(maximumTranslationVelocity / translationMagnitude);
-        }
         return targetTranslation;
     }
 

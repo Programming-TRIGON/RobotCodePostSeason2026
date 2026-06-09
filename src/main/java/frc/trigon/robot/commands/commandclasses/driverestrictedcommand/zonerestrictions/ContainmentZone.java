@@ -18,12 +18,10 @@ public class ContainmentZone implements ZoneRestriction {
      * Creates a new ContainmentZone.
      *
      * @param boundingBox               the area the robot must stay inside
-     * @param minimumDistanceMeters     the robot is never allowed closer than this
-     *                                  to the zone boundary. Motion toward the boundary is fully
-     *                                  blocked at this distance.
-     * @param brakingZoneDistanceMeters when the robot is closer than this to the
-     *                                  boundary, motion toward the boundary is progressively scaled
-     *                                  down, smoothly stopping at the minimum distance.
+     * @param minimumDistanceMeters     the robot is never allowed closer than this to the zone boundary.
+     *                                  Motion toward the boundary is fully blocked at this distance.
+     * @param brakingZoneDistanceMeters when the robot is closer than this to the boundary,
+     *                                  motion toward the boundary is progressively scaled down, smoothly stopping at the minimum distance.
      */
     public ContainmentZone(BoundingBox boundingBox, double minimumDistanceMeters, double brakingZoneDistanceMeters) {
         this.boundingBox = boundingBox;

@@ -21,13 +21,8 @@ public class RestrictedZone implements ZoneRestriction {
      */
     public RestrictedZone(BoundingBox boundingBox, double minimumDistanceMeters, double brakingZoneDistanceMeters) {
         this.boundingBox = boundingBox;
-        this.minimumDistanceMeters = minimumDistanceMeters;
-        this.brakingZoneDistanceMeters = brakingZoneDistanceMeters;
-
-        if (minimumDistanceMeters < 0 || brakingZoneDistanceMeters < 0)
-            DriverStation.reportWarning("RestrictedZone distances must be non-negative", false);
-        if (minimumDistanceMeters > brakingZoneDistanceMeters)
-            DriverStation.reportWarning("RestrictedZone minimum distance cannot be greater than braking zone distance", false);
+        this.minimumDistanceMeters = Math.max(0, minimumDistanceMeters);
+        this.brakingZoneDistanceMeters = Math.max(this.minimumDistanceMeters, brakingZoneDistanceMeters);
     }
 
     @Override
