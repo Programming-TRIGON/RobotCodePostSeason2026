@@ -91,14 +91,14 @@ public class ShootingCommands {
 
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingWhenReadyCommand(() -> false),
+                getLoadForShootingCommand(() -> false),
                 ShootingCommands::isReadyForFixedShootingAtHub
         );
     }
 
     private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingWhenReadyCommand(() -> true),
+                getLoadForShootingCommand(() -> true),
                 ShootingCommands::isReadyForFixedDelivery
         );
     }
