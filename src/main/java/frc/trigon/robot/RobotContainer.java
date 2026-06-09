@@ -14,6 +14,7 @@ import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
+import frc.trigon.robot.commands.commandfactories.autonomous.AutonomousGenerator;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
@@ -60,6 +61,8 @@ public class RobotContainer {
      * @return the command to run in autonomous mode
      */
     public Command getAutonomousCommand() {
+        if (AutonomousConstants.SHOULD_USE_AUTONOMOUS_GENERATOR)
+            return AutonomousGenerator.getAutonomousCommand();
         return autoChooser.get();
     }
 

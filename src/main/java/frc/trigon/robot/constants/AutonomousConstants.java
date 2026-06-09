@@ -13,11 +13,11 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.commands.commandfactories.autonomous.AutonomousGenerator;
 import frc.trigon.robot.commands.commandfactories.autonomous.GeneralAutonomousCommands;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
@@ -32,6 +32,7 @@ public class AutonomousConstants {
     public static final String DEFAULT_AUTO_NAME = "DefaultAutoName";
     public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
     public static final double FEEDFORWARD_SCALAR = 0.5;//TODO: Calibrate
+    public static final boolean SHOULD_USE_AUTONOMOUS_GENERATOR = true;
     public static final PathConstraints
             DRIVE_TO_SCORING_LOCATION_CONSTRAINTS = new PathConstraints(2.5, 2.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
             SHOOT_PRELOAD_BEFORE_NEUTRAL_ZONE_DRIVE_CONSTRAINTS = new PathConstraints(0.3, 0.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
@@ -80,13 +81,18 @@ public class AutonomousConstants {
         Pathfinding.setPathfinder(new LocalADStarAK());
         CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
         configureAutoBuilder();
+        if (SHOULD_USE_AUTONOMOUS_GENERATOR) {
+            AutonomousGenerator.init();
+            return;
+        }
         registerCommands();
     }
 
     private static void configureAutoBuilder() {
         AutoBuilder.configure(
                 RobotContainer.ROBOT_POSE_ESTIMATOR::getEstimatedRobotPose,
-                RobotContainer.ROBOT_POSE_ESTIMATOR::resetPose,
+                (a) -> {
+                },
                 RobotContainer.SWERVE::getSelfRelativeChassisSpeeds,
                 RobotContainer.SWERVE::drivePathPlanner,
                 AUTO_PATH_FOLLOWING_CONTROLLER,

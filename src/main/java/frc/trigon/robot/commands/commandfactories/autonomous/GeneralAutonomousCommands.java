@@ -39,20 +39,19 @@ public class GeneralAutonomousCommands {
     }
 
     public static Command getCollectFromNeutralZoneCommand(AutonomousGenerator.AutonomousState previousState, double collectionTimeout) {
-        return new ParallelDeadlineGroup(
+        return new ParallelCommandGroup(
                 getDriveToFuelInNeutralZoneCommand(
                         AutonomousGenerator.SHOULD_SHOOT_PRELOAD.getAsBoolean() && previousState == null,
                         collectionTimeout,
                         previousState == null,
                         getIntakingPoseInNeutralZone(previousState),
                         false
-                ),
-                getShootAtHubCommand()
+                )
         );
     }
 
     public static Command getScoreCommand(AutonomousGenerator.AutonomousState nextState, double timeout) {
-        return new ParallelDeadlineGroup(
+        return new ParallelCommandGroup(
                 GeneralCommands.runWhen(new WaitCommand(timeout), FieldConstants::isRobotInAllianceZone),
                 SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(
                         () -> getScoringPose(nextState),
@@ -61,8 +60,8 @@ public class GeneralAutonomousCommands {
                         AutonomousConstants.DRIVE_SLOWLY_IN_AUTONOMOUS_CONSTRAINTS,
                         1000,
                         false
-                ).alongWith(new RunCommand(() -> Logger.recordOutput("Autonomous/TargetScoringPose", getScoringPose(nextState).get()))),
-                getShootAtHubCommand()
+                ).alongWith(new RunCommand(() -> Logger.recordOutput("Autonomous/TargetScoringPose", getScoringPose(nextState).get()))).andThen(
+                getShootAtHubCommand())
         ).withTimeout(timeout + AutonomousConstants.NORMAL_DRIVE_TIMEOUT);
     }
 
