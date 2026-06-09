@@ -11,7 +11,7 @@ public class OperatorConstants {
     private static final int DRIVER_CONTROLLER_PORT = 0;
     private static final int
             DRIVER_CONTROLLER_RIGHT_STICK_EXPONENT = 1,
-            DRIVER_CONTROLLER_LEFT_STICK_EXPONENT = 2;
+            DRIVER_CONTROLLER_LEFT_STICK_EXPONENT = 1;
     public static final XboxController DRIVER_CONTROLLER = new XboxController(
             DRIVER_CONTROLLER_PORT, DRIVER_CONTROLLER_RIGHT_STICK_EXPONENT, DRIVER_CONTROLLER_LEFT_STICK_EXPONENT, DRIVER_CONTROLLER_DEADBAND
     );
