@@ -24,7 +24,7 @@ public interface DriveRestriction {
     }
 
     /**
-     * Is run everytime the command is used.
+     * Is run every time the command is used.
      * Used to reset the values so past values don't affect the command.
      */
     default void init() {

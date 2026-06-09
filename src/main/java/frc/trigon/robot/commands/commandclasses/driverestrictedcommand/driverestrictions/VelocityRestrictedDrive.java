@@ -15,8 +15,8 @@ public class VelocityRestrictedDrive implements DriveRestriction {
     /**
      * A restriction that limits the maximum linear and rotational velocity.
      *
-     * @param maximumTranslationVelocityMetersPerSecond maximum linear velocity, has to be between 0 and 1.
-     * @param maximumRotationVelocityRadiansPerSecond   Maximum rotational velocity, has to between 0 and 1.
+     * @param maximumTranslationVelocityMetersPerSecond maximum linear velocity
+     * @param maximumRotationVelocityRadiansPerSecond   maximum rotational velocity
      */
     public VelocityRestrictedDrive(double maximumTranslationVelocityMetersPerSecond, double maximumRotationVelocityRadiansPerSecond) {
         this.maximumTranslationVelocity = MathUtil.clamp(maximumTranslationVelocityMetersPerSecond / SwerveConstants.MAXIMUM_SPEED_METERS_PER_SECOND, 0, 1);
