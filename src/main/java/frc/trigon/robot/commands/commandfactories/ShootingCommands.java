@@ -53,7 +53,7 @@ public class ShootingCommands {
                         ),
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
-                        getAimForShootingCommand()
+                        getWarmUpCommand()
                 )
         );
     }
@@ -81,6 +81,15 @@ public class ShootingCommands {
 
     public static Command getSetFixedShootingStateCommand(FixedShootingPosition targetState) {
         return new InstantCommand(() -> setTargetFixedShootingAtHubState(targetState)).alongWith(new InstantCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", targetState.name())));
+    }
+
+    public static Command getWarmUpCommand() {
+        return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
+                new ParallelCommandGroup(
+                        HoodCommands.getAimForShootingCommand(),
+                        ShooterCommands.getAimForShootingCommand()
+                )
+        );
     }
 
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
@@ -127,13 +136,6 @@ public class ShootingCommands {
 
     private static Command getUpdateShootingCalculationsCommand() {
         return new RunCommand(ShootingCommands::updateShootingCalculations);
-    }
-
-    private static Command getAimForShootingCommand() {
-        return new ParallelCommandGroup(
-                HoodCommands.getAimForShootingCommand(),
-                ShooterCommands.getAimForShootingCommand()
-        );
     }
 
     private static Command getAimSwerveCommand(Supplier<Rotation2d> rotationSupplier) {
