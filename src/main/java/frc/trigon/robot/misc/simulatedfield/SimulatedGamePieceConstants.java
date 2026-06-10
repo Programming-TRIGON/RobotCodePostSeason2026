@@ -17,6 +17,12 @@ public class SimulatedGamePieceConstants {
     static final Translation3d COLLECTION_CHECK_POSITION = new Translation3d(0.38, 0, 0);
     static final int MAXIMUM_HELD_FUEL = 40; //TODO: get
 
+    // Seconds between firing each front ROW (a full row of up to 4 balls launches per cycle).
+    // Normal feed (intake open) is faster now; intake closed (POWERED_CLOSE) feeds nearly instantly.
+    public static final double
+            SHOOTING_INTERVAL_INTAKE_OPEN_SECONDS = 0.20,
+            SHOOTING_INTERVAL_INTAKE_CLOSED_SECONDS = 0.07;
+
     // Indexer width: still used by ShootingCalculations to lay out the per-column shooter exit lanes.
     public static final int INDEXER_WIDTH_CAPACITY = 4;
     public static final double INDEXER_COL_SPACING_METERS = 0.16;
