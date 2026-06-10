@@ -59,14 +59,14 @@ public class TrenchDetection {
 
     private static boolean isHoodCenterBeforeTrench(Translation2d hoodCenter) {
         final double redTrenchMaximumX = FieldConstants.FIELD_LENGTH_METERS - FieldConstants.RIGHT_TRENCH_MINIMUM_X;
-        return hoodCenter.getX() < FieldConstants.RIGHT_TRENCH_MINIMUM_X
-                || hoodCenter.getX() > redTrenchMaximumX;
+        final double blueTrenchMaximumX = FieldConstants.RIGHT_TRENCH_MINIMUM_X;
+        return hoodCenter.getX() < blueTrenchMaximumX || hoodCenter.getX() > redTrenchMaximumX;
     }
 
     private static boolean isHoodCenterAfterTrench(Translation2d hoodCenter) {
         final double redTrenchMinimumX = FieldConstants.FIELD_LENGTH_METERS - FieldConstants.RIGHT_TRENCH_MAXIMUM_X;
-        return hoodCenter.getX() > FieldConstants.RIGHT_TRENCH_MAXIMUM_X
-                && hoodCenter.getX() < redTrenchMinimumX;
+        final double blueTrenchMinimumX = FieldConstants.RIGHT_TRENCH_MAXIMUM_X;
+        return hoodCenter.getX() > blueTrenchMinimumX && hoodCenter.getX() < redTrenchMinimumX;
     }
 
     /**
