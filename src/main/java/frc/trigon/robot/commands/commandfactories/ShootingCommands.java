@@ -50,8 +50,6 @@ public class ShootingCommands {
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimForShootingCommand(),
-                        getWarmUpCommand(),
-                        getAimForShootingCommand(),
                         getIntakeSequenceWhileShootingCommand()
                 )
         );
