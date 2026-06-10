@@ -50,31 +50,37 @@ public class FieldConstants {
      * RIGHT trench mirrors it along the other wall — right side from the driver's perspective.
      */
     public static final double
-            LEFT_TRENCH_MINIMUM_X = 4.000,
-            LEFT_TRENCH_MAXIMUM_X = 5.223,
-            LEFT_TRENCH_MINIMUM_Y = 0.000,
-            LEFT_TRENCH_MAXIMUM_Y = 1.28;
+            RIGHT_TRENCH_MINIMUM_X = 4.000,
+            RIGHT_TRENCH_MAXIMUM_X = 5.223,
+            RIGHT_TRENCH_MINIMUM_Y = 0.000,
+            RIGHT_TRENCH_MAXIMUM_Y = 1.28;
     private static final double
-            RIGHT_TRENCH_MINIMUM_X = LEFT_TRENCH_MINIMUM_X,
-            RIGHT_TRENCH_MAXIMUM_X = LEFT_TRENCH_MAXIMUM_X,
-            RIGHT_TRENCH_MINIMUM_Y = FIELD_WIDTH_METERS - LEFT_TRENCH_MAXIMUM_Y,
-            RIGHT_TRENCH_MAXIMUM_Y = FIELD_WIDTH_METERS - LEFT_TRENCH_MINIMUM_Y;
+            LEFT_TRENCH_MINIMUM_X = RIGHT_TRENCH_MINIMUM_X,
+            LEFT_TRENCH_MAXIMUM_X = RIGHT_TRENCH_MAXIMUM_X,
+            LEFT_TRENCH_MINIMUM_Y = FIELD_WIDTH_METERS - RIGHT_TRENCH_MAXIMUM_Y,
+            LEFT_TRENCH_MAXIMUM_Y = FIELD_WIDTH_METERS - RIGHT_TRENCH_MINIMUM_Y;
+    private static final FlippableTranslation2d
+            RIGHT_TRENCH_CORNER_A = new FlippableTranslation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y, true),
+            RIGHT_TRENCH_CORNER_B = new FlippableTranslation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y,true),
+            LEFT_TRENCH_CORNER_A = new FlippableTranslation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y,true),
+            LEFT_TRENCH_CORNER_B = new FlippableTranslation2d(LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MAXIMUM_Y, true);
+
     public static final BoundingBox
-            BLUE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
-            new Translation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y),
-            new Translation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y)
+            RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
+            RIGHT_TRENCH_CORNER_A.get(),
+            RIGHT_TRENCH_CORNER_B.get()
     ),
+            LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
+                    LEFT_TRENCH_CORNER_A.get(),
+                    LEFT_TRENCH_CORNER_B.get()
+            ),
+            BLUE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
+                    RIGHT_TRENCH_CORNER_A.getBlueObject(),
+                    RIGHT_TRENCH_CORNER_B.getBlueObject()
+            ),
             BLUE_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    new Translation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y),
-                    new Translation2d(LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MAXIMUM_Y)
-            ),
-            RED_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    FlippingUtil.flipFieldPosition(new Translation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y)),
-                    FlippingUtil.flipFieldPosition(new Translation2d(LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MAXIMUM_Y))
-            ),
-            RED_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    FlippingUtil.flipFieldPosition(new Translation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y)),
-                    FlippingUtil.flipFieldPosition(new Translation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y))
+                    LEFT_TRENCH_CORNER_A.getBlueObject(),
+                    LEFT_TRENCH_CORNER_B.getBlueObject()
             );
 
     private static AprilTagFieldLayout createAprilTagFieldLayout() {

@@ -41,31 +41,31 @@ public class TrenchDetection {
         final BoundingBox
                 currentHoodBox = getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()),
                 predictedHoodBox = getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS));
+        FieldConstants.RIGHT_TRENCH_BOUNDING_BOX.log("Zones/RedRightTrench");
+        FieldConstants.LEFT_TRENCH_BOUNDING_BOX.log("Zones/RedLeftTrench");
         FieldConstants.BLUE_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/BlueRightTrench");
         FieldConstants.BLUE_LEFT_TRENCH_BOUNDING_BOX.log("Zones/BlueLeftTrench");
-        FieldConstants.RED_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/RedRightTrench");
-        FieldConstants.RED_LEFT_TRENCH_BOUNDING_BOX.log("Zones/RedLeftTrench");
         currentHoodBox.log("Zones/HoodBoundingBox");
         predictedHoodBox.log("Zones/PredictedHoodBoundingBox");
         Logger.recordOutput("Zones/IsHoodInTrenchZone", isHoodInTrenchZone(currentHoodBox, predictedHoodBox));
     }
 
     private static boolean isBoundingBoxInTrenchZone(BoundingBox hoodBoundingBox) {
-        return hoodBoundingBox.overlaps(FieldConstants.BLUE_RIGHT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(FieldConstants.BLUE_LEFT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(FieldConstants.RED_RIGHT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(FieldConstants.RED_LEFT_TRENCH_BOUNDING_BOX);
+        return hoodBoundingBox.overlaps(FieldConstants.RIGHT_TRENCH_BOUNDING_BOX)
+                || hoodBoundingBox.overlaps(FieldConstants.LEFT_TRENCH_BOUNDING_BOX)
+                || hoodBoundingBox.overlaps(FieldConstants.BLUE_RIGHT_TRENCH_BOUNDING_BOX)
+                || hoodBoundingBox.overlaps(FieldConstants.BLUE_LEFT_TRENCH_BOUNDING_BOX);
     }
 
     private static boolean isHoodCenterBeforeTrench(Translation2d hoodCenter) {
-        final double redTrenchMaximumX = FieldConstants.FIELD_LENGTH_METERS - FieldConstants.LEFT_TRENCH_MINIMUM_X;
-        return hoodCenter.getX() < FieldConstants.LEFT_TRENCH_MINIMUM_X
+        final double redTrenchMaximumX = FieldConstants.FIELD_LENGTH_METERS - FieldConstants.RIGHT_TRENCH_MINIMUM_X;
+        return hoodCenter.getX() < FieldConstants.RIGHT_TRENCH_MINIMUM_X
                 || hoodCenter.getX() > redTrenchMaximumX;
     }
 
     private static boolean isHoodCenterAfterTrench(Translation2d hoodCenter) {
-        final double redTrenchMinimumX = FieldConstants.FIELD_LENGTH_METERS - FieldConstants.LEFT_TRENCH_MAXIMUM_X;
-        return hoodCenter.getX() > FieldConstants.LEFT_TRENCH_MAXIMUM_X
+        final double redTrenchMinimumX = FieldConstants.FIELD_LENGTH_METERS - FieldConstants.RIGHT_TRENCH_MAXIMUM_X;
+        return hoodCenter.getX() > FieldConstants.RIGHT_TRENCH_MAXIMUM_X
                 && hoodCenter.getX() < redTrenchMinimumX;
     }
 
