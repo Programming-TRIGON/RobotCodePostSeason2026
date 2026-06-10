@@ -5,14 +5,9 @@ import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.ContainmentZone;
 
 public class ZoneRestrictedDriveConstants {
-    private static final double
+    public static final double
             ROBOT_X_WIDTH_METERS = 1,
-            ROBOT_Y_WIDTH_METERS = 1,
-            INTAKE_LENGTH = 0.37;
-    public static final BoundingBox ROBOT_RELATIVE_BOUNDING_BOX = new BoundingBox(
-            new Translation2d(ROBOT_X_WIDTH_METERS / 2 + INTAKE_LENGTH, -ROBOT_Y_WIDTH_METERS / 2),
-            new Translation2d(-ROBOT_X_WIDTH_METERS / 2, ROBOT_Y_WIDTH_METERS)
-    );
+            ROBOT_Y_WIDTH_METERS = 1;
     private static final double
             FIELD_BOUNDARY_MINIMUM_DISTANCE_METERS = 0.1,
             FIELD_BOUNDARY_BRAKING_ZONE_DISTANCE_METERS = 0.3;

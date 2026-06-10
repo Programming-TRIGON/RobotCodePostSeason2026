@@ -53,16 +53,7 @@ public class ZoneRestrictedDrive implements DriveRestriction {
 
     private BoundingBox getRobotBoundingBox() {
         final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
-        final BoundingBox robotBoundingBox = ZoneRestrictedDriveConstants.ROBOT_RELATIVE_BOUNDING_BOX;
 
-        final Translation2d robotCenterFieldRelative = robotBoundingBox.getCenter().getTranslation()
-                .rotateBy(robotPose.getRotation())
-                .plus(robotPose.getTranslation());
-
-        return new BoundingBox(
-                new Pose2d(robotCenterFieldRelative, robotPose.getRotation()),
-                robotBoundingBox.getXWidth(),
-                robotBoundingBox.getYWidth()
-        );
+        return new BoundingBox(robotPose, ZoneRestrictedDriveConstants.ROBOT_X_WIDTH_METERS, ZoneRestrictedDriveConstants.ROBOT_Y_WIDTH_METERS);
     }
 }
