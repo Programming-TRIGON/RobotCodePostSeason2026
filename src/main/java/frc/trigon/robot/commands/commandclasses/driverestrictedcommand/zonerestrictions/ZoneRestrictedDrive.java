@@ -31,10 +31,10 @@ public class ZoneRestrictedDrive implements DriveRestriction {
     @Override
     public Translation2d applyRestrictionToTranslation(Translation2d targetTranslation) {
         final BoundingBox robotBox = getRobotBoundingBox();
-        Translation2d translation = targetTranslation;
+        Translation2d translation = targetTranslation.unaryMinus();
         for (ZoneRestriction zone : zoneRestrictions)
             translation = zone.applyRestriction(translation, robotBox);
-        return translation;
+        return translation.unaryMinus();
     }
 
     private static ZoneRestriction[] getZoneRestrictionsWithFieldRestriction(ZoneRestriction[] zones) {
@@ -53,7 +53,12 @@ public class ZoneRestrictedDrive implements DriveRestriction {
 
     private BoundingBox getRobotBoundingBox() {
         final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
+        final BoundingBox robotBoundingBox = ZoneRestrictedDriveConstants.ROBOT_RELATIVE_BOUNDING_BOX;
 
-        return new BoundingBox(robotPose, ZoneRestrictedDriveConstants.ROBOT_X_WIDTH_METERS, ZoneRestrictedDriveConstants.ROBOT_Y_WIDTH_METERS);
+        return new BoundingBox(
+                new Pose2d(robotBoundingBox.getCenter().getTranslation(), robotPose.getRotation()),
+                robotBoundingBox.getXWidth(),
+                robotBoundingBox.getYWidth()
+                );
     }
 }
