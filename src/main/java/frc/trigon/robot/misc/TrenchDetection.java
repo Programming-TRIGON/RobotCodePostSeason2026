@@ -41,20 +41,20 @@ public class TrenchDetection {
         final BoundingBox
                 currentHoodBox = getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()),
                 predictedHoodBox = getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS));
-        FieldConstants.RIGHT_TRENCH_BOUNDING_BOX.log("Zones/RedRightTrench");
-        FieldConstants.LEFT_TRENCH_BOUNDING_BOX.log("Zones/RedLeftTrench");
-        FieldConstants.BLUE_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/BlueRightTrench");
-        FieldConstants.BLUE_LEFT_TRENCH_BOUNDING_BOX.log("Zones/BlueLeftTrench");
+        FieldConstants.FAR_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/RedRightTrench");
+        FieldConstants.FAR_LEFT_TRENCH_BOUNDING_BOX.log("Zones/RedLeftTrench");
+        FieldConstants.CLOSE_BLUE_RIGHT_TRENCH_BOUNDING_BOX.log("Zones/BlueRightTrench");
+        FieldConstants.CLOSE_BLUE_LEFT_TRENCH_BOUNDING_BOX.log("Zones/BlueLeftTrench");
         currentHoodBox.log("Zones/HoodBoundingBox");
         predictedHoodBox.log("Zones/PredictedHoodBoundingBox");
         Logger.recordOutput("Zones/IsHoodInTrenchZone", isHoodInTrenchZone(currentHoodBox, predictedHoodBox));
     }
 
     private static boolean isBoundingBoxInTrenchZone(BoundingBox boundingBox) {
-        return boundingBox.overlaps(FieldConstants.RIGHT_TRENCH_BOUNDING_BOX)
-                || boundingBox.overlaps(FieldConstants.LEFT_TRENCH_BOUNDING_BOX)
-                || boundingBox.overlaps(FieldConstants.BLUE_RIGHT_TRENCH_BOUNDING_BOX)
-                || boundingBox.overlaps(FieldConstants.BLUE_LEFT_TRENCH_BOUNDING_BOX);
+        return boundingBox.overlaps(FieldConstants.FAR_RIGHT_TRENCH_BOUNDING_BOX)
+                || boundingBox.overlaps(FieldConstants.FAR_LEFT_TRENCH_BOUNDING_BOX)
+                || boundingBox.overlaps(FieldConstants.CLOSE_BLUE_RIGHT_TRENCH_BOUNDING_BOX)
+                || boundingBox.overlaps(FieldConstants.CLOSE_BLUE_LEFT_TRENCH_BOUNDING_BOX);
     }
 
     private static boolean isHoodCenterBeforeTrench(Translation2d hoodCenter) {

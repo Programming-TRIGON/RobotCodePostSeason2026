@@ -70,19 +70,19 @@ public class FieldConstants {
             CLOSE_LEFT_TRENCH_CORNER_B = new FlippableTranslation2d(FIELD_LENGTH_METERS - LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MAXIMUM_Y, true);
 
     public static final BoundingBox
-            RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
+            FAR_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
             FAR_RIGHT_TRENCH_CORNER_A.get(),
             FAR_RIGHT_TRENCH_CORNER_B.get()
     ),
-            LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
+            FAR_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
                     FAR_LEFT_TRENCH_CORNER_A.get(),
                     FAR_LEFT_TRENCH_CORNER_B.get()
             ),
-            BLUE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
+            CLOSE_BLUE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
                     CLOSE_RIGHT_TRENCH_CORNER_A.get(),
                     COSE_RIGHT_TRENCH_CORNER_B.get()
             ),
-            BLUE_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
+            CLOSE_BLUE_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
                     CLOSE_LEFT_TRENCH_CORNER_A.get(),
                     CLOSE_LEFT_TRENCH_CORNER_B.get()
             );
