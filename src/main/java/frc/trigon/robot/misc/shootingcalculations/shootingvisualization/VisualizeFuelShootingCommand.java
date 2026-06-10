@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePiece;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 import java.util.Random;
 
@@ -105,7 +105,12 @@ public class VisualizeFuelShootingCommand extends Command {
             // Decompose the 2D error into range (along shot axis) and lateral (perpendicular).
             // Range: positive = overshot (landed past target), negative = undershot.
             // Lateral: positive = landed left of target, negative = right (shooter's perspective).
-            final Translation2d shotDirection = targetPosition.minus(launchShooterExitPosition).div(trueDistanceAtLaunchMeters);
+            final Translation2d shotDirection;
+            if (trueDistanceAtLaunchMeters == 0)
+                shotDirection = targetPosition.minus(launchShooterExitPosition);
+            else
+                shotDirection = targetPosition.minus(launchShooterExitPosition).div(trueDistanceAtLaunchMeters);
+            
             final double rangeError = errorVector.getX() * shotDirection.getX() + errorVector.getY() * shotDirection.getY();
             final double lateralError = -errorVector.getX() * shotDirection.getY() + errorVector.getY() * shotDirection.getX();
 
