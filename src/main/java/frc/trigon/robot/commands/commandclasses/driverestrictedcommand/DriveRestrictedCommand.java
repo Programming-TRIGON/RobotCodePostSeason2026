@@ -86,8 +86,8 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
      */
     private Translation2d getRawJoystickPosition() {
         final double
-                joystickX = OperatorConstants.DRIVER_CONTROLLER.getLeftY(),
-                joystickY = OperatorConstants.DRIVER_CONTROLLER.getLeftX();
-        return new Translation2d(joystickX, joystickY);
+                forwardAxis = OperatorConstants.DRIVER_CONTROLLER.getLeftY(),
+                strafeAxis = OperatorConstants.DRIVER_CONTROLLER.getLeftX();
+        return new Translation2d(forwardAxis, strafeAxis);
     }
 }
