@@ -60,27 +60,31 @@ public class FieldConstants {
             LEFT_TRENCH_MINIMUM_Y = FIELD_WIDTH_METERS - RIGHT_TRENCH_MAXIMUM_Y,
             LEFT_TRENCH_MAXIMUM_Y = FIELD_WIDTH_METERS - RIGHT_TRENCH_MINIMUM_Y;
     private static final FlippableTranslation2d
-            RIGHT_TRENCH_CORNER_A = new FlippableTranslation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y, true),
-            RIGHT_TRENCH_CORNER_B = new FlippableTranslation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y,true),
-            LEFT_TRENCH_CORNER_A = new FlippableTranslation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y,true),
-            LEFT_TRENCH_CORNER_B = new FlippableTranslation2d(LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MAXIMUM_Y, true);
+            FAR_RIGHT_TRENCH_CORNER_A = new FlippableTranslation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y, true),
+            FAR_LEFT_TRENCH_CORNER_A = new FlippableTranslation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y,true),
+            FAR_RIGHT_TRENCH_CORNER_B = new FlippableTranslation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y,true),
+            FAR_LEFT_TRENCH_CORNER_B = new FlippableTranslation2d(LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MAXIMUM_Y, true),
+            CLOSE_RIGHT_TRENCH_CORNER_A = new FlippableTranslation2d(FIELD_LENGTH_METERS - RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MINIMUM_Y, true),
+            CLOSE_LEFT_TRENCH_CORNER_A = new FlippableTranslation2d(FIELD_LENGTH_METERS - LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MINIMUM_Y, true),
+            COSE_RIGHT_TRENCH_CORNER_B = new FlippableTranslation2d(FIELD_LENGTH_METERS - RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MAXIMUM_Y, true),
+            CLOSE_LEFT_TRENCH_CORNER_B = new FlippableTranslation2d(FIELD_LENGTH_METERS - LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MAXIMUM_Y, true);
 
     public static final BoundingBox
             RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
-            RIGHT_TRENCH_CORNER_A.get(),
-            RIGHT_TRENCH_CORNER_B.get()
+            FAR_RIGHT_TRENCH_CORNER_A.get(),
+            FAR_RIGHT_TRENCH_CORNER_B.get()
     ),
             LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    LEFT_TRENCH_CORNER_A.get(),
-                    LEFT_TRENCH_CORNER_B.get()
+                    FAR_LEFT_TRENCH_CORNER_A.get(),
+                    FAR_LEFT_TRENCH_CORNER_B.get()
             ),
             BLUE_RIGHT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    RIGHT_TRENCH_CORNER_A.getBlueObject(),
-                    RIGHT_TRENCH_CORNER_B.getBlueObject()
+                    CLOSE_RIGHT_TRENCH_CORNER_A.get(),
+                    COSE_RIGHT_TRENCH_CORNER_B.get()
             ),
             BLUE_LEFT_TRENCH_BOUNDING_BOX = new BoundingBox(
-                    LEFT_TRENCH_CORNER_A.getBlueObject(),
-                    LEFT_TRENCH_CORNER_B.getBlueObject()
+                    CLOSE_LEFT_TRENCH_CORNER_A.get(),
+                    CLOSE_LEFT_TRENCH_CORNER_B.get()
             );
 
     private static AprilTagFieldLayout createAprilTagFieldLayout() {

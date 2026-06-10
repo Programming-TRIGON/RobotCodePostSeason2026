@@ -50,11 +50,11 @@ public class TrenchDetection {
         Logger.recordOutput("Zones/IsHoodInTrenchZone", isHoodInTrenchZone(currentHoodBox, predictedHoodBox));
     }
 
-    private static boolean isBoundingBoxInTrenchZone(BoundingBox hoodBoundingBox) {
-        return hoodBoundingBox.overlaps(FieldConstants.RIGHT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(FieldConstants.LEFT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(FieldConstants.BLUE_RIGHT_TRENCH_BOUNDING_BOX)
-                || hoodBoundingBox.overlaps(FieldConstants.BLUE_LEFT_TRENCH_BOUNDING_BOX);
+    private static boolean isBoundingBoxInTrenchZone(BoundingBox boundingBox) {
+        return boundingBox.overlaps(FieldConstants.RIGHT_TRENCH_BOUNDING_BOX)
+                || boundingBox.overlaps(FieldConstants.LEFT_TRENCH_BOUNDING_BOX)
+                || boundingBox.overlaps(FieldConstants.BLUE_RIGHT_TRENCH_BOUNDING_BOX)
+                || boundingBox.overlaps(FieldConstants.BLUE_LEFT_TRENCH_BOUNDING_BOX);
     }
 
     private static boolean isHoodCenterBeforeTrench(Translation2d hoodCenter) {
