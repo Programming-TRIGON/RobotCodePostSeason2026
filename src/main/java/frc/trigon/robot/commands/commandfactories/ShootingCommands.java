@@ -53,7 +53,7 @@ public class ShootingCommands {
                         ),
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
-                        getWarmUpCommand()
+                        getAimForShootingCommand()
                 )
         );
     }
@@ -84,12 +84,8 @@ public class ShootingCommands {
     }
 
     public static Command getWarmUpCommand() {
-        return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
-                new ParallelCommandGroup(
-                        HoodCommands.getAimForShootingCommand(),
-                        ShooterCommands.getAimForShootingCommand()
-                )
-        );
+        return new InstantCommand(ShootingCommands::updateShootingCalculations)
+                .andThen(getAimForShootingCommand());
     }
 
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
@@ -143,6 +139,13 @@ public class ShootingCommands {
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftX()),
                 () -> new FlippableRotation2d(rotationSupplier.get(), false)
+        );
+    }
+
+    private static Command getAimForShootingCommand() {
+        return new ParallelCommandGroup(
+                HoodCommands.getAimForShootingCommand(),
+                ShooterCommands.getAimForShootingCommand()
         );
     }
 
