@@ -94,24 +94,28 @@ public class ShootingCalculations {
         final Translation2d targetPhysicalPosition = currentTargetShootingLocation.position.get();
         final Translation2d robotVelocity = new Translation2d(fieldRelativeChassisSpeeds.vxMetersPerSecond, fieldRelativeChassisSpeeds.vyMetersPerSecond);
 
-        // Uses exact shooter exit for both ToF interpolation AND Swerve aim Angle
+        // Uses exact shooter exit for both distance interpolation and swerve aim angle.
         final Pose3d baseExitPose = new Pose3d(robotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
         final Translation2d shooterExitFieldPosition = baseExitPose.getTranslation().toTranslation2d();
 
+        // Iteratively converge on a self-consistent (virtualTarget, parameters) pair.
+        // Shifting to the virtual target changes the shot distance, which changes the
+        // interpolated velocity/pitch/ToF, which changes the virtual target again.
+        // Each iteration tightens that coupling; VIRTUAL_TARGET_ITERATIONS = 5 is enough
+        // to converge within sub-millimeter error for any realistic robot speed.
         Translation2d virtualTarget = targetPhysicalPosition;
-        double distanceToVirtualTarget = shooterExitFieldPosition.getDistance(virtualTarget);
+        ShotParameters parameters = ShootingMap.getInterpolatedParameters(
+                shooterExitFieldPosition.getDistance(virtualTarget), currentTargetShootingLocation.isDelivery);
 
-        ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetShootingLocation.isDelivery);
-
-        for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_HUB_CALCULATION_ITERATIONS; i++) {
+        for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_TARGET_ITERATIONS; i++) {
             virtualTarget = targetPhysicalPosition.minus(robotVelocity.times(parameters.timeOfFlight()));
-            distanceToVirtualTarget = shooterExitFieldPosition.getDistance(virtualTarget);
-            parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetShootingLocation.isDelivery);
+            parameters = ShootingMap.getInterpolatedParameters(
+                    shooterExitFieldPosition.getDistance(virtualTarget), currentTargetShootingLocation.isDelivery);
         }
 
         final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle().rotateBy(Rotation2d.k180deg);
 
-        Logger.recordOutput("ShootingCalculations/DistanceToVirtualTarget", distanceToVirtualTarget);
+        Logger.recordOutput("ShootingCalculations/DistanceToVirtualTarget", shooterExitFieldPosition.getDistance(virtualTarget));
         Logger.recordOutput("ShootingCalculations/InterpolatedTimeOfFlight", parameters.timeOfFlight());
 
         return new ShootingState(

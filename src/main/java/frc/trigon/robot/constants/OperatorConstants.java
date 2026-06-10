@@ -1,20 +1,17 @@
 package frc.trigon.robot.constants;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.RobotContainer;
 
-import java.util.function.DoubleUnaryOperator;
-
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
     private static final int DRIVER_CONTROLLER_PORT = 0;
     private static final int
             DRIVER_CONTROLLER_RIGHT_STICK_EXPONENT = 1,
-            DRIVER_CONTROLLER_LEFT_STICK_EXPONENT = 2;
+            DRIVER_CONTROLLER_LEFT_STICK_EXPONENT = 1;
     public static final XboxController DRIVER_CONTROLLER = new XboxController(
             DRIVER_CONTROLLER_PORT, DRIVER_CONTROLLER_RIGHT_STICK_EXPONENT, DRIVER_CONTROLLER_LEFT_STICK_EXPONENT, DRIVER_CONTROLLER_DEADBAND
     );
@@ -25,17 +22,6 @@ public class OperatorConstants {
             POV_DIVIDER = 2,
             TRANSLATION_STICK_SPEED_DIVIDER = 1,
             ROTATION_STICK_SPEED_DIVIDER = 1;
-
-    public static final double MINIMUM_VELOCITY_TOWARDS_GAME_PIECE_FOR_INTAKE_ASSIST_METERS_PER_SECOND = 1;
-    private static final double
-            INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA_INTERCEPT = 60,
-            INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA_SLOPE = -15;
-    public static final DoubleUnaryOperator INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA =
-            x -> MathUtil.clamp(
-                    (INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA_SLOPE * x) + INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA_INTERCEPT,
-                    0,
-                    INTAKE_ASSIST_MAXIMUM_ASSISTABLE_ANGLE_FORMULA_INTERCEPT
-            );
 
     public static final Trigger
             RESET_HEADING_TRIGGER = DRIVER_CONTROLLER.y(),
@@ -49,7 +35,7 @@ public class OperatorConstants {
             BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down(),
             CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS);
     public static final Trigger
-            SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightBumper().or(OPERATOR_CONTROLLER.d()),
+            SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightStick().or(OPERATOR_CONTROLLER.d()),
             SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_IN_FRONT_OF_TOWER_TRIGGER = DRIVER_CONTROLLER.povDown().or(OPERATOR_CONTROLLER.i()),
             SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_RIGHT_TRENCH_TRIGGER = DRIVER_CONTROLLER.povUpRight().or(OPERATOR_CONTROLLER.o()),
             SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_LEFT_TRENCH_TRIGGER = DRIVER_CONTROLLER.povUpLeft().or(OPERATOR_CONTROLLER.u()),
@@ -58,10 +44,14 @@ public class OperatorConstants {
             FIXED_SHOOTING_AT_HUB_TRIGGER = DRIVER_CONTROLLER.leftStick().or(OPERATOR_CONTROLLER.s()),
             FIXED_DELIVERY_TRIGGER = DRIVER_CONTROLLER.rightStick().or(OPERATOR_CONTROLLER.f()),
             WARM_UP_TRIGGER = OPERATOR_CONTROLLER.c();
+            FIXED_SHOOTING_AT_HUB_TRIGGER = DRIVER_CONTROLLER.leftBumper().or(OPERATOR_CONTROLLER.s()),
+            FIXED_DELIVERY_TRIGGER = DRIVER_CONTROLLER.rightBumper().or(OPERATOR_CONTROLLER.f()),
+            IS_ANY_SHOOTING_TRIGGER_ACTIVE = SHOOTING_TRIGGER.or(FIXED_SHOOTING_AT_HUB_TRIGGER).or(FIXED_DELIVERY_TRIGGER);
     public final static Trigger
-            PRELOAD_TRIGGER = OPERATOR_CONTROLLER.x(),
-            CLOSE_INTAKE_TRIGGER = DRIVER_CONTROLLER.leftBumper().or(OPERATOR_CONTROLLER.z()),
-            CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(SHOOTING_TRIGGER),
-            CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(SHOOTING_TRIGGER.negate()),
-            INTAKE_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(SHOOTING_TRIGGER.and(CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER.negate())).or(OPERATOR_CONTROLLER.z());
+            PRELOAD_TRIGGER = OPERATOR_CONTROLLER.x().or(DRIVER_CONTROLLER.start()),
+            CLOSE_INTAKE_TRIGGER = DRIVER_CONTROLLER.leftStick().or(OPERATOR_CONTROLLER.z()),
+            CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE),
+            CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
+            INTAKE_WHILE_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.c()),
+            INTAKE_TRIGGER = INTAKE_WHILE_SHOOTING_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate());
 }
