@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -61,7 +62,7 @@ public class ShooterConstants {
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
     public static final Transform3d FUEL_EXIT_SHOOTER_POSE = new Transform3d(
             new Translation3d(-0.160855914, 0, 0.462125568),
-            new Rotation3d()
+            new Rotation3d(0, 0, Rotation2d.k180deg.getRadians())
     );
     public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 7.208;
 
