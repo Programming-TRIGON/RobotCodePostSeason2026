@@ -1,6 +1,7 @@
 package frc.trigon.robot.misc.simulatedfield;
 
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
@@ -17,6 +18,7 @@ import java.util.Random;
 
 public class SimulationFieldHandler {
     private static final ArrayList<SimulatedGamePiece> HELD_FUEL = new ArrayList<>(List.of());
+    private static double lastEjectionTimestampSeconds = 0;
 
     public static boolean hasFuel() {
         return !HELD_FUEL.isEmpty();
@@ -57,6 +59,7 @@ public class SimulationFieldHandler {
         updateCollection();
         updateHeldFuelPoses();
         updateEjection();
+        updateIntakeEjection();
     }
 
     private static void updateCollection() {
@@ -91,12 +94,60 @@ public class SimulationFieldHandler {
     }
 
     private static void updateEjection() {
-        if (hasFuel() && isShootingFuel()) {
-            final List<SimulatedGamePiece> ejectableFuels = getEjectableFuels();
-            if (!ejectableFuels.isEmpty()) {
-                ejectGamePieces(ejectableFuels);
-            }
+        if (!hasFuel() || !isShootingFuel())
+            return;
+
+        final double now = Timer.getFPGATimestamp();
+        final double fireInterval = isIntakeClosed()
+                ? SimulatedGamePieceConstants.SHOOTING_INTERVAL_INTAKE_CLOSED_SECONDS
+                : SimulatedGamePieceConstants.SHOOTING_INTERVAL_INTAKE_OPEN_SECONDS;
+
+        if (now - lastEjectionTimestampSeconds < fireInterval)
+            return;
+
+        final List<SimulatedGamePiece> ejectableFuels = getEjectableFuels();
+        if (ejectableFuels.isEmpty())
+            return;
+
+        // Fire the whole front row at once (up to one ball per exit lane), then re-settle the pile.
+        ejectGamePieces(ejectableFuels);
+        lastEjectionTimestampSeconds = now;
+    }
+
+    /**
+     * Handles ejecting fuel backward through the intake: when the loader, indexer, and intake are
+     * all running in reverse, all held fuel is released and dropped at the intake's collection
+     * position so pieces appear at the front of the robot rather than at the shooter exit.
+     */
+    private static void updateIntakeEjection() {
+        if (!hasFuel() || !isEjectingThroughIntake())
+            return;
+
+        final Translation3d ejectPosition = robotRelativeToFieldRelative(SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION);
+        final ArrayList<SimulatedGamePiece> toEject = new ArrayList<>(HELD_FUEL);
+        for (SimulatedGamePiece piece : toEject) {
+            piece.release();
+            piece.updatePosition(ejectPosition);
+            HELD_FUEL.remove(piece);
         }
+    }
+
+    /**
+     * Returns true when the robot is actively reverse-ejecting through the intake:
+     * loader, indexer, and intake all spinning backwards.
+     */
+    private static boolean isEjectingThroughIntake() {
+        return RobotContainer.LOADER.getCurrentVoltage() < -LoaderConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
+                && RobotContainer.INDEXER.getCurrentVoltage() < -IndexerConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
+                && RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.POWERED_OPEN);
+    }
+
+    /**
+     * When the intake is closed (POWERED_CLOSE) the fuel feeds straight to the shooter without
+     * fighting the intake, so it fires much faster, mirroring the real robot.
+     */
+    private static boolean isIntakeClosed() {
+        return RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.POWERED_CLOSE);
     }
 
     private static boolean isShootingFuel() {
@@ -120,7 +171,7 @@ public class SimulationFieldHandler {
 
     private static void ejectGamePieces(List<SimulatedGamePiece> ejectedGamePieces) {
         for (SimulatedGamePiece piece : ejectedGamePieces) {
-            int exitColumn = mapWidthIndexToExitColumn(piece.getHopperCell().widthIndex());
+            final int exitColumn = mapWidthIndexToExitColumn(piece.getHopperCell().widthIndex());
             piece.release();
             HELD_FUEL.remove(piece);
 
@@ -128,9 +179,9 @@ public class SimulationFieldHandler {
         }
 
         // Re-settle the remaining pile so balls collapse forward/down into the freed cells.
-        for (SimulatedGamePiece piece : HELD_FUEL) {
-            piece.release();
-            piece.resetIndexing();
+        for (SimulatedGamePiece remaining : HELD_FUEL) {
+            remaining.release();
+            remaining.resetIndexing();
         }
     }
 
