@@ -41,16 +41,16 @@ public class IntakeConstants {
     static final CANcoderEncoder ANGLE_ENCODER = new CANcoderEncoder(ANGLE_ENCODER_ID, ANGLE_ENCODER_NAME, RobotConstants.CANIVORE_NAME);
 
     private static final double
-            ANGLE_MOTOR_GEAR_RATIO = 45,
-            INTAKE_MOTOR_GEAR_RATIO = 1.55;
+            ANGLE_MOTOR_GEAR_RATIO = 46.96,
+            INTAKE_MOTOR_GEAR_RATIO = 1.5;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
             INTAKE_MOTOR_CURRENT_LIMIT = 40,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 1.1 : 0,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 1.1 : 0;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 10 : 0,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 10 : 0;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -128,13 +128,13 @@ public class IntakeConstants {
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 25 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0028287 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.3359 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.11278 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.16436 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.5246 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
