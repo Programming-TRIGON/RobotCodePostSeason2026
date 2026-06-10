@@ -41,7 +41,8 @@ public class IntakeConstants {
     static final CANcoderEncoder ANGLE_ENCODER = new CANcoderEncoder(ANGLE_ENCODER_ID, ANGLE_ENCODER_NAME, RobotConstants.CANIVORE_NAME);
 
     private static final double
-            ANGLE_MOTOR_GEAR_RATIO = 46.96,
+            ANGLE_MOTOR_TO_ENCODER_GEAR_RATIO = 46.96 / 0.9,
+            ENCODER_GEAR_RATIO = 0.9,
             INTAKE_MOTOR_GEAR_RATIO = 1.5;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
@@ -49,8 +50,8 @@ public class IntakeConstants {
             INTAKE_MOTOR_CURRENT_LIMIT = 40,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 10 : 0,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 10 : 0;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 12 : 0,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 12 : 0;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -68,7 +69,7 @@ public class IntakeConstants {
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
             ANGLE_GEARBOX,
-            ANGLE_MOTOR_GEAR_RATIO,
+            ANGLE_MOTOR_TO_ENCODER_GEAR_RATIO,
             INTAKE_LENGTH_METERS,
             INTAKE_MASS_KILOGRAMS,
             MINIMUM_ANGLE,
@@ -126,7 +127,8 @@ public class IntakeConstants {
 
         config.Feedback.FeedbackRemoteSensorID = ANGLE_ENCODER.getID();
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_GEAR_RATIO;
+        config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_TO_ENCODER_GEAR_RATIO;
+        config.Feedback.SensorToMechanismRatio = ENCODER_GEAR_RATIO;
 
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
