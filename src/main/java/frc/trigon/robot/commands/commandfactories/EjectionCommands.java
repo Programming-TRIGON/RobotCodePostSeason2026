@@ -33,8 +33,7 @@ public class EjectionCommands {
                 getLoadForEjectFromShooterWhenReadyCommand(),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND),
                 HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.EJECT_FROM_SHOOTER_PITCH),
-                getIntakeSequenceWhileShootingCommand()
-        );
+                ShootingCommands.getIntakeSequenceWhileShootingCommand());
     }
 
     private static Command getLoadForEjectFromShooterWhenReadyCommand() {
@@ -49,13 +48,6 @@ public class EjectionCommands {
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_SHOOTER),
                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.EJECT_FROM_SHOOTER)
         );
-    }
-
-    private static RepeatCommand getIntakeSequenceWhileShootingCommand() {
-        return new SequentialCommandGroup(
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
-                FuelIntakeCommands.getCloseIntakeWhileShootingCommand().until(OperatorConstants.INTAKE_WHILE_SHOOTING_TRIGGER)
-        ).repeatedly();
     }
 
     private static BooleanSupplier isReadyToEjectFromShooter() {
