@@ -137,8 +137,8 @@ public class SimulationFieldHandler {
      * loader, indexer, and intake all spinning backwards.
      */
     private static boolean isEjectingThroughIntake() {
-        return RobotContainer.LOADER.getCurrentVoltage() < -LoaderConstants.EJECT_FROM_INTAKE_VOLTAGE
-                && RobotContainer.INDEXER.getCurrentVoltage() < -IndexerConstants.EJECT_FROM_INTAKE_VOLTAGE
+        return RobotContainer.LOADER.getCurrentVoltage() < -LoaderConstants.EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD
+                && RobotContainer.INDEXER.getCurrentVoltage() < -IndexerConstants.EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD
                 && RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN);
     }
 
