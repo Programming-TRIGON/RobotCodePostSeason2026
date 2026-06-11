@@ -1,6 +1,7 @@
 package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
@@ -69,6 +70,7 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 getLoadForFixedDeliveryWhenReadyCommand(),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedDelivery", isReadyForFixedDelivery())),
+                new RunCommand(() -> Logger.recordOutput("Shooting/Delivery/HittingHub/CurrentDeliveryHittingHub", isCurrentDeliveryHittingHub())),
                 HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
                 getIntakeSequenceWhileShootingCommand()
@@ -98,15 +100,16 @@ public class ShootingCommands {
 
     private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(() -> true),
-                ShootingCommands::isReadyForFixedDelivery
+                getLoadForShootingCommand(() -> true).until(ShootingCommands::isCurrentDeliveryHittingHub),
+                () -> isReadyForFixedDelivery() && !isCurrentDeliveryHittingHub()
         );
     }
 
     private static Command getLoadForShootingWhenReadyCommand(BooleanSupplier isDelivery) {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(isDelivery).until(() -> !SHOOTING_CALCULATIONS.isReadyToShoot()),
-                SHOOTING_CALCULATIONS::isReadyToShoot
+                getLoadForShootingCommand(isDelivery)
+                        .until(() -> !SHOOTING_CALCULATIONS.isReadyToShoot() || isCurrentDeliveryHittingHub()),
+                () -> SHOOTING_CALCULATIONS.isReadyToShoot() && (!isDelivery.getAsBoolean() || !isCurrentDeliveryHittingHub())
         ).repeatedly();
     }
 
@@ -191,7 +194,7 @@ public class ShootingCommands {
         TARGET_FIXED_SHOOTING_AT_HUB_STATE = targetFixedShootingAtHubState;
     }
 
-    public enum FixedShootingPosition {//TODO: Get all values from shooting calculations IRL
+    public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL
         IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(59.965), 6.866),
         RIGHT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
         LEFT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
@@ -205,5 +208,114 @@ public class ShootingCommands {
             this.targetPitch = targetPitch;
             this.targetShootingVelocityMetersPerSecond = targetShootingVelocityMetersPerSecond;
         }
+    }
+
+    private static boolean isCurrentDeliveryHittingHub() {
+        final ShootingCalculations.TargetShootingLocation currentTarget = SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation();
+
+        if (!currentTarget.isDelivery)
+            return false;
+
+        return isDeliveryHittingHub(currentTarget);
+    }
+
+    private static boolean isDeliveryHittingHub(ShootingCalculations.TargetShootingLocation targetLocation) {
+        final Translation2d robotPosition = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation();
+        final Translation2d deliveryPosition = getDeliveryPosition(targetLocation);
+
+        final Translation2d hubPosition = FieldConstants.HUB_POSITION.get();
+        final Translation2d flippedHubPosition = new Translation2d(
+                FieldConstants.FIELD_LENGTH_METERS - hubPosition.getX(),
+                FieldConstants.FIELD_WIDTH_METERS - hubPosition.getY()
+        );
+
+        final boolean isHittingRegularHub = doesDeliveryHitHub(robotPosition, deliveryPosition, hubPosition);
+        final boolean isHittingFlippedHub = doesDeliveryHitHub(robotPosition, deliveryPosition, flippedHubPosition);
+        final boolean isHittingHub = isHittingRegularHub || isHittingFlippedHub;
+
+        Logger.recordOutput("Shooting/Delivery/HittingHub/IsHittingHub", isHittingHub);
+        Logger.recordOutput("Shooting/Delivery/HittingHub/IsHittingRegularHub", isHittingRegularHub);
+        Logger.recordOutput("Shooting/Delivery/HittingHub/IsHittingFlippedHub", isHittingFlippedHub);
+        Logger.recordOutput("Shooting/Delivery/HittingHub/TargetLocation", targetLocation.name());
+
+        Logger.recordOutput("Shooting/Delivery/HittingHub/RobotX", robotPosition.getX());
+        Logger.recordOutput("Shooting/Delivery/HittingHub/RobotY", robotPosition.getY());
+        Logger.recordOutput("Shooting/Delivery/HittingHub/DeliveryX", deliveryPosition.getX());
+        Logger.recordOutput("Shooting/Delivery/HittingHub/DeliveryY", deliveryPosition.getY());
+
+        Logger.recordOutput("Shooting/Delivery/HittingHub/HubX", hubPosition.getX());
+        Logger.recordOutput("Shooting/Delivery/HittingHub/HubY", hubPosition.getY());
+        Logger.recordOutput("Shooting/Delivery/HittingHub/FlippedHubX", flippedHubPosition.getX());
+        Logger.recordOutput("Shooting/Delivery/HittingHub/FlippedHubY", flippedHubPosition.getY());
+
+        return isHittingHub;
+    }
+
+    private static boolean doesDeliveryHitHub(
+            Translation2d robotPosition,
+            Translation2d deliveryPosition,
+            Translation2d hubPosition
+    ) {
+        final double halfSize = 1.19 / 2.0;
+        final double extraHubWidth = 0.25;
+
+        final double minimumX = hubPosition.getX() - halfSize;
+        final double maximumX = hubPosition.getX() + halfSize;
+        final double minimumY = hubPosition.getY() - halfSize - extraHubWidth;
+        final double maximumY = hubPosition.getY() + halfSize + extraHubWidth;
+
+        return doesDeliveryShootingLineIntersectRectangle(
+                robotPosition,
+                deliveryPosition,
+                minimumX,
+                maximumX,
+                minimumY,
+                maximumY
+        );
+    }
+
+    private static Translation2d getDeliveryPosition(ShootingCalculations.TargetShootingLocation targetLocation) {
+        if (targetLocation == ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION)
+            return FieldConstants.RIGHT_DELIVERY_POSITION.get();
+
+        return FieldConstants.LEFT_DELIVERY_POSITION.get();
+    }
+
+    private static boolean doesDeliveryShootingLineIntersectRectangle(
+            Translation2d start,
+            Translation2d end,
+            double minimumX,
+            double maximumX,
+            double minimumY,
+            double maximumY
+    ) {
+        return doesLineIntersectLine(start, end, new Translation2d(minimumX, minimumY), new Translation2d(maximumX, minimumY)) ||
+                doesLineIntersectLine(start, end, new Translation2d(maximumX, minimumY), new Translation2d(maximumX, maximumY)) ||
+                doesLineIntersectLine(start, end, new Translation2d(maximumX, maximumY), new Translation2d(minimumX, maximumY)) ||
+                doesLineIntersectLine(start, end, new Translation2d(minimumX, maximumY), new Translation2d(minimumX, minimumY));
+    }
+
+    private static boolean doesLineIntersectLine(
+            Translation2d firstStart,
+            Translation2d firstEnd,
+            Translation2d secondStart,
+            Translation2d secondEnd
+    ) {
+        final double firstDeltaX = firstEnd.getX() - firstStart.getX();
+        final double firstDeltaY = firstEnd.getY() - firstStart.getY();
+        final double secondDeltaX = secondEnd.getX() - secondStart.getX();
+        final double secondDeltaY = secondEnd.getY() - secondStart.getY();
+
+        final double denominator = (-secondDeltaX * firstDeltaY + firstDeltaX * secondDeltaY);
+
+        if (denominator == 0)
+            return false;
+
+        final double firstIntersection =
+                (-firstDeltaY * (firstStart.getX() - secondStart.getX()) + firstDeltaX * (firstStart.getY() - secondStart.getY())) / denominator;
+        final double secondIntersection =
+                (secondDeltaX * (firstStart.getY() - secondStart.getY()) - secondDeltaY * (firstStart.getX() - secondStart.getX())) / denominator;
+
+        return firstIntersection >= 0 && firstIntersection <= 1 && secondIntersection >= 0 && secondIntersection <= 1;
     }
 }
