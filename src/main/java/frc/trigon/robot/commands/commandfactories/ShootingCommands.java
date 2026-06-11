@@ -256,13 +256,11 @@ public class ShootingCommands {
             Translation2d deliveryPosition,
             Translation2d hubPosition
     ) {
-        final double halfSize = 1.19 / 2.0;
-        final double extraHubWidth = 0.25;
 
-        final double minimumX = hubPosition.getX() - halfSize;
-        final double maximumX = hubPosition.getX() + halfSize;
-        final double minimumY = hubPosition.getY() - halfSize - extraHubWidth;
-        final double maximumY = hubPosition.getY() + halfSize + extraHubWidth;
+        final double minimumX = hubPosition.getX() - FieldConstants.HALF_SIZE;
+        final double maximumX = hubPosition.getX() + FieldConstants.HALF_SIZE;
+        final double minimumY = hubPosition.getY() - FieldConstants.HALF_SIZE - FieldConstants.EXTRA_HUB_WIDTH;
+        final double maximumY = hubPosition.getY() + FieldConstants.HALF_SIZE + FieldConstants.EXTRA_HUB_WIDTH;
 
         return doesDeliveryShootingLineIntersectRectangle(
                 robotPosition,
