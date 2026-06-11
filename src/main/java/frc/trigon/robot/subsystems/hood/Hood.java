@@ -74,7 +74,7 @@ public class Hood extends MotorSubsystem {
         motor.setControl(voltageRequest.withOutput(targetVoltage).withIgnoreSoftwareLimits(false));
     }
 
-    @AutoLogOutput(key = "Shooting/Conditions/HoodAtTargetAngle")
+    @AutoLogOutput(key = "ShootingCalculations/Conditions/HoodAtTargetAngle")
     public boolean atTargetAngle() {
         return atAngle(targetAngle);
     }
@@ -91,12 +91,7 @@ public class Hood extends MotorSubsystem {
         return Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.POSITION));
     }
 
-    void aimAtHub() {
-        final Rotation2d targetAngleFromShootingCalculations = shootingCalculations.getTargetShootingState().targetPitch();
-        setTargetAngle(targetAngleFromShootingCalculations);
-    }
-
-    void aimForDelivery() {
+    void aimForShooting() {
         final Rotation2d targetAngleFromShootingCalculations = shootingCalculations.getTargetShootingState().targetPitch();
         setTargetAngle(targetAngleFromShootingCalculations);
     }

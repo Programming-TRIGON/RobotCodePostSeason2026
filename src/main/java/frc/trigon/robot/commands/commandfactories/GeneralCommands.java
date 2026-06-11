@@ -1,8 +1,12 @@
 package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.*;
+import frc.trigon.lib.commands.NetworkTablesCommand;
+import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.OperatorConstants;
+import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
+import frc.trigon.robot.misc.simulatedfield.SimulationFieldHandler;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
@@ -11,6 +15,7 @@ import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -18,6 +23,8 @@ import java.util.function.BooleanSupplier;
  * These are different from {@link CommandConstants} because they create new commands that use some form of logic instead of only constructing an existing command with parameters.
  */
 public class GeneralCommands {
+    public static double SWERVE_SPEED_MULTIPLIER = CommandConstants.DEFAULT_SWERVE_SPEED_MULTIPLIER;
+
     public static Command getDebuggingCommand() {
         return new ParallelCommandGroup(
                 HoodCommands.getDebuggingCommand(),
@@ -25,6 +32,15 @@ public class GeneralCommands {
                 IntakeCommands.getDebuggingCommand(),
                 LoaderCommands.getDebuggingCommand(),
                 ShooterCommands.getDebuggingCommand()
+        );
+    }
+
+    public static Command getTeleportRobotForSimulationShootingMapCalibrationCommand(ShootingCalculations.TargetShootingLocation targetShootingLocation) {
+        return new NetworkTablesCommand(
+                (distanceMeters) -> SimulationFieldHandler.teleportRobotForSimulationShootingMapCalibration(targetShootingLocation, distanceMeters),
+                false,
+                Set.of(RobotContainer.SWERVE),
+                "TeleportRobotForSimulationCalibration/DistanceMeters"
         );
     }
 

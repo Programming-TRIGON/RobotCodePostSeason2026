@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.Logger;
 public class ShootingCalculations {
     private static ShootingCalculations INSTANCE = null;
     private ShootingState targetShootingState = ShootingState.empty();
-    private TargetLocation currentTargetLocation = TargetLocation.HUB;
+    private TargetShootingLocation currentTargetShootingLocation = TargetShootingLocation.HUB;
 
     public static ShootingCalculations getInstance() {
         if (INSTANCE == null) INSTANCE = new ShootingCalculations();
@@ -24,22 +24,22 @@ public class ShootingCalculations {
     private ShootingCalculations() {
     }
 
-    public void setTargetShootingLocation(TargetLocation newTarget) {
-        this.currentTargetLocation = newTarget;
+    public void setTargetShootingLocation(TargetShootingLocation newTarget) {
+        this.currentTargetShootingLocation = newTarget;
     }
 
-    public TargetLocation getCurrentTargetShootingLocation() {
-        return currentTargetLocation;
+    public TargetShootingLocation getCurrentTargetShootingLocation() {
+        return currentTargetShootingLocation;
     }
 
     public void updateCalculations() {
         targetShootingState = calculateTargetShootingState();
 
-        Logger.recordOutput("Shooting/TargetShootingYawDegrees", targetShootingState.targetFieldRelativeYaw().getDegrees());
-        Logger.recordOutput("Shooting/TargetShootingPitchDegrees", targetShootingState.targetPitch().getDegrees());
-        Logger.recordOutput("Shooting/TargetShootingVelocityMPS", targetShootingState.targetShootingVelocityMetersPerSecond());
-        Logger.recordOutput("Shooting/TargetMode", currentTargetLocation.name());
-        Logger.recordOutput("Shooting/IsReadyToShoot", isReadyToShoot());
+        Logger.recordOutput("ShootingCalculations/TargetShootingYawDegrees", targetShootingState.targetFieldRelativeYaw().getDegrees());
+        Logger.recordOutput("ShootingCalculations/TargetShootingPitchDegrees", targetShootingState.targetPitch().getDegrees());
+        Logger.recordOutput("ShootingCalculations/TargetShootingVelocityMPS", targetShootingState.targetShootingVelocityMetersPerSecond());
+        Logger.recordOutput("ShootingCalculations/TargetMode", currentTargetShootingLocation.name());
+        Logger.recordOutput("ShootingCalculations/Conditions/SwerveAtTargetAngle", RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false)));
     }
 
     public ShootingState getTargetShootingState() {
@@ -49,7 +49,7 @@ public class ShootingCalculations {
     /**
      * @return True if the chassis, hood pitch, and shooter wheels are all at their PID setpoints.
      */
-    @AutoLogOutput(key = "Shooting/isReadyToShoot")
+    @AutoLogOutput(key = "ShootingCalculations/isReadyToShoot")
     public boolean isReadyToShoot() {
         final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
@@ -58,7 +58,7 @@ public class ShootingCalculations {
         return isYawReady && isPitchReady && isVelocityReady;
     }
 
-    @AutoLogOutput(key = "Shooting/CurrentFuelExitPosition")
+    @AutoLogOutput(key = "ShootingCalculations/CurrentFuelExitPosition")
     public Translation3d calculateCurrentFuelExitPose(int columnIndex) {
         final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
         final Rotation2d shooterPitch = RobotContainer.HOOD.getCurrentAngle();
@@ -91,28 +91,32 @@ public class ShootingCalculations {
     }
 
     public ShootingState calculateTargetShootingState(Pose2d robotPose, ChassisSpeeds fieldRelativeChassisSpeeds) {
-        final Translation2d targetPhysicalPosition = currentTargetLocation.position.get();
+        final Translation2d targetPhysicalPosition = currentTargetShootingLocation.position.get();
         final Translation2d robotVelocity = new Translation2d(fieldRelativeChassisSpeeds.vxMetersPerSecond, fieldRelativeChassisSpeeds.vyMetersPerSecond);
 
-        // Uses exact shooter exit for both ToF interpolation AND Swerve aim Angle
+        // Uses exact shooter exit for both distance interpolation and swerve aim angle.
         final Pose3d baseExitPose = new Pose3d(robotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
         final Translation2d shooterExitFieldPosition = baseExitPose.getTranslation().toTranslation2d();
 
+        // Iteratively converge on a self-consistent (virtualTarget, parameters) pair.
+        // Shifting to the virtual target changes the shot distance, which changes the
+        // interpolated velocity/pitch/ToF, which changes the virtual target again.
+        // Each iteration tightens that coupling; VIRTUAL_TARGET_ITERATIONS = 5 is enough
+        // to converge within sub-millimeter error for any realistic robot speed.
         Translation2d virtualTarget = targetPhysicalPosition;
-        double distanceToVirtualTarget = shooterExitFieldPosition.getDistance(virtualTarget);
+        ShotParameters parameters = ShootingMap.getInterpolatedParameters(
+                shooterExitFieldPosition.getDistance(virtualTarget), currentTargetShootingLocation.isDelivery);
 
-        ShotParameters parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
-
-        for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_HUB_CALCULATION_ITERATIONS; i++) {
+        for (int i = 0; i < ShootingCalculationsConstants.VIRTUAL_TARGET_ITERATIONS; i++) {
             virtualTarget = targetPhysicalPosition.minus(robotVelocity.times(parameters.timeOfFlight()));
-            distanceToVirtualTarget = shooterExitFieldPosition.getDistance(virtualTarget);
-            parameters = ShootingMap.getInterpolatedParameters(distanceToVirtualTarget, currentTargetLocation.isDelivery);
+            parameters = ShootingMap.getInterpolatedParameters(
+                    shooterExitFieldPosition.getDistance(virtualTarget), currentTargetShootingLocation.isDelivery);
         }
 
-        final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle();
+        final Rotation2d targetYaw = virtualTarget.minus(shooterExitFieldPosition).getAngle().rotateBy(Rotation2d.k180deg);
 
-        Logger.recordOutput("Shooting/DistanceToVirtualTarget", distanceToVirtualTarget);
-        Logger.recordOutput("Shooting/InterpolatedTimeOfFlight", parameters.timeOfFlight());
+        Logger.recordOutput("ShootingCalculations/DistanceToVirtualTarget", shooterExitFieldPosition.getDistance(virtualTarget));
+        Logger.recordOutput("ShootingCalculations/InterpolatedTimeOfFlight", parameters.timeOfFlight());
 
         return new ShootingState(
                 targetYaw,
@@ -121,7 +125,7 @@ public class ShootingCalculations {
         );
     }
 
-    public enum TargetLocation {
+    public enum TargetShootingLocation {
         HUB(FieldConstants.HUB_POSITION, false),
         RIGHT_DELIVERY_LOCATION(FieldConstants.RIGHT_DELIVERY_POSITION, true),
         LEFT_DELIVERY_LOCATION(FieldConstants.LEFT_DELIVERY_POSITION, true);
@@ -129,7 +133,7 @@ public class ShootingCalculations {
         public final FlippableTranslation2d position;
         public final boolean isDelivery;
 
-        TargetLocation(FlippableTranslation2d position, boolean isDelivery) {
+        TargetShootingLocation(FlippableTranslation2d position, boolean isDelivery) {
             this.position = position;
             this.isDelivery = isDelivery;
         }

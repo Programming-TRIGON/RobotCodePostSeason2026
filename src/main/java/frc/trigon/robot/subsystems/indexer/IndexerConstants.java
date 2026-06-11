@@ -40,6 +40,7 @@ public class IndexerConstants {
             new Translation3d(-0.04721098, 0, 0.156750004),
             new Rotation3d()
     );
+    public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 4.5;
 
     static {
         final TalonFXSConfiguration config = new TalonFXSConfiguration();
@@ -60,8 +61,10 @@ public class IndexerConstants {
     }
 
     public enum IndexerState {
-        LOAD_FOR_SHOOTING(7),
-        LOAD_FOR_DELIVERY(10),
+        LOAD_FOR_SHOOTING(5),
+        LOAD_FOR_DELIVERY(7),
+        PRELOAD(3),
+        AGITATE(1),
         REST(0);
 
         public final double targetVoltage;

@@ -1,10 +1,7 @@
 package frc.trigon.robot.misc.shootingcalculations.shootingvisualization;
 
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,12 +14,15 @@ import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePiece;
 import frc.trigon.robot.misc.simulatedfield.SimulatedGamePieceConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 import java.util.Random;
 
 public class VisualizeFuelShootingCommand extends Command {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static final Random RANDOM = new Random();
+    private static final LoggedNetworkBoolean SHOULD_PRINT_SHOT_DETAILS = new LoggedNetworkBoolean(
+            "ShouldPrintShotDetails", false);
 
     private final SimulatedGamePiece shotFuel;
     private Translation3d currentFuelVelocity;
@@ -30,8 +30,9 @@ public class VisualizeFuelShootingCommand extends Command {
     private final int startingColumn;
     private double simulatedFlightTimeSeconds = 0;
     private boolean hasLoggedScore = false;
-    private ShootingCalculations.TargetLocation lockedTarget;
+    private ShootingCalculations.TargetShootingLocation lockedTarget;
     private double trueDistanceAtLaunchMeters;
+    private Translation2d launchShooterExitPosition;
 
     public static InstantCommand getScheduleShotCommand(SimulatedGamePiece shotFuel, int startingColumn) {
         return new InstantCommand(() -> CommandScheduler.getInstance().schedule(new VisualizeFuelShootingCommand(shotFuel, startingColumn)));
@@ -45,12 +46,15 @@ public class VisualizeFuelShootingCommand extends Command {
     @Override
     public void initialize() {
         lockedTarget = SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation();
+        final Pose2d launchRobotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
 
-        final Pose3d baseExitPose = new Pose3d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
-        trueDistanceAtLaunchMeters = baseExitPose.getTranslation().toTranslation2d().getDistance(lockedTarget.position.get());
+        final Pose3d baseExitPose = new Pose3d(launchRobotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+        launchShooterExitPosition = baseExitPose.getTranslation().toTranslation2d();
+        trueDistanceAtLaunchMeters = launchShooterExitPosition.getDistance(lockedTarget.position.get());
 
-        shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateCurrentFuelExitPose(startingColumn));
-        currentFuelVelocity = calculateFuelExitVelocityVector();
+        final Rotation2d shooterPitch = RobotContainer.HOOD.getCurrentAngle();
+        shotFuel.updatePosition(SHOOTING_CALCULATIONS.calculateFieldRelativeFuelExitPose(launchRobotPose, shooterPitch, startingColumn));
+        currentFuelVelocity = calculateFuelExitVelocityVector(launchRobotPose);
         simulatedFlightTimeSeconds = 0;
         hasLoggedScore = false;
 
@@ -84,23 +88,42 @@ public class VisualizeFuelShootingCommand extends Command {
 
     private void executeForShooting() {
         if (shotFuel.isScoredInHub() && !hasLoggedScore) {
-            System.out.println("[Sim Calibration] Hub Shot scored! ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s" +
-                    " True Distance: " + String.format("%.2f", trueDistanceAtLaunchMeters) + "m");
+            if (SHOULD_PRINT_SHOT_DETAILS.get())
+                System.out.println("[Sim Calibration] Hub Shot scored! ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s" +
+                        " True Distance: " + String.format("%.2f", trueDistanceAtLaunchMeters) + "m");
             hasLoggedScore = true;
             ejectFromHub();
         }
     }
 
-    private void executeForDelivery(ShootingCalculations.TargetLocation activeTarget) {
+    private void executeForDelivery(ShootingCalculations.TargetShootingLocation activeTarget) {
         if (shotFuel.getPosition().getZ() <= FuelShootingVisualizationConstants.END_SIMULATION_HEIGHT_METERS && !hasLoggedScore) {
-            double distanceMissedBy = shotFuel.getPosition().toTranslation2d().getDistance(activeTarget.position.get());
+            final Translation2d landingPosition = shotFuel.getPosition().toTranslation2d();
+            final Translation2d targetPosition = activeTarget.position.get();
+            final Translation2d errorVector = landingPosition.minus(targetPosition);
 
-            System.out.println("--- DELIVERY SIMULATION RESULT ---");
-            System.out.println("Target: " + activeTarget.name());
-            System.out.println("Missed coordinate by: " + String.format("%.2f", distanceMissedBy) + " meters");
-            System.out.println("Simulated ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s");
-            System.out.println("True Distance Fired From: " + String.format("%.2f", trueDistanceAtLaunchMeters) + "m");
-            System.out.println("----------------------------------");
+            // Decompose the 2D error into range (along shot axis) and lateral (perpendicular).
+            // Range: positive = overshot (landed past target), negative = undershot.
+            // Lateral: positive = landed left of target, negative = right (shooter's perspective).
+            final Translation2d shotDirection;
+            if (trueDistanceAtLaunchMeters == 0)
+                shotDirection = targetPosition.minus(launchShooterExitPosition);
+            else
+                shotDirection = targetPosition.minus(launchShooterExitPosition).div(trueDistanceAtLaunchMeters);
+            
+            final double rangeError = errorVector.getX() * shotDirection.getX() + errorVector.getY() * shotDirection.getY();
+            final double lateralError = -errorVector.getX() * shotDirection.getY() + errorVector.getY() * shotDirection.getX();
+
+            if (SHOULD_PRINT_SHOT_DETAILS.get()) {
+                System.out.println("--- DELIVERY SIMULATION RESULT ---");
+                System.out.println("Target: " + activeTarget.name());
+                System.out.println("Range error:   " + String.format("%+.2f", rangeError) + "m  (+ overshot / - undershot)");
+                System.out.println("Lateral error: " + String.format("%+.2f", lateralError) + "m  (+ left / - right)");
+                System.out.println("Total miss:    " + String.format("%.2f", errorVector.getNorm()) + "m");
+                System.out.println("Simulated ToF: " + String.format("%.3f", simulatedFlightTimeSeconds) + "s");
+                System.out.println("True Distance Fired From: " + String.format("%.2f", trueDistanceAtLaunchMeters) + "m");
+                System.out.println("----------------------------------");
+            }
 
             hasLoggedScore = true;
         }
@@ -115,18 +138,24 @@ public class VisualizeFuelShootingCommand extends Command {
         currentSpinRadiansPerSecond = (spinConstant * fuelExitVelocityMetersPerSecond) / (FuelShootingVisualizationConstants.GAME_PIECE_RADIUS_METERS);
     }
 
-    private Translation3d calculateFuelExitVelocityVector() {
-        final Translation3d shootingVelocityVector = calculateShootingVelocityVector();
+    private Translation3d calculateFuelExitVelocityVector(Pose2d launchRobotPose) {
+        final Translation3d shootingVelocityVector = calculateShootingVelocityVector(launchRobotPose);
         final Translation3d robotVelocityVector = new Translation3d(RobotContainer.SWERVE.getFieldRelativeVelocity());
         return shootingVelocityVector.plus(robotVelocityVector);
     }
 
-    private Translation3d calculateShootingVelocityVector() {
+    private Translation3d calculateShootingVelocityVector(Pose2d launchRobotPose) {
         final double fuelExitSpeedMetersPerSecond = RobotContainer.SHOOTER.getCurrentVelocityMetersPerSecond();
         final Rotation2d dumperPitch = RobotContainer.HOOD.getCurrentAngle();
-        final Rotation2d chassisFieldRelativeAngle = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation();
 
-        return new Translation3d(fuelExitSpeedMetersPerSecond, new Rotation3d(0, -dumperPitch.getRadians(), chassisFieldRelativeAngle.getRadians()));
+        // Derive the shooter's field-relative facing directly from FUEL_EXIT_SHOOTER_POSE using
+        // the snapshotted pose so the velocity direction is consistent with the exit-position
+        // transform. FUEL_EXIT_SHOOTER_POSE already encodes the 180° backward-facing mounting,
+        // so the old manual .rotateBy(k180deg) was double-counting the flip.
+        final Pose3d exitPose = new Pose3d(launchRobotPose).transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE);
+        final Rotation2d shooterExitFieldRelativeAngle = exitPose.getRotation().toRotation2d();
+
+        return new Translation3d(fuelExitSpeedMetersPerSecond, new Rotation3d(0, -dumperPitch.getRadians(), shooterExitFieldRelativeAngle.getRadians()));
     }
 
     private void stepSimulation() {
