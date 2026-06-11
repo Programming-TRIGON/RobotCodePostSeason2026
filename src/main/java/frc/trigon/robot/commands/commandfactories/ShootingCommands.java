@@ -70,7 +70,6 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 getLoadForFixedDeliveryWhenReadyCommand(),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedDelivery", isReadyForFixedDelivery())),
-                new RunCommand(() -> Logger.recordOutput("Shooting/Delivery/HittingHub/CurrentDeliveryHittingHub", isDeliveryHittingHub())),
                 HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
                 getIntakeSequenceWhileShootingCommand()
@@ -107,8 +106,8 @@ public class ShootingCommands {
 
     private static Command getLoadForShootingWhenReadyCommand(BooleanSupplier isDelivery) {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(isDelivery).until(() -> !isReadyForShootingOrDelivery(isDelivery)),
-                () -> isReadyForShootingOrDelivery(isDelivery)
+                getLoadForShootingCommand(isDelivery).until(() -> !isReadyForShooting(isDelivery)),
+                () -> isReadyForShooting(isDelivery)
         ).repeatedly();
     }
 
@@ -209,7 +208,7 @@ public class ShootingCommands {
         }
     }
 
-    private static boolean isReadyForShootingOrDelivery(BooleanSupplier isDelivery) {
+    private static boolean isReadyForShooting(BooleanSupplier isDelivery) {
         return SHOOTING_CALCULATIONS.isReadyToShoot() &&
                 (!isDelivery.getAsBoolean() || !isDeliveryHittingHub());
     }
@@ -228,11 +227,11 @@ public class ShootingCommands {
         final Translation2d deliveryPosition = getDeliveryPosition(targetLocation);
 
         final Translation2d hubPosition = FieldConstants.HUB_POSITION.get();
-        final Translation2d flippedHubPosition = getFlippedHubPosition();
+        final Translation2d oppositesHubPosition = getFlippedHubPosition();
 
         final boolean isHittingRegularHub = doesDeliveryHitHub(robotPosition, deliveryPosition, hubPosition);
-        final boolean isHittingFlippedHub = doesDeliveryHitHub(robotPosition, deliveryPosition, flippedHubPosition);
-        final boolean isHittingHub = isHittingRegularHub || isHittingFlippedHub;
+        final boolean isHittingOppositeHub = doesDeliveryHitHub(robotPosition, deliveryPosition, oppositesHubPosition);
+        final boolean isHittingHub = isHittingRegularHub || isHittingOppositeHub;
 
         Logger.recordOutput("Shooting/Delivery/HittingHub/IsHittingHub", isHittingHub);
         Logger.recordOutput("Shooting/Delivery/HittingHub/TargetLocation", targetLocation.name());
@@ -250,7 +249,6 @@ public class ShootingCommands {
     }
 
     private static boolean doesDeliveryHitHub(Translation2d robotPosition, Translation2d deliveryPosition, Translation2d hubPosition) {
-
         final double minimumX = hubPosition.getX() - FieldConstants.HALF_SIZE_OF_HUB;
         final double maximumX = hubPosition.getX() + FieldConstants.HALF_SIZE_OF_HUB;
         final double minimumY = hubPosition.getY() - FieldConstants.HALF_SIZE_OF_HUB - FieldConstants.EXTRA_HUB_WIDTH;
@@ -281,10 +279,15 @@ public class ShootingCommands {
             double hubRectangleMinimumY,
             double hubRectangleMaximumY
     ) {
-        return doLinesIntersect(deliveryPathStart, deliveryPathEnd, new Translation2d(hubRectangleMinimumX, hubRectangleMinimumY), new Translation2d(hubRectangleMaximumX, hubRectangleMaximumY)) ||
-                doLinesIntersect(deliveryPathStart, deliveryPathEnd, new Translation2d(hubRectangleMinimumX, hubRectangleMinimumY), new Translation2d(hubRectangleMaximumX, hubRectangleMaximumY)) ||
-                doLinesIntersect(deliveryPathStart, deliveryPathEnd, new Translation2d(hubRectangleMinimumX, hubRectangleMinimumY), new Translation2d(hubRectangleMaximumX, hubRectangleMaximumY)) ||
-                doLinesIntersect(deliveryPathStart, deliveryPathEnd, new Translation2d(hubRectangleMinimumX, hubRectangleMinimumY), new Translation2d(hubRectangleMaximumX, hubRectangleMaximumY));
+        final Translation2d bottomLeftHubCorner = new Translation2d(hubRectangleMinimumX, hubRectangleMinimumY);
+        final Translation2d bottomRightHubCorner = new Translation2d(hubRectangleMaximumX, hubRectangleMinimumY);
+        final Translation2d topLeftHubCorner = new Translation2d(hubRectangleMinimumX, hubRectangleMaximumY);
+        final Translation2d topRightHubCorner = new Translation2d(hubRectangleMaximumX, hubRectangleMaximumY);
+
+        return doLinesIntersect(deliveryPathStart, deliveryPathEnd, bottomLeftHubCorner, bottomRightHubCorner) ||
+                doLinesIntersect(deliveryPathStart, deliveryPathEnd, bottomRightHubCorner, topRightHubCorner) ||
+                doLinesIntersect(deliveryPathStart, deliveryPathEnd, topRightHubCorner, topLeftHubCorner) ||
+                doLinesIntersect(deliveryPathStart, deliveryPathEnd, topLeftHubCorner, bottomLeftHubCorner);
     }
 
     private static boolean doLinesIntersect(
