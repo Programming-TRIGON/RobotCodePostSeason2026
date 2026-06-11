@@ -14,6 +14,8 @@ import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 
+import java.util.function.BooleanSupplier;
+
 public class EjectionCommands {
     public static Command getEjectFromIntakeCommand() {
         return new ParallelCommandGroup(
@@ -34,8 +36,7 @@ public class EjectionCommands {
     private static Command getLoadForEjectFromShooterWhenReadyCommand() {
         return GeneralCommands.runWhen(
                 getLoadForEjectFromShooterCommand(),
-                () -> RobotContainer.SHOOTER.atVelocity(ShooterConstants.EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND)
-                        && RobotContainer.HOOD.atAngle(HoodConstants.EJECT_FROM_SHOOTER_PITCH)
+                isReadyToEjectFromShooter()
         );
     }
 
@@ -44,5 +45,10 @@ public class EjectionCommands {
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_SHOOTER),
                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.EJECT_FROM_SHOOTER)
         );
+    }
+
+    private static BooleanSupplier isReadyToEjectFromShooter() {
+        return () -> RobotContainer.SHOOTER.atVelocity(ShooterConstants.EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND)
+                && RobotContainer.HOOD.atAngle(HoodConstants.EJECT_FROM_SHOOTER_PITCH);
     }
 }
