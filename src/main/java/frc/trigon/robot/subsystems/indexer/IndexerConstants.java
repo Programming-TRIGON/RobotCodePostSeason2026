@@ -41,6 +41,7 @@ public class IndexerConstants {
             new Rotation3d()
     );
     public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 4.5;
+    public static final double EJECT_FROM_INTAKE_VOLTAGE = 5;
 
     static {
         final TalonFXSConfiguration config = new TalonFXSConfiguration();
@@ -65,8 +66,8 @@ public class IndexerConstants {
         LOAD_FOR_DELIVERY(7),
         PRELOAD(3),
         AGITATE(1),
-        EJECT_FROM_INTAKE(-12),
-        EJECT_FROM_SHOOTER(12),
+        EJECT_FROM_INTAKE(-5),
+        EJECT_FROM_SHOOTER(5),
         REST(0);
 
         public final double targetVoltage;

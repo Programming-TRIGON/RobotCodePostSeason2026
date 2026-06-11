@@ -43,6 +43,7 @@ public class LoaderConstants {
     );
 
     public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 3.5;
+    public static final double EJECT_FROM_INTAKE_VOLTAGE = 5;
 
     static {
         configureLoaderMasterMotor();
@@ -98,7 +99,7 @@ public class LoaderConstants {
         LOAD_FOR_DELIVERY(6),
         LOAD_FOR_SHOOTING(4),
         PRELOAD(2),
-        EJECT_FROM_INTAKE(-12),
+        EJECT_FROM_INTAKE(-5),
         EJECT_FROM_SHOOTER(5),
         REST(0);
 
