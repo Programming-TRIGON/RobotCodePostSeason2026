@@ -95,6 +95,8 @@ public class RobotContainer {
         OperatorConstants.FIXED_SHOOTING_AT_HUB_TRIGGER.whileTrue(ShootingCommands.getFixedShootingAtHubCommand());
         OperatorConstants.FIXED_DELIVERY_TRIGGER.whileTrue(ShootingCommands.getFixedDeliveryShootingCommand());
         OperatorConstants.WARM_UP_TRIGGER.whileTrue(ShootingCommands.getWarmUpCommand());
+        OperatorConstants.EJECT_FROM_INTAKE_TRIGGER.whileTrue(ShootingCommands.getEjectFromIntakeCommand());
+        OperatorConstants.EJECT_FROM_SHOOTER_TRIGGER.whileTrue(ShootingCommands.getEjectFromShooterCommand());
 
         OperatorConstants.INTAKE_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).unless(OperatorConstants.SHOOTING_TRIGGER));
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());

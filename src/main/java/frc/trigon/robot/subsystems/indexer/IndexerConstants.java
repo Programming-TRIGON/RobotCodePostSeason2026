@@ -65,6 +65,8 @@ public class IndexerConstants {
         LOAD_FOR_DELIVERY(7),
         PRELOAD(3),
         AGITATE(1),
+        EJECT_FROM_INTAKE(-12),
+        EJECT_FROM_SHOOTER(12),
         REST(0);
 
         public final double targetVoltage;

@@ -75,6 +75,36 @@ public class ShootingCommands {
         );
     }
 
+    public static Command getEjectFromIntakeCommand() {
+        return new ParallelCommandGroup(
+                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_INTAKE),
+                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.EJECT_FROM_INTAKE),
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.EJECT)
+        );
+    }
+
+    public static Command getEjectFromShooterCommand() {
+        return new ParallelCommandGroup(
+                getLoadForEjectFromShooterWhenReadyCommand(),
+                ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.EJECT_SHOOTING_VELOCITY_METERS_PER_SECOND),
+                HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.EJECT_SHOOTING_HOOD_PITCH)
+        );
+    }
+
+    private static Command getLoadForEjectFromShooterWhenReadyCommand() {
+        return GeneralCommands.runWhen(
+                getLoadForEjectFromShooterCommand(),
+                () -> RobotContainer.SHOOTER.atVelocity(ShooterConstants.EJECT_SHOOTING_VELOCITY_METERS_PER_SECOND)
+        );
+    }
+
+    private static ParallelCommandGroup getLoadForEjectFromShooterCommand() {
+        return new ParallelCommandGroup(
+                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_SHOOTER),
+                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.EJECT_FROM_SHOOTER)
+        );
+    }
+
     private static RepeatCommand getIntakeSequenceWhileShootingCommand() {
         return new SequentialCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),

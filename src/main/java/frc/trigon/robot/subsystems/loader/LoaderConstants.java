@@ -98,6 +98,8 @@ public class LoaderConstants {
         LOAD_FOR_DELIVERY(6),
         LOAD_FOR_SHOOTING(4),
         PRELOAD(2),
+        EJECT_FROM_INTAKE(-12),
+        EJECT_FROM_SHOOTER(5),
         REST(0);
 
         public final double targetVoltage;
