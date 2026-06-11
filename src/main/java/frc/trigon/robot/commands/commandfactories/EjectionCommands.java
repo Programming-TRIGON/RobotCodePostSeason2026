@@ -35,6 +35,7 @@ public class EjectionCommands {
         return GeneralCommands.runWhen(
                 getLoadForEjectFromShooterCommand(),
                 () -> RobotContainer.SHOOTER.atVelocity(ShooterConstants.EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND)
+                        && RobotContainer.HOOD.atAngle(HoodConstants.EJECT_FROM_SHOOTER_PITCH)
         );
     }
 

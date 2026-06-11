@@ -95,7 +95,7 @@ public class RobotContainer {
         OperatorConstants.SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_BACK_LEFT_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BACK_LEFT));
         OperatorConstants.FIXED_SHOOTING_AT_HUB_TRIGGER.whileTrue(ShootingCommands.getFixedShootingAtHubCommand());
         OperatorConstants.FIXED_DELIVERY_TRIGGER.whileTrue(ShootingCommands.getFixedDeliveryShootingCommand());
-        OperatorConstants.WARM_UP_TRIGGER.whileTrue(ShootingCommands.getWarmForShootingCommand());
+        OperatorConstants.PREPARE_FOR_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForShootingCommand());
         OperatorConstants.EJECT_FROM_INTAKE_TRIGGER.whileTrue(EjectionCommands.getEjectFromIntakeCommand());
         OperatorConstants.EJECT_FROM_SHOOTER_TRIGGER.whileTrue(EjectionCommands.getEjectFromShooterCommand());
 

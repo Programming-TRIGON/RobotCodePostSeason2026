@@ -82,7 +82,7 @@ public class ShootingCommands {
         });
     }
 
-    public static Command getWarmForShootingCommand() {
+    public static Command getPrepareForShootingCommand() {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
