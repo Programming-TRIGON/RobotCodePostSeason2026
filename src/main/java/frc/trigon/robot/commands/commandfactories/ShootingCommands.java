@@ -84,9 +84,11 @@ public class ShootingCommands {
 
     public static Command getWarmForShootingCommand() {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
+                new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
                         getAimForShootingCommand()
-                );
+                )
+        );
     }
 
     private static RepeatCommand getIntakeSequenceWhileShootingCommand() {
