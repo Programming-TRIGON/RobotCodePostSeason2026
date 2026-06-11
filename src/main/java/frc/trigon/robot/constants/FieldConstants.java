@@ -40,7 +40,7 @@ public class FieldConstants {
             BLUE_RELATIVE_DELIVERY_POSITION_X = 3.0,
             DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS = 2.2;
     public static final double
-            HALF_SIZE_OF_HUB = 1.19 / 2.0,
+            HALF_SIZE_OF_HUB_CENTER_X = 1.19 / 2.0,
             EXTRA_HUB_WIDTH = 0.25;
     public static final FlippableTranslation2d
             HUB_POSITION = new FlippableTranslation2d(TAG_ID_TO_POSE.get(26).getX() + (Units.inchesToMeters(47) / 2), FIELD_WIDTH_METERS / 2, true),

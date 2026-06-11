@@ -209,8 +209,7 @@ public class ShootingCommands {
     }
 
     private static boolean isReadyForShooting(BooleanSupplier isDelivery) {
-        return SHOOTING_CALCULATIONS.isReadyToShoot() &&
-                (!isDelivery.getAsBoolean() || !isDeliveryHittingHub());
+        return SHOOTING_CALCULATIONS.isReadyToShoot() && (!isDelivery.getAsBoolean() || !isDeliveryHittingHub());
     }
 
     private static boolean isDeliveryHittingHub() {
@@ -249,10 +248,10 @@ public class ShootingCommands {
     }
 
     private static boolean doesDeliveryHitHub(Translation2d robotPosition, Translation2d deliveryPosition, Translation2d hubPosition) {
-        final double minimumX = hubPosition.getX() - FieldConstants.HALF_SIZE_OF_HUB;
-        final double maximumX = hubPosition.getX() + FieldConstants.HALF_SIZE_OF_HUB;
-        final double minimumY = hubPosition.getY() - FieldConstants.HALF_SIZE_OF_HUB - FieldConstants.EXTRA_HUB_WIDTH;
-        final double maximumY = hubPosition.getY() + FieldConstants.HALF_SIZE_OF_HUB + FieldConstants.EXTRA_HUB_WIDTH;
+        final double minimumX = hubPosition.getX() - FieldConstants.HALF_SIZE_OF_HUB_CENTER_X;
+        final double maximumX = hubPosition.getX() + FieldConstants.HALF_SIZE_OF_HUB_CENTER_X;
+        final double minimumY = hubPosition.getY() - FieldConstants.HALF_SIZE_OF_HUB_CENTER_X - FieldConstants.EXTRA_HUB_WIDTH;
+        final double maximumY = hubPosition.getY() + FieldConstants.HALF_SIZE_OF_HUB_CENTER_X + FieldConstants.EXTRA_HUB_WIDTH;
 
         return doesDeliveryShootingLineIntersectHub(
                 robotPosition,
