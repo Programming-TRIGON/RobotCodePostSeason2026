@@ -7,9 +7,19 @@ import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveConstants;
 
+/**
+ * A restriction that changes the robot's center of rotation.
+ * Rotates the robot around the offset point instead of the chassis center.
+ * Useful for rotating around an extended mechanism such as an intake.
+ */
 public class CustomCenterOfRotationDrive implements DriveRestriction {
     private final Translation2d centerOfRotationOffsetMeters;
 
+    /**
+     * A restriction that changes the robot's center of rotation.
+     *
+     * @param centerOfRotationOffsetMeters the desired robot's center of rotation, in robot-relative coordinates. Positive X is forward, positive Y is left.
+     */
     public CustomCenterOfRotationDrive(Translation2d centerOfRotationOffsetMeters) {
         this.centerOfRotationOffsetMeters = centerOfRotationOffsetMeters;
     }
