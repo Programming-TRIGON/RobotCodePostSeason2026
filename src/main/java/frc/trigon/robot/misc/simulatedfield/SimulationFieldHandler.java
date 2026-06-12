@@ -123,13 +123,34 @@ public class SimulationFieldHandler {
         if (!hasFuel() || !isEjectingThroughIntake())
             return;
 
-        final Translation3d ejectPosition = robotRelativeToFieldRelative(SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION);
         final ArrayList<SimulatedGamePiece> toEject = new ArrayList<>(HELD_FUEL);
-        for (SimulatedGamePiece piece : toEject) {
+        for (int i = 0; i < toEject.size(); i++) {
+            final SimulatedGamePiece piece = toEject.get(i);
             piece.release();
-            piece.updatePosition(ejectPosition);
+            piece.updatePosition(calculateIntakeEjectPosition(i));
             HELD_FUEL.remove(piece);
         }
+    }
+
+    /**
+     * Lays ejected fuel out in front of the intake in a row 4 balls wide, filling left-to-right and
+     * advancing forward (away from the robot) once each row of 4 is full. The block is centered on
+     * the intake's Y axis so it sits squarely ahead of the collection point.
+     */
+    private static Translation3d calculateIntakeEjectPosition(int index) {
+        final int width = SimulatedGamePieceConstants.INTAKE_EJECT_ROW_WIDTH;
+        final double spacing = SimulatedGamePieceConstants.FUEL_DIAMETER_METERS;
+
+        final int column = index % width;
+        final int row = index / width;
+        final double widthCenter = (width - 1) / 2.0;
+
+        final Translation3d robotRelativePosition = SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION.plus(new Translation3d(
+                row * spacing,
+                (column - widthCenter) * spacing,
+                0
+        ));
+        return robotRelativeToFieldRelative(robotRelativePosition);
     }
 
     /**
