@@ -19,6 +19,8 @@ import java.util.Random;
 public class SimulationFieldHandler {
     private static final ArrayList<SimulatedGamePiece> HELD_FUEL = new ArrayList<>(List.of());
     private static double lastEjectionTimestampSeconds = 0;
+    private static double lastIntakeEjectionTimestampSeconds = 0;
+    private static int intakeEjectedCount = 0;
 
     public static boolean hasFuel() {
         return !HELD_FUEL.isEmpty();
@@ -120,16 +122,25 @@ public class SimulationFieldHandler {
      * position so pieces appear at the front of the robot rather than at the shooter exit.
      */
     private static void updateIntakeEjection() {
-        if (!hasFuel() || !isEjectingThroughIntake())
+        if (!hasFuel() || !isEjectingThroughIntake()) {
+            intakeEjectedCount = 0;
+            return;
+        }
+
+        final double now = Timer.getFPGATimestamp();
+        if (now - lastIntakeEjectionTimestampSeconds < SimulatedGamePieceConstants.INTAKE_EJECT_INTERVAL_SECONDS)
             return;
 
-        final ArrayList<SimulatedGamePiece> toEject = new ArrayList<>(HELD_FUEL);
-        for (int i = 0; i < toEject.size(); i++) {
-            final SimulatedGamePiece piece = toEject.get(i);
+        final int width = SimulatedGamePieceConstants.INTAKE_EJECT_ROW_WIDTH;
+        for (int i = 0; i < width && !HELD_FUEL.isEmpty(); i++) {
+            final SimulatedGamePiece piece = HELD_FUEL.get(0);
             piece.release();
-            piece.updatePosition(calculateIntakeEjectPosition(i));
+            piece.updatePosition(calculateIntakeEjectPosition(intakeEjectedCount));
             HELD_FUEL.remove(piece);
+            intakeEjectedCount++;
         }
+
+        lastIntakeEjectionTimestampSeconds = now;
     }
 
     /**

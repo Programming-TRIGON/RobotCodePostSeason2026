@@ -19,6 +19,8 @@ public class SimulatedGamePieceConstants {
 
     // Width of the row of fuel laid out in front of the intake when reverse-ejecting.
     static final int INTAKE_EJECT_ROW_WIDTH = 4;
+    // Seconds between releasing each row of 4 balls, so ejection plays out over time.
+    static final double INTAKE_EJECT_INTERVAL_SECONDS = 0.05;
 
     // Seconds between firing each front ROW (a full row of up to 4 balls launches per cycle).
     // Normal feed (intake open) is faster now; intake closed (POWERED_CLOSE) feeds nearly instantly.
