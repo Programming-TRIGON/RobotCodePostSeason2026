@@ -242,7 +242,7 @@ public class Swerve extends MotorSubsystem {
     }
 
     /**
-     * Drives the swerve with the given powers and with the given center of rotation, relative to the field's frame of reference.
+     * Drives the swerve with the given powers, relative to the field's frame of reference.
      *
      * @param xPower     the x power
      * @param yPower     the y power
@@ -276,7 +276,14 @@ public class Swerve extends MotorSubsystem {
         final ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, thetaPower);
         selfRelativeDrive(speeds);
     }
-
+    /**
+     * Drives the swerve with the given powers, relative to the robot's frame of reference.
+     *
+     * @param xPower     the x power
+     * @param yPower     the y power
+     * @param thetaPower the theta power
+     * @param centerOfRotation the center of rotation
+     */
     void selfRelativeDrive(double xPower, double yPower, double thetaPower, Translation2d centerOfRotation) {
         final ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, thetaPower);
         selfRelativeDrive(speeds, centerOfRotation);

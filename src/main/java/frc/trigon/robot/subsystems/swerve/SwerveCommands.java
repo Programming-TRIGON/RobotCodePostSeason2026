@@ -37,6 +37,7 @@ public class SwerveCommands {
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
+     * @param centerOfRotationSupplier the target center of rotation
      * @return the command
      */
     public static Command getClosedLoopFieldRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
@@ -134,6 +135,7 @@ public class SwerveCommands {
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
+     * @param centerOfRotationSupplier the target center of rotation
      * @return the command
      */
     public static Command getClosedLoopSelfRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
