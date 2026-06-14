@@ -61,7 +61,7 @@ public class IntakeConstants {
             INTAKE_GEARBOX = DCMotor.getKrakenX60Foc(INTAKE_MOTOR_AMOUNT);
     private static final double
             INTAKE_LENGTH_METERS = 0.369,
-            INTAKE_MASS_KILOGRAMS = 3.5;
+            INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
             MINIMUM_ANGLE = Rotation2d.fromDegrees(0),
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(157.51);
@@ -225,7 +225,8 @@ public class IntakeConstants {
         OPEN(0, MINIMUM_ANGLE, 1),
         CLOSE(0, MAXIMUM_ANGLE, 1),
         POWERED_OPEN(6, MINIMUM_ANGLE, 1),
-        POWERED_CLOSE(6, MAXIMUM_ANGLE, 1);
+        POWERED_CLOSE(6, MAXIMUM_ANGLE, 1),
+        REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1);
 
         public final double targetVoltage;
         public final Rotation2d targetAngle;
