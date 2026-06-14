@@ -25,7 +25,8 @@ public class SelfRelativeDriveRestrictedCommand extends DriveRestrictedCommand {
         return SwerveCommands.getClosedLoopSelfRelativeDriveCommand(
                 () -> restrictedX,
                 () -> restrictedY,
-                () -> restrictedRotation
+                () -> restrictedRotation,
+                () -> centerOfRotation
         );
     }
 

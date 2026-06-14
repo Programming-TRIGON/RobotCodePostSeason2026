@@ -23,7 +23,8 @@ public class FieldRelativeDriveRestrictedCommand extends DriveRestrictedCommand 
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                 () -> restrictedX,
                 () -> restrictedY,
-                () -> restrictedRotation
+                () -> restrictedRotation,
+                () -> centerOfRotation
         );
     }
 }

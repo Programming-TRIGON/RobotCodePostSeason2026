@@ -15,6 +15,7 @@ import frc.trigon.robot.constants.OperatorConstants;
  */
 public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveRestriction[] driveRestrictions;
+    protected Translation2d centerOfRotation = Translation2d.kZero;
     protected double
         restrictedX = 0,
         restrictedY = 0,
@@ -44,6 +45,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         restrictedX = 0;
         restrictedY = 0;
         restrictedRotation = 0;
+        centerOfRotation = Translation2d.kZero;
         for (DriveRestriction driveRestriction : driveRestrictions)
             driveRestriction.init();
     }
@@ -52,14 +54,19 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         Translation2d targetTranslation = selfRelativeDrive(calculateTargetJoystickTranslation());
         double targetRotation = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
 
+        Translation2d center = Translation2d.kZero;
         for (DriveRestriction driveRestriction : driveRestrictions) {
             targetTranslation = driveRestriction.applyRestrictionToTranslation(targetTranslation);
             targetRotation = driveRestriction.applyRestrictionToRotation(targetRotation);
+            final Translation2d restrictionCenter = driveRestriction.getCenterOfRotation();
+            if (!restrictionCenter.equals(Translation2d.kZero))
+                center = restrictionCenter;
         }
 
         restrictedX = targetTranslation.getX();
         restrictedY = targetTranslation.getY();
         restrictedRotation = targetRotation;
+        centerOfRotation = center;
     }
 
     /**

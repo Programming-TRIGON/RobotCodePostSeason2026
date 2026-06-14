@@ -24,6 +24,13 @@ public interface DriveRestriction {
     }
 
     /**
+     * Returns the desired center of rotation in robot-relative coordinates.
+     */
+    default Translation2d getCenterOfRotation() {
+        return Translation2d.kZero;
+    }
+
+    /**
      * Is run every time the command is used.
      * Used to reset the values so past values don't affect the command.
      */

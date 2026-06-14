@@ -34,6 +34,22 @@ public class SwerveCommands {
     /**
      * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed loop mode.
      *
+     * @param xSupplier     the target forwards power
+     * @param ySupplier     the target leftwards power
+     * @param thetaSupplier the target theta power, CCW+
+     * @return the command
+     */
+    public static Command getClosedLoopFieldRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
+        return new InitExecuteCommand(
+                () -> RobotContainer.SWERVE.initializeDrive(true),
+                () -> RobotContainer.SWERVE.fieldRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), centerOfRotationSupplier.get()),
+                RobotContainer.SWERVE
+        );
+    }
+
+    /**
+     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed loop mode.
+     *
      * @param translationSupplier the target translation powers
      * @param rotationSupplier    the target rotation power, CCW+
      * @return the command
@@ -108,6 +124,22 @@ public class SwerveCommands {
         return new InitExecuteCommand(
                 () -> RobotContainer.SWERVE.initializeDrive(true),
                 () -> RobotContainer.SWERVE.selfRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                RobotContainer.SWERVE
+        );
+    }
+
+    /**
+     * Creates a command that drives the swerve with the given powers, relative to the robot's frame of reference, in closed loop mode.
+     *
+     * @param xSupplier     the target forwards power
+     * @param ySupplier     the target leftwards power
+     * @param thetaSupplier the target theta power, CCW+
+     * @return the command
+     */
+    public static Command getClosedLoopSelfRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
+        return new InitExecuteCommand(
+                () -> RobotContainer.SWERVE.initializeDrive(true),
+                () -> RobotContainer.SWERVE.selfRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), centerOfRotationSupplier.get()),
                 RobotContainer.SWERVE
         );
     }
