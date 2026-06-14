@@ -29,7 +29,7 @@ public class ZoneRestrictedDrive implements DriveRestriction {
     }
 
     @Override
-    public Translation2d applyRestrictionToTranslation(Translation2d targetTranslation) {
+    public Translation2d ApplyTranslationRestriction(Translation2d targetTranslation) {
         final BoundingBox robotBox = getRobotBoundingBox();
         Translation2d translation = targetTranslation.unaryMinus();
         for (ZoneRestriction zone : zoneRestrictions)

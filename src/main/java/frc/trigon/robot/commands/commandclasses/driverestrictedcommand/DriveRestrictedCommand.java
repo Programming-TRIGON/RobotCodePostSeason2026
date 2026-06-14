@@ -17,9 +17,9 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveRestriction[] driveRestrictions;
     protected Translation2d centerOfRotation = Translation2d.kZero;
     protected double
-        restrictedX = 0,
-        restrictedY = 0,
-        restrictedRotation = 0;
+            restrictedX = 0,
+            restrictedY = 0,
+            restrictedRotation = 0;
 
     /**
      * Constructs a command that drives the robot and restricts its movement.
@@ -37,9 +37,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
 
     protected abstract Command getDriveCommand();
 
-    protected Translation2d selfRelativeDrive(Translation2d targetTranslation) {
-        return targetTranslation;
-    }
+    protected abstract Translation2d selfRelativeDrive(Translation2d targetTranslation);
 
     private void init() {
         restrictedX = 0;
@@ -51,22 +49,20 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     private void setRestrictedOutput() {
-        Translation2d targetTranslation = selfRelativeDrive(calculateTargetJoystickTranslation());
-        double targetRotation = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
+        Translation2d targetRobotTranslation = selfRelativeDrive(calculateTargetJoystickTranslation());
+        double targetRobotRotation = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
+        Translation2d targetRobotCenterOfRotation = Translation2d.kZero;
 
-        Translation2d center = Translation2d.kZero;
         for (DriveRestriction driveRestriction : driveRestrictions) {
-            targetTranslation = driveRestriction.applyRestrictionToTranslation(targetTranslation);
-            targetRotation = driveRestriction.applyRestrictionToRotation(targetRotation);
-            final Translation2d restrictionCenter = driveRestriction.getCenterOfRotation();
-            if (!restrictionCenter.equals(Translation2d.kZero))
-                center = restrictionCenter;
+            targetRobotTranslation = driveRestriction.ApplyTranslationRestriction(targetRobotTranslation);
+            targetRobotRotation = driveRestriction.ApplyRotationRestriction(targetRobotRotation);
+            targetRobotCenterOfRotation = driveRestriction.getCenterOfRotation();
         }
 
-        restrictedX = targetTranslation.getX();
-        restrictedY = targetTranslation.getY();
-        restrictedRotation = targetRotation;
-        centerOfRotation = center;
+        restrictedX = targetRobotTranslation.getX();
+        restrictedY = targetRobotTranslation.getY();
+        restrictedRotation = targetRobotRotation;
+        centerOfRotation = targetRobotCenterOfRotation;
     }
 
     /**
@@ -75,10 +71,10 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
      * @return the target translation
      */
     private Translation2d calculateTargetJoystickTranslation() {
-        final Translation2d rawPosition = getRawJoystickPosition();
+        final Translation2d rawJoystickPosition = getRawJoystickPosition();
         final double
-                rawXValue = rawPosition.getX(),
-                rawYValue = rawPosition.getY();
+                rawXValue = rawJoystickPosition.getX(),
+                rawYValue = rawJoystickPosition.getY();
 
         return new Translation2d(
                 CommandConstants.calculateDriveStickAxisValue(rawXValue),
@@ -93,8 +89,8 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
      */
     private Translation2d getRawJoystickPosition() {
         final double
-                forwardAxis = OperatorConstants.DRIVER_CONTROLLER.getLeftY(),
-                strafeAxis = OperatorConstants.DRIVER_CONTROLLER.getLeftX();
-        return new Translation2d(forwardAxis, strafeAxis);
+                xAxis = OperatorConstants.DRIVER_CONTROLLER.getLeftY(),
+                yAxis = OperatorConstants.DRIVER_CONTROLLER.getLeftX();
+        return new Translation2d(xAxis, yAxis);
     }
 }

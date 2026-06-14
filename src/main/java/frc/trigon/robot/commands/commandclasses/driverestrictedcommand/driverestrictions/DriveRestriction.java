@@ -9,7 +9,7 @@ public interface DriveRestriction {
      * @param targetTranslation the target translation of the robot
      * @return the restricted target translation of the robot
      */
-    default Translation2d applyRestrictionToTranslation(Translation2d targetTranslation) {
+    default Translation2d ApplyTranslationRestriction(Translation2d targetTranslation) {
         return targetTranslation;
     }
 
@@ -19,7 +19,7 @@ public interface DriveRestriction {
      * @param targetRotation the target rotation of the robot
      * @return the restricted target rotation of the robot
      */
-    default double applyRestrictionToRotation(double targetRotation) {
+    default double ApplyRotationRestriction(double targetRotation) {
         return targetRotation;
     }
 

@@ -3,14 +3,14 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driveres
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.trigon.robot.constants.RobotConstants;
 
 /**
- * A restriction that caps how the robot's linear and rotational acceleration.
- * Used for protecting top-heavy or extended mechanisms from tipping or damage caused by sudden joystick inputs.
+ * A restriction that limits the robot's linear and rotational acceleration.
  */
 public class AccelerationRestrictedDrive implements DriveRestriction {
     private final double maximumTranslationAcceleration;
-    private final SlewRateLimiter rotationLimiter;
+    private final SlewRateLimiter rotationAccelerationLimiter;
 
     private Translation2d currentTranslation = Translation2d.kZero;
 
@@ -24,28 +24,28 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
      */
     public AccelerationRestrictedDrive(double maximumTranslationAcceleration, double maximumRotationAcceleration) {
         this.maximumTranslationAcceleration = maximumTranslationAcceleration;
-        this.rotationLimiter = new SlewRateLimiter(maximumRotationAcceleration);
+        this.rotationAccelerationLimiter = new SlewRateLimiter(maximumRotationAcceleration);
     }
 
     @Override
     public void init() {
         currentTranslation = Translation2d.kZero;
-        rotationLimiter.reset(0);
+        rotationAccelerationLimiter.reset(0);
     }
 
     @Override
-    public Translation2d applyRestrictionToTranslation(Translation2d targetTranslation) {
+    public Translation2d ApplyTranslationRestriction(Translation2d targetTranslation) {
         currentTranslation = MathUtil.slewRateLimit(
                 currentTranslation,
                 targetTranslation,
-                LOOP_PERIOD_SECONDS,
+                RobotConstants.PERIODIC_TIME_SECONDS,
                 maximumTranslationAcceleration
         );
         return currentTranslation;
     }
 
     @Override
-    public double applyRestrictionToRotation(double targetRotation) {
-        return rotationLimiter.calculate(targetRotation);
+    public double ApplyRotationRestriction(double targetRotation) {
+        return rotationAccelerationLimiter.calculate(targetRotation);
     }
 }
