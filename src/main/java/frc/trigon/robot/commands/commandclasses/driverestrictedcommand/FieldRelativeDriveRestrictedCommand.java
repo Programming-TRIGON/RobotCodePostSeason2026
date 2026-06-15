@@ -28,4 +28,8 @@ public class FieldRelativeDriveRestrictedCommand extends DriveRestrictedCommand 
                 () -> centerOfRotation
         );
     }
+
+    protected Translation2d relativeDrive(Translation2d targetTranslation) {
+        return targetTranslation;
+    }
 }

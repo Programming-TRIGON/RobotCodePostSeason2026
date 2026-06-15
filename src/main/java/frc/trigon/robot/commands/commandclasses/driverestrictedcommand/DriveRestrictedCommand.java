@@ -1,5 +1,6 @@
 package frc.trigon.robot.commands.commandclasses.driverestrictedcommand;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -35,6 +36,10 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         );
     }
 
+    protected Rotation2d relativeDrive() {
+        return Rotation2d.kZero;
+    }
+
     protected abstract Command getDriveCommand();
 
     private void init() {
@@ -47,7 +52,9 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     private void setRestrictedOutput() {
-        Translation2d targetRobotTranslation = calculateTargetJoystickTranslation();
+        Rotation2d relativeRotation = relativeDrive();
+
+        Translation2d targetRobotTranslation = calculateTargetJoystickTranslation().rotateBy(relativeRotation);
         double targetRobotRotation = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
         Translation2d targetRobotCenterOfRotation = Translation2d.kZero;
 
@@ -56,6 +63,8 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
             targetRobotRotation = driveRestriction.applyRotationRestriction(targetRobotRotation);
             targetRobotCenterOfRotation = driveRestriction.applyCenterOfRotationRestriction(targetRobotCenterOfRotation);
         }
+
+        targetRobotTranslation = targetRobotTranslation.rotateBy(relativeRotation.unaryMinus());
 
         restrictedX = targetRobotTranslation.getX();
         restrictedY = targetRobotTranslation.getY();
