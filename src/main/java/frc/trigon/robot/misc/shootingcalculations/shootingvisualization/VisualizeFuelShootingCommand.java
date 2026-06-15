@@ -21,8 +21,7 @@ import java.util.Random;
 public class VisualizeFuelShootingCommand extends Command {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static final Random RANDOM = new Random();
-    private static final LoggedNetworkBoolean SHOULD_PRINT_SHOT_DETAILS = new LoggedNetworkBoolean(
-            "ShouldPrintShotDetails", false);
+    private static final LoggedNetworkBoolean SHOULD_PRINT_SHOT_DETAILS = new LoggedNetworkBoolean("ShouldPrintShotDetails", false);
 
     private final SimulatedGamePiece shotFuel;
     private Translation3d currentFuelVelocity;
