@@ -65,7 +65,6 @@ repositories {
         url = uri("https://frcmaven.wpi.edu/artifactory/littletonrobotics-mvn-release")
     }
     mavenLocal()
-    maven { url "https://jitpack.io" }
 }
 
 task(replayWatch, type: JavaExec) {
