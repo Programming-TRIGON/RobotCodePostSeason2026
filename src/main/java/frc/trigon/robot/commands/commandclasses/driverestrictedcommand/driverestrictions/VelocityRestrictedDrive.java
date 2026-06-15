@@ -24,7 +24,7 @@ public class VelocityRestrictedDrive implements DriveRestriction {
     }
 
     @Override
-    public Translation2d ApplyTranslationRestriction(Translation2d targetTranslation) {
+    public Translation2d applyTranslationRestriction(Translation2d targetTranslation) {
         final double translationMagnitude = targetTranslation.getNorm();
         if (translationMagnitude > maximumTranslationVelocity)
             return targetTranslation.times(maximumTranslationVelocity / translationMagnitude);
@@ -32,7 +32,7 @@ public class VelocityRestrictedDrive implements DriveRestriction {
     }
 
     @Override
-    public double ApplyRotationRestriction(double targetRotation) {
+    public double applyRotationRestriction(double targetRotation) {
         return MathUtil.clamp(targetRotation, -maximumRotationVelocity, maximumRotationVelocity);
     }
 }

@@ -34,7 +34,7 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
     }
 
     @Override
-    public Translation2d ApplyTranslationRestriction(Translation2d targetTranslation) {
+    public Translation2d applyTranslationRestriction(Translation2d targetTranslation) {
         currentTranslation = MathUtil.slewRateLimit(
                 currentTranslation,
                 targetTranslation,
@@ -45,7 +45,7 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
     }
 
     @Override
-    public double ApplyRotationRestriction(double targetRotation) {
+    public double applyRotationRestriction(double targetRotation) {
         return rotationAccelerationLimiter.calculate(targetRotation);
     }
 }

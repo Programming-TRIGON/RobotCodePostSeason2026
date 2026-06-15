@@ -9,7 +9,7 @@ public interface DriveRestriction {
      * @param targetTranslation the target translation of the robot
      * @return the restricted target translation of the robot
      */
-    default Translation2d ApplyTranslationRestriction(Translation2d targetTranslation) {
+    default Translation2d applyTranslationRestriction(Translation2d targetTranslation) {
         return targetTranslation;
     }
 
@@ -19,15 +19,18 @@ public interface DriveRestriction {
      * @param targetRotation the target rotation of the robot
      * @return the restricted target rotation of the robot
      */
-    default double ApplyRotationRestriction(double targetRotation) {
+    default double applyRotationRestriction(double targetRotation) {
         return targetRotation;
     }
 
     /**
-     * Returns the desired center of rotation in robot-relative coordinates.
+     * Applies a restriction to the target rotation of the robot.
+     *
+     * @param targetCenterOfRotation the robot's target center of rotation
+     * @return the robot's restricted target center of rotation
      */
-    default Translation2d getCenterOfRotation() {
-        return Translation2d.kZero;
+    default Translation2d applyCenterOfRotationRestriction(Translation2d targetCenterOfRotation) {
+        return targetCenterOfRotation;
     }
 
     /**

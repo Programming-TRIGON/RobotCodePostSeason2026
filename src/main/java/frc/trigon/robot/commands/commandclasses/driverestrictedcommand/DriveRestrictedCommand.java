@@ -54,9 +54,9 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         Translation2d targetRobotCenterOfRotation = Translation2d.kZero;
 
         for (DriveRestriction driveRestriction : driveRestrictions) {
-            targetRobotTranslation = driveRestriction.ApplyTranslationRestriction(targetRobotTranslation);
-            targetRobotRotation = driveRestriction.ApplyRotationRestriction(targetRobotRotation);
-            targetRobotCenterOfRotation = driveRestriction.getCenterOfRotation();
+            targetRobotTranslation = driveRestriction.applyTranslationRestriction(targetRobotTranslation);
+            targetRobotRotation = driveRestriction.applyRotationRestriction(targetRobotRotation);
+            targetRobotCenterOfRotation = driveRestriction.applyCenterOfRotationRestriction(targetRobotCenterOfRotation);
         }
 
         restrictedX = targetRobotTranslation.getX();

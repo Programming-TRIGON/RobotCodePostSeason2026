@@ -20,7 +20,7 @@ public class CustomCenterOfRotationDrive implements DriveRestriction {
     }
 
     @Override
-    public Translation2d getCenterOfRotation() {
+    public Translation2d applyCenterOfRotationRestriction(Translation2d targetCenterOfRotation) {
         return centerOfRotation;
     }
 }
