@@ -11,10 +11,7 @@ import frc.trigon.robot.constants.RobotConstants;
 public class AccelerationRestrictedDrive implements DriveRestriction {
     private final double maximumTranslationAcceleration;
     private final SlewRateLimiter rotationAccelerationLimiter;
-
     private Translation2d currentTranslation = Translation2d.kZero;
-
-    private static final double LOOP_PERIOD_SECONDS = 0.02;
 
     /**
      * A restriction that limits the maximum linear and rotational acceleration.
