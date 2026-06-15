@@ -29,9 +29,4 @@ public class SelfRelativeDriveRestrictedCommand extends DriveRestrictedCommand {
                 () -> centerOfRotation
         );
     }
-
-    @Override
-    protected Translation2d selfRelativeDrive(Translation2d targetTranslation) {
-        return targetTranslation.rotateBy(RobotContainer.SWERVE.getDriveRelativeAngle().unaryMinus());
-    }
 }

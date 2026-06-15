@@ -37,8 +37,6 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
 
     protected abstract Command getDriveCommand();
 
-    protected abstract Translation2d selfRelativeDrive(Translation2d targetTranslation);
-
     private void init() {
         restrictedX = 0;
         restrictedY = 0;
@@ -49,7 +47,7 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     private void setRestrictedOutput() {
-        Translation2d targetRobotTranslation = selfRelativeDrive(calculateTargetJoystickTranslation());
+        Translation2d targetRobotTranslation = calculateTargetJoystickTranslation();
         double targetRobotRotation = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
         Translation2d targetRobotCenterOfRotation = Translation2d.kZero;
 
