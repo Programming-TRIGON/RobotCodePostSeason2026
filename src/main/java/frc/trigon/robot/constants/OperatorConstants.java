@@ -6,6 +6,7 @@ import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.TrenchDetection;
+import frc.trigon.robot.misc.matchTracker.MatchTracker;
 
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
@@ -34,7 +35,9 @@ public class OperatorConstants {
             BACKWARD_QUASISTATIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.left(),
             FORWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.up(),
             BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down(),
-            CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS);
+            CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS),
+            CHANGE_AUTONOMOUS_WINNER_TO_BLUE_TRIGGER = OPERATOR_CONTROLLER.t(),
+            CHANGE_AUTONOMOUS_WINNER_TO_RED_TRIGGER = OPERATOR_CONTROLLER.y();
     public static final Trigger
             SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightStick().or(OPERATOR_CONTROLLER.d()),
             SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_IN_FRONT_OF_TOWER_TRIGGER = DRIVER_CONTROLLER.povDown().or(OPERATOR_CONTROLLER.i()),
@@ -52,5 +55,7 @@ public class OperatorConstants {
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             INTAKE_WHILE_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.c()),
             INTAKE_TRIGGER = INTAKE_WHILE_SHOOTING_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
-            RESTRICT_HOOD_ANGLE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone);
+            RESTRICT_HOOD_ANGLE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone),
+            INDICATE_ALLIANCE_SHIFT_TRIGGER = new Trigger(MatchTracker::shouldIndicateAllianceShift),
+            HUB_ACTIVE_FOR_SHOOTING_CHANGED_TRIGGER = new Trigger(MatchTracker::didHubActiveForShootingChange);
 }

@@ -8,6 +8,7 @@ import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
+import frc.trigon.robot.misc.matchTracker.MatchTracker;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
@@ -209,7 +210,13 @@ public class ShootingCommands {
     }
 
     private static boolean isReadyForShooting(BooleanSupplier isDelivery) {
-        return SHOOTING_CALCULATIONS.isReadyToShoot() && (!isDelivery.getAsBoolean() || !isDeliveryHittingHub());
+        if (!SHOOTING_CALCULATIONS.isReadyToShoot())
+            return false;
+
+        if (isDelivery.getAsBoolean())
+            return !isDeliveryHittingHub();
+
+        return MatchTracker.isHubActiveForShooting();
     }
 
     private static boolean isDeliveryHittingHub() {
