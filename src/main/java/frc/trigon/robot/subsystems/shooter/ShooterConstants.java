@@ -31,8 +31,8 @@ public class ShooterConstants {
 
     static final boolean FOC_ENABLED = true;
     public static final double
-            TOP_WHEEL_GEAR_RATIO = 2.0,
-            BOTTOM_WHEEL_GEAR_RATIO = 1.0;
+            TOP_WHEEL_GEAR_RATIO = 1.416,
+            BOTTOM_WHEEL_GEAR_RATIO = 2;
     static final double AVERAGE_GEAR_RATIO = (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
@@ -84,9 +84,9 @@ public class ShooterConstants {
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.00057465 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.18557 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.010478 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15.0 : 0;
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 0;
