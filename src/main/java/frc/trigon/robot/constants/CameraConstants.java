@@ -15,7 +15,10 @@ public class CameraConstants {
     );
     private static final Transform3d
             ROBOT_TO_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
-            new Translation3d(0.171, -0.355, 0.191),
+            new Translation3d(
+                    0.171,
+                    -0.355,
+                    0.191),
             new Rotation3d(
                     Units.degreesToRadians(9.68),
                     Units.degreesToRadians(-22.5),
@@ -23,7 +26,10 @@ public class CameraConstants {
             )
     ),
             ROBOT_TO_LEFT_APRIL_TAG_CAMERA = new Transform3d(
-                    new Translation3d(0.171, 0.355, 0.191),
+                    new Translation3d(
+                            0.171,
+                            0.355,
+                            0.191),
                     new Rotation3d(
                             Units.degreesToRadians(9.68),
                             Units.degreesToRadians(-22.5),
