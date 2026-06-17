@@ -22,8 +22,8 @@ public class HoodCommands {
 
     public static Command getResetHoodCommand() {
         return new StartEndCommand(
-                RobotContainer.HOOD::setTargetVoltageToResetVoltage,
-                RobotContainer.HOOD::zeroPosition,
+                RobotContainer.HOOD::resetTargetVoltage,
+                RobotContainer.HOOD::setZeroPosition,
                 RobotContainer.HOOD
         ).ignoringDisable(true);
     }
