@@ -7,12 +7,11 @@ import org.littletonrobotics.junction.Logger;
 public class MatchTracker {
     private static Character forcedGameData = null;
 
-    public static boolean isHubActiveForShot() {
+    public static boolean isHubActiveForShooting() {
         final double currentMatchTimeSeconds = DriverStation.getMatchTime();
-        final double fuelArrivalMatchTimeSeconds =
-                currentMatchTimeSeconds - MatchTrackerConstants.FUEL_FLIGHT_TIME_SECONDS;
+        final double expectedFuelArrivalMatchTimeSeconds  = currentMatchTimeSeconds - MatchTrackerConstants.FUEL_FLIGHT_TIME_SECONDS;
 
-        return isOurHubActiveAtMatchTime(fuelArrivalMatchTimeSeconds);
+        return isOurHubActiveAtMatchTime(expectedFuelArrivalMatchTimeSeconds );
     }
 
     public static boolean isHubActiveNow() {
@@ -20,14 +19,18 @@ public class MatchTracker {
     }
 
     public static void forceGameData(char gameData) {
-        final char upperCaseGameData = Character.toUpperCase(gameData);
+        final char gameDataUpperCase = Character.toUpperCase(gameData);
 
-        if (upperCaseGameData != MatchTrackerConstants.RED_ALLIANCE_GAME_DATA &&
-                upperCaseGameData != MatchTrackerConstants.BLUE_ALLIANCE_GAME_DATA) {
+        if (gameDataUpperCase != MatchTrackerConstants.RED_ALLIANCE_GAME_DATA &&
+                gameDataUpperCase != MatchTrackerConstants.BLUE_ALLIANCE_GAME_DATA) {
             return;
         }
 
-        forcedGameData = upperCaseGameData;
+        forcedGameData = gameDataUpperCase;
+    }
+
+    public static void clearForcedGameData() { //code rabbit told me to add this but ask Nahum if we need this
+        forcedGameData = null;
     }
 
     private static String getGameData() {
@@ -48,22 +51,13 @@ public class MatchTracker {
 
         if (!isValidGameData(gameData)) {
             Logger.recordOutput("MatchTracker/HasValidGameData", false);
-
-            /*
-             * If game data is missing or invalid, default to true.
-             * This prevents the robot from blocking shooting because of a Driver Station issue.
-             */
             return true;
         }
 
         Logger.recordOutput("MatchTracker/HasValidGameData", true);
 
-        final boolean isRedHubInactiveInShift1 =
-                Character.toUpperCase(gameData.charAt(0)) == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA;
-
-        final boolean isOurHubInactiveInShift1 =
-                isRedHubInactiveInShift1 == Flippable.isRedAlliance();
-
+        final boolean isRedHubInactiveInShift1 = Character.toUpperCase(gameData.charAt(0)) == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA;
+        final boolean isOurHubInactiveInShift1 = isRedHubInactiveInShift1 == Flippable.isRedAlliance();
         final boolean isOurHubActiveInShift1 = !isOurHubInactiveInShift1;
 
         return calculateHubActiveDuringTeleopShift(matchTimeSeconds, isOurHubActiveInShift1);
@@ -74,31 +68,25 @@ public class MatchTracker {
             boolean isOurHubActiveInShift1
     ) {
         if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_START_TELEOP_TIME_SECONDS) {
-            // Transition shift: both hubs are active.
             return true;
         }
 
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS) {
-            // Shift 1.
             return isOurHubActiveInShift1;
         }
 
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS) {
-            // Shift 2.
             return !isOurHubActiveInShift1;
         }
 
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS) {
-            // Shift 3.
             return isOurHubActiveInShift1;
         }
 
         if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TELEOP_TIME_SECONDS) {
-            // Shift 4.
             return !isOurHubActiveInShift1;
         }
-
-        // Endgame: both hubs are active.
+        
         return true;
     }
 
@@ -122,6 +110,6 @@ public class MatchTracker {
         Logger.recordOutput("IsGameDataForced", forcedGameData != null);
         Logger.recordOutput("IsRedAlliance", Flippable.isRedAlliance());
         Logger.recordOutput("IsHubActiveNow", isHubActiveNow());
-        Logger.recordOutput("IsHubActiveForShooting", isHubActiveForShot());
+        Logger.recordOutput("IsHubActiveForShooting", isHubActiveForShooting());
     }
 }
