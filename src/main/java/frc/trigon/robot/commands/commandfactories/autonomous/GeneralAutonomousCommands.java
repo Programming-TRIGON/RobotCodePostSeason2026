@@ -67,7 +67,7 @@ public class GeneralAutonomousCommands {
     }
 
     public static Command getTimedScoreCommand(double timeout) {
-        return ShootingCommands.getShootingCommand().withTimeout(timeout);
+        return ShootingCommands.getAutonomousShootingCommand().withTimeout(timeout);
     }
 
     public static Command getCollectFromDepotCommand(boolean shootWhileDriving, double collectionTimeout) {
