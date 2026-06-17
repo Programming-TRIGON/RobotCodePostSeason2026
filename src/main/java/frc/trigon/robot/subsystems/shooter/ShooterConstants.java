@@ -81,9 +81,9 @@ public class ShooterConstants {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.8;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 1;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0.001;
         config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.21507;
         config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.21093;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.009702;
