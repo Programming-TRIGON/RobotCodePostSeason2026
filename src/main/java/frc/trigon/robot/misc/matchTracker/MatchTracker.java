@@ -9,9 +9,9 @@ public class MatchTracker {
 
     public static boolean isHubActiveForShooting() {
         final double currentMatchTimeSeconds = DriverStation.getMatchTime();
-        final double expectedFuelArrivalMatchTimeSeconds  = currentMatchTimeSeconds - MatchTrackerConstants.FUEL_FLIGHT_TIME_SECONDS;
+        final double expectedFuelArrivalMatchTimeSeconds = currentMatchTimeSeconds - MatchTrackerConstants.FUEL_FLIGHT_TIME_SECONDS;
 
-        return isOurHubActiveAtMatchTime(expectedFuelArrivalMatchTimeSeconds );
+        return isOurHubActiveAtMatchTime(expectedFuelArrivalMatchTimeSeconds);
     }
 
     public static boolean isHubActiveNow() {
@@ -29,7 +29,7 @@ public class MatchTracker {
         forcedGameData = gameDataUpperCase;
     }
 
-    public static void clearForcedGameData() { //code rabbit told me to add this but ask Nahum if we need this
+    public static void clearForcedGameData() {
         forcedGameData = null;
     }
 
@@ -86,7 +86,7 @@ public class MatchTracker {
         if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TELEOP_TIME_SECONDS) {
             return !isOurHubActiveInShift1;
         }
-        
+
         return true;
     }
 
