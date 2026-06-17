@@ -39,7 +39,7 @@ public class GeneralAutonomousCommands {
     }
 
     public static Command getCollectFromNeutralZoneCommand(AutonomousGenerator.AutonomousState previousState, double collectionTimeout) {
-        return new ParallelCommandGroup(
+        return new ParallelDeadlineGroup(
                 getDriveToFuelInNeutralZoneCommand(
                         AutonomousGenerator.SHOULD_SHOOT_PRELOAD.getAsBoolean() && previousState == null,
                         collectionTimeout,
@@ -51,17 +51,18 @@ public class GeneralAutonomousCommands {
     }
 
     public static Command getScoreCommand(AutonomousGenerator.AutonomousState nextState, double timeout) {
-        return new ParallelCommandGroup(
-                GeneralCommands.runWhen(new WaitCommand(timeout), FieldConstants::isRobotInAllianceZone),
-                SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(
-                        () -> getScoringPose(nextState),
-                        AutonomousConstants.DRIVE_IN_AUTONOMOUS_CONSTRAINTS,
-                        0,
-                        AutonomousConstants.DRIVE_SLOWLY_IN_AUTONOMOUS_CONSTRAINTS,
-                        1000,
-                        false
-                ).alongWith(new RunCommand(() -> Logger.recordOutput("Autonomous/TargetScoringPose", getScoringPose(nextState).get()))).andThen(
-                getShootAtHubCommand())
+        return new SequentialCommandGroup(
+                new ParallelDeadlineGroup(
+                        SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(
+                                () -> AutonomousConstants.SHOOTING_POSE,
+                                AutonomousConstants.DRIVE_IN_AUTONOMOUS_CONSTRAINTS,
+                                0,
+                                AutonomousConstants.DRIVE_SLOWLY_IN_AUTONOMOUS_CONSTRAINTS,
+                                1000,
+                                false
+                        ),
+                        new RunCommand(() -> Logger.recordOutput("Autonomous/TargetScoringPose", getScoringPose(nextState).get()))),
+                ShootingCommands.getShootingCommand()
         ).withTimeout(timeout + AutonomousConstants.NORMAL_DRIVE_TIMEOUT);
     }
 
@@ -82,7 +83,7 @@ public class GeneralAutonomousCommands {
 
     private static Command getShootAtHubCommand() {
         return GeneralCommands.runWhen(
-                ShootingCommands.getFixedShootingAtHubCommand(),
+                ShootingCommands.getShootingCommand(),
                 FieldConstants::isRobotInAllianceZone,
                 AutonomousConstants.AUTONOMOUS_SHOOTING_DURATION_SECONDS
         );

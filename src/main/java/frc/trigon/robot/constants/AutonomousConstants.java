@@ -10,12 +10,14 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
+import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.autonomous.AutonomousGenerator;
 import frc.trigon.robot.commands.commandfactories.autonomous.GeneralAutonomousCommands;
@@ -32,7 +34,7 @@ public class AutonomousConstants {
     public static final String DEFAULT_AUTO_NAME = "DefaultAutoName";
     public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
     public static final double FEEDFORWARD_SCALAR = 0.5;//TODO: Calibrate
-    public static final boolean SHOULD_USE_AUTONOMOUS_GENERATOR = true;
+    public static final boolean SHOULD_USE_AUTONOMOUS_GENERATOR = false;
     public static final PathConstraints
             DRIVE_TO_SCORING_LOCATION_CONSTRAINTS = new PathConstraints(2.5, 2.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
             SHOOT_PRELOAD_BEFORE_NEUTRAL_ZONE_DRIVE_CONSTRAINTS = new PathConstraints(0.3, 0.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
@@ -46,10 +48,16 @@ public class AutonomousConstants {
             AUTONOMOUS_TIME_SECONDS = 20,
             DEPOT_COLLECTION_TIMEOUT_SECONDS = 4,
             NEUTRAL_ZONE_COLLECTION_TIMEOUT_SECONDS = 2,
-            SCORING_TIMEOUT_SECONDS = 2.5,
+            SCORING_TIMEOUT_SECONDS = 10,
             NORMAL_DRIVE_TIMEOUT = 4,
             AUTONOMOUS_SHOOTING_DURATION_SECONDS = 3;
     public static final double START_INTAKING_X = 6.3;
+
+    public static final FlippablePose2d SHOOTING_POSE = new FlippablePose2d(
+            3.775, 7.376,
+            Rotation2d.fromDegrees(98),
+            true
+    );
 
 
     private static final PIDConstants
