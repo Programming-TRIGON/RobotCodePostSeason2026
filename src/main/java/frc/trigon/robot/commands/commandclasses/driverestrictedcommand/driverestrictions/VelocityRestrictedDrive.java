@@ -10,7 +10,7 @@ import frc.trigon.robot.subsystems.swerve.SwerveConstants;
  */
 public class VelocityRestrictedDrive implements DriveRestriction {
     private final double maximumTranslationVelocityMetersPerSecond;
-    private final double maximumRotationVelocityMetersPerSecond;
+    private final double maximumRotationVelocityRadiansPerSecond;
 
     /**
      * A restriction that limits the maximum linear and rotational velocity.
@@ -20,12 +20,12 @@ public class VelocityRestrictedDrive implements DriveRestriction {
      */
     public VelocityRestrictedDrive(double maximumTranslationVelocityMetersPerSecond, double maximumRotationVelocityRadiansPerSecond) {
         this.maximumTranslationVelocityMetersPerSecond = MathUtil.clamp(maximumTranslationVelocityMetersPerSecond / SwerveConstants.MAXIMUM_SPEED_METERS_PER_SECOND, 0, 1);
-        this.maximumRotationVelocityMetersPerSecond = MathUtil.clamp(maximumRotationVelocityRadiansPerSecond / SwerveConstants.MAXIMUM_ROTATIONAL_SPEED_RADIANS_PER_SECOND, 0, 1);
+        this.maximumRotationVelocityRadiansPerSecond = MathUtil.clamp(maximumRotationVelocityRadiansPerSecond / SwerveConstants.MAXIMUM_ROTATIONAL_SPEED_RADIANS_PER_SECOND, 0, 1);
     }
 
     @Override
     public Translation2d applyTranslationRestriction(Translation2d targetTranslation) {
-        final Translation2d scaledRobotTargetTranslation = targetTranslation.times(maximumRotationVelocityMetersPerSecond);
+        final Translation2d scaledRobotTargetTranslation = targetTranslation.times(maximumTranslationVelocityMetersPerSecond);
         final double scaledRobotTargetTranslationMagnitude = scaledRobotTargetTranslation.getNorm();
 
         if (scaledRobotTargetTranslationMagnitude > maximumTranslationVelocityMetersPerSecond)
@@ -35,6 +35,6 @@ public class VelocityRestrictedDrive implements DriveRestriction {
 
     @Override
     public double applyRotationRestriction(double targetRotation) {
-        return targetRotation * maximumRotationVelocityMetersPerSecond;
+        return targetRotation * maximumRotationVelocityRadiansPerSecond;
     }
 }
