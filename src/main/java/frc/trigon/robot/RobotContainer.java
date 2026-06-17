@@ -19,8 +19,8 @@ import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
 import frc.trigon.robot.constants.OperatorConstants;
-import frc.trigon.robot.misc.matchTracker.MatchTracker;
 import frc.trigon.robot.misc.matchTracker.MatchTrackerCommands;
+import frc.trigon.robot.misc.matchTracker.MatchTrackerConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
@@ -107,8 +107,8 @@ public class RobotContainer {
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.RESTRICT_HOOD_ANGLE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
 
-        OperatorConstants.CHANGE_AUTONOMOUS_WINNER_TO_BLUE_TRIGGER.onTrue(MatchTrackerCommands.getForceGameDataCommand('B'));
-        OperatorConstants.CHANGE_AUTONOMOUS_WINNER_TO_RED_TRIGGER.onTrue(MatchTrackerCommands.getForceGameDataCommand('R'));
+        OperatorConstants.SET_AUTONOMOUS_WINNER_TO_BLUE_TRIGGER.onTrue(MatchTrackerCommands.getForceGameDataCommand(MatchTrackerConstants.BLUE_ALLIANCE_GAME_DATA));
+        OperatorConstants.SET_AUTONOMOUS_WINNER_TO_RED_TRIGGER.onTrue(MatchTrackerCommands.getForceGameDataCommand(MatchTrackerConstants.RED_ALLIANCE_GAME_DATA));
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {

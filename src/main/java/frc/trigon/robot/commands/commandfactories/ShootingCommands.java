@@ -225,7 +225,7 @@ public class ShootingCommands {
         if (isDelivery.getAsBoolean())
             return !isDeliveryHittingHub();
 
-        return MatchTracker.isHubActiveForShooting();
+        return MatchTracker.isHubActiveForShot();
     }
 
     private static boolean isDeliveryHittingHub() {

@@ -1,30 +1,18 @@
 package frc.trigon.robot.misc.matchTracker;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import frc.trigon.lib.utilities.flippable.Flippable;
-import frc.trigon.robot.constants.OperatorConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class MatchTracker {
     private static Character forcedGameData = null;
-    private static DriverStation.Alliance lastAlliance = null;
 
-    public static boolean isHubActiveForShooting() {
+    public static boolean isHubActiveForShot() {
         final double currentMatchTimeSeconds = DriverStation.getMatchTime();
         final double fuelArrivalMatchTimeSeconds =
                 currentMatchTimeSeconds - MatchTrackerConstants.FUEL_FLIGHT_TIME_SECONDS;
 
         return isOurHubActiveAtMatchTime(fuelArrivalMatchTimeSeconds);
-    }
-
-    public static boolean didHubActiveForShootingChange() {
-        final boolean wasHubActiveForShooting = MatchTrackerConstants.WAS_HUB_ACTIVE_FOR_SHOOTING;
-        final boolean isHubActiveForShooting = isHubActiveForShooting();
-
-        MatchTrackerConstants.WAS_HUB_ACTIVE_FOR_SHOOTING = isHubActiveForShooting;
-
-        return isHubActiveForShooting != wasHubActiveForShooting;
     }
 
     public static boolean isHubActiveNow() {
@@ -62,9 +50,8 @@ public class MatchTracker {
             Logger.recordOutput("MatchTracker/HasValidGameData", false);
 
             /*
-             * Fails open because sometimes game data can be empty early in teleop.
-             * This prevents the robot from randomly refusing to shoot because FMS data
-             * has not arrived yet.
+             * If game data is missing or invalid, default to true.
+             * This prevents the robot from blocking shooting because of a Driver Station issue.
              */
             return true;
         }
@@ -79,34 +66,34 @@ public class MatchTracker {
 
         final boolean isOurHubActiveInShift1 = !isOurHubInactiveInShift1;
 
-        return isOurHubActiveAtMatchTime(matchTimeSeconds, isOurHubActiveInShift1);
+        return calculateHubActiveDuringTeleopShift(matchTimeSeconds, isOurHubActiveInShift1);
     }
 
-    private static boolean isOurHubActiveAtMatchTime(
+    private static boolean calculateHubActiveDuringTeleopShift(
             double matchTimeSeconds,
             boolean isOurHubActiveInShift1
     ) {
-        if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_START_TIME_SECONDS) {
+        if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_START_TELEOP_TIME_SECONDS) {
             // Transition shift: both hubs are active.
             return true;
         }
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TIME_SECONDS) {
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS) {
             // Shift 1.
             return isOurHubActiveInShift1;
         }
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TIME_SECONDS) {
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS) {
             // Shift 2.
             return !isOurHubActiveInShift1;
         }
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TIME_SECONDS) {
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS) {
             // Shift 3.
             return isOurHubActiveInShift1;
         }
 
-        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TIME_SECONDS) {
+        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TELEOP_TIME_SECONDS) {
             // Shift 4.
             return !isOurHubActiveInShift1;
         }
@@ -121,12 +108,7 @@ public class MatchTracker {
 
         final char gameDataChar = Character.toUpperCase(gameData.charAt(0));
 
-        return gameDataChar == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA ||
-                gameDataChar == MatchTrackerConstants.BLUE_ALLIANCE_GAME_DATA;
-    }
-
-    public static boolean shouldIndicateAllianceShift() {
-        return didHubActiveForShootingChange();
+        return gameDataChar == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA ||  gameDataChar == MatchTrackerConstants.BLUE_ALLIANCE_GAME_DATA;
     }
 
     public static void logMatchInfo() {
@@ -140,6 +122,6 @@ public class MatchTracker {
         Logger.recordOutput("IsGameDataForced", forcedGameData != null);
         Logger.recordOutput("IsRedAlliance", Flippable.isRedAlliance());
         Logger.recordOutput("IsHubActiveNow", isHubActiveNow());
-        Logger.recordOutput("IsHubActiveForShooting", isHubActiveForShooting());
+        Logger.recordOutput("IsHubActiveForShooting", isHubActiveForShot());
     }
 }
