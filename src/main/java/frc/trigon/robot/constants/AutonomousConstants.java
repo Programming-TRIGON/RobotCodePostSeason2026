@@ -34,7 +34,7 @@ public class AutonomousConstants {
     public static final String DEFAULT_AUTO_NAME = "DefaultAutoName";
     public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
     public static final double FEEDFORWARD_SCALAR = 0.5;//TODO: Calibrate
-    public static final boolean SHOULD_USE_AUTONOMOUS_GENERATOR = false;
+    public static final boolean SHOULD_USE_AUTONOMOUS_GENERATOR = true;
     public static final PathConstraints
             DRIVE_TO_SCORING_LOCATION_CONSTRAINTS = new PathConstraints(2.5, 2.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
             SHOOT_PRELOAD_BEFORE_NEUTRAL_ZONE_DRIVE_CONSTRAINTS = new PathConstraints(0.3, 0.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
@@ -48,16 +48,22 @@ public class AutonomousConstants {
             AUTONOMOUS_TIME_SECONDS = 20,
             DEPOT_COLLECTION_TIMEOUT_SECONDS = 4,
             NEUTRAL_ZONE_COLLECTION_TIMEOUT_SECONDS = 2,
-            SCORING_TIMEOUT_SECONDS = 10,
+            SCORING_TIMEOUT_SECONDS = 3,
             NORMAL_DRIVE_TIMEOUT = 4,
             AUTONOMOUS_SHOOTING_DURATION_SECONDS = 3;
     public static final double START_INTAKING_X = 6.3;
 
-    public static final FlippablePose2d SHOOTING_POSE = new FlippablePose2d(
+    public static final FlippablePose2d
+            SHOOTING_POSE = new FlippablePose2d(
             3.775, 7.376,
             Rotation2d.fromDegrees(98),
             true
-    );
+    ),
+            NEUTRAL_INTAKE_POSE = new FlippablePose2d(
+                    7.360, 7.003,
+                    Rotation2d.fromDegrees(-31.215),
+                    true
+            );
 
 
     private static final PIDConstants

@@ -63,7 +63,7 @@ public class ShootingCommands {
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimForShootingCommand(),
-                        getAutonomousIntakeWhileShootingCommand()
+                        IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE)
                 )
         );
     }
@@ -92,13 +92,6 @@ public class ShootingCommands {
         return new SequentialCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
                 FuelIntakeCommands.getCloseIntakeWhileShootingCommand().until(OperatorConstants.INTAKE_WHILE_SHOOTING_TRIGGER)
-        ).repeatedly();
-    }
-
-    public static Command getAutonomousIntakeWhileShootingCommand() {
-        return new SequentialCommandGroup(
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).withTimeout(0.5),
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE).withTimeout(0.3)
         ).repeatedly();
     }
 

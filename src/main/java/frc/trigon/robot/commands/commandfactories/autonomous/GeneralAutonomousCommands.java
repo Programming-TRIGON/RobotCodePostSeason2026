@@ -1,6 +1,7 @@
 package frc.trigon.robot.commands.commandfactories.autonomous;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.*;
@@ -13,6 +14,7 @@ import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
+import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,29 +26,25 @@ import java.util.function.Supplier;
  */
 public class GeneralAutonomousCommands {
     public static Command getDeliveryCommand(AutonomousGenerator.AutonomousState previousState, Supplier<Double> collectionTimeout) {
-        return new ParallelDeadlineGroup(
-                getDriveToFuelInNeutralZoneCommand(
-                        AutonomousGenerator.SHOULD_SHOOT_PRELOAD.getAsBoolean() && previousState == null,
-                        collectionTimeout.get(),
-                        previousState == null,
-                        getIntakingPoseInNeutralZone(previousState),
-                        true
-
-                ),
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN),
-                getDeliverWhileDrivingCommand()
-        );
+//        return new ParallelDeadlineGroup(
+//                getDriveToFuelInNeutralZoneCommand(
+//                        AutonomousGenerator.SHOULD_SHOOT_PRELOAD.getAsBoolean() && previousState == null,
+//                        collectionTimeout.get(),
+//                        previousState == null,
+//                        getIntakingPoseInNeutralZone(previousState),
+//                        true
+//
+//                ),
+//                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN),
+//                getDeliverWhileDrivingCommand()
+//        );
+        return Commands.none();
     }
 
     public static Command getCollectFromNeutralZoneCommand(AutonomousGenerator.AutonomousState previousState, double collectionTimeout) {
         return new ParallelDeadlineGroup(
-                getDriveToFuelInNeutralZoneCommand(
-                        AutonomousGenerator.SHOULD_SHOOT_PRELOAD.getAsBoolean() && previousState == null,
-                        collectionTimeout,
-                        previousState == null,
-                        getIntakingPoseInNeutralZone(previousState),
-                        false
-                )
+                getSafeDriveToIntakeFromNeutralPath(),
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN)
         );
     }
 
@@ -62,7 +60,7 @@ public class GeneralAutonomousCommands {
                                 false
                         ),
                         new RunCommand(() -> Logger.recordOutput("Autonomous/TargetScoringPose", getScoringPose(nextState).get()))),
-                ShootingCommands.getShootingCommand()
+                ShootingCommands.getShootingCommand().withTimeout(AutonomousConstants.SCORING_TIMEOUT_SECONDS)
         ).withTimeout(timeout + AutonomousConstants.NORMAL_DRIVE_TIMEOUT);
     }
 
@@ -81,55 +79,26 @@ public class GeneralAutonomousCommands {
         ).alongWith(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
     }
 
-    private static Command getShootAtHubCommand() {
-        return GeneralCommands.runWhen(
-                ShootingCommands.getShootingCommand(),
-                FieldConstants::isRobotInAllianceZone,
-                AutonomousConstants.AUTONOMOUS_SHOOTING_DURATION_SECONDS
-        );
-    }
-
-    private static Command getDeliverWhileDrivingCommand() {
-        return GeneralCommands.getContinuousConditionalCommand(
-                ShootingCommands.getFixedDeliveryShootingCommand(),
-                GeneralCommands.getContinuousConditionalCommand(
-                        ShootingCommands.getFixedShootingAtHubCommand(),
-                        ShootingCommands.getFixedDeliveryShootingCommand(),
-                        FieldConstants::isRobotInAllianceZone
-                ),
-                FieldConstants::isRobotInDeliveryZone
-        );
-    }
-
-    private static Command getDriveToFuelInNeutralZoneCommand(boolean shootPreload, double timeout, boolean shouldWaitUntilAtPose, FlippablePose2d targetPose, boolean intakeSlowly) {
-        return SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(
-                        () -> targetPose,
-                        AutonomousConstants.DRIVE_FOR_INTAKING_CONSTRAINTS,
-                        0,
-                        AutonomousConstants.SHOOT_PRELOAD_BEFORE_NEUTRAL_ZONE_DRIVE_CONSTRAINTS,
-                        shootPreload ? AutonomousConstants.SHOOT_PRELOAD_BEFORE_NEUTRAL_ZONE_TIME_SECONDS : 0,
-                        true
-                ).until(shouldWaitUntilAtPose ? () -> RobotContainer.SWERVE.atPose(targetPose) : GeneralAutonomousCommands::shouldRobotStartIntaking)
-                .withTimeout(AutonomousConstants.NORMAL_DRIVE_TIMEOUT + timeout);
-    }
-
-
-    private static FlippablePose2d getIntakingPoseInNeutralZone(AutonomousGenerator.AutonomousState previousState) {
-        if (previousState == null)
-            return SafeAutonomousDriveCommands.isRight() ? FieldConstants.RIGHT_FIRST_INTAKE_POSITION : FieldConstants.LEFT_FIRST_INTAKE_POSITION;
-        return SafeAutonomousDriveCommands.isRight() ? FieldConstants.RIGHT_INTAKE_POSITION : FieldConstants.LEFT_INTAKE_POSITION;
-    }
-
     private static boolean isAfterTrenchX() {
         final Pose2d currentRobotPose = new FlippablePose2d(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose(), true).get();
         return currentRobotPose.getX() < FieldConstants.TRENCH_ALLIANCE_ENTRY_AUTONOMOUS_X;
     }
 
-    private static boolean shouldRobotStartIntaking() {
-        final Pose2d currentRobotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
-        if (Flippable.isRedAlliance())
-            return currentRobotPose.getX() < (FieldConstants.FIELD_LENGTH_METERS - AutonomousConstants.START_INTAKING_X);
-        return currentRobotPose.getX() > AutonomousConstants.START_INTAKING_X;
+    private static Command getSafeDriveToIntakeFromNeutralPath() {
+        return new SequentialCommandGroup(
+                SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(() ->AutonomousConstants.NEUTRAL_INTAKE_POSE, AutonomousConstants.DRIVE_IN_AUTONOMOUS_CONSTRAINTS),
+                getIntakeFromNeutralPath()
+        );
+    }
+
+    private static Command getIntakeFromNeutralPath() {
+        try {
+            PathPlannerPath neutralIntakePath = PathPlannerPath.fromPathFile("Neutral Collect");
+            return SwerveCommands.getFollowPathCommand(() -> neutralIntakePath);
+        } catch (Exception e) {
+            System.out.println("Couldn't find path");
+            return Commands.none();
+        }
     }
 
     static FlippablePose2d getScoringPose(AutonomousGenerator.AutonomousState nextState) {
