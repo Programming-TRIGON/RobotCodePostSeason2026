@@ -2,7 +2,7 @@ package frc.trigon.robot.misc.matchTracker;
 
 public class MatchTrackerConstants {
     public static final double
-            TRANSITION_SHIFT_START_TELEOP_TIME_SECONDS = 130,
+            SHIFT_1_START_TELEOP_TIME_SECONDS = 130,
             SHIFT_2_START_TELEOP_TIME_SECONDS = 105,
             SHIFT_3_START_TELEOP_TIME_SECONDS = 80,
             SHIFT_4_START_TELEOP_TIME_SECONDS = 55,

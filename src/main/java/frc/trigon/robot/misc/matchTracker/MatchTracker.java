@@ -14,7 +14,7 @@ public class MatchTracker {
         return isOurHubActiveAtMatchTime(expectedFuelArrivalMatchTimeSeconds);
     }
 
-    public static boolean isHubActiveNow() {
+    public static boolean isHubActive() {
         return isOurHubActiveAtMatchTime(DriverStation.getMatchTime());
     }
 
@@ -67,7 +67,7 @@ public class MatchTracker {
             double matchTimeSeconds,
             boolean isOurHubActiveInShift1
     ) {
-        if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_START_TELEOP_TIME_SECONDS) {
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS) {
             return true;
         }
 
@@ -109,7 +109,7 @@ public class MatchTracker {
         Logger.recordOutput("GameData", getGameData());
         Logger.recordOutput("IsGameDataForced", forcedGameData != null);
         Logger.recordOutput("IsRedAlliance", Flippable.isRedAlliance());
-        Logger.recordOutput("IsHubActiveNow", isHubActiveNow());
+        Logger.recordOutput("IsHubActiveNow", isHubActive());
         Logger.recordOutput("IsHubActiveForShooting", isHubActiveForShooting());
     }
 }
