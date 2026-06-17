@@ -77,18 +77,27 @@ public class ShootingCommands {
         );
     }
 
-    private static RepeatCommand getIntakeSequenceWhileShootingCommand() {
-        return new SequentialCommandGroup(
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
-                FuelIntakeCommands.getCloseIntakeWhileShootingCommand().until(OperatorConstants.INTAKE_WHILE_SHOOTING_TRIGGER)
-        ).repeatedly();
-    }
-
     public static Command getSetFixedShootingStateCommand(FixedShootingPosition targetState) {
         return new InstantCommand(() -> {
             setTargetFixedShootingAtHubState(targetState);
             Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", targetState.name());
         });
+    }
+
+    public static Command getPrepareForShootingCommand() {
+        return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
+                new ParallelCommandGroup(
+                        getUpdateShootingCalculationsCommand(),
+                        getAimForShootingCommand()
+                )
+        );
+    }
+
+    public static RepeatCommand getIntakeSequenceWhileShootingCommand() {
+        return new SequentialCommandGroup(
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
+                FuelIntakeCommands.getCloseIntakeWhileShootingCommand().until(OperatorConstants.INTAKE_WHILE_SHOOTING_TRIGGER)
+        ).repeatedly();
     }
 
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
@@ -138,18 +147,18 @@ public class ShootingCommands {
         return new RunCommand(ShootingCommands::updateShootingCalculations);
     }
 
-    private static Command getAimForShootingCommand() {
-        return new ParallelCommandGroup(
-                HoodCommands.getAimForShootingCommand(),
-                ShooterCommands.getAimForShootingCommand()
-        );
-    }
-
     private static Command getAimSwerveCommand(Supplier<Rotation2d> rotationSupplier) {
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftX()),
                 () -> new FlippableRotation2d(rotationSupplier.get(), false)
+        );
+    }
+
+    private static Command getAimForShootingCommand() {
+        return new ParallelCommandGroup(
+                HoodCommands.getAimForShootingCommand(),
+                ShooterCommands.getAimForShootingCommand()
         );
     }
 
