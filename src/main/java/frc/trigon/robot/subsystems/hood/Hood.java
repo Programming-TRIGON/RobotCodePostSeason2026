@@ -105,6 +105,15 @@ public class Hood extends MotorSubsystem {
         motor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
     }
 
+    void resetTargetVoltage() {
+        motor.setControl(voltageRequest.withOutput(HoodConstants.HOOD_RESET_VOLTAGE).withIgnoreSoftwareLimits(true));
+    }
+
+    void resetPosition() {
+        motor.setPosition(HoodConstants.RESET_ANGLE.getRotations());
+        motor.stopMotor();
+    }
+
     private Rotation2d getTargetProfiledAngle() {
         return Rotation2d.fromRotations(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
     }
