@@ -109,7 +109,7 @@ public class Hood extends MotorSubsystem {
         motor.setControl(voltageRequest.withOutput(HoodConstants.HOOD_RESET_VOLTAGE).withIgnoreSoftwareLimits(true));
     }
 
-    void setZeroPosition() {
+    void resetPosition() {
         motor.setPosition(HoodConstants.RESET_ANGLE.getRotations());
         motor.stopMotor();
     }

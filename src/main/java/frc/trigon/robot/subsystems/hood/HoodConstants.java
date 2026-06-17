@@ -69,7 +69,7 @@ public class HoodConstants {
     public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(30.203);
     public static final Rotation2d EJECT_FROM_SHOOTER_PITCH = Rotation2d.fromDegrees(30);
     static final double HOOD_RESET_VOLTAGE = 1;
-    static final Rotation2d RESET_ANGLE = REST_ANGLE;
+    static final Rotation2d RESET_ANGLE = MINIMUM_ANGLE;
 
     static {
         configureMotor();
