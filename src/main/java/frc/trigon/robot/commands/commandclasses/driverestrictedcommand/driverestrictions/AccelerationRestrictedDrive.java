@@ -10,25 +10,26 @@ import frc.trigon.robot.subsystems.swerve.SwerveConstants;
  * A drive restriction that limits the robot's linear and rotational acceleration.
  */
 public class AccelerationRestrictedDrive implements DriveRestriction {
-    private final double maximumTranslationAccelerationMeter;
-    private final SlewRateLimiter rotationAccelerationLimiter;
+    private final double maximumTranslationAccelerationMetersPerSecondSquared;
+    private final SlewRateLimiter rotationAccelerationRadiansPerSecondSquaredLimiter;
     private Translation2d currentTranslation = Translation2d.kZero;
 
     /**
      * A drive restriction that limits the maximum linear and rotational acceleration.
      *
-     * @param maximumTranslationAccelerationMeter maximum linear acceleration
-     * @param maximumRotationAcceleration    maximum rotational acceleration
+     * @param maximumTranslationAccelerationMetersPerSecondSquared maximum linear acceleration
+     * @param maximumRotationAccelerationRadiansPerSecondSquared    maximum rotational acceleration
+     *
      */
-    public AccelerationRestrictedDrive(double maximumTranslationAccelerationMeter, double maximumRotationAcceleration) {
-        this.maximumTranslationAccelerationMeter = maximumTranslationAccelerationMeter;
-        this.rotationAccelerationLimiter = new SlewRateLimiter(maximumRotationAcceleration / SwerveConstants.MAXIMUM_ROTATIONAL_SPEED_RADIANS_PER_SECOND);
+    public AccelerationRestrictedDrive(double maximumTranslationAccelerationMetersPerSecondSquared, double maximumRotationAccelerationRadiansPerSecondSquared) {
+        this.maximumTranslationAccelerationMetersPerSecondSquared = maximumTranslationAccelerationMetersPerSecondSquared;
+        this.rotationAccelerationRadiansPerSecondSquaredLimiter = new SlewRateLimiter(maximumRotationAccelerationRadiansPerSecondSquared / SwerveConstants.MAXIMUM_ROTATIONAL_SPEED_RADIANS_PER_SECOND);
     }
 
     @Override
     public void init() {
         currentTranslation = Translation2d.kZero;
-        rotationAccelerationLimiter.reset(0);
+        rotationAccelerationRadiansPerSecondSquaredLimiter.reset(0);
     }
 
     @Override
@@ -37,13 +38,13 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
                 currentTranslation,
                 targetTranslation,
                 RobotConstants.PERIODIC_TIME_SECONDS,
-                maximumTranslationAccelerationMeter
+                maximumTranslationAccelerationMetersPerSecondSquared
         );
         return currentTranslation;
     }
 
     @Override
     public double applyRotationRestriction(double targetRotation) {
-        return rotationAccelerationLimiter.calculate(targetRotation);
+        return rotationAccelerationRadiansPerSecondSquaredLimiter.calculate(targetRotation);
     }
 }
