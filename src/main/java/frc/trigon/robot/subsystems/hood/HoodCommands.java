@@ -20,6 +20,14 @@ public class HoodCommands {
         );
     }
 
+    public static Command getResetHoodCommand() {
+        return new StartEndCommand(
+                RobotContainer.HOOD::resetTargetVoltage,
+                RobotContainer.HOOD::resetPosition,
+                RobotContainer.HOOD
+        ).ignoringDisable(true);
+    }
+
     public static Command getAimForShootingCommand() {
         return new ExecuteEndCommand(
                 RobotContainer.HOOD::aimForShooting,
