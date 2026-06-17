@@ -5,12 +5,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.trigon.robot.subsystems.swerve.SwerveConstants;
 
 /**
- * A restriction that caps the robot's maximum linear and rotational velocity.
- * Used for precise actions like scoring approaches or fine alignment, where full driver speed would overshoot.
+ * A restriction that limits the robot's maximum linear and rotational velocity.
+ * Used to slow down the robot for precise robot movement.
  */
 public class VelocityRestrictedDrive implements DriveRestriction {
-    private final double maximumTranslationVelocity;
-    private final double maximumRotationVelocity;
+    private final double maximumTranslationVelocityMetersPerSecond;
+    private final double maximumRotationVelocityMetersPerSecond;
 
     /**
      * A restriction that limits the maximum linear and rotational velocity.
@@ -19,20 +19,22 @@ public class VelocityRestrictedDrive implements DriveRestriction {
      * @param maximumRotationVelocityRadiansPerSecond   maximum rotational velocity
      */
     public VelocityRestrictedDrive(double maximumTranslationVelocityMetersPerSecond, double maximumRotationVelocityRadiansPerSecond) {
-        this.maximumTranslationVelocity = MathUtil.clamp(maximumTranslationVelocityMetersPerSecond / SwerveConstants.MAXIMUM_SPEED_METERS_PER_SECOND, 0, 1);
-        this.maximumRotationVelocity = MathUtil.clamp(maximumRotationVelocityRadiansPerSecond / SwerveConstants.MAXIMUM_ROTATIONAL_SPEED_RADIANS_PER_SECOND, 0, 1);
+        this.maximumTranslationVelocityMetersPerSecond = MathUtil.clamp(maximumTranslationVelocityMetersPerSecond / SwerveConstants.MAXIMUM_SPEED_METERS_PER_SECOND, 0, 1);
+        this.maximumRotationVelocityMetersPerSecond = MathUtil.clamp(maximumRotationVelocityRadiansPerSecond / SwerveConstants.MAXIMUM_ROTATIONAL_SPEED_RADIANS_PER_SECOND, 0, 1);
     }
 
     @Override
     public Translation2d applyTranslationRestriction(Translation2d targetTranslation) {
-        final double translationMagnitude = targetTranslation.getNorm();
-        if (translationMagnitude > maximumTranslationVelocity)
-            return targetTranslation.times(maximumTranslationVelocity / translationMagnitude);
-        return targetTranslation;
+        final Translation2d scaledRobotTargetTranslation = targetTranslation.times(maximumRotationVelocityMetersPerSecond);
+        final double scaledRobotTargetTranslationMagnitude = scaledRobotTargetTranslation.getNorm();
+
+        if (scaledRobotTargetTranslationMagnitude > maximumTranslationVelocityMetersPerSecond)
+            return scaledRobotTargetTranslation.times(maximumTranslationVelocityMetersPerSecond / scaledRobotTargetTranslationMagnitude);
+        return scaledRobotTargetTranslation;
     }
 
     @Override
     public double applyRotationRestriction(double targetRotation) {
-        return MathUtil.clamp(targetRotation, -maximumRotationVelocity, maximumRotationVelocity);
+        return targetRotation * maximumRotationVelocityMetersPerSecond;
     }
 }

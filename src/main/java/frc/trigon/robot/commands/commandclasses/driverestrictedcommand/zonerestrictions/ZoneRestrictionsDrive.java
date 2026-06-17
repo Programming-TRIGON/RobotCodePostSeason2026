@@ -12,7 +12,7 @@ import frc.trigon.robot.constants.ZoneRestrictedDriveConstants;
  * All zone restrictions are applied sequentially, each further restricting the previous result.
  * Useful for keeping the robot inside the field boundary or out of specific regions such as opponent protected areas.
  */
-public class ZoneRestrictedDrive implements DriveRestriction {
+public class ZoneRestrictionsDrive implements DriveRestriction {
     private final ZoneRestriction[] zoneRestrictions;
 
     /**
@@ -21,7 +21,7 @@ public class ZoneRestrictedDrive implements DriveRestriction {
      * @param shouldRestrictToField whether to restrict the robot from leaving the field boundary
      * @param zoneRestrictions      the zones to restrict movement relative to
      */
-    public ZoneRestrictedDrive(boolean shouldRestrictToField, ZoneRestriction... zoneRestrictions) {
+    public ZoneRestrictionsDrive(boolean shouldRestrictToField, ZoneRestriction... zoneRestrictions) {
         this.zoneRestrictions = shouldRestrictToField
                 ? getZoneRestrictionsWithFieldRestriction(zoneRestrictions)
                 : zoneRestrictions;

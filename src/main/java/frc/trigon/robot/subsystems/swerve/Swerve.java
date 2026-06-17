@@ -182,10 +182,11 @@ public class Swerve extends MotorSubsystem {
     }
 
     /**
-     * Calculates and sets the target states for each module from robot-relative chassis speeds and robot-relative center of rotation.
+     * Calculates and sets the target states for each module from robot-relative chassis speeds and sets a robot-relative center of rotation.
      *
      * @param targetSpeeds the desired robot-relative targetSpeeds
      * @param centerOfRotation the desired robot-relative centerOfRotation
+     *
      */
     public void selfRelativeDrive(ChassisSpeeds targetSpeeds, Translation2d centerOfRotation) {
         final SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(targetSpeeds, centerOfRotation);

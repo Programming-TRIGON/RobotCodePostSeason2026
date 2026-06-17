@@ -24,18 +24,16 @@ public interface DriveRestriction {
     }
 
     /**
-     * Applies a restriction to the target rotation of the robot.
+     * Applies a restriction to the target center of rotation of the robot.
      *
-     * @param targetCenterOfRotation the robot's target center of rotation
      * @return the robot's restricted target center of rotation
      */
-    default Translation2d applyCenterOfRotationRestriction(Translation2d targetCenterOfRotation) {
-        return targetCenterOfRotation;
+    default Translation2d getCenterOfRotationRestriction() {
+        return Translation2d.kZero;
     }
 
     /**
-     * Is run every time the command is used.
-     * Used to reset the values so past values don't affect the command.
+     * Resets the restricted values so then stale values don't get used.
      */
     default void init() {}
 }

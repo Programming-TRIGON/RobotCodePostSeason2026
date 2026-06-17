@@ -81,7 +81,7 @@ public class SwerveCommands {
     }
 
     /**
-     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed loop mode.
+     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in open loop mode.
      *
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
@@ -92,6 +92,23 @@ public class SwerveCommands {
         return new InitExecuteCommand(
                 () -> RobotContainer.SWERVE.initializeDrive(false),
                 () -> RobotContainer.SWERVE.fieldRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                RobotContainer.SWERVE
+        );
+    }
+
+    /**
+     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in open loop mode.
+     *
+     * @param xSupplier     the target forwards power
+     * @param ySupplier     the target leftwards power
+     * @param thetaSupplier the target theta power, CCW+
+     * @param centerOfRotationSupplier the target center of rotation
+     * @return the command
+     */
+    public static Command getOpenLoopFieldRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
+        return new InitExecuteCommand(
+                () -> RobotContainer.SWERVE.initializeDrive(false),
+                () -> RobotContainer.SWERVE.fieldRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), centerOfRotationSupplier.get()),
                 RobotContainer.SWERVE
         );
     }
@@ -175,6 +192,23 @@ public class SwerveCommands {
         return new InitExecuteCommand(
                 () -> RobotContainer.SWERVE.initializeDrive(false),
                 () -> RobotContainer.SWERVE.selfRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble()),
+                RobotContainer.SWERVE
+        );
+    }
+
+    /**
+     * Creates a command that drives the swerve with the given powers, relative to the robot's frame of reference, in open loop mode.
+     *
+     * @param xSupplier     the target forwards power
+     * @param ySupplier     the target leftwards power
+     * @param thetaSupplier the target theta power, CCW+
+     * @param centerOfRotationSupplier the target center of rotation
+     * @return the command
+     */
+    public static Command getOpenLoopSelfRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
+        return new InitExecuteCommand(
+                () -> RobotContainer.SWERVE.initializeDrive(false),
+                () -> RobotContainer.SWERVE.selfRelativeDrive(xSupplier.getAsDouble(), ySupplier.getAsDouble(), thetaSupplier.getAsDouble(), centerOfRotationSupplier.get()),
                 RobotContainer.SWERVE
         );
     }

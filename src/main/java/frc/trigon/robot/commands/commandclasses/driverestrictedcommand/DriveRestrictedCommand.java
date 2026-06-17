@@ -16,7 +16,8 @@ import frc.trigon.robot.constants.OperatorConstants;
  */
 public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveRestriction[] driveRestrictions;
-    protected Translation2d centerOfRotation = Translation2d.kZero; //This is used in this class because the center of rotation is used in the drive command.
+    protected Translation2d robotRelativeCenterOfRotation = Translation2d.kZero; // Stored as a field because the supplier passed to getDriveCommand uses it.
+
     protected double
             restrictedX = 0,
             restrictedY = 0,
@@ -36,8 +37,12 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         );
     }
 
-    protected Rotation2d relativeDrive() {
-        return Rotation2d.kZero;
+    protected Translation2d toFieldRelativeDrive(Translation2d targetTranslation) {
+        return targetTranslation;
+    }
+
+    protected Translation2d fromFieldRelativeDrive(Translation2d targetTranslation) {
+        return targetTranslation;
     }
 
     protected abstract Command getDriveCommand();
@@ -46,53 +51,48 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         restrictedX = 0;
         restrictedY = 0;
         restrictedRotation = 0;
-        centerOfRotation = Translation2d.kZero;
+        robotRelativeCenterOfRotation = Translation2d.kZero;
         for (DriveRestriction driveRestriction : driveRestrictions)
             driveRestriction.init();
     }
 
     private void setRestrictedOutput() {
-        Rotation2d relativeRotation = relativeDrive();
-
-        Translation2d targetRobotTranslation = calculateTargetJoystickTranslation().rotateBy(relativeRotation);
-        double targetRobotRotation = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
+        Translation2d targetRobotTranslationPower = toFieldRelativeDrive(calculateTargetRobotTranslation());
+        double targetRobotRotationPower = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
         Translation2d targetRobotCenterOfRotation = Translation2d.kZero;
 
         for (DriveRestriction driveRestriction : driveRestrictions) {
-            targetRobotTranslation = driveRestriction.applyTranslationRestriction(targetRobotTranslation);
-            targetRobotRotation = driveRestriction.applyRotationRestriction(targetRobotRotation);
-            targetRobotCenterOfRotation = driveRestriction.applyCenterOfRotationRestriction(targetRobotCenterOfRotation);
+            targetRobotTranslationPower = driveRestriction.applyTranslationRestriction(targetRobotTranslationPower);
+            targetRobotRotationPower = driveRestriction.applyRotationRestriction(targetRobotRotationPower);
+            targetRobotCenterOfRotation = driveRestriction.getCenterOfRotationRestriction();
         }
 
-        targetRobotTranslation = targetRobotTranslation.rotateBy(relativeRotation.unaryMinus());
+        targetRobotTranslationPower = fromFieldRelativeDrive(targetRobotTranslationPower);
 
-        restrictedX = targetRobotTranslation.getX();
-        restrictedY = targetRobotTranslation.getY();
-        restrictedRotation = targetRobotRotation;
-        centerOfRotation = targetRobotCenterOfRotation;
+        restrictedX = targetRobotTranslationPower.getX();
+        restrictedY = targetRobotTranslationPower.getY();
+        restrictedRotation = targetRobotRotationPower;
+        robotRelativeCenterOfRotation = targetRobotCenterOfRotation;
     }
 
     /**
-     * Calculates the target joystick translation based on driver input.
+     * Calculates the robot's target translation based on driver input.
      *
-     * @return the target translation
+     * @return the robot's target translation from the joystick, as powers (1,-1)
      */
-    private Translation2d calculateTargetJoystickTranslation() {
+    private Translation2d calculateTargetRobotTranslation() {
         final Translation2d rawJoystickPosition = getRawJoystickPosition();
-        final double
-                rawXValue = rawJoystickPosition.getX(),
-                rawYValue = rawJoystickPosition.getY();
 
         return new Translation2d(
-                CommandConstants.calculateDriveStickAxisValue(rawXValue),
-                CommandConstants.calculateDriveStickAxisValue(rawYValue)
+                CommandConstants.calculateDriveStickAxisValue(rawJoystickPosition.getX()),
+                CommandConstants.calculateDriveStickAxisValue(rawJoystickPosition.getY())
         );
     }
 
     /**
      * Gets the raw joystick position of the controller.
      *
-     * @return the joysticks position as a Translation2D
+     * @return the left joysticks position as a power (1,-1), in a Translation2D
      */
     private Translation2d getRawJoystickPosition() {
         final double

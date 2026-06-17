@@ -1,6 +1,7 @@
 package frc.trigon.robot.commands.commandclasses.driverestrictedcommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.DriveRestriction;
@@ -26,12 +27,17 @@ public class SelfRelativeDriveRestrictedCommand extends DriveRestrictedCommand {
                 () -> restrictedX,
                 () -> restrictedY,
                 () -> restrictedRotation,
-                () -> centerOfRotation
+                () -> robotRelativeCenterOfRotation
         );
     }
 
     @Override
-    protected Rotation2d relativeDrive() {
-        return RobotContainer.SWERVE.getDriveRelativeAngle();
+    protected Translation2d toFieldRelativeDrive(Translation2d joystickFrameTranslation) {
+        return joystickFrameTranslation.rotateBy(RobotContainer.SWERVE.getDriveRelativeAngle());
+    }
+
+    @Override
+    protected Translation2d fromFieldRelativeDrive(Translation2d fieldFrameTranslation) {
+        return fieldFrameTranslation.rotateBy(RobotContainer.SWERVE.getDriveRelativeAngle().unaryMinus());
     }
 }
