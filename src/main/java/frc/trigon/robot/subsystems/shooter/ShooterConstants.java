@@ -78,22 +78,22 @@ public class ShooterConstants {
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
 
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.8;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.2185;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.21198;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.010289;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.21507;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.21093;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.009702;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15.0 : 0;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 0;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : 12.5;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 21.0;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.Feedback.SensorToMechanismRatio = AVERAGE_GEAR_RATIO;
-        config.Feedback.VelocityFilterTimeConstant = 0;
+        config.Feedback.VelocityFilterTimeConstant = 0.002;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = STATOR_CURRENT_LIMIT_AMPS;
@@ -115,7 +115,7 @@ public class ShooterConstants {
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
 
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
