@@ -5,8 +5,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.trigon.robot.constants.OperatorConstants;
 
 public class MatchTrackerCommands {
-    public static Command getForceGameDataCommand(char gameData) {
-        return new InstantCommand(() -> MatchTracker.forceGameData(gameData));
+    public static Command setOverrideGameDataCommand() {
+        return new InstantCommand(() -> MatchTracker.overrideGameData());
+    }
+
+    public static Command disableOverrideGameDataCommand() {
+        return new InstantCommand(() -> MatchTracker.disableOverrideGameData());
     }
 
     public static Command getRumbleCommand() {

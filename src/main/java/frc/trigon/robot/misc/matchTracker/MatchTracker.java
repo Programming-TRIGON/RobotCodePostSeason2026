@@ -5,42 +5,28 @@ import frc.trigon.lib.utilities.flippable.Flippable;
 import org.littletonrobotics.junction.Logger;
 
 public class MatchTracker {
-    private static Character forcedGameData = null;
-
-    public static boolean isHubActiveForShooting() {
-        final double currentMatchTimeSeconds = DriverStation.getMatchTime();
-        final double expectedFuelArrivalMatchTimeSeconds = currentMatchTimeSeconds - MatchTrackerConstants.FUEL_FLIGHT_TIME_SECONDS;
-
-        return isOurHubActiveAtMatchTime(expectedFuelArrivalMatchTimeSeconds);
-    }
+    private static boolean overrideGameData = false;
 
     public static boolean isHubActive() {
         return isOurHubActiveAtMatchTime(DriverStation.getMatchTime());
     }
 
-    public static void forceGameData(char gameData) {
-        final char gameDataUpperCase = Character.toUpperCase(gameData);
-
-        if (gameDataUpperCase != MatchTrackerConstants.RED_ALLIANCE_GAME_DATA &&
-                gameDataUpperCase != MatchTrackerConstants.BLUE_ALLIANCE_GAME_DATA) {
-            return;
-        }
-
-        forcedGameData = gameDataUpperCase;
+    public static void overrideGameData() {
+        overrideGameData = true;
     }
 
-    public static void clearForcedGameData() {
-        forcedGameData = null;
+    public static void disableOverrideGameData() {
+        overrideGameData = false;
     }
 
     private static String getGameData() {
-        if (forcedGameData != null)
-            return String.valueOf(forcedGameData);
-
         return DriverStation.getGameSpecificMessage();
     }
 
     private static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
+        if (overrideGameData)
+            return true;
+
         if (DriverStation.isAutonomousEnabled())
             return true;
 
@@ -96,20 +82,17 @@ public class MatchTracker {
 
         final char gameDataChar = Character.toUpperCase(gameData.charAt(0));
 
-        return gameDataChar == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA ||  gameDataChar == MatchTrackerConstants.BLUE_ALLIANCE_GAME_DATA;
+        return gameDataChar == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA ||
+                gameDataChar == MatchTrackerConstants.BLUE_ALLIANCE_GAME_DATA;
     }
 
     public static void logMatchInfo() {
         final double matchTimeSeconds = DriverStation.getMatchTime();
-        final double fuelArrivalMatchTimeSeconds =
-                matchTimeSeconds - MatchTrackerConstants.FUEL_FLIGHT_TIME_SECONDS;
 
         Logger.recordOutput("MatchTimeSeconds", matchTimeSeconds);
-        Logger.recordOutput("FuelArrivalMatchTimeSeconds", fuelArrivalMatchTimeSeconds);
         Logger.recordOutput("GameData", getGameData());
-        Logger.recordOutput("IsGameDataForced", forcedGameData != null);
+        Logger.recordOutput("IsHubAlwaysActiveOverridden", overrideGameData);
         Logger.recordOutput("IsRedAlliance", Flippable.isRedAlliance());
         Logger.recordOutput("IsHubActiveNow", isHubActive());
-        Logger.recordOutput("IsHubActiveForShooting", isHubActiveForShooting());
     }
 }
