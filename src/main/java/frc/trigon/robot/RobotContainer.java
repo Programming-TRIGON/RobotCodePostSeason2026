@@ -30,6 +30,7 @@ import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.loader.Loader;
 import frc.trigon.robot.subsystems.shooter.Shooter;
+import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -50,7 +51,7 @@ public class RobotContainer {
         initializeGeneralSystems();
         buildAutoChooser();
         configureBindings();
-//        configureSysIDBindings(HOOD);
+//        configureSysIDBindings(SHOOTER);
     }
 
     /**
@@ -71,7 +72,7 @@ public class RobotContainer {
         //      INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.AGITATE));
         //  INTAKE.setDefaultCommand(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN));
         //    LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
-        //  SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
+          SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
     }
 
     private void bindControllerCommands() {
