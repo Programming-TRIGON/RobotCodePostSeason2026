@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.robot.subsystems.MotorSubsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends MotorSubsystem {
@@ -59,6 +60,7 @@ public class Intake extends MotorSubsystem {
     @Override
     public void setBrake(boolean brake) {
         masterAngleMotor.setBrake(brake);
+        IntakeConstants.FOLLOWER_ANGLE_MOTOR.setBrake(brake);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class Intake extends MotorSubsystem {
         IntakeConstants.FOLLOWER_ANGLE_MOTOR.update();
         intakeMotor.update();
         IntakeConstants.ANGLE_ENCODER.update();
-        Logger.recordOutput("Intake/CurrentArmAngle", getCurrentAngle());
+        Logger.recordOutput("Intake/CurrentArmAngle", getCurrentAngle().getDegrees());
     }
 
     @Override
@@ -81,6 +83,7 @@ public class Intake extends MotorSubsystem {
         return targetState == this.targetState && atTargetState();
     }
 
+    @AutoLogOutput(key = "Intake/IntakeAtTargetAngle")
     public boolean atTargetState() {
         return targetState.targetAngle.minus(getCurrentAngle()).getDegrees() < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }

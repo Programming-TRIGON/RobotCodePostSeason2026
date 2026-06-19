@@ -68,7 +68,7 @@ public class HoodConstants {
     static final Rotation2d REST_ANGLE = MINIMUM_ANGLE;
     public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(30.203);
     public static final Rotation2d EJECT_FROM_SHOOTER_PITCH = Rotation2d.fromDegrees(30);
-    static final double HOOD_RESET_VOLTAGE = -1;
+    static final double HOOD_RESET_VOLTAGE = -0.5;
     static final Rotation2d RESET_ANGLE = MINIMUM_ANGLE;
 
     static {
@@ -86,13 +86,13 @@ public class HoodConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 35 : 250;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 35 : 300;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.22942 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.016146 : 0.25369;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 2.6669 : 2.4991;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.016146 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 2.6669 : 2.6469;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.041586 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.18316 : 0.60768;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.18316 : 0.33039;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
@@ -103,7 +103,7 @@ public class HoodConstants {
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 60;
+        config.CurrentLimits.StatorCurrentLimit = 40;
 
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAXIMUM_ANGLE.getRotations();

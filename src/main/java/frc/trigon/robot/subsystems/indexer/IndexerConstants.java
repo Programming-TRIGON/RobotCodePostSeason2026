@@ -2,6 +2,7 @@ package frc.trigon.robot.subsystems.indexer;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -50,6 +51,7 @@ public class IndexerConstants {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.ExternalFeedback.withSensorToMechanismRatio(GEAR_RATIO);
+        config.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 40;
