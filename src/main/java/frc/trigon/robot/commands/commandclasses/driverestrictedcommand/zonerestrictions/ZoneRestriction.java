@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.trigon.lib.utilities.BoundingBox;
 
 /**
- * Represents a zone that restricts the robot's movement relative to its boundary.
+ * Represents a zone that restricts the robot's movement relative to the area of the robot.
  */
 public interface ZoneRestriction {
     BoundingBox getBoundingBox();
@@ -13,7 +13,7 @@ public interface ZoneRestriction {
     /**
      * Gets the distance from the zone boundary that the robot cannot cross.
      */
-    double getMinimumDistanceMeters();
+    double getMinimumDistanceFromZoneBoundaryMeters();
 
     /**
      * Gets the distance from the zone boundary at which braking begins.
@@ -38,11 +38,11 @@ public interface ZoneRestriction {
      */
     default double calculateBrakingScale(double distanceToBoundary) {
         final double
-                distanceIntoBrakingZone = distanceToBoundary - getMinimumDistanceMeters(),
-                brakingZoneSize = getBrakingZoneDistanceMeters() - getMinimumDistanceMeters();
+                distanceIntoBrakingZone = distanceToBoundary - getMinimumDistanceFromZoneBoundaryMeters(),
+                brakingZoneSize = getBrakingZoneDistanceMeters() - getMinimumDistanceFromZoneBoundaryMeters();
 
         if (brakingZoneSize <= 0)
-            return distanceToBoundary > getMinimumDistanceMeters() ? 1 : 0;
+            return distanceToBoundary > getMinimumDistanceFromZoneBoundaryMeters() ? 1 : 0;
 
         return MathUtil.clamp(distanceIntoBrakingZone / brakingZoneSize, 0, 1);
     }

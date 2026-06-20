@@ -34,7 +34,7 @@ public class ContainmentZone implements ZoneRestriction {
     }
 
     @Override
-    public double getMinimumDistanceMeters() {
+    public double getMinimumDistanceFromZoneBoundaryMeters() {
         return minimumDistanceMeters;
     }
 

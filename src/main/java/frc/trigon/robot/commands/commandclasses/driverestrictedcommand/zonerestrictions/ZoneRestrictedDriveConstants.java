@@ -1,13 +1,13 @@
-package frc.trigon.robot.constants;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.trigon.lib.utilities.BoundingBox;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.ContainmentZone;
+import frc.trigon.robot.constants.FieldConstants;
 
 public class ZoneRestrictedDriveConstants {
     private static final double
-            ROBOT_X_WIDTH_METERS = 0.9,
-            ROBOT_Y_WIDTH_METERS = 0.9,
+            ROBOT_X_WIDTH_METERS = 0.836,
+            ROBOT_Y_WIDTH_METERS = 0.902,
             INTAKE_LENGTH = 0.37;
     public static final BoundingBox ROBOT_RELATIVE_BOUNDING_BOX = new BoundingBox(
             new Translation2d(ROBOT_X_WIDTH_METERS / 2 + INTAKE_LENGTH, -ROBOT_Y_WIDTH_METERS / 2),

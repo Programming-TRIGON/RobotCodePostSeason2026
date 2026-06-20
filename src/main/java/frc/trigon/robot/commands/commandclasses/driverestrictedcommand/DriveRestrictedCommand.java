@@ -17,7 +17,6 @@ import frc.trigon.robot.constants.OperatorConstants;
 public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveRestriction[] driveRestrictions;
     protected Translation2d robotRelativeCenterOfRotation = Translation2d.kZero; // Stored as a field because the supplier passed to getDriveCommand uses it.
-
     protected double
             restrictedX = 0,
             restrictedY = 0,

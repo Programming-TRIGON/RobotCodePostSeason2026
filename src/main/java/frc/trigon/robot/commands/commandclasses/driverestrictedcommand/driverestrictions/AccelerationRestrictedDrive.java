@@ -3,6 +3,7 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driveres
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.robot.constants.RobotConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveConstants;
 
@@ -36,7 +37,7 @@ public class AccelerationRestrictedDrive implements DriveRestriction {
         currentTranslation = MathUtil.slewRateLimit(
                 currentTranslation,
                 targetTranslation,
-                RobotConstants.PERIODIC_TIME_SECONDS,
+                RobotHardwareStats.getPeriodicTimeSeconds(),
                 maximumTranslationAccelerationPower
         );
         return currentTranslation;

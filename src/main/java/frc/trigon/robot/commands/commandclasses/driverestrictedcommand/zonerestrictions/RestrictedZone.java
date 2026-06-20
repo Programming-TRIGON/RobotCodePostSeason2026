@@ -1,7 +1,6 @@
 package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.trigon.lib.utilities.BoundingBox;
 
 /**
@@ -31,7 +30,7 @@ public class RestrictedZone implements ZoneRestriction {
     }
 
     @Override
-    public double getMinimumDistanceMeters() {
+    public double getMinimumDistanceFromZoneBoundaryMeters() {
         return minimumDistanceMeters;
     }
 
@@ -53,41 +52,41 @@ public class RestrictedZone implements ZoneRestriction {
     /**
      * Scales down the component of the translation pointing toward the zone boundary.
      *
-     * @param targetTranslation               the target translation to restrict
+     * @param targetTranslation               the  robot's target translation
      * @param minimumDistanceToBoundaryMeters the current distance to the zone boundary from the closest point of the robot to the closest point on the boundary
      * @param robotBoundingBox                the robot's current bounding box
      * @return the restricted translation
      */
     private Translation2d calculateRestrictedTranslation(Translation2d targetTranslation, double minimumDistanceToBoundaryMeters, BoundingBox robotBoundingBox) {
-        final Translation2d unitVectorTowardBoundary = calculateUnitVectorTowardBoundary(robotBoundingBox);
-        final double translationComponentTowardBoundary = targetTranslation.dot(unitVectorTowardBoundary);
+        final Translation2d directionTowardBoundary = calculateDirectionTowardBoundary(robotBoundingBox);
+        final double translationComponentTowardBoundary = targetTranslation.dot(directionTowardBoundary);
 
         if (translationComponentTowardBoundary <= 0)
             return targetTranslation;
 
-        return applyBrakingScale(targetTranslation, unitVectorTowardBoundary, translationComponentTowardBoundary, minimumDistanceToBoundaryMeters);
+        return applyBrakingScale(targetTranslation, directionTowardBoundary, translationComponentTowardBoundary, minimumDistanceToBoundaryMeters);
     }
 
     /**
-     * Returns a unit vector pointing from the robot's current position toward the nearest zone boundary point.
-     * If the robot is inside the zone such that the vector would point outside the zone,
-     * the vector is flipped to prevent movement further into the zone.
+     * Returns the direction from the robot toward the nearest zone boundary point.
+     * If the robot is inside the zone such that the direction would be towards outside the zone,
+     * the direction is flipped to prevent movement further into the zone.
      * Returns a zero vector if the robot is exactly on the boundary.
      *
      * @param robotBoundingBox the robot's current bounding box
-     * @return the unit vector pointing toward the zone boundary
+     * @return the direction from the robot pointing toward the zone boundary
      */
-    private Translation2d calculateUnitVectorTowardBoundary(BoundingBox robotBoundingBox) {
+    private Translation2d calculateDirectionTowardBoundary(BoundingBox robotBoundingBox) {
         final Translation2d robotCenter = robotBoundingBox.getCenter().getTranslation();
-        Translation2d vectorTowardBoundary = boundingBox.nearestPerimeterPoint(robotCenter).minus(robotCenter);
+        Translation2d directionTowardBoundary = boundingBox.nearestPerimeterPoint(robotCenter).minus(robotCenter);
 
         if (boundingBox.contains(robotCenter))
-            vectorTowardBoundary = vectorTowardBoundary.unaryMinus();
+            directionTowardBoundary = directionTowardBoundary.unaryMinus();
 
-        if (vectorTowardBoundary.getNorm() < 1e-6)
+        if (directionTowardBoundary.getNorm() < 1e-6)
             return new Translation2d();
 
-        return vectorTowardBoundary.times(1 / vectorTowardBoundary.getNorm());
+        return directionTowardBoundary.times(1 / directionTowardBoundary.getNorm());
     }
 
     /**
@@ -95,14 +94,14 @@ public class RestrictedZone implements ZoneRestriction {
      * scales the toward-boundary component by the braking scale, and recombines them.
      *
      * @param targetTranslation                the target translation to apply braking to
-     * @param unitVectorTowardBoundary         the unit vector pointing toward the boundary
      * @param towardBoundaryComponentMagnitude the magnitude of the target translation in the toward-boundary direction
+     * @param directionTowardBoundary         the direction of the robot pointing toward the boundary
      * @param minimumDistanceToBoundaryMeters  the current distance to the zone boundary from the closest point of the robot to the closest point on the boundary
      * @return the scaled translation
      */
-    private Translation2d applyBrakingScale(Translation2d targetTranslation, Translation2d unitVectorTowardBoundary, double towardBoundaryComponentMagnitude, double minimumDistanceToBoundaryMeters) {
+    private Translation2d applyBrakingScale(Translation2d targetTranslation, Translation2d directionTowardBoundary, double towardBoundaryComponentMagnitude, double minimumDistanceToBoundaryMeters) {
         final Translation2d
-                towardComponent = unitVectorTowardBoundary.times(towardBoundaryComponentMagnitude),
+                towardComponent = directionTowardBoundary.times(towardBoundaryComponentMagnitude),
                 perpendicularComponent = targetTranslation.minus(towardComponent);
         final double brakingScale = calculateBrakingScale(minimumDistanceToBoundaryMeters);
 

@@ -2,9 +2,14 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driveres
 
 import edu.wpi.first.math.geometry.Translation2d;
 
+/**
+ * A restriction applied to the robot's drive by a DriveRestrictedCommand.
+ * Each restriction changes either the translation, rotation, or center of rotation.
+ * All methods default to passing the value through unchanged.
+ */
 public interface DriveRestriction {
     /**
-     * Applies a restriction to the target translation of the robot
+     * Applies a restriction to the target translation of the robot.
      *
      * @param targetTranslation the target translation of the robot
      * @return the restricted target translation of the robot
@@ -32,8 +37,10 @@ public interface DriveRestriction {
     default Translation2d applyCenterOfRotationRestriction(Translation2d targetCenterOfRotation) {
         return targetCenterOfRotation;
     }
+
     /**
      * Resets the restricted values so then stale values don't get used.
      */
-    default void init() {}
+    default void init() {
+    }
 }
