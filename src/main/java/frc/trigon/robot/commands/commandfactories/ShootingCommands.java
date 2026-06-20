@@ -29,7 +29,6 @@ import java.util.function.Supplier;
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
-    private static boolean overrideGameData = false;
 
     public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
@@ -213,7 +212,7 @@ public class ShootingCommands {
         if (isDelivery.getAsBoolean())
             return !isDeliveryHittingHub();
 
-        return MatchTracker.isHubActive()              ;
+        return MatchTracker.isHubActive();
     }
 
     private static boolean isDeliveryHittingHub() {

@@ -47,20 +47,15 @@ public class MatchTracker {
     }
 
     private static boolean calculateHubActiveDuringTeleopShift(double matchTimeSeconds, boolean isOurHubActiveInShift1) {
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS) {
-            return true;}
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS) {return true;}
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS) {
-            return isOurHubActiveInShift1;}
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS) {return isOurHubActiveInShift1;}
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS) {
-            return !isOurHubActiveInShift1;}
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS) {return !isOurHubActiveInShift1;}
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS) {
-            return isOurHubActiveInShift1;}
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS) {return isOurHubActiveInShift1;}
 
-        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TELEOP_TIME_SECONDS) {
-            return !isOurHubActiveInShift1;}
+        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TELEOP_TIME_SECONDS) {return !isOurHubActiveInShift1;}
 
         return true;
     }
