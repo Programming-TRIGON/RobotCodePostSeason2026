@@ -13,15 +13,15 @@ public class MatchTracker {
 
     public static void overrideGameData() {
         overrideGameData = true;
+        Logger.recordOutput("IsHubAlwaysActiveOverridden", overrideGameData);
     }
 
     public static void disableOverrideGameData() {
         overrideGameData = false;
+        Logger.recordOutput("IsHubAlwaysActiveOverridden", overrideGameData);
     }
 
-    private static String getGameData() {
-        return DriverStation.getGameSpecificMessage();
-    }
+    private static String getGameData() {return DriverStation.getGameSpecificMessage();}
 
     private static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
         if (overrideGameData)
@@ -29,9 +29,6 @@ public class MatchTracker {
 
         if (DriverStation.isAutonomousEnabled())
             return true;
-
-        if (!DriverStation.isTeleopEnabled())
-            return false;
 
         final String gameData = getGameData();
 
@@ -49,29 +46,21 @@ public class MatchTracker {
         return calculateHubActiveDuringTeleopShift(matchTimeSeconds, isOurHubActiveInShift1);
     }
 
-    private static boolean calculateHubActiveDuringTeleopShift(
-            double matchTimeSeconds,
-            boolean isOurHubActiveInShift1
-    ) {
+    private static boolean calculateHubActiveDuringTeleopShift(double matchTimeSeconds, boolean isOurHubActiveInShift1) {
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS) {
-            return true;
-        }
+            return true;}
 
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS) {
-            return isOurHubActiveInShift1;
-        }
+            return isOurHubActiveInShift1;}
 
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS) {
-            return !isOurHubActiveInShift1;
-        }
+            return !isOurHubActiveInShift1;}
 
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS) {
-            return isOurHubActiveInShift1;
-        }
+            return isOurHubActiveInShift1;}
 
         if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TELEOP_TIME_SECONDS) {
-            return !isOurHubActiveInShift1;
-        }
+            return !isOurHubActiveInShift1;}
 
         return true;
     }
@@ -87,11 +76,8 @@ public class MatchTracker {
     }
 
     public static void logMatchInfo() {
-        final double matchTimeSeconds = DriverStation.getMatchTime();
-
-        Logger.recordOutput("MatchTimeSeconds", matchTimeSeconds);
+        Logger.recordOutput("MatchTimeSeconds", DriverStation.getMatchTime());
         Logger.recordOutput("GameData", getGameData());
-        Logger.recordOutput("IsHubAlwaysActiveOverridden", overrideGameData);
         Logger.recordOutput("IsRedAlliance", Flippable.isRedAlliance());
         Logger.recordOutput("IsHubActiveNow", isHubActive());
     }

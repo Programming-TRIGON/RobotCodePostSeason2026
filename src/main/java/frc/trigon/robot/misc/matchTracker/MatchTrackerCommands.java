@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.trigon.robot.constants.OperatorConstants;
 
 public class MatchTrackerCommands {
-    public static Command setOverrideGameDataCommand() {
+    public static Command enableOverrideGameDataCommand() {
         return new InstantCommand(() -> MatchTracker.overrideGameData());
     }
 
@@ -14,6 +14,6 @@ public class MatchTrackerCommands {
     }
 
     public static Command getRumbleCommand() {
-        return new InstantCommand(() -> OperatorConstants.DRIVER_CONTROLLER.rumble(MatchTrackerConstants.RUMBLE_TIME_IN_SECONDS,MatchTrackerConstants.RUMBLE_POWER));
+        return new InstantCommand(() -> OperatorConstants.DRIVER_CONTROLLER.rumble(MatchTrackerConstants.RUMBLE_TIME_IN_SECONDS, MatchTrackerConstants.RUMBLE_POWER));
     }
 }

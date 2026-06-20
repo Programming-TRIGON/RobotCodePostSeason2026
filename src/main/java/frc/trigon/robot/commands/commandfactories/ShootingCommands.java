@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
+    private static boolean overrideGameData = false;
 
     public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
@@ -181,7 +182,10 @@ public class ShootingCommands {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch);
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
 
-        return isPitchReady && isVelocityReady;
+        if (!SHOOTING_CALCULATIONS.isReadyToShoot())
+            return false;
+
+        return isPitchReady && isVelocityReady && MatchTracker.isHubActive();
     }
 
     private static void updateShootingCalculations() {
@@ -202,22 +206,6 @@ public class ShootingCommands {
         TARGET_FIXED_SHOOTING_AT_HUB_STATE = targetFixedShootingAtHubState;
     }
 
-    public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL
-        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(59.965), 6.866),
-        RIGHT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
-        LEFT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
-        BACK_RIGHT(Rotation2d.fromDegrees(57.079), 8.349),
-        BACK_LEFT(Rotation2d.fromDegrees(57.079), 8.349);
-
-        private final Rotation2d targetPitch;
-        private final double targetShootingVelocityMetersPerSecond;
-
-        FixedShootingPosition(Rotation2d targetPitch, double targetShootingVelocityMetersPerSecond) {
-            this.targetPitch = targetPitch;
-            this.targetShootingVelocityMetersPerSecond = targetShootingVelocityMetersPerSecond;
-        }
-    }
-
     private static boolean isReadyForShooting(BooleanSupplier isDelivery) {
         if (!SHOOTING_CALCULATIONS.isReadyToShoot())
             return false;
@@ -225,7 +213,7 @@ public class ShootingCommands {
         if (isDelivery.getAsBoolean())
             return !isDeliveryHittingHub();
 
-        return MatchTracker.isHubActive();
+        return MatchTracker.isHubActive()              ;
     }
 
     private static boolean isDeliveryHittingHub() {
@@ -327,5 +315,21 @@ public class ShootingCommands {
                 (secondDeltaX * (deliveryPathStartPoint.getY() - hubSideStartPoint.getY()) - secondDeltaY * (deliveryPathStartPoint.getX() - hubSideStartPoint.getX())) / denominator;
 
         return firstIntersection >= 0 && firstIntersection <= 1 && secondIntersection >= 0 && secondIntersection <= 1;
+    }
+
+    public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL
+        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(59.965), 6.866),
+        RIGHT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
+        LEFT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
+        BACK_RIGHT(Rotation2d.fromDegrees(57.079), 8.349),
+        BACK_LEFT(Rotation2d.fromDegrees(57.079), 8.349);
+
+        private final Rotation2d targetPitch;
+        private final double targetShootingVelocityMetersPerSecond;
+
+        FixedShootingPosition(Rotation2d targetPitch, double targetShootingVelocityMetersPerSecond) {
+            this.targetPitch = targetPitch;
+            this.targetShootingVelocityMetersPerSecond = targetShootingVelocityMetersPerSecond;
+        }
     }
 }
