@@ -64,7 +64,7 @@ public class SwerveCommands {
     }
 
     /**
-     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed loop mode.
+     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in open loop mode.
      *
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
