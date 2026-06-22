@@ -19,6 +19,8 @@ import java.util.Random;
 public class SimulationFieldHandler {
     private static final ArrayList<SimulatedGamePiece> HELD_FUEL = new ArrayList<>(List.of());
     private static double lastEjectionTimestampSeconds = 0;
+    private static double lastIntakeEjectionTimestampSeconds = 0;
+    private static int intakeEjectedCount = 0;
 
     public static boolean hasFuel() {
         return !HELD_FUEL.isEmpty();
@@ -120,16 +122,46 @@ public class SimulationFieldHandler {
      * position so pieces appear at the front of the robot rather than at the shooter exit.
      */
     private static void updateIntakeEjection() {
-        if (!hasFuel() || !isEjectingThroughIntake())
+        if (!hasFuel() || !isEjectingThroughIntake()) {
+            intakeEjectedCount = 0;
+            return;
+        }
+
+        final double now = Timer.getFPGATimestamp();
+        if (now - lastIntakeEjectionTimestampSeconds < SimulatedGamePieceConstants.INTAKE_EJECT_INTERVAL_SECONDS)
             return;
 
-        final Translation3d ejectPosition = robotRelativeToFieldRelative(SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION);
-        final ArrayList<SimulatedGamePiece> toEject = new ArrayList<>(HELD_FUEL);
-        for (SimulatedGamePiece piece : toEject) {
+        final int width = SimulatedGamePieceConstants.INTAKE_EJECT_ROW_WIDTH;
+        for (int i = 0; i < width && !HELD_FUEL.isEmpty(); i++) {
+            final SimulatedGamePiece piece = HELD_FUEL.get(0);
             piece.release();
-            piece.updatePosition(ejectPosition);
+            piece.updatePosition(calculateIntakeEjectPosition(intakeEjectedCount));
             HELD_FUEL.remove(piece);
+            intakeEjectedCount++;
         }
+
+        lastIntakeEjectionTimestampSeconds = now;
+    }
+
+    /**
+     * Lays ejected fuel out in front of the intake in a row 4 balls wide, filling left-to-right and
+     * advancing forward (away from the robot) once each row of 4 is full. The block is centered on
+     * the intake's Y axis so it sits squarely ahead of the collection point.
+     */
+    private static Translation3d calculateIntakeEjectPosition(int index) {
+        final int width = SimulatedGamePieceConstants.INTAKE_EJECT_ROW_WIDTH;
+        final double spacing = SimulatedGamePieceConstants.FUEL_DIAMETER_METERS;
+
+        final int column = index % width;
+        final int row = index / width;
+        final double widthCenter = (width - 1) / 2.0;
+
+        final Translation3d robotRelativePosition = SimulatedGamePieceConstants.COLLECTION_CHECK_POSITION.plus(new Translation3d(
+                row * spacing,
+                (column - widthCenter) * spacing,
+                0
+        ));
+        return robotRelativeToFieldRelative(robotRelativePosition);
     }
 
     /**
@@ -137,9 +169,9 @@ public class SimulationFieldHandler {
      * loader, indexer, and intake all spinning backwards.
      */
     private static boolean isEjectingThroughIntake() {
-        return RobotContainer.LOADER.getCurrentVoltage() < -LoaderConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
-                && RobotContainer.INDEXER.getCurrentVoltage() < -IndexerConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
-                && RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.POWERED_OPEN);
+        return RobotContainer.LOADER.getCurrentVoltage() < LoaderConstants.EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD
+                && RobotContainer.INDEXER.getCurrentVoltage() < IndexerConstants.EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD
+                && RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN);
     }
 
     /**

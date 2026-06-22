@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.misc.TrenchDetection;
 
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
@@ -25,6 +26,7 @@ public class OperatorConstants {
 
     public static final Trigger
             RESET_HEADING_TRIGGER = DRIVER_CONTROLLER.y(),
+            RESET_HOOD_TRIGGER = OPERATOR_CONTROLLER.a(),
             TOGGLE_BRAKE_TRIGGER = OPERATOR_CONTROLLER.g().or(RobotController::getUserButton),
             DEBUGGING_TRIGGER = OPERATOR_CONTROLLER.f2(),
             SHOOTING_MAP_CALIBRATION_TRIGGER = OPERATOR_CONTROLLER.f3(),
@@ -43,12 +45,16 @@ public class OperatorConstants {
             SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_BACK_LEFT_TRIGGER = DRIVER_CONTROLLER.povLeft().or(OPERATOR_CONTROLLER.j()),
             FIXED_SHOOTING_AT_HUB_TRIGGER = DRIVER_CONTROLLER.leftBumper().or(OPERATOR_CONTROLLER.s()),
             FIXED_DELIVERY_TRIGGER = DRIVER_CONTROLLER.rightBumper().or(OPERATOR_CONTROLLER.f()),
-            IS_ANY_SHOOTING_TRIGGER_ACTIVE = SHOOTING_TRIGGER.or(FIXED_SHOOTING_AT_HUB_TRIGGER).or(FIXED_DELIVERY_TRIGGER);
+            PREPARE_FOR_SHOOTING_TRIGGER = OPERATOR_CONTROLLER.c(),
+            EJECT_FROM_INTAKE_TRIGGER = DRIVER_CONTROLLER.x().or(OPERATOR_CONTROLLER.r()),
+            EJECT_FROM_SHOOTER_TRIGGER = OPERATOR_CONTROLLER.e(),
+            IS_ANY_SHOOTING_TRIGGER_ACTIVE = SHOOTING_TRIGGER.or(FIXED_SHOOTING_AT_HUB_TRIGGER).or(FIXED_DELIVERY_TRIGGER).or(EJECT_FROM_SHOOTER_TRIGGER);
     public final static Trigger
             PRELOAD_TRIGGER = OPERATOR_CONTROLLER.x().or(DRIVER_CONTROLLER.start()),
             CLOSE_INTAKE_TRIGGER = DRIVER_CONTROLLER.leftStick().or(OPERATOR_CONTROLLER.z()),
             CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE),
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
-            INTAKE_WHILE_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.c()),
-            INTAKE_TRIGGER = INTAKE_WHILE_SHOOTING_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate());
+            INTAKE_WHILE_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.v()),
+            INTAKE_TRIGGER = INTAKE_WHILE_SHOOTING_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
+            RESTRICT_HOOD_ANGLE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone);
 }

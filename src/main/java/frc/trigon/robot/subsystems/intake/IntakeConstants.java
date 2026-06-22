@@ -41,16 +41,17 @@ public class IntakeConstants {
     static final CANcoderEncoder ANGLE_ENCODER = new CANcoderEncoder(ANGLE_ENCODER_ID, ANGLE_ENCODER_NAME, RobotConstants.CANIVORE_NAME);
 
     private static final double
-            ANGLE_MOTOR_GEAR_RATIO = 45,
-            INTAKE_MOTOR_GEAR_RATIO = 1.55;
+            ARM_SENSOR_TO_MECHANISM_GEAR_RATIO = 0.9,
+            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 46.96 / ARM_SENSOR_TO_MECHANISM_GEAR_RATIO,
+            INTAKE_MOTOR_GEAR_RATIO = 1.5;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
             INTAKE_MOTOR_CURRENT_LIMIT = 40,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 1.1 : 0,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 1.1 : 0;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 0,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 0;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -60,7 +61,7 @@ public class IntakeConstants {
             INTAKE_GEARBOX = DCMotor.getKrakenX60Foc(INTAKE_MOTOR_AMOUNT);
     private static final double
             INTAKE_LENGTH_METERS = 0.369,
-            INTAKE_MASS_KILOGRAMS = 3.5;
+            INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
             MINIMUM_ANGLE = Rotation2d.fromDegrees(0),
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(157.51);
@@ -68,7 +69,7 @@ public class IntakeConstants {
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
             ANGLE_GEARBOX,
-            ANGLE_MOTOR_GEAR_RATIO,
+            ARM_ROTOR_TO_SENSOR_GEAR_RATIO * ARM_SENSOR_TO_MECHANISM_GEAR_RATIO,
             INTAKE_LENGTH_METERS,
             INTAKE_MASS_KILOGRAMS,
             MINIMUM_ANGLE,
@@ -126,15 +127,16 @@ public class IntakeConstants {
 
         config.Feedback.FeedbackRemoteSensorID = ANGLE_ENCODER.getID();
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        config.Feedback.RotorToSensorRatio = ANGLE_MOTOR_GEAR_RATIO;
+        config.Feedback.RotorToSensorRatio = ARM_ROTOR_TO_SENSOR_GEAR_RATIO;
+        config.Feedback.SensorToMechanismRatio = ARM_SENSOR_TO_MECHANISM_GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 25 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0028287 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.3359 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.11278 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.16436 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.5246 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
@@ -223,7 +225,8 @@ public class IntakeConstants {
         OPEN(0, MINIMUM_ANGLE, 1),
         CLOSE(0, MAXIMUM_ANGLE, 1),
         POWERED_OPEN(6, MINIMUM_ANGLE, 1),
-        POWERED_CLOSE(6, MAXIMUM_ANGLE, 1);
+        POWERED_CLOSE(6, MAXIMUM_ANGLE, 1),
+        REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1);
 
         public final double targetVoltage;
         public final Rotation2d targetAngle;

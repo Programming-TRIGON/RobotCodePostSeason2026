@@ -17,6 +17,7 @@ import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.AutonomousConstants;
+import frc.trigon.robot.misc.TrenchDetection;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimatorConstants;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.swerve.swervemodule.SwerveModule;
@@ -67,6 +68,7 @@ public class Swerve extends MotorSubsystem {
 
         updatePoseEstimatorStates();
         RobotContainer.ROBOT_POSE_ESTIMATOR.periodic();
+        TrenchDetection.logTrenchBoundingBoxes();
     }
 
     @Override
