@@ -2,13 +2,16 @@ package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
+import frc.trigon.robot.misc.matchTracker.MatchTrackerConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
@@ -29,7 +32,7 @@ import java.util.function.Supplier;
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
-    public static boolean overrideGameData = false;
+    public static boolean shouldOverrideGameData = false;
 
     public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
@@ -182,9 +185,6 @@ public class ShootingCommands {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch);
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
 
-        if (!SHOOTING_CALCULATIONS.isReadyToShoot())
-            return false;
-
         return isPitchReady && isVelocityReady && MatchTracker.isHubActive();
     }
 
@@ -315,6 +315,39 @@ public class ShootingCommands {
                 (secondDeltaX * (deliveryPathStartPoint.getY() - hubSideStartPoint.getY()) - secondDeltaY * (deliveryPathStartPoint.getX() - hubSideStartPoint.getX())) / denominator;
 
         return firstIntersection >= 0 && firstIntersection <= 1 && secondIntersection >= 0 && secondIntersection <= 1;
+    }
+
+    public static void overrideGameData() {
+        ShootingCommands.shouldOverrideGameData = true;
+        Logger.recordOutput("IsHubAlwaysActiveOverridden", ShootingCommands.shouldOverrideGameData);
+    }
+
+    public static void disableOverrideGameData() {
+        ShootingCommands.shouldOverrideGameData = false;
+        Logger.recordOutput("IsHubAlwaysActiveOverridden", ShootingCommands.shouldOverrideGameData);
+    }
+
+    public static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
+        if (ShootingCommands.shouldOverrideGameData)
+            return true;
+
+        if (DriverStation.isAutonomousEnabled())
+            return true;
+
+        final String gameData = DriverStation.getGameSpecificMessage();
+
+        if (!MatchTracker.isValidGameData(gameData)) {
+            Logger.recordOutput("MatchTracker/HasValidGameData", false);
+            return true;
+        }
+
+        Logger.recordOutput("MatchTracker/HasValidGameData", true);
+
+        final boolean isRedHubInactiveInShift1 = Character.toUpperCase(gameData.charAt(0)) == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA;
+        final boolean isOurHubInactiveInShift1 = isRedHubInactiveInShift1 == Flippable.isRedAlliance();
+        final boolean isOurHubActiveInShift1 = !isOurHubInactiveInShift1;
+
+        return MatchTracker.calculateHubActiveDuringTeleopShift(matchTimeSeconds, isOurHubActiveInShift1);
     }
 
     public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL

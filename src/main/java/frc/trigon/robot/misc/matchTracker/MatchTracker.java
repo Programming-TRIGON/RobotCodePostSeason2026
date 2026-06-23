@@ -7,57 +7,29 @@ import org.littletonrobotics.junction.Logger;
 
 public class MatchTracker {
     public static boolean isHubActive() {
-        return isOurHubActiveAtMatchTime(DriverStation.getMatchTime());
+        return ShootingCommands.isOurHubActiveAtMatchTime(DriverStation.getMatchTime());
     }
 
-    public static void overrideGameData() {
-        ShootingCommands.overrideGameData = true;
-        Logger.recordOutput("IsHubAlwaysActiveOverridden", ShootingCommands.overrideGameData);
-    }
-
-    public static void disableOverrideGameData() {
-        ShootingCommands.overrideGameData = false;
-        Logger.recordOutput("IsHubAlwaysActiveOverridden", ShootingCommands.overrideGameData);
-    }
-
-    private static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
-        if (ShootingCommands.overrideGameData)
+    public static boolean calculateHubActiveDuringTeleopShift(double matchTimeSeconds, boolean isOurHubActiveInShift1) {
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS)
             return true;
 
-        if (DriverStation.isAutonomousEnabled())
-            return true;
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS)
+            return isOurHubActiveInShift1;
 
-        final String gameData = DriverStation.getGameSpecificMessage();
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS)
+            return !isOurHubActiveInShift1;
 
-        if (!isValidGameData(gameData)) {
-            Logger.recordOutput("MatchTracker/HasValidGameData", false);
-            return true;
-        }
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS)
+            return isOurHubActiveInShift1;
 
-        Logger.recordOutput("MatchTracker/HasValidGameData", true);
-
-        final boolean isRedHubInactiveInShift1 = Character.toUpperCase(gameData.charAt(0)) == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA;
-        final boolean isOurHubInactiveInShift1 = isRedHubInactiveInShift1 == Flippable.isRedAlliance();
-        final boolean isOurHubActiveInShift1 = !isOurHubInactiveInShift1;
-
-        return calculateHubActiveDuringTeleopShift(matchTimeSeconds, isOurHubActiveInShift1);
-    }
-
-    private static boolean calculateHubActiveDuringTeleopShift(double matchTimeSeconds, boolean isOurHubActiveInShift1) {
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS) return true;
-
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS) return isOurHubActiveInShift1;
-
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS) return !isOurHubActiveInShift1;
-
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS) return isOurHubActiveInShift1;
-
-        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TELEOP_TIME_SECONDS) return !isOurHubActiveInShift1;
+        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TELEOP_TIME_SECONDS)
+            return !isOurHubActiveInShift1;
 
         return true;
     }
 
-    private static boolean isValidGameData(String gameData) {
+    public static boolean isValidGameData(String gameData) {
         if (gameData == null || gameData.isEmpty())
             return false;
 
