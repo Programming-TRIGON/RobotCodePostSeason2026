@@ -6,6 +6,9 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
@@ -35,15 +38,23 @@ public class LoaderConstants {
             MOMENT_OF_INERTIA
     );
 
-    private static final double MAXIMUM_DISPLAYABLE_VOLTAGE = 12;
+    static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
+            Units.Volts.of(1).per(Units.Second),
+            Units.Volts.of(3),
+            null
+    );
+
+    private static final double MAXIMUM_DISPLAYABLE_VELOCITY = 12;
     private static final String LOADER_MECHANISM_NAME = "LoaderMechanism";
     static final SpeedMechanism2d LOADER_MECHANISM = new SpeedMechanism2d(
             LOADER_MECHANISM_NAME,
-            MAXIMUM_DISPLAYABLE_VOLTAGE
+            MAXIMUM_DISPLAYABLE_VELOCITY
     );
 
     public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 3.5;
     public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -3;
+    static final double WHEEL_DIAMETER_METERS = 0.05;
+    static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {
         configureLoaderMasterMotor();
@@ -61,6 +72,17 @@ public class LoaderConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 1.3;
+        config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0 : 0.32098;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0 : 0.46584;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0 : 0.014836;
+
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Loader.metersToRotations(10);
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Loader.rotationsToMeters(50);
+        config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
+
         config.CurrentLimits.StatorCurrentLimit = 50;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
@@ -69,6 +91,9 @@ public class LoaderConstants {
 
         MASTER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
         MASTER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
     }
 
     private static void configureLoaderFollowerMotor() {
@@ -96,17 +121,17 @@ public class LoaderConstants {
     }
 
     public enum LoaderState {
-        LOAD_FOR_DELIVERY(6),
-        LOAD_FOR_SHOOTING(8),
-        PRELOAD(2),
-        EJECT_FROM_INTAKE(-5),
-        EJECT_FROM_SHOOTER(5),
+        LOAD_FOR_DELIVERY(2),
+        LOAD_FOR_SHOOTING(3),
+        PRELOAD(0.5),
+        EJECT_FROM_INTAKE(-2),
+        EJECT_FROM_SHOOTER(2),
         REST(0);
 
-        public final double targetVoltage;
+        public final double targetVelocity;
 
-        LoaderState(double targetVoltage) {
-            this.targetVoltage = targetVoltage;
+        LoaderState(double targetVelocity) {
+            this.targetVelocity = targetVelocity;
         }
     }
 }

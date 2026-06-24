@@ -43,6 +43,13 @@ public class Shooter extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
         ShooterConstants.FOLLOWER_MOTOR.update();
+
+
+        final double currentVelocityMetersPerSecond = getCurrentVelocityMetersPerSecond();
+        final double targetProfiledVelocityMetersPerSecond = rotationToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
+        Logger.recordOutput("Shooter/CurrentVelocityMetersPerSecond", currentVelocityMetersPerSecond);
+        Logger.recordOutput("Shooter/TargetVelocityMetersPerSecond", this.targetVelocityMetersPerSecond);
+        Logger.recordOutput("Shooter/TargetProfiledVelocityMetersPerSecond", targetProfiledVelocityMetersPerSecond);
     }
 
     @Override
@@ -63,10 +70,6 @@ public class Shooter extends MotorSubsystem {
                 currentVelocityMetersPerSecond,
                 targetProfiledVelocityMetersPerSecond
         );
-
-        Logger.recordOutput("Shooter/CurrentVelocityMetersPerSecond", currentVelocityMetersPerSecond);
-        Logger.recordOutput("Shooter/TargetVelocityMetersPerSecond", this.targetVelocityMetersPerSecond);
-        Logger.recordOutput("Shooter/TargetProfiledVelocityMetersPerSecond", targetProfiledVelocityMetersPerSecond);
     }
 
     @AutoLogOutput(key = "ShootingCalculations/Conditions/ShooterAtTargetVelocity")

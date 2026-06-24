@@ -81,15 +81,15 @@ public class ShooterConstants {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.9;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.73;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.30097;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.21014;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.010344;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.27773;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.21056;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.0090496;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : 12.5;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 15;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 30;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.Feedback.SensorToMechanismRatio = AVERAGE_GEAR_RATIO;

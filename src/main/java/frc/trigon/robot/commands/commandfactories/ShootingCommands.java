@@ -39,7 +39,7 @@ public class ShootingCommands {
                                 LoaderCommands.getDebuggingCommand()
                         ),
                         () -> RobotContainer.HOOD.atTargetAngle() && RobotContainer.SHOOTER.atTargetVelocity()
-                )
+                ).until(() -> !RobotContainer.HOOD.atTargetAngle() || !RobotContainer.SHOOTER.atTargetVelocity()).repeatedly()
         );
     }
 
