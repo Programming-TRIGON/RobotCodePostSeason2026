@@ -42,7 +42,7 @@ public class IntakeConstants {
 
     private static final double
             ARM_SENSOR_TO_MECHANISM_GEAR_RATIO = 0.9,
-            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 46.2873879 / ARM_SENSOR_TO_MECHANISM_GEAR_RATIO,
+            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 46.96 / ARM_SENSOR_TO_MECHANISM_GEAR_RATIO,
             INTAKE_MOTOR_GEAR_RATIO = 1.5;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
@@ -50,8 +50,8 @@ public class IntakeConstants {
             INTAKE_MOTOR_CURRENT_LIMIT = 40,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 2;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 1,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 1;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -130,13 +130,13 @@ public class IntakeConstants {
         config.Feedback.RotorToSensorRatio = ARM_ROTOR_TO_SENSOR_GEAR_RATIO;
         config.Feedback.SensorToMechanismRatio = ARM_SENSOR_TO_MECHANISM_GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 50;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.27781;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 3.6836;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 1.2416;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.11069;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.08202;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 6.3681;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0.12696;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.46964;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
@@ -211,7 +211,7 @@ public class IntakeConstants {
         final CANcoderConfiguration config = new CANcoderConfiguration();
 
         config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        config.MagnetSensor.MagnetOffset = 0.3924156;
+        config.MagnetSensor.MagnetOffset = 0.223388671875;
         config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
 
         ANGLE_ENCODER.applyConfiguration(config);

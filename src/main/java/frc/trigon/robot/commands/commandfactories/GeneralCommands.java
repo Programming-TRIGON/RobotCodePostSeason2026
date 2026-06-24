@@ -29,7 +29,7 @@ public class GeneralCommands {
         return new ParallelCommandGroup(
                 HoodCommands.getDebuggingCommand(),
                 IndexerCommands.getDebuggingCommand(),
-//                IntakeCommands.getDebuggingCommand(),
+                //IntakeCommands.getDebuggingCommand(),
                 LoaderCommands.getDebuggingCommand(),
                 ShooterCommands.getDebuggingCommand()
         );
