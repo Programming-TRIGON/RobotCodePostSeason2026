@@ -7,7 +7,30 @@ import org.littletonrobotics.junction.Logger;
 
 public class MatchTracker {
     public static boolean isHubActive() {
-        return ShootingCommands.isOurHubActiveAtMatchTime(DriverStation.getMatchTime());
+        if (ShootingCommands.shouldOverrideGameData)
+            return true;
+
+        return isOurHubActiveAtMatchTime(DriverStation.getMatchTime());
+    }
+
+    public static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
+        if (DriverStation.isAutonomousEnabled())
+            return true;
+
+        final String gameData = DriverStation.getGameSpecificMessage();
+
+        if (!MatchTracker.isValidGameData(gameData)) {
+            Logger.recordOutput("MatchTracker/HasValidGameData", false);
+            return true;
+        }
+
+        Logger.recordOutput("MatchTracker/HasValidGameData", true);
+
+        final boolean isRedHubInactiveInShift1 = Character.toUpperCase(gameData.charAt(0)) == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA;
+        final boolean isOurHubInactiveInShift1 = isRedHubInactiveInShift1 == Flippable.isRedAlliance();
+        final boolean isOurHubActiveInShift1 = !isOurHubInactiveInShift1;
+
+        return MatchTracker.calculateHubActiveDuringTeleopShift(matchTimeSeconds, isOurHubActiveInShift1);
     }
 
     public static boolean calculateHubActiveDuringTeleopShift(double matchTimeSeconds, boolean isOurHubActiveInShift1) {

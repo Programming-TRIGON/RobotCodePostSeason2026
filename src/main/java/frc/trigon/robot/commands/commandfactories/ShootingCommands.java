@@ -185,7 +185,7 @@ public class ShootingCommands {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch);
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
 
-        return isPitchReady && isVelocityReady && MatchTracker.isHubActive();
+        return isPitchReady && isVelocityReady;
     }
 
     private static void updateShootingCalculations() {
@@ -325,29 +325,6 @@ public class ShootingCommands {
     public static void disableOverrideGameData() {
         ShootingCommands.shouldOverrideGameData = false;
         Logger.recordOutput("IsHubAlwaysActiveOverridden", ShootingCommands.shouldOverrideGameData);
-    }
-
-    public static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
-        if (ShootingCommands.shouldOverrideGameData)
-            return true;
-
-        if (DriverStation.isAutonomousEnabled())
-            return true;
-
-        final String gameData = DriverStation.getGameSpecificMessage();
-
-        if (!MatchTracker.isValidGameData(gameData)) {
-            Logger.recordOutput("MatchTracker/HasValidGameData", false);
-            return true;
-        }
-
-        Logger.recordOutput("MatchTracker/HasValidGameData", true);
-
-        final boolean isRedHubInactiveInShift1 = Character.toUpperCase(gameData.charAt(0)) == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA;
-        final boolean isOurHubInactiveInShift1 = isRedHubInactiveInShift1 == Flippable.isRedAlliance();
-        final boolean isOurHubActiveInShift1 = !isOurHubInactiveInShift1;
-
-        return MatchTracker.calculateHubActiveDuringTeleopShift(matchTimeSeconds, isOurHubActiveInShift1);
     }
 
     public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL
