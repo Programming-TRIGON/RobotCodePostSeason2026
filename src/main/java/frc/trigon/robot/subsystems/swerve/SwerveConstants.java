@@ -31,7 +31,7 @@ public class SwerveConstants {
             FRONT_RIGHT_STEER_ENCODER_OFFSET_ROTATIONS = -0.141845703125,
             REAR_LEFT_STEER_ENCODER_OFFSET_ROTATIONS = -0.494384765625,
             REAR_RIGHT_STEER_ENCODER_OFFSET_ROTATIONS = -0.1396484375;
-    private static final double//TODO:Calibrate
+    private static final double
             FRONT_LEFT_WHEEL_DIAMETER = 0.043331 * 2,
             FRONT_RIGHT_WHEEL_DIAMETER = 0.043145 * 2,
             REAR_LEFT_WHEEL_DIAMETER = 0.043362 * 2,
@@ -101,7 +101,7 @@ public class SwerveConstants {
 
     private static void configureGyro() {
         final Pigeon2Configuration config = new Pigeon2Configuration();
-        //TODO:Calibrate
+
         config.MountPose.MountPoseYaw = -179.51104736328125;
         config.MountPose.MountPosePitch = 1.4400229454040527;
         config.MountPose.MountPoseRoll = -144.35397338867188;
