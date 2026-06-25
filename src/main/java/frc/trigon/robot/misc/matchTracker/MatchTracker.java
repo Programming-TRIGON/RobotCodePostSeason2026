@@ -93,29 +93,28 @@ public class MatchTracker {
     }
 
     private static int getShiftNumber(double matchTimeSeconds) {
-        if (matchTimeSeconds > MatchTrackerConstants.AUTONOMOUS_TIME_SECOND) {
+        if (matchTimeSeconds > MatchTrackerConstants.AUTONOMOUS_TIME_SECOND)
             return 0;
-        }
 
-        if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_TIME_SECOND) {
+        if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_TIME_SECOND)
             return 1;
-        }
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS) {
+
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS)
             return 2;
-        }
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS) {
+
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS)
             return 3;
-        }
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS) {
+
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS)
             return 4;
-        }
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS) {
+
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS)
             return 5;
-        }
+
 
         return 6;
     }
@@ -144,7 +143,6 @@ public class MatchTracker {
 
         Logger.recordOutput("MatchTracker/MatchTimeSeconds", matchTimeSeconds);
         Logger.recordOutput("MatchTracker/GameData", DriverStation.getGameSpecificMessage());
-        Logger.recordOutput("MatchTracker/IsRedAlliance", Flippable.isRedAlliance());
         Logger.recordOutput("MatchTracker/IsHubActive", isHubActive());
         Logger.recordOutput("MatchTracker/TimeUntilAllianceShiftSeconds", getTimeUntilShiftEndSeconds(matchTimeSeconds));
         Logger.recordOutput("MatchTracker/ShiftType", SHIFT_TYPE);
