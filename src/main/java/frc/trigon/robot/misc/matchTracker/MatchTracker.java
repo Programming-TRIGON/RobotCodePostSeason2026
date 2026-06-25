@@ -99,23 +99,18 @@ public class MatchTracker {
         if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_TIME_SECOND)
             return 1;
 
-
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS)
             return 2;
-
 
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS)
             return 3;
 
-
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS)
             return 4;
 
-
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS)
             return 5;
-
-
+        
         return 6;
     }
 
