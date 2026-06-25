@@ -20,7 +20,6 @@ import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.matchTracker.MatchTrackerCommands;
-import frc.trigon.robot.misc.matchTracker.MatchTrackerConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
@@ -109,7 +108,7 @@ public class RobotContainer {
 
         OperatorConstants.ENABLE_OVERRIDE_GAME_DATA_TRIGGER.onTrue(MatchTrackerCommands.getEnableOverrideGameDataCommand());
         OperatorConstants.DISABLE_OVERRIDE_GAME_DATA_TRIGGER.onTrue(MatchTrackerCommands.getDisableOverrideGameDataCommand());
-        OperatorConstants.HUB_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
+        OperatorConstants.HUB_ACTIVE_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {

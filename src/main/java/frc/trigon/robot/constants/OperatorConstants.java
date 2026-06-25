@@ -8,8 +8,6 @@ import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.TrenchDetection;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
 
-import java.security.cert.TrustAnchor;
-
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
     private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -62,5 +60,5 @@ public class OperatorConstants {
             INTAKE_WHILE_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.v()),
             INTAKE_TRIGGER = INTAKE_WHILE_SHOOTING_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             RESTRICT_HOOD_ANGLE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone),
-            HUB_STATE_CHANGED_TRIGGER = new Trigger(MatchTracker::hasHubActiveStateChanged);
+            HUB_ACTIVE_STATE_CHANGED_TRIGGER = new Trigger(MatchTracker::hasHubActiveStateChanged);
 }
