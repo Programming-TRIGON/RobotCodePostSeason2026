@@ -6,6 +6,9 @@ import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.TrenchDetection;
+import frc.trigon.robot.misc.matchTracker.MatchTracker;
+
+import java.security.cert.TrustAnchor;
 
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
@@ -58,5 +61,6 @@ public class OperatorConstants {
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             INTAKE_WHILE_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.v()),
             INTAKE_TRIGGER = INTAKE_WHILE_SHOOTING_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
-            RESTRICT_HOOD_ANGLE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone);
+            RESTRICT_HOOD_ANGLE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone),
+            HUB_STATE_CHANGED_TRIGGER = new Trigger(MatchTracker::hasHubActiveStateChanged);
 }

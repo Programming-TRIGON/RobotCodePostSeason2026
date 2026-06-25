@@ -15,6 +15,8 @@ public class MatchTrackerCommands {
     }
 
     public static Command getRumbleCommand() {
-        return new InstantCommand(() -> OperatorConstants.DRIVER_CONTROLLER.rumble(MatchTrackerConstants.RUMBLE_TIME_IN_SECONDS, MatchTrackerConstants.RUMBLE_POWER));
+        return new InstantCommand(
+                () -> OperatorConstants.DRIVER_CONTROLLER.rumble(MatchTrackerConstants.RUMBLE_TIME_IN_SECONDS, MatchTrackerConstants.RUMBLE_POWER)
+        ).withTimeout(0.5);
     }
 }

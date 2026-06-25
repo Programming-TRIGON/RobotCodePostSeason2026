@@ -319,12 +319,12 @@ public class ShootingCommands {
 
     public static void overrideGameData() {
         ShootingCommands.shouldOverrideGameData = true;
-        Logger.recordOutput("IsHubAlwaysActiveOverridden", ShootingCommands.shouldOverrideGameData);
+        Logger.recordOutput("IsGameDataOverridden", ShootingCommands.shouldOverrideGameData);
     }
 
     public static void disableOverrideGameData() {
         ShootingCommands.shouldOverrideGameData = false;
-        Logger.recordOutput("IsHubAlwaysActiveOverridden", ShootingCommands.shouldOverrideGameData);
+        Logger.recordOutput("IsGameDataOverridden", ShootingCommands.shouldOverrideGameData);
     }
 
     public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL
