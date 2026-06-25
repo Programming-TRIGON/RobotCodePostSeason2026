@@ -6,9 +6,9 @@ import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRela
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.CustomCenterOfRotationDrive;
 
 public class IntakeAssistCommand {
-    private static Translation2d INTAKE_CENTER_OF_ROTATION = new Translation2d(0,0.5);
+    private static Translation2d INTAKE_CENTER_OF_ROTATION = new Translation2d(0.5,0);
 
-    public static Command intakeCenterOfRotationCommand() {
+    public static Command getIntakeCenterOfRotationCommand() {
         return new FieldRelativeRestrictedDriveCommand(
                 new CustomCenterOfRotationDrive(INTAKE_CENTER_OF_ROTATION)
         );

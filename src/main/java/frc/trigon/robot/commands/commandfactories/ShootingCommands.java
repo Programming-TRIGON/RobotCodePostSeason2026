@@ -175,9 +175,10 @@ public class ShootingCommands {
     }
 
     private static Command getLimitVelocityWhileShootingCommand() {
-        return new FieldRelativeRestrictedDriveCommand(
+        return new RunCommand(() ->
+                new FieldRelativeRestrictedDriveCommand(
                 new VelocityRestrictedDrive(MAXIMUM_LINEAR_VELOCITY, MAXIMUM_ROTATIONAL_VELOCITY)
-        );
+        ));
     }
 
     private static boolean isReadyForFixedDelivery() {

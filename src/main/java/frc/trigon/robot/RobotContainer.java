@@ -11,10 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.commands.CommandConstants;
-import frc.trigon.robot.commands.commandfactories.EjectionCommands;
-import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
-import frc.trigon.robot.commands.commandfactories.GeneralCommands;
-import frc.trigon.robot.commands.commandfactories.ShootingCommands;
+import frc.trigon.robot.commands.commandfactories.*;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
@@ -104,6 +101,9 @@ public class RobotContainer {
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.RESTRICT_HOOD_ANGLE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
+
+        OperatorConstants.INTAKE_ASSIST_COMMAND.whileTrue(IntakeAssistCommand.getIntakeCenterOfRotationCommand());
+        OperatorConstants.TRENCH_ASSIST_COMMAND.whileTrue(TrenchAssistCommand.getTrenchAssistCommand());
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {
