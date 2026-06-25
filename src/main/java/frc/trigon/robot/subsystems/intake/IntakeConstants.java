@@ -50,8 +50,8 @@ public class IntakeConstants {
             INTAKE_MOTOR_CURRENT_LIMIT = 40,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 1,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 1;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 4,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 4;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,

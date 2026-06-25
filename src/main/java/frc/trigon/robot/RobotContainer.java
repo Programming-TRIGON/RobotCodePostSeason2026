@@ -55,7 +55,7 @@ public class RobotContainer {
         buildAutoChooser();
         configureBindings();
 
-        configureSysIDBindings(INTAKE);
+//        configureSysIDBindings(INTAKE);
     }
 
     /**
@@ -74,7 +74,7 @@ public class RobotContainer {
 //        SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
         //      INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.AGITATE));
-          INTAKE.setDefaultCommand(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN));
+        INTAKE.setDefaultCommand(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN));
         LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
         SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
     }
