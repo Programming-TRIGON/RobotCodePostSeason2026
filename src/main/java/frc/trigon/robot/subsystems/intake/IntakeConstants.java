@@ -47,7 +47,7 @@ public class IntakeConstants {
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
-            INTAKE_MOTOR_CURRENT_LIMIT = 40,
+            INTAKE_MOTOR_CURRENT_LIMIT = 60,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 4,
@@ -193,7 +193,7 @@ public class IntakeConstants {
         config.Audio.BeepOnConfig = false;
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.Feedback.SensorToMechanismRatio = INTAKE_MOTOR_GEAR_RATIO;
 
@@ -225,8 +225,8 @@ public class IntakeConstants {
         REST(0, MAXIMUM_ANGLE, 1),
         OPEN(0, MINIMUM_ANGLE, 1),
         CLOSE(0, MAXIMUM_ANGLE, 1),
-        POWERED_OPEN(6, MINIMUM_ANGLE, 1),
-        POWERED_CLOSE(6, MAXIMUM_ANGLE, 1),
+        POWERED_OPEN(4, MINIMUM_ANGLE, 1),
+        POWERED_CLOSE(5, MAXIMUM_ANGLE, 1),
         REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1);
 
         public final double targetVoltage;
