@@ -77,7 +77,7 @@ public class Intake extends MotorSubsystem {
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
-    public boolean hasGamePiece() {
+    public boolean isHittingSomething() {
         return !IntakeConstants.LIMIT_SWITCH.get();
     }
 
