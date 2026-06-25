@@ -102,8 +102,9 @@ public class RobotContainer {
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.RESTRICT_HOOD_ANGLE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
 
-        OperatorConstants.INTAKE_ASSIST_COMMAND.whileTrue(IntakeAssistCommand.getIntakeCenterOfRotationCommand());
-        OperatorConstants.TRENCH_ASSIST_COMMAND.whileTrue(TrenchAssistCommand.getTrenchAssistCommand());
+        OperatorConstants.INTAKE_ASSIST_TRIGGER.whileTrue(IntakeAssistCommand.getIntakeCenterOfRotationCommand());
+        OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(TrenchAssistCommand.getTrenchAssistCommand());
+
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {
