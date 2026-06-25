@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
-    public static boolean shouldOverrideGameData = false;
+    public static boolean SHOULD_OVERRIDE_GAME_DATA = false;
 
     public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
@@ -315,13 +315,13 @@ public class ShootingCommands {
     }
 
     public static void enableOverrideGameData() {
-        shouldOverrideGameData = true;
-        Logger.recordOutput("IsGameDataOverridden", shouldOverrideGameData);
+        SHOULD_OVERRIDE_GAME_DATA = true;
+        Logger.recordOutput("IsGameDataOverridden", SHOULD_OVERRIDE_GAME_DATA);
     }
 
     public static void disableOverrideGameData() {
-        shouldOverrideGameData = false;
-        Logger.recordOutput("IsGameDataOverridden", shouldOverrideGameData);
+        SHOULD_OVERRIDE_GAME_DATA = false;
+        Logger.recordOutput("IsGameDataOverridden", SHOULD_OVERRIDE_GAME_DATA);
     }
 
     public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL

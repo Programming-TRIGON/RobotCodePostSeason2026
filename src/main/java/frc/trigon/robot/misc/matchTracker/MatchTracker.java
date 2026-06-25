@@ -20,7 +20,7 @@ public class MatchTracker {
     }
 
     public static boolean isHubActive() {
-        if (ShootingCommands.shouldOverrideGameData)
+        if (ShootingCommands.SHOULD_OVERRIDE_GAME_DATA)
             return true;
 
         return isOurHubActiveAtMatchTime(DriverStation.getMatchTime());
