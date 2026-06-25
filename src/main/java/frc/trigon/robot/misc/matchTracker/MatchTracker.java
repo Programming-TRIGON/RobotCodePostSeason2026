@@ -73,6 +73,6 @@ public class MatchTracker {
         Logger.recordOutput("MatchTracker/MatchTimeSeconds", DriverStation.getMatchTime());
         Logger.recordOutput("MatchTracker/GameData", DriverStation.getGameSpecificMessage());
         Logger.recordOutput("MatchTracker/IsRedAlliance", Flippable.isRedAlliance());
-        Logger.recordOutput("MatchTracker/IsHubActiveNow", isHubActive());
+        Logger.recordOutput("MatchTracker/IsHubActive", isHubActive());
     }
 }
