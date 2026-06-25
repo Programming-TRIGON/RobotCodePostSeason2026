@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRelativeRestrictedDriveCommand;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.VelocityRestrictedDrive;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
@@ -28,6 +30,8 @@ import java.util.function.Supplier;
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
+    private static double MAXIMUM_LINEAR_VELOCITY = 4;
+    private static Rotation2d MAXIMUM_ROTATIONAL_VELOCITY = Rotation2d.fromRadians(90);
 
     public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
@@ -47,6 +51,7 @@ public class ShootingCommands {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
+                        getLimitVelocityWhileShootingCommand(),
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
@@ -167,6 +172,12 @@ public class ShootingCommands {
             if (target != SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation())
                 SHOOTING_CALCULATIONS.setTargetShootingLocation(target);
         });
+    }
+
+    private static Command getLimitVelocityWhileShootingCommand() {
+        return new FieldRelativeRestrictedDriveCommand(
+                new VelocityRestrictedDrive(MAXIMUM_LINEAR_VELOCITY, MAXIMUM_ROTATIONAL_VELOCITY)
+        );
     }
 
     private static boolean isReadyForFixedDelivery() {
