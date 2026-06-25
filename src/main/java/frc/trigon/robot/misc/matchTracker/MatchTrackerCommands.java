@@ -7,7 +7,7 @@ import frc.trigon.robot.constants.OperatorConstants;
 
 public class MatchTrackerCommands {
     public static Command getEnableOverrideGameDataCommand() {
-        return new InstantCommand(() -> ShootingCommands.overrideGameData());
+        return new InstantCommand(() -> ShootingCommands.enableOverrideGameData());
     }
 
     public static Command getDisableOverrideGameDataCommand() {
@@ -15,8 +15,6 @@ public class MatchTrackerCommands {
     }
 
     public static Command getRumbleCommand() {
-        return new InstantCommand(
-                () -> OperatorConstants.DRIVER_CONTROLLER.rumble(MatchTrackerConstants.RUMBLE_TIME_IN_SECONDS, MatchTrackerConstants.RUMBLE_POWER)
-        ).withTimeout(0.5);
+        return new InstantCommand(() -> OperatorConstants.DRIVER_CONTROLLER.rumble(MatchTrackerConstants.RUMBLE_TIME_SECONDS, MatchTrackerConstants.RUMBLE_POWER));
     }
 }

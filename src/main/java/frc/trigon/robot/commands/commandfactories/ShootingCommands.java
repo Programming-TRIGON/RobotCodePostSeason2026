@@ -2,16 +2,13 @@ package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
-import frc.trigon.robot.misc.matchTracker.MatchTrackerConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
@@ -317,14 +314,14 @@ public class ShootingCommands {
         return firstIntersection >= 0 && firstIntersection <= 1 && secondIntersection >= 0 && secondIntersection <= 1;
     }
 
-    public static void overrideGameData() {
-        ShootingCommands.shouldOverrideGameData = true;
-        Logger.recordOutput("IsGameDataOverridden", ShootingCommands.shouldOverrideGameData);
+    public static void enableOverrideGameData() {
+        shouldOverrideGameData = true;
+        Logger.recordOutput("IsGameDataOverridden", shouldOverrideGameData);
     }
 
     public static void disableOverrideGameData() {
-        ShootingCommands.shouldOverrideGameData = false;
-        Logger.recordOutput("IsGameDataOverridden", ShootingCommands.shouldOverrideGameData);
+        shouldOverrideGameData = false;
+        Logger.recordOutput("IsGameDataOverridden", shouldOverrideGameData);
     }
 
     public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL

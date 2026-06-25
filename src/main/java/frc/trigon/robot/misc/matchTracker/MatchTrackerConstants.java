@@ -16,6 +16,6 @@ public class MatchTrackerConstants {
      * because the fuel takes time to reach the hub.
      */
     static final double
-            RUMBLE_TIME_IN_SECONDS = 0.5,
+            RUMBLE_TIME_SECONDS = 0.5,
             RUMBLE_POWER = 1;
 }
