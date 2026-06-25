@@ -110,7 +110,7 @@ public class MatchTracker {
 
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS)
             return 5;
-        
+
         return 6;
     }
 
@@ -137,7 +137,6 @@ public class MatchTracker {
         final double matchTimeSeconds = DriverStation.getMatchTime();
 
         Logger.recordOutput("MatchTracker/MatchTimeSeconds", matchTimeSeconds);
-        Logger.recordOutput("MatchTracker/GameData", DriverStation.getGameSpecificMessage());
         Logger.recordOutput("MatchTracker/IsHubActive", isHubActive());
         Logger.recordOutput("MatchTracker/TimeUntilAllianceShiftSeconds", getTimeUntilShiftEndSeconds(matchTimeSeconds));
         Logger.recordOutput("MatchTracker/ShiftType", SHIFT_TYPE);
