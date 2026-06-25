@@ -54,8 +54,6 @@ public class IntakeConstants {
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 0,
             DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 0;
 
-    static final DigitalInput LIMIT_SWITCH = new DigitalInput(0);
-
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
             INTAKE_MOTOR_AMOUNT = 1;
@@ -111,6 +109,8 @@ public class IntakeConstants {
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
+
+    static final DigitalInput INTAKE_LIMIT_SWITCH = new DigitalInput(0);
 
     static {
         configureMasterAngleMotor();

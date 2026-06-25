@@ -28,7 +28,7 @@ public class IntakeCommands {
                 () -> RobotContainer.INTAKE.setTargetState(targetState),
                 RobotContainer.INTAKE::stop,
                 RobotContainer.INTAKE
-        ).until(RobotContainer.INTAKE::isHittingSomething);
+        ).until(RobotContainer.INTAKE::isLimitSwitchPressed);
     }
 
     public static Command getGearRatioCalculationCommand() {
