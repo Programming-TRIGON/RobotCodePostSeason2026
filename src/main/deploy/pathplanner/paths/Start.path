@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 7.359550013646288,
+        "x": 7.732059244791667,
         "y": 7.003461892740174
       },
       "prevControl": {
-        "x": 6.146988377689662,
+        "x": 6.519497608835041,
         "y": 7.6500558540445525
       },
       "nextControl": null,
       "isLocked": true,
-      "linkedName": "Prepare Collect"
+      "linkedName": "Collect Start"
     }
   ],
   "rotationTargets": [

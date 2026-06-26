@@ -6,6 +6,7 @@
 package frc.trigon.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -16,10 +17,7 @@ import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.commands.commandfactories.autonomous.AutonomousGenerator;
-import frc.trigon.robot.constants.AutonomousConstants;
-import frc.trigon.robot.constants.CameraConstants;
-import frc.trigon.robot.constants.LEDConstants;
-import frc.trigon.robot.constants.OperatorConstants;
+import frc.trigon.robot.constants.*;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
@@ -38,6 +36,8 @@ import frc.trigon.robot.subsystems.shooter.Shooter;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import java.util.List;
 
 public class RobotContainer {
     public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator(
@@ -129,6 +129,32 @@ public class RobotContainer {
     }
 
     private void buildAutoChooser() {
-        autoChooser = new LoggedDashboardChooser<>("AutoChooser", AutoBuilder.buildAutoChooser());
+        autoChooser = new LoggedDashboardChooser<>("AutoChooser");
+
+        final List<String> autoNames = AutoBuilder.getAllAutoNames();
+        boolean hasDefault = false;
+
+        for (String autoName : autoNames) {
+            final PathPlannerAuto autoNonMirrored = new PathPlannerAuto(autoName);
+            final PathPlannerAuto autoMirrored = new PathPlannerAuto(autoName, true);
+
+            if (!AutonomousConstants.DEFAULT_AUTO_NAME.isEmpty() && AutonomousConstants.DEFAULT_AUTO_NAME.equals(autoName)) {
+                hasDefault = true;
+                autoChooser.addDefaultOption(autoNonMirrored.getName(), autoNonMirrored);
+                autoChooser.addOption(autoMirrored.getName() + "Mirrored", autoMirrored);
+            } else if (!AutonomousConstants.DEFAULT_AUTO_NAME.isEmpty() && AutonomousConstants.DEFAULT_AUTO_NAME.equals(autoName + "Mirrored")) {
+                hasDefault = true;
+                autoChooser.addDefaultOption(autoMirrored.getName() + "Mirrored", autoMirrored);
+                autoChooser.addOption(autoNonMirrored.getName(), autoNonMirrored);
+            } else {
+                autoChooser.addOption(autoNonMirrored.getName(), autoNonMirrored);
+                autoChooser.addOption(autoMirrored.getName() + "Mirrored", autoMirrored);
+            }
+        }
+
+        if (!hasDefault)
+            autoChooser.addDefaultOption("None", Commands.none());
+        else
+            autoChooser.addOption("None", Commands.none());
     }
 }

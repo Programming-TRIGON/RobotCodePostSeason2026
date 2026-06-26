@@ -34,7 +34,7 @@ public class AutonomousConstants {
     public static final String DEFAULT_AUTO_NAME = "DefaultAutoName";
     public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
     public static final double FEEDFORWARD_SCALAR = 0.5;//TODO: Calibrate
-    public static final boolean SHOULD_USE_AUTONOMOUS_GENERATOR = true;
+    public static final boolean SHOULD_USE_AUTONOMOUS_GENERATOR = false;
     public static final PathConstraints
             DRIVE_TO_SCORING_LOCATION_CONSTRAINTS = new PathConstraints(2.5, 2.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
             SHOOT_PRELOAD_BEFORE_NEUTRAL_ZONE_DRIVE_CONSTRAINTS = new PathConstraints(0.3, 0.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),

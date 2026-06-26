@@ -28,10 +28,11 @@ public class TrenchDetection {
     }
 
     private static boolean isHoodInTrenchZone(BoundingBox currentHoodBox, BoundingBox predictedHoodBox) {
-        return isBoundingBoxInTrenchZone(currentHoodBox)
-                || isBoundingBoxInTrenchZone(predictedHoodBox)
-                || (isHoodCenterBeforeTrench(currentHoodBox.getCenter().getTranslation()) && isHoodCenterAfterTrench(predictedHoodBox.getCenter().getTranslation()))
-                || (isHoodCenterAfterTrench(currentHoodBox.getCenter().getTranslation()) && isHoodCenterBeforeTrench(predictedHoodBox.getCenter().getTranslation()));
+//        return isBoundingBoxInTrenchZone(currentHoodBox)
+//                || isBoundingBoxInTrenchZone(predictedHoodBox)
+//                || (isHoodCenterBeforeTrench(currentHoodBox.getCenter().getTranslation()) && isHoodCenterAfterTrench(predictedHoodBox.getCenter().getTranslation()))
+//                || (isHoodCenterAfterTrench(currentHoodBox.getCenter().getTranslation()) && isHoodCenterBeforeTrench(predictedHoodBox.getCenter().getTranslation()));
+        return false;
     }
 
     /**
