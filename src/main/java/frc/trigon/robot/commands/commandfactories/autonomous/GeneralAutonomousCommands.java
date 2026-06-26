@@ -5,10 +5,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.FieldConstants;
@@ -86,7 +84,12 @@ public class GeneralAutonomousCommands {
 
     private static Command getSafeDriveToIntakeFromNeutralPath() {
         return new SequentialCommandGroup(
-                SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(() ->AutonomousConstants.NEUTRAL_INTAKE_POSE, AutonomousConstants.DRIVE_IN_AUTONOMOUS_CONSTRAINTS),
+                SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(
+                        () -> AutonomousConstants.NEUTRAL_INTAKE_POSE, AutonomousConstants.DRIVE_IN_AUTONOMOUS_CONSTRAINTS,
+                        3,
+                        AutonomousConstants.DRIVE_SLOWLY_IN_AUTONOMOUS_CONSTRAINTS,
+                        1000,
+                        false),
                 getIntakeFromNeutralPath()
         );
     }
