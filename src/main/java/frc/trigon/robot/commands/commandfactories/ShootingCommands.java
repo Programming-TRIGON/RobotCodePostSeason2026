@@ -82,7 +82,7 @@ public class ShootingCommands {
         return new InstantCommand(() -> {
             setTargetFixedShootingAtHubState(targetState);
             Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", targetState.name());
-        });
+        }).ignoringDisable(true);
     }
 
     public static Command getPrepareForShootingCommand() {
@@ -325,11 +325,11 @@ public class ShootingCommands {
     }
 
     public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL
-        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(59.965), 6.866),
-        RIGHT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
-        LEFT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
-        BACK_RIGHT(Rotation2d.fromDegrees(57.079), 8.349),
-        BACK_LEFT(Rotation2d.fromDegrees(57.079), 8.349);
+        IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(25), 7.3),
+        RIGHT_TRENCH(Rotation2d.fromDegrees(28), 8.55),
+        LEFT_TRENCH(Rotation2d.fromDegrees(28), 8.55),
+        BACK_RIGHT(Rotation2d.fromDegrees(37), 9.3),
+        BACK_LEFT(Rotation2d.fromDegrees(37), 9.3);
 
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;

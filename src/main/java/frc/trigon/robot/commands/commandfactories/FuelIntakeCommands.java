@@ -15,7 +15,6 @@ import frc.trigon.robot.subsystems.loader.LoaderConstants;
 public class FuelIntakeCommands {
     public static Command getPreloadCommand() {
         return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.PRELOAD),
                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.PRELOAD)
         ).withTimeout(CommandConstants.PRELOAD_TIMER_SECONDS);
     }
