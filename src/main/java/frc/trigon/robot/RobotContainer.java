@@ -71,7 +71,7 @@ public class RobotContainer {
     }
 
     private void bindDefaultCommands() {
-//        SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
+        SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
         //      INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.AGITATE));
         INTAKE.setDefaultCommand(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN));
