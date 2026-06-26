@@ -1,6 +1,7 @@
 package frc.trigon.robot.constants;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -9,13 +10,19 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
+import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.commands.commandfactories.autonomous.AutonomousGenerator;
+import frc.trigon.robot.commands.commandfactories.autonomous.GeneralAutonomousCommands;
+import frc.trigon.robot.subsystems.intake.IntakeCommands;
+import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -27,7 +34,37 @@ public class AutonomousConstants {
     public static final String DEFAULT_AUTO_NAME = "DefaultAutoName";
     public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
     public static final double FEEDFORWARD_SCALAR = 0.5;//TODO: Calibrate
-    public static final PathConstraints DRIVE_TO_SCORING_LOCATION_CONSTRAINTS = new PathConstraints(2.5, 4.5, Units.degreesToRadians(450), Units.degreesToRadians(900));
+    public static final boolean SHOULD_USE_AUTONOMOUS_GENERATOR = true;
+    public static final PathConstraints
+            DRIVE_TO_SCORING_LOCATION_CONSTRAINTS = new PathConstraints(2.5, 2.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
+            SHOOT_PRELOAD_BEFORE_NEUTRAL_ZONE_DRIVE_CONSTRAINTS = new PathConstraints(0.3, 0.5, Units.degreesToRadians(100), Units.degreesToRadians(100)),
+            DRIVE_IN_AUTONOMOUS_CONSTRAINTS = new PathConstraints(3, 3, Units.degreesToRadians(100), Units.degreesToRadians(100)),
+            DRIVE_SLOWLY_IN_AUTONOMOUS_CONSTRAINTS = new PathConstraints(1.5, 1, Units.degreesToRadians(100), Units.degreesToRadians(100)),
+            DRIVE_FOR_INTAKING_CONSTRAINTS = new PathConstraints(3, 3, Units.degreesToRadians(500), Units.degreesToRadians(900));
+    public static final double SHOOT_PRELOAD_BEFORE_NEUTRAL_ZONE_TIME_SECONDS = 1;
+
+    public static final double
+            TOTAL_MATCH_TIME_SECONDS = 160,
+            AUTONOMOUS_TIME_SECONDS = 20,
+            DEPOT_COLLECTION_TIMEOUT_SECONDS = 4,
+            NEUTRAL_ZONE_COLLECTION_TIMEOUT_SECONDS = 2,
+            SCORING_TIMEOUT_SECONDS = 3,
+            NORMAL_DRIVE_TIMEOUT = 4,
+            AUTONOMOUS_SHOOTING_DURATION_SECONDS = 3;
+    public static final double START_INTAKING_X = 6.3;
+
+    public static final FlippablePose2d
+            SHOOTING_POSE = new FlippablePose2d(
+            3.775, 7.376,
+            Rotation2d.fromDegrees(98),
+            true
+    ),
+            NEUTRAL_INTAKE_POSE = new FlippablePose2d(
+                    7.360, 7.003,
+                    Rotation2d.fromDegrees(-31.215),
+                    true
+            );
+
 
     private static final PIDConstants
             AUTO_TRANSLATION_PID_CONSTANTS = RobotHardwareStats.isSimulation() ?
@@ -58,13 +95,18 @@ public class AutonomousConstants {
         Pathfinding.setPathfinder(new LocalADStarAK());
         CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
         configureAutoBuilder();
+        if (SHOULD_USE_AUTONOMOUS_GENERATOR) {
+            AutonomousGenerator.init();
+            return;
+        }
         registerCommands();
     }
 
     private static void configureAutoBuilder() {
         AutoBuilder.configure(
                 RobotContainer.ROBOT_POSE_ESTIMATOR::getEstimatedRobotPose,
-                RobotContainer.ROBOT_POSE_ESTIMATOR::resetPose,
+                (a) -> {
+                },
                 RobotContainer.SWERVE::getSelfRelativeChassisSpeeds,
                 RobotContainer.SWERVE::drivePathPlanner,
                 AUTO_PATH_FOLLOWING_CONTROLLER,
@@ -83,6 +125,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        //TODO: Implement
+        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
+        NamedCommands.registerCommand("ShootCommand", GeneralAutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
     }
 }
