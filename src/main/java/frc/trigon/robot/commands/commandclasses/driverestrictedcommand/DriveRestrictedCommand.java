@@ -100,9 +100,9 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     }
 
     /**
-     * Gets the raw joystick position of the controller.
+     * Gets the raw left joystick position of the controller.
      *
-     * @return the left joysticks position as a power (1,-1), in a Translation2D
+     * @return the left joystick's position as a power (1,-1), as a Translation2d
      */
     private Translation2d getRawJoystickPosition() {
         final double
