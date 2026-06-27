@@ -24,7 +24,8 @@ public class TrenchDetection {
      * @return whether the hood is in or passing through a trench
      */
     public static boolean isHoodInTrenchZone() {
-        return isHoodInTrenchZone(getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()), getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS)));
+//        return isHoodInTrenchZone(getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()), getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS)));
+        return false;
     }
 
     private static boolean isHoodInTrenchZone(BoundingBox currentHoodBox, BoundingBox predictedHoodBox) {

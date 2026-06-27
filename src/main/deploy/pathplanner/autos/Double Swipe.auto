@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start"
+            "pathName": "Double Swipe Start"
           }
         },
         {
@@ -17,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Neutral Collect"
+                  "pathName": "Double Swipe Neutral Collect"
                 }
               },
               {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Retrun For Shoot"
+            "pathName": "Double Swipe Retrun For Shoot"
           }
         },
         {
@@ -44,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Return For Collect"
+            "pathName": "Double Swipe Return For Collect"
           }
         },
         {
@@ -54,7 +54,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Neutral Collect"
+                  "pathName": "Double Swipe Neutral Collect"
                 }
               },
               {
@@ -69,7 +69,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Retrun For Shoot"
+            "pathName": "Double Swipe Retrun For Shoot"
           }
         },
         {
