@@ -1,6 +1,5 @@
 package frc.trigon.robot.commands.commandclasses.driverestrictedcommand;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.DriveRestriction;
@@ -23,10 +22,20 @@ public class FieldRelativeRestrictedDriveCommand extends DriveRestrictedCommand 
     @Override
     protected Command getDriveCommand() {
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
-                () -> restrictedX,
-                () -> restrictedY,
-                () -> restrictedRotation,
+                () -> restrictedXPower,
+                () -> restrictedYPower,
+                () -> restrictedRotationPower,
                 () -> robotRelativeCenterOfRotation
         );
+    }
+
+    @Override
+    protected Translation2d toFieldRelativeDrive(Translation2d targetTranslation) {
+        return targetTranslation;
+    }
+
+    @Override
+    protected Translation2d fromFieldRelativeDrive(Translation2d targetTranslation) {
+        return targetTranslation;
     }
 }

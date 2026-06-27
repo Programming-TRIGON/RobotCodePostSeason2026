@@ -1,6 +1,5 @@
 package frc.trigon.robot.commands.commandclasses.driverestrictedcommand;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,9 +17,9 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveRestriction[] driveRestrictions;
     protected Translation2d robotRelativeCenterOfRotation = Translation2d.kZero; // Stored as a field because the supplier passed to getDriveCommand uses it.
     protected double
-            restrictedX = 0,
-            restrictedY = 0,
-            restrictedRotation = 0;
+            restrictedXPower = 0,
+            restrictedYPower = 0,
+            restrictedRotationPower = 0;
 
     /**
      * Constructs a command that drives the robot and restricts its movement.
@@ -31,55 +30,67 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
         this.driveRestrictions = driveRestrictions;
         addCommands(
                 new InstantCommand(this::init),
-                new RunCommand(this::setRestrictedOutput),
+                new RunCommand(this::setRestrictedTranslation),
+                new RunCommand(this::setRestrictedRotation),
+                new RunCommand(this::setRestrictedCenterOfRotation),
                 getDriveCommand()
         );
     }
 
-    protected Translation2d toFieldRelativeDrive(Translation2d targetTranslation) {
-        return targetTranslation;
-    }
+    protected abstract Translation2d toFieldRelativeDrive(Translation2d targetTranslation);
 
-    protected Translation2d fromFieldRelativeDrive(Translation2d targetTranslation) {
-        return targetTranslation;
-    }
+    protected abstract Translation2d fromFieldRelativeDrive(Translation2d targetTranslation);
 
     protected abstract Command getDriveCommand();
 
     private void init() {
-        restrictedX = 0;
-        restrictedY = 0;
-        restrictedRotation = 0;
+        restrictedXPower = 0;
+        restrictedYPower = 0;
+        restrictedRotationPower = 0;
         robotRelativeCenterOfRotation = Translation2d.kZero;
         for (DriveRestriction driveRestriction : driveRestrictions)
             driveRestriction.init();
     }
 
-    private void setRestrictedOutput() {
-        Translation2d targetRobotTranslationPower = toFieldRelativeDrive(calculateTargetRobotTranslation());
-        double targetRobotRotationPower = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
-        Translation2d targetRobotCenterOfRotation = Translation2d.kZero;
+    private void setRestrictedTranslation() {
+        Translation2d targetRobotTranslationPower = toFieldRelativeDrive(calculateTargetRobotTranslationPower());
 
         for (DriveRestriction driveRestriction : driveRestrictions) {
             targetRobotTranslationPower = driveRestriction.applyTranslationRestriction(targetRobotTranslationPower);
-            targetRobotRotationPower = driveRestriction.applyRotationRestriction(targetRobotRotationPower);
-            targetRobotCenterOfRotation = driveRestriction.applyCenterOfRotationRestriction(targetRobotCenterOfRotation);
+
         }
 
         targetRobotTranslationPower = fromFieldRelativeDrive(targetRobotTranslationPower);
 
-        restrictedX = targetRobotTranslationPower.getX();
-        restrictedY = targetRobotTranslationPower.getY();
-        restrictedRotation = targetRobotRotationPower;
+        restrictedXPower = targetRobotTranslationPower.getX();
+        restrictedYPower = targetRobotTranslationPower.getY();
+    }
+
+    private void setRestrictedCenterOfRotation() {
+        Translation2d targetRobotCenterOfRotation = Translation2d.kZero;
+
+        for (DriveRestriction driveRestriction : driveRestrictions) {
+            targetRobotCenterOfRotation = driveRestriction.applyCenterOfRotationRestriction(targetRobotCenterOfRotation);
+        }
+
         robotRelativeCenterOfRotation = targetRobotCenterOfRotation;
     }
 
+    private void setRestrictedRotation() {
+        double targetRobotRotationPower = CommandConstants.calculateRotationStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getRightX());
+
+        for (DriveRestriction driveRestriction : driveRestrictions) {
+            targetRobotRotationPower = driveRestriction.applyRotationRestriction(targetRobotRotationPower);
+        }
+
+        restrictedRotationPower = targetRobotRotationPower;
+    }
     /**
      * Calculates the robot's target translation based on driver input.
      *
      * @return the robot's target translation from the joystick, as powers (1,-1)
      */
-    private Translation2d calculateTargetRobotTranslation() {
+    private Translation2d calculateTargetRobotTranslationPower() {
         final Translation2d rawJoystickPosition = getRawJoystickPosition();
 
         return new Translation2d(

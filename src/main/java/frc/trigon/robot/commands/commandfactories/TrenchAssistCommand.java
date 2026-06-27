@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRelativeRestrictedDriveCommand;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.RestrictedZone;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.ZoneRestrictionsDrive;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneRestrictionsDrive;
 
 public class TrenchAssistCommand {
     private static final double BUMP_LENGTH_METERS = 1.12776;

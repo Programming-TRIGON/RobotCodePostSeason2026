@@ -1,10 +1,11 @@
-package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions;
+package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.DriveRestriction;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.ZoneRestrictedDriveConstants;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.ZoneRestriction;
 
 /**
  * Restricts the robot's movement based on defined zones on the field.
