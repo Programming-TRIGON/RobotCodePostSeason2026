@@ -243,7 +243,7 @@ public class Swerve extends MotorSubsystem {
     }
 
     /**
-     * Drives the swerve with the given powers, relative to the field's frame of reference.
+     * Drives the swerve with the given powers, relative to the field's frame of reference, using a custom center of rotation.
      *
      * @param xPower     the x power
      * @param yPower     the y power
