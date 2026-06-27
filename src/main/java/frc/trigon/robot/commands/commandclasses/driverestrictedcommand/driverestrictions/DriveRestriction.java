@@ -39,7 +39,7 @@ public interface DriveRestriction {
     }
 
     /**
-     * Resets the restricted values so then stale values don't get used.
+     * Resets the restricted values so that stale values aren't used.
      */
     default void init() {
     }
