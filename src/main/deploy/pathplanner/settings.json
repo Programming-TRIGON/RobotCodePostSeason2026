@@ -3,7 +3,9 @@
   "robotLength": 0.902,
   "holonomicMode": true,
   "pathFolders": [
-    "First Auto"
+    "Basic Auto Paths",
+    "Double Swipe Paths",
+    "Long Delivery Paths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.4,

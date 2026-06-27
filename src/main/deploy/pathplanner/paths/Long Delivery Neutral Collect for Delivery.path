@@ -12,7 +12,7 @@
         "y": 6.626793943847096
       },
       "isLocked": false,
-      "linkedName": "Double Swipe StartPath End"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -73,7 +73,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FinishCollect"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -109,7 +109,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Double Swipe Paths",
+  "folder": "Long Delivery Paths",
   "idealStartingState": {
     "velocity": 4.0,
     "rotation": -73.52216891971507
