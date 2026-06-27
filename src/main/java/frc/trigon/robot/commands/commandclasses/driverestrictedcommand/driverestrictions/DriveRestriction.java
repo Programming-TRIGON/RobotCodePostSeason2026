@@ -11,11 +11,11 @@ public interface DriveRestriction {
     /**
      * Applies a restriction to the target translation of the robot.
      *
-     * @param targetTranslation the target translation of the robot
+     * @param targetTranslationPower the target translation of the robot, as a power from -1 to 1
      * @return the restricted target translation of the robot
      */
-    default Translation2d applyTranslationRestriction(Translation2d targetTranslation) {
-        return targetTranslation;
+    default Translation2d applyTranslationRestriction(Translation2d targetTranslationPower) {
+        return targetTranslationPower;
     }
 
     /**
