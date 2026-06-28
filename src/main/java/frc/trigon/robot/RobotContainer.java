@@ -145,15 +145,15 @@ public class RobotContainer {
 
             if (!AutonomousConstants.DEFAULT_AUTO_NAME.isEmpty() && AutonomousConstants.DEFAULT_AUTO_NAME.equals(autoName)) {
                 hasDefault = true;
-                autoChooser.addDefaultOption(autoNonMirrored.getName(), autoNonMirrored);
-                autoChooser.addOption(autoMirrored.getName() + "Mirrored", autoMirrored);
+                autoChooser.addDefaultOption(autoNonMirrored.getName() +" Left", autoNonMirrored);
+                autoChooser.addOption(autoMirrored.getName() + " Right", autoMirrored);
             } else if (!AutonomousConstants.DEFAULT_AUTO_NAME.isEmpty() && AutonomousConstants.DEFAULT_AUTO_NAME.equals(autoName + "Mirrored")) {
                 hasDefault = true;
-                autoChooser.addDefaultOption(autoMirrored.getName() + "Mirrored", autoMirrored);
-                autoChooser.addOption(autoNonMirrored.getName(), autoNonMirrored);
+                autoChooser.addDefaultOption(autoMirrored.getName() + " Right", autoMirrored);
+                autoChooser.addOption(autoNonMirrored.getName() + " Left", autoNonMirrored);
             } else {
-                autoChooser.addOption(autoNonMirrored.getName(), autoNonMirrored);
-                autoChooser.addOption(autoMirrored.getName() + "Mirrored", autoMirrored);
+                autoChooser.addOption(autoNonMirrored.getName() + " Left", autoNonMirrored);
+                autoChooser.addOption(autoMirrored.getName() + " Right", autoMirrored);
             }
         }
 
