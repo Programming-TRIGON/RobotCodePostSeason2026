@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
@@ -39,7 +40,9 @@ public class AutonomousConstants {
             NEUTRAL_ZONE_COLLECTION_TIMEOUT_SECONDS = 2,
             SCORING_TIMEOUT_SECONDS = 3,
             NORMAL_DRIVE_TIMEOUT = 4,
-            AUTONOMOUS_SHOOTING_DURATION_SECONDS = 3;
+            AUTONOMOUS_SHOOTING_DURATION_SECONDS = 3,
+            AUTONOMOUS_DELIVERY_DURATION_SECONDS = 7;
+    public static final Rotation2d DELIVERY_ROTATION = Rotation2d.fromDegrees(27.873);
     public static final double START_INTAKING_X = 6.3;
 
     public static final FlippablePose2d

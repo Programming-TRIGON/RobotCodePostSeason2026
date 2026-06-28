@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
+import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
@@ -66,6 +67,17 @@ public class ShootingCommands {
                         getAimForShootingCommand(),
                         IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE)
                 )
+        );
+    }
+
+    public static Command getAutonomousDeliveryCommand() {
+        return new ParallelCommandGroup(
+                getLoadForFixedDeliveryWhenReadyCommand(),
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedDelivery", isReadyForFixedDelivery())),
+                HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
+                ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE),
+                getAimSwerveCommand(() -> AutonomousConstants.DELIVERY_ROTATION)
         );
     }
 

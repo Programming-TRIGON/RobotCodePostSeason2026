@@ -20,6 +20,10 @@ public class AutonomousCommands {
         return ShootingCommands.getAutonomousShootingCommand().withTimeout(timeout);
     }
 
+    public static Command getTimedDeliveryCommand(double timeout){
+        return ShootingCommands.getAutonomousDeliveryCommand().withTimeout(timeout);
+    }
+
     /**
      * Creates a command that resets the pose estimator's pose to the starting pose of the given autonomous as long as the robot is not enabled.
      *

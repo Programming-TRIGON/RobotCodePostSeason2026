@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.6569649274767535,
-        "y": 6.626793943847096
+        "x": 7.842753280934772,
+        "y": 6.066425004192842
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Long Delivery StartPath End"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 5.463866174768518
       },
       "prevControl": {
-        "x": 7.79326301805544,
-        "y": 5.694315685297992
+        "x": 7.773252256239513,
+        "y": 5.742376867482312
       },
       "nextControl": {
-        "x": 7.987098237731598,
-        "y": 5.233416664239044
+        "x": 7.99289441364052,
+        "y": 5.219213083179236
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 4.675227575231482
       },
       "prevControl": {
-        "x": 8.009730980300901,
-        "y": 4.940100349425316
+        "x": 7.98967082816571,
+        "y": 4.906721760957717
       },
       "nextControl": {
-        "x": 7.575987193744403,
-        "y": 3.9791084516928197
+        "x": 7.667423303783747,
+        "y": 4.156914965363706
       },
       "isLocked": false,
       "linkedName": null
@@ -52,28 +52,28 @@
         "y": 5.026834418402777
       },
       "prevControl": {
-        "x": 6.56979725952821,
-        "y": 4.256183078278557
+        "x": 6.9548577819856225,
+        "y": 4.002639178631875
       },
       "nextControl": {
-        "x": 6.239700559223468,
-        "y": 5.865383698335983
+        "x": 5.934093774753978,
+        "y": 5.927469281548159
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.776471715856482,
-        "y": 7.390781901041667
+        "x": 6.181616753472223,
+        "y": 6.284916377314814
       },
       "prevControl": {
-        "x": 6.7826092303240735,
-        "y": 7.509536964699073
+        "x": 6.355454280445521,
+        "y": 5.247498291070097
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Long Delivery Collect For Delivey End"
     }
   ],
   "rotationTargets": [
@@ -88,14 +88,7 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "CollectCommand",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 2.4908118770764136,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.4,
     "maxAcceleration": 4.0,
@@ -105,8 +98,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 4.0,
-    "rotation": 180.0
+    "velocity": 0.0,
+    "rotation": 27.87326106747837
   },
   "reversed": false,
   "folder": "Long Delivery Paths",
