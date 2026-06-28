@@ -46,7 +46,7 @@ public class AutonomousConstants {
     public static final Rotation2d DELIVERY_ROTATION = Rotation2d.fromDegrees(27.873);
 
     public static final FlippablePose2d
-            SHOOTING_POSE = new FlippablePose2d(
+            DOUBLE_SWIPE_SHOOTING_POSE = new FlippablePose2d(
             3.775, 7.376,
             Rotation2d.fromDegrees(98),
             true

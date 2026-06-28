@@ -9,6 +9,7 @@ import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
+import frc.trigon.robot.misc.TrenchDetection;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
@@ -59,15 +60,18 @@ public class ShootingCommands {
         );
     }
 
-    public static Command getAutonomousShootingCommand() {
+    public static Command getFixedAutonomousShootingCommand(FixedShootingPosition fixedShootingPosition) {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
-                        getUpdateShootingCalculationsCommand(),
-                        getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
-                        getSetTargetShootingLocationCommand(),
-                        getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
-                        getAimForShootingCommand(),
-                        IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE)
+                        HoodCommands.getSetTargetAngleCommand(() -> fixedShootingPosition.targetPitch).onlyWhile(() -> !TrenchDetection.isHoodBeforeTrench()),
+                        ShooterCommands.getSetTargetVelocityCommand(() -> fixedShootingPosition.targetShootingVelocityMetersPerSecond),
+                        new ParallelCommandGroup(
+                                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING),
+                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
+                                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE)
+                        ).onlyWhile(() -> RobotContainer.HOOD.atTargetAngle()
+                                && RobotContainer.SHOOTER.atTargetVelocity()
+                                && RobotContainer.SWERVE.atPose(AutonomousConstants.DOUBLE_SWIPE_SHOOTING_POSE))
                 )
         );
     }
@@ -354,7 +358,8 @@ public class ShootingCommands {
         RIGHT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
         LEFT_TRENCH(Rotation2d.fromDegrees(59.427), 7.108),
         BACK_RIGHT(Rotation2d.fromDegrees(57.079), 8.349),
-        BACK_LEFT(Rotation2d.fromDegrees(57.079), 8.349);
+        BACK_LEFT(Rotation2d.fromDegrees(57.079), 8.349),
+        AUTONOMOUS_DOUBLE_SWIPE(Rotation2d.fromDegrees(59.427), 7.108);
 
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;

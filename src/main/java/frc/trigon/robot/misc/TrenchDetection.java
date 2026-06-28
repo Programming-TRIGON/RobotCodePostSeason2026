@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.FieldConstants;
@@ -28,9 +27,12 @@ public class TrenchDetection {
      * @return whether the hood is in or passing through a trench
      */
     public static boolean isHoodInTrenchZone() {
-        if (DriverStation.isAutonomous())
-            return false;
         return isHoodInTrenchZone(getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()), getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS)));
+    }
+
+    public static boolean isHoodBeforeTrench() {
+        final BoundingBox currentHoodBox = getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose());
+        return isHoodCenterBeforeTrench(currentHoodBox.getCenter().getTranslation());
     }
 
     private static boolean isHoodInTrenchZone(BoundingBox currentHoodBox, BoundingBox predictedHoodBox) {
