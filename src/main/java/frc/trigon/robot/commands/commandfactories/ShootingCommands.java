@@ -37,7 +37,7 @@ public class ShootingCommands {
                 ShooterCommands.getDebuggingCommand(),
                 GeneralCommands.runWhen(
                         new ParallelCommandGroup(
-//                              IndexerCommands.getDebuggingCommand(),
+                                IndexerCommands.getDebuggingCommand(),
                                 LoaderCommands.getDebuggingCommand()
                         ),
                         () -> RobotContainer.HOOD.atTargetAngle() && RobotContainer.SHOOTER.atTargetVelocity()
@@ -52,8 +52,8 @@ public class ShootingCommands {
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
-                        getAimForShootingCommand()
-                        //getIntakeSequenceWhileShootingCommand()
+                        getAimForShootingCommand(),
+                        getIntakeSequenceWhileShootingCommand()
                 )
         );
     }
@@ -63,8 +63,8 @@ public class ShootingCommands {
                 getLoadForFixedShootingAtHubWhenReadyCommand(),
                 HoodCommands.getSetTargetAngleCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
                 ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
-                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name()))
-                //getIntakeSequenceWhileShootingCommand()
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name())),
+                getIntakeSequenceWhileShootingCommand()
         );
     }
 

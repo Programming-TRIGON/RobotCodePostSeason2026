@@ -41,7 +41,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
     public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator(
-            CameraConstants.RIGHT_APRIL_TAG_CAMERA,
+//            CameraConstants.RIGHT_APRIL_TAG_CAMERA,
             CameraConstants.LEFT_APRIL_TAG_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
@@ -83,6 +83,7 @@ public class RobotContainer {
     }
 
     private void bindControllerCommands() {
+        OperatorConstants.OPERATOR_CONTROLLER.backspace().whileTrue(CommandConstants.CALCULATE_CAMERA_POSITION_COMMAND);
         OperatorConstants.RESET_HEADING_TRIGGER.onTrue(CommandConstants.RESET_HEADING_COMMAND);
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
         OperatorConstants.CAMERAS_DISCONNECTED_TRIGGER.onTrue(CommandConstants.INDICATE_CAMERAS_DISCONNECTED_COMMAND);
