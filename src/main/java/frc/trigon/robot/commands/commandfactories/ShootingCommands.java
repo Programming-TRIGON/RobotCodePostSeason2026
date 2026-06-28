@@ -85,14 +85,6 @@ public class ShootingCommands {
         );
     }
 
-    private static Command getAimHoodForFixedShootingCommand(Supplier<Rotation2d> targetAngleSupplier) {
-        return GeneralCommands.getContinuousConditionalCommand(
-                HoodCommands.getRestCommand(),
-                HoodCommands.getSetTargetAngleCommand(targetAngleSupplier),
-                OperatorConstants.LOWER_HOOD_TRIGGER
-        );
-    }
-
     public static Command getSetFixedShootingStateCommand(FixedShootingPosition targetState) {
         return new InstantCommand(() -> {
             setTargetFixedShootingAtHubState(targetState);
@@ -190,6 +182,14 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING)
+        );
+    }
+
+    private static Command getAimHoodForFixedShootingCommand(Supplier<Rotation2d> targetAngleSupplier) {
+        return GeneralCommands.getContinuousConditionalCommand(
+                HoodCommands.getRestCommand(),
+                HoodCommands.getSetTargetAngleCommand(targetAngleSupplier),
+                OperatorConstants.LOWER_HOOD_TRIGGER
         );
     }
 
