@@ -64,7 +64,7 @@ public class ShootingCommands {
     public static Command getFixedAutonomousShootingCommand(FixedShootingPosition fixedShootingPosition) {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
-                        HoodCommands.getSetTargetAngleCommand(() -> fixedShootingPosition.targetPitch).onlyWhile(() -> !TrenchDetection.isHoodBeforeTrench()),
+                        HoodCommands.getSetTargetAngleCommand(() -> fixedShootingPosition.targetPitch).onlyIf(TrenchDetection::isHoodBeforeTrench),
                         ShooterCommands.getSetTargetVelocityCommand(() -> fixedShootingPosition.targetShootingVelocityMetersPerSecond),
                         new ParallelCommandGroup(
                                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING),
