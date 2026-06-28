@@ -41,8 +41,8 @@ public class IndexerConstants {
             new Translation3d(-0.04721098, 0, 0.156750004),
             new Rotation3d()
     );
-    public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 4.5;
-    public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -3;
+    public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 1;
+    public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -1;
 
     static {
         final TalonFXSConfiguration config = new TalonFXSConfiguration();
