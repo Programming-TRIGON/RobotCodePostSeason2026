@@ -53,11 +53,7 @@ public class ShootingCommands {
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
-                        GeneralCommands.getContinuousConditionalCommand(
-                                HoodCommands.getDebuggingCommand(),
-                                getAimForShootingCommand(),
-                                TrenchDetection::isHoodInTrenchZone
-                        ),
+                        getAimForShootingCommand(),
                         getIntakeSequenceWhileShootingCommand()
                 )
         );
@@ -162,9 +158,10 @@ public class ShootingCommands {
     }
 
     private static Command getAimForShootingCommand() {
-        return new ParallelCommandGroup(
-                HoodCommands.getAimForShootingCommand(),
-                ShooterCommands.getAimForShootingCommand()
+        return GeneralCommands.getContinuousConditionalCommand(
+                HoodCommands.getResetHoodCommand(),
+                new ParallelCommandGroup(HoodCommands.getAimForShootingCommand(), ShooterCommands.getAimForShootingCommand()),
+                TrenchDetection::isHoodInTrenchZone
         );
     }
 
