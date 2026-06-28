@@ -19,11 +19,10 @@ import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverest
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.RestrictedZone;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
+import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
-import org.littletonrobotics.junction.Logger;
-
-import java.util.function.BooleanSupplier;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 /**
  * A class that contains commands that only use parameters and don't require logic.
@@ -46,18 +45,16 @@ public class CommandConstants {
     public static final double
             DEFAULT_SWERVE_SPEED_MULTIPLIER = 1,
             SHOOTING_SWERVE_SPEED_MULTIPLIER = 0.5;
-    private static Translation2d INTAKE_CENTER_OF_ROTATION = new Translation2d(0.5, 0);
+    private static final Translation2d INTAKE_CENTER_OF_ROTATION = new Translation2d(0.418, 0);
     private static final double
-            BUMP_LENGTH_METERS = 1.12776,
-            BUMP_WIDTH_METERS = 1.8542,
-            MINIMUM_DISTANCE_METERS_FROM_BUMP_ZONE = 0.1,
-            BRAKING_DISTANCE_FROM_BUMP_ZONE = 0.1;
-    private static final BoundingBox
-            RED_LEFT_BUMP_ZONE = new BoundingBox(new Pose2d(new Translation2d(11.821414, 5.566918), new Rotation2d()), BUMP_LENGTH_METERS, BUMP_WIDTH_METERS),
-            RED_RIGHT_BUMP_ZONE = new BoundingBox(new Pose2d(new Translation2d(11.821414, 2.518918), new Rotation2d()), BUMP_LENGTH_METERS, BUMP_WIDTH_METERS),
-            BLUE_LEFT_BUMP_ZONE = new BoundingBox(new Pose2d(new Translation2d(4.541774, 5.566918), new Rotation2d()), BUMP_LENGTH_METERS, BUMP_WIDTH_METERS),
-            BLUE_RIGHT_BUMP_ZONE = new BoundingBox(new Pose2d(new Translation2d(4.541774, 2.518918), new Rotation2d()), BUMP_LENGTH_METERS, BUMP_WIDTH_METERS);
-    private static boolean SHOULD_USE_INTAKE_ASSIST = false;
+            BUMPS_ZONE_Y_METERS = 1.12776,
+            BUMPS_ZONE_X_METERS = 5.5118,
+            MINIMUM_DISTANCE_METERS_FROM_BUMP_ZONE = 0.15,
+            BRAKING_DISTANCE_FROM_BUMP_ZONE = 0.4;
+    private static final Translation2d
+            BLUE_BUMPS_ZONE_CENTER = new Translation2d(4.592574, FieldConstants.FIELD_WIDTH_METERS / 2),
+            RED_BUMPS_ZONE_CENTER = new Translation2d(11.947426, FieldConstants.FIELD_WIDTH_METERS / 2);
+    private static final LoggedNetworkBoolean SHOULD_USE_INTAKE_ASSIST = new LoggedNetworkBoolean("Assist/ShouldUseIntakeAssist", false);
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
@@ -99,12 +96,11 @@ public class CommandConstants {
             TRENCH_ASSIST_COMMAND = new FieldRelativeRestrictedDriveCommand(
                     new ZoneRestrictionsDrive(
                             true,
-                            getBumpRestrictedZone(RED_LEFT_BUMP_ZONE),
-                            getBumpRestrictedZone(RED_RIGHT_BUMP_ZONE),
-                            getBumpRestrictedZone(BLUE_LEFT_BUMP_ZONE),
-                            getBumpRestrictedZone(BLUE_RIGHT_BUMP_ZONE))
+                            getBumpRestrictedZone(getBumpBoundingBox(BLUE_BUMPS_ZONE_CENTER)),
+                            getBumpRestrictedZone(getBumpBoundingBox(RED_BUMPS_ZONE_CENTER))
+                    )
             );
-
+    
     /**
      * Sets the speed multiplier applied to the drive stick values, scaling the robot's driving speed.
      * A value of 1 keeps the regular speed, while lower values make the robot drive slower (0 stops driving).
@@ -177,12 +173,15 @@ public class CommandConstants {
         return Math.sin(-povRadians);
     }
 
-    private static RestrictedZone getBumpRestrictedZone(BoundingBox bumpZone) {
-        return new RestrictedZone(bumpZone, MINIMUM_DISTANCE_METERS_FROM_BUMP_ZONE, BRAKING_DISTANCE_FROM_BUMP_ZONE);
+    private static RestrictedZone getBumpRestrictedZone(BoundingBox bumpBoundingBox) {
+        return new RestrictedZone(bumpBoundingBox, MINIMUM_DISTANCE_METERS_FROM_BUMP_ZONE, BRAKING_DISTANCE_FROM_BUMP_ZONE);
+    }
+
+    private static BoundingBox getBumpBoundingBox(Translation2d bumpZoneCenter) {
+        return new BoundingBox(new Pose2d(bumpZoneCenter, new Rotation2d()), BUMPS_ZONE_Y_METERS, BUMPS_ZONE_X_METERS);
     }
 
     public static boolean shouldUseIntakeAssist() {
-        Logger.recordOutput("Intake/ShouldUseIntakeAssistTrigger", SHOULD_USE_INTAKE_ASSIST);
-        return SHOULD_USE_INTAKE_ASSIST;
+        return SHOULD_USE_INTAKE_ASSIST.get();
     }
 }

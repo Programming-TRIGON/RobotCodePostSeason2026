@@ -8,7 +8,7 @@ public class ZoneRestrictedDriveConstants {
     private static final double
             ROBOT_X_WIDTH_METERS = 0.836,
             ROBOT_Y_WIDTH_METERS = 0.902,
-            INTAKE_LENGTH = 0.37;
+            INTAKE_LENGTH = 0.198845;
     public static final BoundingBox ROBOT_RELATIVE_BOUNDING_BOX = new BoundingBox(
             new Translation2d(ROBOT_X_WIDTH_METERS / 2 + INTAKE_LENGTH, -ROBOT_Y_WIDTH_METERS / 2),
             new Translation2d(-ROBOT_X_WIDTH_METERS / 2, ROBOT_Y_WIDTH_METERS / 2)

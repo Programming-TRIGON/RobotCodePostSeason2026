@@ -3,6 +3,7 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driveres
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.trigon.lib.utilities.BoundingBox;
+import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.ZoneRestrictedDriveConstants;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.ZoneRestriction;
@@ -31,10 +32,13 @@ public class ZoneRestrictionsDrive implements DriveRestriction {
     @Override
     public Translation2d applyTranslationRestriction(Translation2d targetTranslation) {
         final BoundingBox robotBox = getRobotBoundingBox();
-        Translation2d translation = targetTranslation.unaryMinus();
+        final boolean isRedAlliance = Flippable.isRedAlliance();
+        Translation2d translation = isRedAlliance ? targetTranslation.unaryMinus() : targetTranslation;
+
         for (ZoneRestriction zone : zoneRestrictions)
             translation = zone.applyRestriction(translation, robotBox);
-        return translation.unaryMinus();
+
+        return isRedAlliance ? translation.unaryMinus() : translation;
     }
 
     private static ZoneRestriction[] getZoneRestrictionsWithFieldRestriction(ZoneRestriction[] zones) {
