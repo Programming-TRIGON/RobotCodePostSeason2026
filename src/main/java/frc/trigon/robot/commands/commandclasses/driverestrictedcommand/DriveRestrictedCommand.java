@@ -60,7 +60,6 @@ public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
 
         for (DriveRestriction driveRestriction : driveRestrictions) {
             targetRobotTranslationPower = driveRestriction.applyTranslationRestriction(targetRobotTranslationPower);
-
         }
 
         targetRobotTranslationPower = fromFieldRelativeDrive(targetRobotTranslationPower);
