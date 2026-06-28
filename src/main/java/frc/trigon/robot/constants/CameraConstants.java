@@ -22,18 +22,18 @@ public class CameraConstants {
             new Rotation3d(
                     Units.degreesToRadians(9.68),
                     Units.degreesToRadians(-22.5),
-                    Units.degreesToRadians(-23.0)
+                    Units.degreesToRadians(180 - 23.0)
             )
     ),
             ROBOT_TO_LEFT_APRIL_TAG_CAMERA = new Transform3d(
                     new Translation3d(
-                            0.171,
-                            0.355,
+                            -0.171,
+                            -0.355,
                             0.191),
                     new Rotation3d(
                             Units.degreesToRadians(9.68),
                             Units.degreesToRadians(-22.5),
-                            Units.degreesToRadians(23.0)
+                            Units.degreesToRadians(180 + 23.0)
                     )
             );
     public static final AprilTagCamera

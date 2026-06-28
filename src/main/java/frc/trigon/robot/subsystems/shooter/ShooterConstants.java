@@ -64,7 +64,7 @@ public class ShooterConstants {
             new Translation3d(-0.160855914, 0, 0.462125568),
             new Rotation3d(0, 0, Rotation2d.k180deg.getRadians())
     );
-    public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 7.208;
+    public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 7.9;
     public static final double EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 2;
 
     static {
