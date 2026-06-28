@@ -408,8 +408,8 @@ public class ShootingCommands {
         BETWEEN_TOWER_AND_HUB(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(177.9)),
         RIGHT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(-100.108)),
         LEFT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(100.108)),
-        RIGHT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(168.564)),
-        LEFT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(-157.736));
+        RIGHT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(-157.736)),
+        LEFT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(168.564));
 
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;
