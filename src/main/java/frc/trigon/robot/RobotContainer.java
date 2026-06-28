@@ -91,7 +91,6 @@ public class RobotContainer {
         OperatorConstants.SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(ShootingCommands.getShootingMapCalibrationCommand());
         OperatorConstants.TELEPORTATION_FOR_SIMULATION_SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(GeneralCommands.getTeleportRobotForSimulationShootingMapCalibrationCommand(ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION));
         OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
-        OperatorConstants.LOWER_HOOD_TRIGGER.whileTrue(HoodCommands.getRestCommand());
 
         OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
         OperatorConstants.SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BETWEEN_TOWER_AND_HUB));
@@ -111,7 +110,6 @@ public class RobotContainer {
         OperatorConstants.INTAKE_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).unless(OperatorConstants.SHOOTING_TRIGGER));
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
-        OperatorConstants.RESTRICT_HOOD_ANGLE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
 
         OperatorConstants.ENABLE_OVERRIDE_GAME_DATA_TRIGGER.onTrue(MatchTrackerCommands.getEnableOverrideGameDataCommand());
         OperatorConstants.DISABLE_OVERRIDE_GAME_DATA_TRIGGER.onTrue(MatchTrackerCommands.getDisableOverrideGameDataCommand());

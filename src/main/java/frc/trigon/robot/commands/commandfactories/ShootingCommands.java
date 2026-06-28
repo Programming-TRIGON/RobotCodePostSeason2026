@@ -8,6 +8,7 @@ import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
+import frc.trigon.robot.misc.TrenchDetection;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
@@ -54,7 +55,8 @@ public class ShootingCommands {
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
                         getSetTargetShootingLocationCommand(),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
-                        getAimForShootingCommand(),
+                        getAimHoodForShootingCommand(),
+                        ShooterCommands.getAimForShootingCommand(),
                         getIntakeSequenceWhileShootingCommand()
                 )
         );
@@ -64,7 +66,7 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 getLoadForFixedShootingAtHubWhenReadyCommand(),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedShootingAtHub", isReadyForFixedShootingAtHub())),
-                HoodCommands.getSetTargetAngleCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
+                getAimHoodForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
                 ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name())),
@@ -76,10 +78,18 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 getLoadForFixedDeliveryWhenReadyCommand(),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedDelivery", isReadyForFixedDelivery())),
-                HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
+                getAimHoodForFixedShootingCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
                 getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
                 getIntakeSequenceWhileShootingCommand()
+        );
+    }
+
+    private static Command getAimHoodForFixedShootingCommand(Supplier<Rotation2d> targetAngleSupplier) {
+        return GeneralCommands.getContinuousConditionalCommand(
+                HoodCommands.getRestCommand(),
+                HoodCommands.getSetTargetAngleCommand(targetAngleSupplier),
+                OperatorConstants.LOWER_HOOD_TRIGGER
         );
     }
 
@@ -110,7 +120,8 @@ public class ShootingCommands {
         return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
-                        getAimForShootingCommand()
+                        getAimHoodForShootingCommand(),
+                        ShooterCommands.getAimForShootingCommand()
                 )
         );
     }
@@ -202,10 +213,11 @@ public class ShootingCommands {
         );
     }
 
-    private static Command getAimForShootingCommand() {
-        return new ParallelCommandGroup(
+    private static Command getAimHoodForShootingCommand() {
+        return GeneralCommands.getContinuousConditionalCommand(
+                HoodCommands.getRestCommand(),
                 HoodCommands.getAimForShootingCommand(),
-                ShooterCommands.getAimForShootingCommand()
+                TrenchDetection::isHoodInTrenchZone
         );
     }
 
