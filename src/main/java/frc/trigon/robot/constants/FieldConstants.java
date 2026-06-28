@@ -55,14 +55,14 @@ public class FieldConstants {
      * RIGHT trench mirrors it along the other wall — right side from the driver's perspective.
      */
     public static final double
-            RIGHT_TRENCH_MINIMUM_X = 4.000,
-            RIGHT_TRENCH_MAXIMUM_X = 5.223,
+            RIGHT_TRENCH_MINIMUM_X = 4.3,
+            RIGHT_TRENCH_MAXIMUM_X = 4.9,
             RIGHT_TRENCH_MINIMUM_Y = 0.000,
             RIGHT_TRENCH_MAXIMUM_Y = 1.28;
     private static final double
-            LEFT_TRENCH_MINIMUM_X = RIGHT_TRENCH_MINIMUM_X,
-            LEFT_TRENCH_MAXIMUM_X = RIGHT_TRENCH_MAXIMUM_X,
-            LEFT_TRENCH_MINIMUM_Y = FIELD_WIDTH_METERS - RIGHT_TRENCH_MAXIMUM_Y,
+            LEFT_TRENCH_MINIMUM_X = 4.3,
+            LEFT_TRENCH_MAXIMUM_X = 4.9,
+            LEFT_TRENCH_MINIMUM_Y = 6.79,
             LEFT_TRENCH_MAXIMUM_Y = FIELD_WIDTH_METERS - RIGHT_TRENCH_MINIMUM_Y;
     private static final FlippableTranslation2d
             FAR_RIGHT_TRENCH_CORNER_A = new FlippableTranslation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y, true),

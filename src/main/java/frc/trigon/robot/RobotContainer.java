@@ -111,7 +111,6 @@ public class RobotContainer {
         OperatorConstants.INTAKE_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).unless(OperatorConstants.SHOOTING_TRIGGER));
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
-        OperatorConstants.RESTRICT_HOOD_ANGLE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
 
         OperatorConstants.ENABLE_OVERRIDE_GAME_DATA_TRIGGER.onTrue(MatchTrackerCommands.getEnableOverrideGameDataCommand());
         OperatorConstants.DISABLE_OVERRIDE_GAME_DATA_TRIGGER.onTrue(MatchTrackerCommands.getDisableOverrideGameDataCommand());
