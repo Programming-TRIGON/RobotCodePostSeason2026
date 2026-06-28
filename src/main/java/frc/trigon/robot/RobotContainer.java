@@ -41,7 +41,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
     public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator(
-//            CameraConstants.RIGHT_APRIL_TAG_CAMERA,
+            CameraConstants.RIGHT_APRIL_TAG_CAMERA,
             CameraConstants.LEFT_APRIL_TAG_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
@@ -70,20 +70,19 @@ public class RobotContainer {
     private void configureBindings() {
         bindDefaultCommands();
         bindControllerCommands();
-        configureSysIDBindings(LOADER);
+//        configureSysIDBindings(LOADER);
     }
 
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
-        INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.AGITATE));
+        INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
         INTAKE.setDefaultCommand(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN));
         LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
         SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
     }
 
     private void bindControllerCommands() {
-        OperatorConstants.OPERATOR_CONTROLLER.backspace().whileTrue(CommandConstants.CALCULATE_CAMERA_POSITION_COMMAND);
         OperatorConstants.RESET_HEADING_TRIGGER.onTrue(CommandConstants.RESET_HEADING_COMMAND);
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
         OperatorConstants.CAMERAS_DISCONNECTED_TRIGGER.onTrue(CommandConstants.INDICATE_CAMERAS_DISCONNECTED_COMMAND);
