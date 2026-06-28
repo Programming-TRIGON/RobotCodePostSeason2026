@@ -121,7 +121,7 @@ public class LoaderConstants {
     }
 
     public enum LoaderState {
-        LOAD_FOR_DELIVERY(2),
+        LOAD_FOR_DELIVERY(3),
         LOAD_FOR_SHOOTING(3),
         PRELOAD(1),
         EJECT_FROM_INTAKE(-2),
