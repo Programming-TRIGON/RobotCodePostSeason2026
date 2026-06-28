@@ -32,7 +32,7 @@ public class HoodConstants {
     private static final double
             HOOD_MASS_KILOGRAMS = 2,
             HOOD_LENGTH_METERS = 0.258;
-    public static final Rotation2d
+    private static final Rotation2d
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(62),
             MINIMUM_ANGLE = Rotation2d.fromDegrees(21.5);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;

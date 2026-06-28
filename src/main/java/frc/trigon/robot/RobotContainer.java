@@ -91,7 +91,7 @@ public class RobotContainer {
         OperatorConstants.SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(ShootingCommands.getShootingMapCalibrationCommand());
         OperatorConstants.TELEPORTATION_FOR_SIMULATION_SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(GeneralCommands.getTeleportRobotForSimulationShootingMapCalibrationCommand(ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION));
         OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
-        OperatorConstants.LOWER_HOOD_TRIGGER.whileTrue(HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.MINIMUM_ANGLE));
+        OperatorConstants.LOWER_HOOD_TRIGGER.whileTrue(HoodCommands.getRestCommand());
 
         OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
         OperatorConstants.SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BETWEEN_TOWER_AND_HUB));
