@@ -46,6 +46,8 @@ public class FieldConstants {
             HUB_POSITION = new FlippableTranslation2d(TAG_ID_TO_POSE.get(26).getX() + (Units.inchesToMeters(47) / 2), FIELD_WIDTH_METERS / 2, true),
             RIGHT_DELIVERY_POSITION = new FlippableTranslation2d(BLUE_RELATIVE_DELIVERY_POSITION_X, (FIELD_WIDTH_METERS / 2) - DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS, true),
             LEFT_DELIVERY_POSITION = new FlippableTranslation2d(BLUE_RELATIVE_DELIVERY_POSITION_X, (FIELD_WIDTH_METERS / 2) + DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS, true);
+    public static final FlippableTranslation2d RIGHT_OF_TOWER_POSITION = new FlippableTranslation2d(0.949, 2.531, true);
+    public static final FlippableTranslation2d LEFT_OF_TOWER_POSITION = new FlippableTranslation2d(0.716, 4.827, true);
 
     /**
      * The trench bounding box coordinates in meters.

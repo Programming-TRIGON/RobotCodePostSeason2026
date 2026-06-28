@@ -70,7 +70,6 @@ public class RobotContainer {
     private void configureBindings() {
         bindDefaultCommands();
         bindControllerCommands();
-//        configureSysIDBindings(LOADER);
     }
 
     private void bindDefaultCommands() {
@@ -92,12 +91,16 @@ public class RobotContainer {
         OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
 
         OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
-        OperatorConstants.SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_IN_FRONT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.IN_FRONT_OF_TOWER));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_RIGHT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_TRENCH));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_LEFT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_TRENCH));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_BACK_RIGHT_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BACK_RIGHT));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_IN_HUB_POSITION_BACK_LEFT_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BACK_LEFT));
+        OperatorConstants.SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BETWEEN_TOWER_AND_HUB));
+        OperatorConstants.SET_TARGET_FIXED_SCORING_IN_FRONT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.IN_FRONT_OF_TOWER));
+        OperatorConstants.SET_TARGET_FIXED_SCORING_CLOSEST_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetClosestTrenchCommand());
+        OperatorConstants.SET_TARGET_FIXED_SCORING_CLOSEST_SIDE_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetClosestSideOfTowerCommand());
+        OperatorConstants.SET_TARGET_FIXED_SCORING_RIGHT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_TRENCH));
+        OperatorConstants.SET_TARGET_FIXED_SCORING_LEFT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_TRENCH));
+        OperatorConstants.SET_TARGET_FIXED_SCORING_RIGHT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_OF_TOWER));
+        OperatorConstants.SET_TARGET_FIXED_SCORING_LEFT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_OF_TOWER));
         OperatorConstants.FIXED_SHOOTING_AT_HUB_TRIGGER.whileTrue(ShootingCommands.getFixedShootingAtHubCommand());
+        OperatorConstants.PREPARE_FOR_FIXED_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForFixedShootingCommand());
         OperatorConstants.FIXED_DELIVERY_TRIGGER.whileTrue(ShootingCommands.getFixedDeliveryShootingCommand());
         OperatorConstants.PREPARE_FOR_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForShootingCommand());
         OperatorConstants.EJECT_FROM_INTAKE_TRIGGER.whileTrue(EjectionCommands.getEjectFromIntakeCommand());
@@ -109,6 +112,8 @@ public class RobotContainer {
 
         OperatorConstants.ENABLE_OVERRIDE_GAME_DATA_TRIGGER.onTrue(MatchTrackerCommands.getEnableOverrideGameDataCommand());
         OperatorConstants.DISABLE_OVERRIDE_GAME_DATA_TRIGGER.onTrue(MatchTrackerCommands.getDisableOverrideGameDataCommand());
+        OperatorConstants.ENABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableOverrideSwerveAimCommand());
+        OperatorConstants.DISABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableOverrideSwerveAimCommand());
         OperatorConstants.HUB_ACTIVE_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
     }
 
