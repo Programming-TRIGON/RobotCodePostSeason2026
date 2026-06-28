@@ -71,7 +71,7 @@ public class LoaderConstants {
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
-
+        
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.5 : 1.3;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
