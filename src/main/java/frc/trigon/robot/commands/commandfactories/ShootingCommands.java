@@ -71,7 +71,7 @@ public class ShootingCommands {
                                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE)
                         ).onlyWhile(() -> RobotContainer.HOOD.atTargetAngle()
                                 && RobotContainer.SHOOTER.atTargetVelocity()
-                                && RobotContainer.SWERVE.atPose(AutonomousConstants.DOUBLE_SWIPE_SHOOTING_POSE))
+                                && (RobotContainer.SWERVE.atPose(AutonomousConstants.DOUBLE_SWIPE_LEFT_SHOOTING_POSE) || RobotContainer.SWERVE.atPose(AutonomousConstants.DOUBLE_SWIPE_RIGHT_SHOOTING_POSE)))
                 )
         );
     }

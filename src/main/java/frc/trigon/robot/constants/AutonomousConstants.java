@@ -46,11 +46,16 @@ public class AutonomousConstants {
     public static final Rotation2d DELIVERY_ROTATION = Rotation2d.fromDegrees(27.873);
 
     public static final FlippablePose2d
-            DOUBLE_SWIPE_SHOOTING_POSE = new FlippablePose2d(
-            3.775, 7.376,
-            Rotation2d.fromDegrees(98),
+            DOUBLE_SWIPE_LEFT_SHOOTING_POSE = new FlippablePose2d(
+            2.853, 6.768,
+            Rotation2d.fromDegrees(120.390),
             true
     ),
+            DOUBLE_SWIPE_RIGHT_SHOOTING_POSE = new FlippablePose2d(
+                    DOUBLE_SWIPE_LEFT_SHOOTING_POSE.get().getY(), FieldConstants.FIELD_WIDTH_METERS - DOUBLE_SWIPE_LEFT_SHOOTING_POSE.get().getX(),
+                    DOUBLE_SWIPE_LEFT_SHOOTING_POSE.get().getRotation().unaryMinus(),
+                    true
+            ),
             NEUTRAL_INTAKE_POSE = new FlippablePose2d(
                     7.360, 7.003,
                     Rotation2d.fromDegrees(-31.215),
