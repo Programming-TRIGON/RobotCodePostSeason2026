@@ -12,7 +12,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
@@ -31,7 +30,9 @@ import java.io.IOException;
 public class AutonomousConstants {
     public static final String DEFAULT_AUTO_NAME = "DefaultAutoName";
     public static final RobotConfig ROBOT_CONFIG = getRobotConfig();
-    public static final double FEEDFORWARD_SCALAR = 0.3;//TODO: Calibrate
+    public static final double FEEDFORWARD_SCALAR = RobotHardwareStats.isSimulation()
+            ? 0.3
+            : 0.5;//TODO: Calibrate
 
     public static final double
             TOTAL_MATCH_TIME_SECONDS = 160,
@@ -43,7 +44,6 @@ public class AutonomousConstants {
             AUTONOMOUS_SHOOTING_DURATION_SECONDS = 3,
             AUTONOMOUS_DELIVERY_DURATION_SECONDS = 7;
     public static final Rotation2d DELIVERY_ROTATION = Rotation2d.fromDegrees(27.873);
-    public static final double START_INTAKING_X = 6.3;
 
     public static final FlippablePose2d
             SHOOTING_POSE = new FlippablePose2d(

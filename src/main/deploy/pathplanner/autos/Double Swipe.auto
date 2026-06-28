@@ -42,9 +42,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Double Swipe Return For Collect"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Double Swipe Return For Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectCommand"
+                }
+              }
+            ]
           }
         },
         {
@@ -67,9 +80,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Double Swipe Retrun For Shoot"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Double Swipe Retrun For Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectCommand"
+                }
+              }
+            ]
           }
         },
         {
