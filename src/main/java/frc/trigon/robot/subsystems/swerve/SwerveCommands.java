@@ -32,12 +32,12 @@ public class SwerveCommands {
     }
 
     /**
-     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in closed loop mode.
+     * Creates a command that drives the swerve with the given powers, with a custom center of rotation relative to the robot's frame of reference, in closed loop mode.
      *
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
-     * @param centerOfRotationSupplier the target center of rotation
+     * @param centerOfRotationSupplier the target center of rotation relative to the robot's frame of reference
      * @return the command
      */
     public static Command getClosedLoopFieldRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
@@ -97,12 +97,12 @@ public class SwerveCommands {
     }
 
     /**
-     * Creates a command that drives the swerve with the given powers, relative to the field's frame of reference, in open loop mode.
+     * Creates a command that drives the swerve with the given powers, with a custom center of rotation relative to the robot's frame of reference, in open loop mode.
      *
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
-     * @param centerOfRotationSupplier the target center of rotation
+     * @param centerOfRotationSupplier the target center of rotation relative to the robot's frame of reference
      * @return the command
      */
     public static Command getOpenLoopFieldRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
@@ -147,12 +147,12 @@ public class SwerveCommands {
     }
 
     /**
-     * Creates a command that drives the swerve with the given powers, relative to the robot's frame of reference, in closed loop mode.
+     * Creates a command that drives the swerve with the given powers, with a custom center of rotation relative to the robot's frame of reference, in closed loop mode.
      *
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
-     * @param centerOfRotationSupplier the target center of rotation
+     * @param centerOfRotationSupplier the target center of rotation relative to the robot's frame of reference
      * @return the command
      */
     public static Command getClosedLoopSelfRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {
@@ -197,12 +197,12 @@ public class SwerveCommands {
     }
 
     /**
-     * Creates a command that drives the swerve with the given powers, relative to the robot's frame of reference, in open loop mode.
+     * Creates a command that drives the swerve with the given powers, with a custom center of rotation relative to the robot's frame of reference, in open loop mode.
      *
      * @param xSupplier     the target forwards power
      * @param ySupplier     the target leftwards power
      * @param thetaSupplier the target theta power, CCW+
-     * @param centerOfRotationSupplier the target center of rotation
+     * @param centerOfRotationSupplier the target center of rotation relative to the robot's frame of reference
      * @return the command
      */
     public static Command getOpenLoopSelfRelativeDriveCommand(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier, Supplier<Translation2d> centerOfRotationSupplier) {

@@ -96,15 +96,11 @@ public class RobotContainer {
         OperatorConstants.PREPARE_FOR_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForShootingCommand());
         OperatorConstants.EJECT_FROM_INTAKE_TRIGGER.whileTrue(EjectionCommands.getEjectFromIntakeCommand());
         OperatorConstants.EJECT_FROM_SHOOTER_TRIGGER.whileTrue(EjectionCommands.getEjectFromShooterCommand());
-
-        OperatorConstants.INTAKE_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).unless(OperatorConstants.SHOOTING_TRIGGER));
+        OperatorConstants.INTAKE_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).raceWith(CommandConstants.INTAKE_CENTER_OF_ROTATION_COMMAND.onlyIf(CommandConstants::shouldUseIntakeAssist)).unless(OperatorConstants.SHOOTING_TRIGGER));
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.RESTRICT_HOOD_ANGLE_TRIGGER.whileTrue(HoodCommands.getRestCommand());
-
-        OperatorConstants.INTAKE_ASSIST_TRIGGER.whileTrue(IntakeAssistCommand.getIntakeCenterOfRotationCommand());
-        OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(TrenchAssistCommand.getTrenchAssistCommand());
-
+        OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {

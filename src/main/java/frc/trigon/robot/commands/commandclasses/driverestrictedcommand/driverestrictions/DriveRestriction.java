@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 /**
  * A restriction applied to the robot's drive by a DriveRestrictedCommand.
  * Each restriction changes either the translation, rotation, or center of rotation.
- * All methods default to passing the value through unchanged.
  */
 public interface DriveRestriction {
     /**
@@ -21,11 +20,11 @@ public interface DriveRestriction {
     /**
      * Applies a restriction to the target rotation of the robot.
      *
-     * @param targetRotation the target rotation of the robot
+     * @param targetRotationPower the target rotation of the robot
      * @return the restricted target rotation of the robot
      */
-    default double applyRotationRestriction(double targetRotation) {
-        return targetRotation;
+    default double applyRotationRestriction(double targetRotationPower) {
+        return targetRotationPower;
     }
 
     /**

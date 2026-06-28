@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
  * Rotates the robot around a robot relative point instead of the chassis center.
  * Useful for rotating around an extended mechanism such as an intake.
  */
-public class CustomCenterOfRotationDrive implements DriveRestriction {
+public class CustomCenterOfRotationDriveRestriction implements DriveRestriction {
     private final Translation2d centerOfRotation;
 
     /**
@@ -15,7 +15,7 @@ public class CustomCenterOfRotationDrive implements DriveRestriction {
      *
      * @param centerOfRotation the robot's desired center of rotation as a robot relative point
      */
-    public CustomCenterOfRotationDrive(Translation2d centerOfRotation) {
+    public CustomCenterOfRotationDriveRestriction(Translation2d centerOfRotation) {
         this.centerOfRotation = centerOfRotation;
     }
 

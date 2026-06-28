@@ -57,6 +57,5 @@ public class OperatorConstants {
             INTAKE_WHILE_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.v()),
             INTAKE_TRIGGER = INTAKE_WHILE_SHOOTING_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             RESTRICT_HOOD_ANGLE_TRIGGER = new Trigger(TrenchDetection::isHoodInTrenchZone),
-            INTAKE_ASSIST_TRIGGER = DRIVER_CONTROLLER.back(),
-            TRENCH_ASSIST_TRIGGER = DRIVER_CONTROLLER.a();
+            TRENCH_ASSIST_TRIGGER = DRIVER_CONTROLLER.back();
 }

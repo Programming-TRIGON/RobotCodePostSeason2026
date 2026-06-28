@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.DriveRestriction;
 import frc.trigon.robot.constants.OperatorConstants;
+import frc.trigon.robot.subsystems.swerve.SwerveCommands;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 /**
  * An abstract class for a command that drives the robot while restricting its movement.
@@ -15,7 +18,7 @@ import frc.trigon.robot.constants.OperatorConstants;
  */
 public abstract class DriveRestrictedCommand extends ParallelCommandGroup {
     private final DriveRestriction[] driveRestrictions;
-    protected Translation2d robotRelativeCenterOfRotation = Translation2d.kZero; // Stored as a field because the supplier passed to getDriveCommand uses it.
+    protected Translation2d robotRelativeCenterOfRotation = Translation2d.kZero; /** Stored as a field in this class so that the command can properly interface with the Swerve method that changes the custom center of rotation,{@link SwerveCommands#getClosedLoopFieldRelativeDriveCommand(DoubleSupplier, DoubleSupplier, DoubleSupplier, Supplier)} for the swerve command */
     protected double
             restrictedXPower = 0,
             restrictedYPower = 0,
