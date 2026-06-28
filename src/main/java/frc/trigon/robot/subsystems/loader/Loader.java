@@ -35,11 +35,6 @@ public class Loader extends MotorSubsystem {
         LoaderConstants.FOLLOWER_MOTOR.update();
     }
 
-    @Override
-    public void sysIDDrive(double targetVoltage) {
-        masterMotor.setControl(voltageRequest.withOutput(targetVoltage).withIgnoreSoftwareLimits(false));
-    }
-
     public double getCurrentVoltage() {
         return masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE);
     }
