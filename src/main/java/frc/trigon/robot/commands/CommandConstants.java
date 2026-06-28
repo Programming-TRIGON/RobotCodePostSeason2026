@@ -14,6 +14,7 @@ import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRelativeRestrictedDriveCommand;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.SelfRelativeDriveRestrictedCommand;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.CustomCenterOfRotationDriveRestriction;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneRestrictionsDrive;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.RestrictedZone;
@@ -100,7 +101,7 @@ public class CommandConstants {
                             getBumpRestrictedZone(getBumpBoundingBox(RED_BUMPS_ZONE_CENTER))
                     )
             );
-    
+
     /**
      * Sets the speed multiplier applied to the drive stick values, scaling the robot's driving speed.
      * A value of 1 keeps the regular speed, while lower values make the robot drive slower (0 stops driving).

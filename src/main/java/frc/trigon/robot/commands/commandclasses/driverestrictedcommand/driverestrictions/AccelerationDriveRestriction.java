@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.trigon.lib.hardware.RobotHardwareStats;
+import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.DriveRestrictedCommand;
 import frc.trigon.robot.subsystems.swerve.SwerveConstants;
@@ -30,7 +31,8 @@ public class AccelerationDriveRestriction implements DriveRestriction {
 
     @Override
     public void init() {
-        currentTranslationAcceleration = RobotContainer.SWERVE.getFieldRelativeVelocity().div(SwerveConstants.MAXIMUM_SPEED_METERS_PER_SECOND);
+        final Translation2d currentVelocity = RobotContainer.SWERVE.getFieldRelativeVelocity().div(SwerveConstants.MAXIMUM_SPEED_METERS_PER_SECOND);
+        currentTranslationAcceleration = Flippable.isRedAlliance() ? currentVelocity.unaryMinus() : currentVelocity;
         rotationAccelerationRadiansPerSecondSquaredLimiter.reset(RobotContainer.SWERVE.getRotationalVelocityRadiansPerSecond() / SwerveConstants.MAXIMUM_ROTATIONAL_SPEED_RADIANS_PER_SECOND);
     }
 
