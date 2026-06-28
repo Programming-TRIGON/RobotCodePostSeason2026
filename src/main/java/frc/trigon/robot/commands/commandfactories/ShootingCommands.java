@@ -234,7 +234,7 @@ public class ShootingCommands {
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND);
         final boolean isAngleReady = isSwerveAtAngle(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW);
 
-        return isPitchReady && isVelocityReady && isAngleReady;
+        return isPitchReady && isVelocityReady && (SHOULD_OVERRIDE_SWERVE_AIM || isAngleReady);
     }
 
     private static boolean isReadyForFixedShootingAtHub() {
@@ -242,7 +242,7 @@ public class ShootingCommands {
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
         final boolean isAngleReady = isSwerveAtAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw);
 
-        return isPitchReady && isVelocityReady && isAngleReady;
+        return isPitchReady && isVelocityReady && (SHOULD_OVERRIDE_SWERVE_AIM || isAngleReady);
     }
 
     private static boolean isSwerveAtAngle(FlippableRotation2d targetFieldRelativeYaw) {
@@ -398,12 +398,12 @@ public class ShootingCommands {
 
     public static void enableOverrideGameData() {
         SHOULD_OVERRIDE_GAME_DATA = true;
-        Logger.recordOutput("IsGameDataOverridden", SHOULD_OVERRIDE_GAME_DATA);
+        Logger.recordOutput("MatchTracker/IsGameDataOverridden", SHOULD_OVERRIDE_GAME_DATA);
     }
 
     public static void disableOverrideGameData() {
         SHOULD_OVERRIDE_GAME_DATA = false;
-        Logger.recordOutput("IsGameDataOverridden", SHOULD_OVERRIDE_GAME_DATA);
+        Logger.recordOutput("MatchTracker/IsGameDataOverridden", SHOULD_OVERRIDE_GAME_DATA);
     }
 
     public static void enableOverrideSwerveAim() {
