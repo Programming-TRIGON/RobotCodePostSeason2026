@@ -20,8 +20,8 @@ public class FuelShootingVisualizationConstants {
 
     static final double
             AIR_DENSITY = 1.225,
-            DRAG_COEFFICIENT = 0.55,
-            MAGNUS_LIFT_FACTOR = 0.25,
+            DRAG_COEFFICIENT = 0.47,
+            MAGNUS_LIFT_FACTOR = 0.1,
             SPIN_DECAY_COEFFICIENT = 0.01;
 
     static final double SIMULATION_TIME_STEP_SECONDS = 0.001;
