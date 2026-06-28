@@ -20,9 +20,9 @@ public class FuelShootingVisualizationConstants {
 
     static final double
             AIR_DENSITY = 1.225,
-            DRAG_COEFFICIENT = 1.5,
-            MAGNUS_LIFT_FACTOR = -30,
-            SPIN_DECAY_COEFFICIENT = 0.001;
+            DRAG_COEFFICIENT = 1.8,
+            MAGNUS_LIFT_FACTOR = -40,
+            SPIN_DECAY_COEFFICIENT = 0.05;
 
     static final double SIMULATION_TIME_STEP_SECONDS = 0.001;
     static final double END_SIMULATION_HEIGHT_METERS = SimulatedGamePieceConstants.GamePieceType.FUEL.originPointHeightOffGroundMeters;

@@ -26,6 +26,8 @@ public class ShootingMap {
         addPoint(HUB_MAP, 2.472544086, 7.3, Rotation2d.fromDegrees(25), 1.18);
         addPoint(HUB_MAP, 2.041144086, 6.8, Rotation2d.fromDegrees(24), 1.07);
         addPoint(HUB_MAP, 1.666144086, 6.6, Rotation2d.fromDegrees(22), 1.07);
+        //addPoint(HUB_MAP, 1.4, 6.5, Rotation2d.fromDegrees(35), 1.0);
+
     }
 
     private static void addDeliveryPoints() { //TODO: calibrate real robot numbers
