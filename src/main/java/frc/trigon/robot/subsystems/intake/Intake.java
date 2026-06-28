@@ -23,6 +23,7 @@ public class Intake extends MotorSubsystem {
             IntakeConstants.DEFAULT_MAXIMUM_ACCELERATION
     ).withEnableFOC(IntakeConstants.FOC_ENABLED);
     private IntakeConstants.IntakeState targetState = IntakeConstants.IntakeState.REST;
+    private Rotation2d targetAngle = Rotation2d.fromDegrees(0);
 
     public Intake() {
         setName("Intake");
@@ -70,6 +71,7 @@ public class Intake extends MotorSubsystem {
         intakeMotor.update();
         IntakeConstants.ANGLE_ENCODER.update();
         Logger.recordOutput("Intake/CurrentArmAngle", getCurrentAngle().getDegrees());
+        Logger.recordOutput("Intake/TargetArmAngle", targetAngle.getDegrees());
     }
 
     @Override
@@ -105,6 +107,7 @@ public class Intake extends MotorSubsystem {
     }
 
     void setTargetAngle(Rotation2d targetAngle) {
+        this.targetAngle = targetAngle;
         masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
     }
 
