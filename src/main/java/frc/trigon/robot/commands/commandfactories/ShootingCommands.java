@@ -427,11 +427,11 @@ public class ShootingCommands {
 
     public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL
         IN_FRONT_OF_TOWER(Rotation2d.fromDegrees(25), 7.6, Rotation2d.fromDegrees(-177.967), new Translation2d(2.422, 3.948)),
-        BETWEEN_TOWER_AND_HUB(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(177.9), new Translation2d(1.777, 3.948)),
+        BETWEEN_TOWER_AND_HUB(Rotation2d.fromDegrees(23), 7.1, Rotation2d.fromDegrees(177.9), new Translation2d(1.777, 3.948)),
         RIGHT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(-100.108), new Translation2d(3.939, 0.776326)),
         LEFT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(100.108), new Translation2d(3.939, 7.293)),
-        RIGHT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(-157.736), new Translation2d(0.716, 4.827)),
-        LEFT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(168.564), new Translation2d(0.949, 2.531));
+        RIGHT_OF_TOWER(Rotation2d.fromDegrees(28), 9.1, Rotation2d.fromDegrees(-157.736), new Translation2d(0.716, 4.827)),
+        LEFT_OF_TOWER(Rotation2d.fromDegrees(28), 8.85, Rotation2d.fromDegrees(166.564), new Translation2d(0.949, 2.531));
 
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;
