@@ -42,7 +42,7 @@ public class IntakeConstants {
 
     private static final double
             ARM_SENSOR_TO_MECHANISM_GEAR_RATIO = 0.9,
-            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 53.254573,
+            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 47.021834,
             INTAKE_MOTOR_GEAR_RATIO = 1.5;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
@@ -50,8 +50,8 @@ public class IntakeConstants {
             INTAKE_MOTOR_CURRENT_LIMIT = 60,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 4,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 4;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2.5,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 1.5;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -63,8 +63,8 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS = 0.369,
             INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(-28),
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(62);
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(-50),
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(88);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
@@ -132,11 +132,11 @@ public class IntakeConstants {
 
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 90;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0.7;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.46484375;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 3.1;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0.8;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.39;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 3.8;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.233;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.25;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
@@ -211,7 +211,7 @@ public class IntakeConstants {
         final CANcoderConfiguration config = new CANcoderConfiguration();
 
         config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        config.MagnetSensor.MagnetOffset = -0.105713;
+        config.MagnetSensor.MagnetOffset = -0.15959;
         config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
 
         ANGLE_ENCODER.applyConfiguration(config);
@@ -225,8 +225,8 @@ public class IntakeConstants {
         REST(0, MAXIMUM_ANGLE, 1),
         OPEN(0, MINIMUM_ANGLE, 1),
         CLOSE(0, MAXIMUM_ANGLE, 1),
-        POWERED_OPEN(4, MINIMUM_ANGLE, 1),
-        POWERED_CLOSE(5, MAXIMUM_ANGLE, 1),
+        POWERED_OPEN(6, MINIMUM_ANGLE, 1),
+        POWERED_CLOSE(5, MAXIMUM_ANGLE, 0.7),
         REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1);
 
         public final double targetVoltage;
