@@ -10,7 +10,7 @@ import frc.trigon.robot.poseestimation.robotposeestimator.StandardDeviations;
 
 public class CameraConstants {
     private static final StandardDeviations APRIL_TAG_CAMERA_STANDARD_DEVIATIONS = new StandardDeviations(
-            0.016,
+            0.05,
             0.01
     );
     private static final Transform3d

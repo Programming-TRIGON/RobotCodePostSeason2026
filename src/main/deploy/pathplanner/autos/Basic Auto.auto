@@ -11,9 +11,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "BasicShootCommand"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "BasicShootCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PushFuelCommand"
+                }
+              }
+            ]
           }
         }
       ]
