@@ -96,6 +96,7 @@ public class SwerveConstants {
             TRANSLATION_PID_TOLERANCE_METERS = 0.02;
     static final double PID_TO_POSE_PREDICTION_TIME_SECONDS = 0.13;//TODO:Calibrate
     public static final FlippableRotation2d FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW = new FlippableRotation2d(Rotation2d.fromDegrees(0), true);
+    static final double velocityDeadband = 0.01;
 
     static {
         configureGyro();

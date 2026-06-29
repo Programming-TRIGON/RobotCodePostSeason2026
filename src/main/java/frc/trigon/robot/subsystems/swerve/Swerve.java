@@ -84,6 +84,11 @@ public class Swerve extends MotorSubsystem {
             module.stop();
     }
 
+    public boolean isMoving() {
+        final ChassisSpeeds chassisSpeeds = getFieldRelativeChassisSpeeds();
+        return !isStill(chassisSpeeds);
+    }
+
     public void setHeading(Rotation2d heading) {
         gyro.setYaw(heading);
     }
@@ -186,7 +191,7 @@ public class Swerve extends MotorSubsystem {
     /**
      * Calculates and sets the target states for each module from robot-relative chassis speeds and sets a robot-relative center of rotation.
      *
-     * @param targetSpeeds the desired robot-relative targetSpeeds
+     * @param targetSpeeds     the desired robot-relative targetSpeeds
      * @param centerOfRotation the desired robot-relative centerOfRotation
      *
      */
@@ -261,9 +266,9 @@ public class Swerve extends MotorSubsystem {
     /**
      * Drives the swerve with the given powers, relative to the field's frame of reference, using a custom center of rotation.
      *
-     * @param xPower     the x power
-     * @param yPower     the y power
-     * @param thetaPower the theta power
+     * @param xPower           the x power
+     * @param yPower           the y power
+     * @param thetaPower       the theta power
      * @param centerOfRotation the center of rotation relative to the robot's frame of reference
      */
     void fieldRelativeDrive(double xPower, double yPower, double thetaPower, Translation2d centerOfRotation) {
@@ -293,12 +298,13 @@ public class Swerve extends MotorSubsystem {
         final ChassisSpeeds speeds = powersToSpeeds(xPower, yPower, thetaPower);
         selfRelativeDrive(speeds);
     }
+
     /**
      * Drives the swerve with the given powers, relative to the robot's frame of reference.
      *
-     * @param xPower     the x power
-     * @param yPower     the y power
-     * @param thetaPower the theta power
+     * @param xPower           the x power
+     * @param yPower           the y power
+     * @param thetaPower       the theta power
      * @param centerOfRotation the center of rotation relative to the robot's frame of reference
      */
     void selfRelativeDrive(double xPower, double yPower, double thetaPower, Translation2d centerOfRotation) {
