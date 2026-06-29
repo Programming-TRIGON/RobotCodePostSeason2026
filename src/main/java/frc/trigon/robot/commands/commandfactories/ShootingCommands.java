@@ -155,8 +155,7 @@ public class ShootingCommands {
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
                         ),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousBasicPosition().targetPitch) &&
-                                RobotContainer.SHOOTER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond) &&
-                                RobotContainer.SWERVE.atPose(getAutonomousBasicPosition().resetPose)
+                                RobotContainer.SHOOTER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond)
                 )
         );
     }
@@ -184,8 +183,7 @@ public class ShootingCommands {
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
                         ),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousDoubleSwipePosition().targetPitch) &&
-                                RobotContainer.SHOOTER.atVelocity(getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond) &&
-                                RobotContainer.SWERVE.atPose(getAutonomousDoubleSwipePosition().resetPose)
+                                RobotContainer.SHOOTER.atVelocity(getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond)
                 )
         );
     }
