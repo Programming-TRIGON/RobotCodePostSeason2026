@@ -42,7 +42,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "PrepareForShootCommand"
+                  "name": "DoubleSwipePrepareForShootCommand"
                 }
               }
             ]
@@ -51,7 +51,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootCommand"
+            "name": "DoubleSwipeShootCommand"
           }
         },
         {
@@ -105,7 +105,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "PrepareForShootCommand"
+                  "name": "DoubleSwipePrepareForShootCommand"
                 }
               }
             ]
@@ -114,7 +114,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootCommand"
+            "name": "DoubleSwipeShootCommand"
           }
         }
       ]

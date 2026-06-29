@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  */
 public class AutonomousCommands {
     public static Command getTimedScoreCommand(double timeout) {
-        return ShootingCommands.getFixedAutonomousShootingCommand().withTimeout(timeout);
+        return ShootingCommands.getDoubleSwipeFixedAutonomousShootingCommand().withTimeout(timeout);
     }
 
     public static Command getTimedDeliveryCommand(double timeout){
