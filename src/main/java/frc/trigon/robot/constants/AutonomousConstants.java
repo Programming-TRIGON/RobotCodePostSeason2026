@@ -46,6 +46,7 @@ public class AutonomousConstants {
             AUTONOMOUS_DELIVERY_DURATION_SECONDS = 7;
     public static final Rotation2d DELIVERY_ROTATION = Rotation2d.fromDegrees(27.873);
 
+    public static boolean IS_AUTO_LEFT_SIDE = true;
     public static final FlippablePose2d
             DOUBLE_SWIPE_LEFT_SHOOTING_POSE = new FlippablePose2d(
             2.853, 6.768,

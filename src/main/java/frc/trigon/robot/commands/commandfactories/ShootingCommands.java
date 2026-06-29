@@ -1,5 +1,6 @@
 package frc.trigon.robot.commands.commandfactories;
 
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -8,6 +9,7 @@ import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
+import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.TrenchDetection;
@@ -133,6 +135,11 @@ public class ShootingCommands {
 
     public static Command getFixedAutonomousShootingCommand() {
         return new ParallelCommandGroup(
+                GeneralCommands.getContinuousConditionalCommand(
+                        SwerveCommands.getDriveToPoseCommand(() -> AutonomousConstants.DOUBLE_SWIPE_LEFT_SHOOTING_POSE, new PathConstraints(3, 3, 3, 3)),
+                        SwerveCommands.getDriveToPoseCommand(() -> AutonomousConstants.DOUBLE_SWIPE_RIGHT_SHOOTING_POSE, new PathConstraints(3, 3, 3, 3)),
+                        () -> AutonomousConstants.IS_AUTO_LEFT_SIDE
+                ),
                 GeneralCommands.getContinuousConditionalCommand(
                         HoodCommands.getRestCommand(),
                         HoodCommands.getSetTargetAngleCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetPitch),
