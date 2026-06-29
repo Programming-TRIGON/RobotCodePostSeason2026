@@ -9,10 +9,14 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.commands.CommandConstants;
-import frc.trigon.robot.commands.commandfactories.*;
+import frc.trigon.robot.commands.commandfactories.EjectionCommands;
+import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
+import frc.trigon.robot.commands.commandfactories.GeneralCommands;
+import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
@@ -136,20 +140,22 @@ public class RobotContainer {
         boolean hasDefault = false;
 
         for (String autoName : autoNames) {
-            final PathPlannerAuto autoNonMirrored = new PathPlannerAuto(autoName);
-            final PathPlannerAuto autoMirrored = new PathPlannerAuto(autoName, true);
+            final Command autoNonMirrored = new InstantCommand(() -> AutonomousConstants.IS_AUTO_LEFT_SIDE = true).andThen(new PathPlannerAuto(autoName));
+            final Command autoMirrored = new InstantCommand(() -> AutonomousConstants.IS_AUTO_LEFT_SIDE = false).andThen(new PathPlannerAuto(autoName, true));
+            final String leftName = autoName + " Left";
+            final String rightName = autoName + " Right";
 
             if (!AutonomousConstants.DEFAULT_AUTO_NAME.isEmpty() && AutonomousConstants.DEFAULT_AUTO_NAME.equals(autoName)) {
                 hasDefault = true;
-                autoChooser.addDefaultOption(autoNonMirrored.getName() +" Left", autoNonMirrored);
-                autoChooser.addOption(autoMirrored.getName() + " Right", autoMirrored);
+                autoChooser.addDefaultOption(leftName, autoNonMirrored);
+                autoChooser.addOption(rightName, autoMirrored);
             } else if (!AutonomousConstants.DEFAULT_AUTO_NAME.isEmpty() && AutonomousConstants.DEFAULT_AUTO_NAME.equals(autoName + "Mirrored")) {
                 hasDefault = true;
-                autoChooser.addDefaultOption(autoMirrored.getName() + " Right", autoMirrored);
-                autoChooser.addOption(autoNonMirrored.getName() + " Left", autoNonMirrored);
+                autoChooser.addDefaultOption(rightName, autoMirrored);
+                autoChooser.addOption(leftName, autoNonMirrored);
             } else {
-                autoChooser.addOption(autoNonMirrored.getName() + " Left", autoNonMirrored);
-                autoChooser.addOption(autoMirrored.getName() + " Right", autoMirrored);
+                autoChooser.addOption(leftName, autoNonMirrored);
+                autoChooser.addOption(rightName, autoMirrored);
             }
         }
 
