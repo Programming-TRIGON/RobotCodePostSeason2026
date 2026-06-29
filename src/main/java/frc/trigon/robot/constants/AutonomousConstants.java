@@ -54,13 +54,8 @@ public class AutonomousConstants {
             true
     ),
             DOUBLE_SWIPE_RIGHT_SHOOTING_POSE = new FlippablePose2d(
-                    2.853, FieldConstants.FIELD_WIDTH_METERS - 6.768,
-                    DOUBLE_SWIPE_LEFT_SHOOTING_POSE.get().getRotation().unaryMinus(),
-                    true
-            ),
-            NEUTRAL_INTAKE_POSE = new FlippablePose2d(
-                    7.360, 7.003,
-                    Rotation2d.fromDegrees(-31.215),
+                    2.853, 1.442,
+                    Rotation2d.fromDegrees(-120.390),
                     true
             );
 
