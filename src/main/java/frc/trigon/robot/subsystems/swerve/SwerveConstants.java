@@ -4,12 +4,14 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.hardware.phoenix6.pigeon2.Pigeon2Gyro;
 import frc.trigon.lib.hardware.phoenix6.pigeon2.Pigeon2Signal;
+import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.RobotConstants;
@@ -93,6 +95,7 @@ public class SwerveConstants {
             ROTATION_PID_TOLERANCE_DEGREES = 1,
             TRANSLATION_PID_TOLERANCE_METERS = 0.02;
     static final double PID_TO_POSE_PREDICTION_TIME_SECONDS = 0.13;//TODO:Calibrate
+    public static final FlippableRotation2d FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW = new FlippableRotation2d(Rotation2d.fromDegrees(0), true);
 
     static {
         configureGyro();
