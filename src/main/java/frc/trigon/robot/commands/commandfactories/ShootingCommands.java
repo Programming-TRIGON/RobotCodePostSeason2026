@@ -137,7 +137,7 @@ public class ShootingCommands {
                 SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                         () -> 0.0,
                         () -> 0.0,
-                        () -> getAutonomousDoubleSwipePosition().targetFieldRelativeYaw
+                        () -> getAutonomousBasicPosition().targetFieldRelativeYaw
                 ),
                 GeneralCommands.getContinuousConditionalCommand(
                         HoodCommands.getRestCommand(),
