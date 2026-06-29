@@ -7,15 +7,10 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
-import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.AutonomousCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
@@ -65,8 +60,7 @@ public class AutonomousConstants {
     private static void configureAutoBuilder() {
         AutoBuilder.configure(
                 RobotContainer.ROBOT_POSE_ESTIMATOR::getEstimatedRobotPose,
-                (a) -> {
-                },
+                RobotContainer.ROBOT_POSE_ESTIMATOR::resetPose,
                 RobotContainer.SWERVE::getSelfRelativeChassisSpeeds,
                 RobotContainer.SWERVE::drivePathPlanner,
                 AUTO_PATH_FOLLOWING_CONTROLLER,
@@ -88,7 +82,7 @@ public class AutonomousConstants {
         NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         NamedCommands.registerCommand("DoubleSwipeShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
         NamedCommands.registerCommand("DoubleSwipePrepareForShootCommand", ShootingCommands.getPrepareForDoubleSwipeFixedAutonomousShootingCommand());
-        NamedCommands.registerCommand("BasicShootCommand",ShootingCommands.getBasicFixedAutonomousShootingCommand());
+        NamedCommands.registerCommand("BasicShootCommand", ShootingCommands.getBasicFixedAutonomousShootingCommand());
         NamedCommands.registerCommand("PushFuelCommand", AutonomousCommands.getPushFuelWithIntakeCommand());
     }
 }
