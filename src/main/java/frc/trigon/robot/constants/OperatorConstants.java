@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.misc.TrenchDetection;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
 
 public class OperatorConstants {
@@ -60,5 +59,6 @@ public class OperatorConstants {
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             INTAKE_WHILE_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.b()),
             INTAKE_TRIGGER = INTAKE_WHILE_SHOOTING_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
+            TRENCH_ASSIST_TRIGGER = DRIVER_CONTROLLER.back(),
             HUB_ACTIVE_STATE_CHANGED_TRIGGER = new Trigger(MatchTracker::hasHubActiveStateChanged);
 }
