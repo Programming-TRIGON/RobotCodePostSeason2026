@@ -18,6 +18,7 @@ import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.AutonomousCommands;
+import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import org.json.simple.parser.ParseException;
@@ -41,7 +42,7 @@ public class AutonomousConstants {
             NEUTRAL_ZONE_COLLECTION_TIMEOUT_SECONDS = 2,
             SCORING_TIMEOUT_SECONDS = 3,
             NORMAL_DRIVE_TIMEOUT = 4,
-            AUTONOMOUS_SHOOTING_DURATION_SECONDS = 5,
+            AUTONOMOUS_SHOOTING_DURATION_SECONDS = 50,
             AUTONOMOUS_DELIVERY_DURATION_SECONDS = 7;
     public static final Rotation2d DELIVERY_ROTATION = Rotation2d.fromDegrees(27.873);
 
@@ -120,5 +121,6 @@ public class AutonomousConstants {
     private static void registerCommands() {
         NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         NamedCommands.registerCommand("ShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
+        NamedCommands.registerCommand("PrepareForShootCommand", ShootingCommands.getPrepareForFixedAutonomousShootingCommand(ShootingCommands.FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE));
     }
 }
