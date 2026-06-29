@@ -205,6 +205,20 @@ public class Swerve extends MotorSubsystem {
         resetRotationController();
     }
 
+    /**
+     * Locks the swerve, so it'll be hard to move it. This will make the modules look in the middle of a robot in an "x" shape.
+     */
+    void lockSwerve() {
+        final SwerveModuleState
+                right = new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),
+                left = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+
+        swerveModules[0].setTargetState(left);
+        swerveModules[1].setTargetState(right);
+        swerveModules[2].setTargetState(right);
+        swerveModules[3].setTargetState(left);
+    }
+
     void resetRotationController() {
         SwerveConstants.PROFILED_ROTATION_PID_CONTROLLER_DEGREES.reset(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation().getDegrees());
     }

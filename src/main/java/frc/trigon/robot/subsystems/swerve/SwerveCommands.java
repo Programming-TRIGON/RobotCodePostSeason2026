@@ -213,6 +213,14 @@ public class SwerveCommands {
         );
     }
 
+    public static Command getLockSwerveCommand() {
+        return new StartEndCommand(
+                RobotContainer.SWERVE::lockSwerve,
+                () -> {},
+                RobotContainer.SWERVE
+        );
+    }
+
     public static Command getDriveToPoseCommand(Supplier<FlippablePose2d> targetPose, PathConstraints constraints) {
         return getDriveToPoseCommand(targetPose, constraints, 0.0);
     }

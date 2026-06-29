@@ -14,7 +14,6 @@ import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRelativeRestrictedDriveCommand;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.SelfRelativeDriveRestrictedCommand;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.CustomCenterOfRotationDriveRestriction;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneRestrictionsDrive;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.RestrictedZone;
@@ -108,7 +107,7 @@ public class CommandConstants {
      *
      * @param speedMultiplier the multiplier to scale the driving speed by, from 0 (stopped) to 1 (full speed)
      */
-    public static void setSpeedMultiplier(double speedMultiplier) {
+    public static void setSwerveSpeedMultiplier(double speedMultiplier) {
         GeneralCommands.SWERVE_SPEED_MULTIPLIER = speedMultiplier;
     }
 
