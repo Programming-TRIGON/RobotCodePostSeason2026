@@ -13,10 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.commands.CommandConstants;
-import frc.trigon.robot.commands.commandfactories.EjectionCommands;
-import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
-import frc.trigon.robot.commands.commandfactories.GeneralCommands;
-import frc.trigon.robot.commands.commandfactories.ShootingCommands;
+import frc.trigon.robot.commands.commandfactories.*;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
@@ -67,7 +64,7 @@ public class RobotContainer {
      * @return the command to run in autonomous mode
      */
     public Command getAutonomousCommand() {
-        AutonomousConstants.IS_AUTO_LEFT_SIDE = !autoChooser.get().getName().endsWith("Right");
+        AutonomousCommands.IS_AUTO_LEFT_SIDE = !autoChooser.get().getName().endsWith("Right");
         return autoChooser.get();
     }
 
@@ -140,8 +137,8 @@ public class RobotContainer {
         boolean hasDefault = false;
 
         for (String autoName : autoNames) {
-            final Command autoNonMirrored = Commands.runOnce(() -> AutonomousConstants.IS_AUTO_LEFT_SIDE = true).andThen(new PathPlannerAuto(autoName));
-            final Command autoMirrored = Commands.runOnce(() -> AutonomousConstants.IS_AUTO_LEFT_SIDE = false).andThen(new PathPlannerAuto(autoName, true));
+            final Command autoNonMirrored = Commands.runOnce(() -> AutonomousCommands.IS_AUTO_LEFT_SIDE = true).andThen(new PathPlannerAuto(autoName));
+            final Command autoMirrored = Commands.runOnce(() -> AutonomousCommands.IS_AUTO_LEFT_SIDE = false).andThen(new PathPlannerAuto(autoName, true));
             final String leftName = autoName + " Left";
             final String rightName = autoName + " Right";
 

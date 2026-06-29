@@ -30,11 +30,6 @@ public class TrenchDetection {
         return isHoodInTrenchZone(getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose()), getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getPredictedRobotPose(TRENCH_POSE_PREDICTION_TIME_SECONDS)));
     }
 
-    public static boolean isHoodBeforeTrench() {
-        final BoundingBox currentHoodBox = getHoodBoundingBox(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose());
-        return isHoodCenterAfterTrench(currentHoodBox.getCenter().getTranslation());
-    }
-
     private static boolean isHoodInTrenchZone(BoundingBox currentHoodBox, BoundingBox predictedHoodBox) {
         return isBoundingBoxInTrenchZone(currentHoodBox)
                 || isBoundingBoxInTrenchZone(predictedHoodBox)

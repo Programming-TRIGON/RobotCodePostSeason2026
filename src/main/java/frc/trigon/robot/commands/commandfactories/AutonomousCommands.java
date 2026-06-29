@@ -16,6 +16,8 @@ import java.util.function.Supplier;
  * A class that contains command factories for preparation commands and commands used during the 20-second autonomous period at the start of each match.
  */
 public class AutonomousCommands {
+    public static boolean IS_AUTO_LEFT_SIDE = true;
+
     public static Command getTimedScoreCommand(double timeout) {
         return ShootingCommands.getDoubleSwipeFixedAutonomousShootingCommand().withTimeout(timeout);
     }

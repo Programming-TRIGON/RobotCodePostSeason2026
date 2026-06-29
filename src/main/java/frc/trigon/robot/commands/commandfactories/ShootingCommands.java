@@ -201,13 +201,13 @@ public class ShootingCommands {
     }
 
     private static FixedShootingPosition getAutonomousDoubleSwipePosition() {
-        return AutonomousConstants.IS_AUTO_LEFT_SIDE
+        return AutonomousCommands.IS_AUTO_LEFT_SIDE
                 ? FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE_LEFT
                 : FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE_RIGHT;
     }
 
     private static FixedShootingPosition getAutonomousBasicPosition() {
-        return AutonomousConstants.IS_AUTO_LEFT_SIDE
+        return AutonomousCommands.IS_AUTO_LEFT_SIDE
                 ? FixedShootingPosition.AUTONOMOUS_BASIC_LEFT
                 : FixedShootingPosition.AUTONOMOUS_BASIC_RIGHT;
     }
