@@ -40,6 +40,8 @@ public class FieldConstants {
     public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createAprilTagFieldLayout();
     private static final Transform3d TAG_OFFSET = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     public static final HashMap<Integer, Pose3d> TAG_ID_TO_POSE = fieldLayoutToTagIDToPoseMap();
+    public static final FlippableTranslation2d RIGHT_OF_TOWER_POSITION = new FlippableTranslation2d(0.949, 2.531, true);
+    public static final FlippableTranslation2d LEFT_OF_TOWER_POSITION = new FlippableTranslation2d(0.716, 4.827, true);
 
     public static final double
             DEPOT_X = 0.45,
@@ -95,8 +97,8 @@ public class FieldConstants {
             LEFT_TRENCH_MAXIMUM_Y = FIELD_WIDTH_METERS - RIGHT_TRENCH_MINIMUM_Y;
     private static final FlippableTranslation2d
             FAR_RIGHT_TRENCH_CORNER_A = new FlippableTranslation2d(RIGHT_TRENCH_MINIMUM_X, RIGHT_TRENCH_MINIMUM_Y, true),
-            FAR_LEFT_TRENCH_CORNER_A = new FlippableTranslation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y,true),
-            FAR_RIGHT_TRENCH_CORNER_B = new FlippableTranslation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y,true),
+            FAR_LEFT_TRENCH_CORNER_A = new FlippableTranslation2d(LEFT_TRENCH_MINIMUM_X, LEFT_TRENCH_MINIMUM_Y, true),
+            FAR_RIGHT_TRENCH_CORNER_B = new FlippableTranslation2d(RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MAXIMUM_Y, true),
             FAR_LEFT_TRENCH_CORNER_B = new FlippableTranslation2d(LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MAXIMUM_Y, true),
             CLOSE_RIGHT_TRENCH_CORNER_A = new FlippableTranslation2d(FIELD_LENGTH_METERS - RIGHT_TRENCH_MAXIMUM_X, RIGHT_TRENCH_MINIMUM_Y, true),
             CLOSE_LEFT_TRENCH_CORNER_A = new FlippableTranslation2d(FIELD_LENGTH_METERS - LEFT_TRENCH_MAXIMUM_X, LEFT_TRENCH_MINIMUM_Y, true),
