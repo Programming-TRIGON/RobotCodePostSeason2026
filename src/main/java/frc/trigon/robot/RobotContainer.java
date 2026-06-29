@@ -140,8 +140,8 @@ public class RobotContainer {
         boolean hasDefault = false;
 
         for (String autoName : autoNames) {
-            final Command autoNonMirrored = new InstantCommand(() -> AutonomousConstants.IS_AUTO_LEFT_SIDE = true).andThen(new PathPlannerAuto(autoName));
-            final Command autoMirrored = new InstantCommand(() -> AutonomousConstants.IS_AUTO_LEFT_SIDE = false).andThen(new PathPlannerAuto(autoName, true));
+            final Command autoNonMirrored = Commands.runOnce(() -> AutonomousConstants.IS_AUTO_LEFT_SIDE = true).andThen(new PathPlannerAuto(autoName));
+            final Command autoMirrored = Commands.runOnce(() -> AutonomousConstants.IS_AUTO_LEFT_SIDE = false).andThen(new PathPlannerAuto(autoName, true));
             final String leftName = autoName + " Left";
             final String rightName = autoName + " Right";
 

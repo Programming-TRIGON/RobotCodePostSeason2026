@@ -1,6 +1,5 @@
 package frc.trigon.robot.commands.commandfactories;
 
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -135,17 +134,17 @@ public class ShootingCommands {
 
     public static Command getFixedAutonomousShootingCommand() {
         return new ParallelCommandGroup(
-                GeneralCommands.getContinuousConditionalCommand(
-                        SwerveCommands.getDriveToPoseCommand(() -> AutonomousConstants.DOUBLE_SWIPE_LEFT_SHOOTING_POSE, new PathConstraints(3, 3, 3, 3)),
-                        SwerveCommands.getDriveToPoseCommand(() -> AutonomousConstants.DOUBLE_SWIPE_RIGHT_SHOOTING_POSE, new PathConstraints(3, 3, 3, 3)),
-                        () -> AutonomousConstants.IS_AUTO_LEFT_SIDE
+                SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
+                        () -> 0.0,
+                        () -> 0.0,
+                        () -> getAutonomousDoubleSwipePosition().targetFieldRelativeYaw
                 ),
                 GeneralCommands.getContinuousConditionalCommand(
                         HoodCommands.getRestCommand(),
-                        HoodCommands.getSetTargetAngleCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetPitch),
+                        HoodCommands.getSetTargetAngleCommand(() -> getAutonomousDoubleSwipePosition().targetPitch),
                         TrenchDetection::isHoodInTrenchZone
                 ),
-                ShooterCommands.getSetTargetVelocityCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetShootingVelocityMetersPerSecond),
+                ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
                 GeneralCommands.getContinuousConditionalCommand(
                         new ParallelCommandGroup(
                                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING),
@@ -155,8 +154,8 @@ public class ShootingCommands {
                                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST),
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
                         ),
-                        () -> RobotContainer.HOOD.atAngle(FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetPitch) &&
-                                RobotContainer.SHOOTER.atVelocity(FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetShootingVelocityMetersPerSecond)
+                        () -> RobotContainer.HOOD.atAngle(getAutonomousDoubleSwipePosition().targetPitch) &&
+                                RobotContainer.SHOOTER.atVelocity(getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond)
                 )
         );
     }
@@ -165,12 +164,18 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 GeneralCommands.getContinuousConditionalCommand(
                         HoodCommands.getRestCommand(),
-                        HoodCommands.getSetTargetAngleCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetPitch),
+                        HoodCommands.getSetTargetAngleCommand(() -> getAutonomousDoubleSwipePosition().targetPitch),
                         TrenchDetection::isHoodInTrenchZone
                 ),
-                ShooterCommands.getSetTargetVelocityCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetShootingVelocityMetersPerSecond),
-                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE))
+                ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", getAutonomousDoubleSwipePosition()))
         );
+    }
+
+    private static FixedShootingPosition getAutonomousDoubleSwipePosition() {
+        return AutonomousConstants.IS_AUTO_LEFT_SIDE
+                ? FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE_LEFT
+                : FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE_RIGHT;
     }
 
     public static RepeatCommand getIntakeSequenceWhileShootingCommand() {
@@ -465,7 +470,8 @@ public class ShootingCommands {
         LEFT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(100.108), new Translation2d(3.939, 7.293)),
         RIGHT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(-157.736), new Translation2d(0.716, 4.827)),
         LEFT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(168.564), new Translation2d(0.949, 2.531)),
-        AUTONOMOUS_DOUBLE_SWIPE(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(120.390), new Translation2d(2.853, 6.768));
+        AUTONOMOUS_DOUBLE_SWIPE_LEFT(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(120.390), new Translation2d(2.853, 6.768)),
+        AUTONOMOUS_DOUBLE_SWIPE_RIGHT(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(-120.390), new Translation2d(2.853, 1.442));
 
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;
