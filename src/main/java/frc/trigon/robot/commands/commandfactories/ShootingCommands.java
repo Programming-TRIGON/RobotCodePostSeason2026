@@ -137,7 +137,7 @@ public class ShootingCommands {
                 SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                         () -> 0.0,
                         () -> 0.0,
-                        () -> getAutonomousDoubleSwipePosition().targetFieldRelativeYaw
+                        () -> getAutonomousBasicPosition().targetFieldRelativeYaw
                 ),
                 GeneralCommands.getContinuousConditionalCommand(
                         HoodCommands.getRestCommand(),
@@ -155,7 +155,8 @@ public class ShootingCommands {
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
                         ),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousBasicPosition().targetPitch) &&
-                                RobotContainer.SHOOTER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond)
+                                RobotContainer.SHOOTER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond) &&
+                                RobotContainer.SWERVE.atPose(getAutonomousBasicPosition().resetPose)
                 )
         );
     }
@@ -183,7 +184,8 @@ public class ShootingCommands {
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
                         ),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousDoubleSwipePosition().targetPitch) &&
-                                RobotContainer.SHOOTER.atVelocity(getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond)
+                                RobotContainer.SHOOTER.atVelocity(getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond) &&
+                                RobotContainer.SWERVE.atPose(getAutonomousDoubleSwipePosition().resetPose)
                 )
         );
     }
