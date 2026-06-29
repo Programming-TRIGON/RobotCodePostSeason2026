@@ -42,7 +42,7 @@ public class AutonomousConstants {
             NEUTRAL_ZONE_COLLECTION_TIMEOUT_SECONDS = 2,
             SCORING_TIMEOUT_SECONDS = 3,
             NORMAL_DRIVE_TIMEOUT = 4,
-            AUTONOMOUS_SHOOTING_DURATION_SECONDS = 50,
+            AUTONOMOUS_SHOOTING_DURATION_SECONDS = 5,
             AUTONOMOUS_DELIVERY_DURATION_SECONDS = 7;
     public static final Rotation2d DELIVERY_ROTATION = Rotation2d.fromDegrees(27.873);
 

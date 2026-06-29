@@ -431,7 +431,8 @@ public class ShootingCommands {
         RIGHT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(-100.108), new Translation2d(3.939, 0.776326)),
         LEFT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(100.108), new Translation2d(3.939, 7.293)),
         RIGHT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(-157.736), new Translation2d(0.716, 4.827)),
-        LEFT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(168.564), new Translation2d(0.949, 2.531));
+        LEFT_OF_TOWER(Rotation2d.fromDegrees(0), 0, Rotation2d.fromDegrees(168.564), new Translation2d(0.949, 2.531)),
+        AUTONOMOUS_DOUBLE_SWIPE(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(120.390), new Translation2d(2.853, 6.768));
 
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;
