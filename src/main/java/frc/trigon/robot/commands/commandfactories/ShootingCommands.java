@@ -4,8 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
+import frc.trigon.lib.utilities.flippable.FlippableTranslation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.FieldConstants;
@@ -121,7 +121,7 @@ public class ShootingCommands {
 
     public static Command getResetPoseToFixedShootingLocationCommand() {
         return new InstantCommand(
-                () -> RobotContainer.ROBOT_POSE_ESTIMATOR.resetPose(TARGET_FIXED_SHOOTING_AT_HUB_STATE.resetPose.get())
+                () -> RobotContainer.ROBOT_POSE_ESTIMATOR.resetPose(new Pose2d(TARGET_FIXED_SHOOTING_AT_HUB_STATE.resetPose.get(), RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation()))
         ).ignoringDisable(true);
     }
 
@@ -525,13 +525,13 @@ public class ShootingCommands {
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;
         private final FlippableRotation2d targetFieldRelativeYaw;
-        private final FlippablePose2d resetPose;
+        private final FlippableTranslation2d resetPose;
 
         FixedShootingPosition(Rotation2d targetPitch, double targetShootingVelocityMetersPerSecond, Rotation2d targetFieldRelativeYaw, Translation2d position) {
             this.targetPitch = targetPitch;
             this.targetShootingVelocityMetersPerSecond = targetShootingVelocityMetersPerSecond;
             this.targetFieldRelativeYaw = new FlippableRotation2d(targetFieldRelativeYaw, true);
-            this.resetPose = new FlippablePose2d(new Pose2d(position, targetFieldRelativeYaw), true);
+            this.resetPose = new FlippableTranslation2d(position, true);
         }
     }
 }
