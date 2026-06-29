@@ -17,11 +17,11 @@ import java.util.function.Supplier;
  */
 public class AutonomousCommands {
     public static Command getTimedScoreCommand(double timeout) {
-        return ShootingCommands.getFixedAutonomousShootingCommand(ShootingCommands.FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE).withTimeout(timeout);
+        return ShootingCommands.getFixedAutonomousShootingCommand().withTimeout(timeout);
     }
 
     public static Command getTimedDeliveryCommand(double timeout){
-        return ShootingCommands.getAutonomousDeliveryCommand().withTimeout(timeout);
+        return ShootingCommands.getFixedDeliveryShootingCommand().withTimeout(timeout);
     }
 
     /**

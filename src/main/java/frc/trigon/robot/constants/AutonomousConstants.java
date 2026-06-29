@@ -121,6 +121,6 @@ public class AutonomousConstants {
     private static void registerCommands() {
         NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         NamedCommands.registerCommand("ShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
-        NamedCommands.registerCommand("PrepareForShootCommand", ShootingCommands.getPrepareForFixedAutonomousShootingCommand(ShootingCommands.FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE));
+        NamedCommands.registerCommand("PrepareForShootCommand", ShootingCommands.getPrepareForFixedAutonomousShootingCommand());
     }
 }

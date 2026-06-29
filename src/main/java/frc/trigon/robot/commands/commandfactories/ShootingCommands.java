@@ -131,12 +131,38 @@ public class ShootingCommands {
         );
     }
 
+    public static Command getFixedAutonomousShootingCommand() {
+        return new ParallelCommandGroup(
+                GeneralCommands.getContinuousConditionalCommand(
+                        HoodCommands.getRestCommand(),
+                        HoodCommands.getSetTargetAngleCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetPitch),
+                        TrenchDetection::isHoodInTrenchZone
+                ),
+                ShooterCommands.getSetTargetVelocityCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetShootingVelocityMetersPerSecond),
+                GeneralCommands.getContinuousConditionalCommand(
+                        new ParallelCommandGroup(
+                                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING),
+                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
+                        ),
+                        new ParallelCommandGroup(
+                                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST),
+                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
+                        ),
+                        () -> RobotContainer.HOOD.atAngle(FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetPitch) &&
+                                RobotContainer.SHOOTER.atVelocity(FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetShootingVelocityMetersPerSecond)
+                )
+        );
+    }
+
     public static Command getPrepareForFixedAutonomousShootingCommand() {
         return new ParallelCommandGroup(
-                HoodCommands.getSetTargetAngleCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
-                ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
-                getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
-                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name()))
+                GeneralCommands.getContinuousConditionalCommand(
+                        HoodCommands.getRestCommand(),
+                        HoodCommands.getSetTargetAngleCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetPitch),
+                        TrenchDetection::isHoodInTrenchZone
+                ),
+                ShooterCommands.getSetTargetVelocityCommand(() -> FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE.targetShootingVelocityMetersPerSecond),
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE))
         );
     }
 
