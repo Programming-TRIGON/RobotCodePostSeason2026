@@ -62,6 +62,10 @@ public class ShootingCommands {
                         ShooterCommands.getAimForShootingCommand(),
                         getIntakeSequenceWhileShootingCommand()
                 )
+        ).beforeStarting(
+                () -> CommandConstants.setSpeedMultiplier(CommandConstants.SHOOTING_SWERVE_SPEED_MULTIPLIER)
+        ).finallyDo(
+                () -> CommandConstants.setSpeedMultiplier(CommandConstants.DEFAULT_SWERVE_SPEED_MULTIPLIER)
         );
     }
 
