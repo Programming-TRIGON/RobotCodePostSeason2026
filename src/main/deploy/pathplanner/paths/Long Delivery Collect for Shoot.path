@@ -1,0 +1,131 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.181616753472223,
+        "y": 6.284916377314814
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.25860765027768,
+        "y": 6.012679360513761
+      },
+      "isLocked": false,
+      "linkedName": "Long Delivery Collect For Delivey End"
+    },
+    {
+      "anchor": {
+        "x": 6.2824601417824075,
+        "y": 5.132664207175926
+      },
+      "prevControl": {
+        "x": 6.1855425319443285,
+        "y": 5.3631137177054
+      },
+      "nextControl": {
+        "x": 6.379377751620487,
+        "y": 4.902214696646452
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.17725658275463,
+        "y": 4.512710286458333
+      },
+      "prevControl": {
+        "x": 6.932744620104391,
+        "y": 4.460615179961386
+      },
+      "nextControl": {
+        "x": 7.421768545404869,
+        "y": 4.564805392955279
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.893986038773148,
+        "y": 4.934979673032408
+      },
+      "prevControl": {
+        "x": 7.71321045576304,
+        "y": 4.34317922570661
+      },
+      "nextControl": {
+        "x": 8.038788483796296,
+        "y": 5.409015769675926
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.658378616898149,
+        "y": 6.284916377314814
+      },
+      "prevControl": {
+        "x": 7.9154168477941464,
+        "y": 5.7764639683476195
+      },
+      "nextControl": {
+        "x": 7.401340386002152,
+        "y": 6.7933687862820085
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.776471715856482,
+        "y": 7.390781901041667
+      },
+      "prevControl": {
+        "x": 6.7826092303240735,
+        "y": 7.509536964699073
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Long Delivery Collect For Shoot End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": -63.21611184030923
+    },
+    {
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 4.450575849370012
+    },
+    {
+      "waypointRelativePos": 4,
+      "rotationDegrees": 116.80439498088661
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.4,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 400.0,
+    "maxAngularAcceleration": 400.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 4.0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Long Delivery Paths",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 27.873
+  },
+  "useDefaultConstraints": true
+}

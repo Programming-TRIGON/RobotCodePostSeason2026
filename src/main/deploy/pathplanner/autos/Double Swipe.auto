@@ -1,0 +1,126 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Double Swipe Start"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Double Swipe Neutral Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Double Swipe Retrun For Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DoubleSwipePrepareForShootCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DoubleSwipeShootCommand"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Double Swipe Return For Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Double Swipe Neutral Collect"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Double Swipe Retrun For Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DoubleSwipePrepareForShootCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DoubleSwipeShootCommand"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": null,
+  "choreoAuto": false
+}

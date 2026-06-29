@@ -140,6 +140,86 @@ public class ShootingCommands {
         );
     }
 
+    public static Command getBasicFixedAutonomousShootingCommand() {
+        return new ParallelCommandGroup(
+                SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
+                        () -> 0.0,
+                        () -> 0.0,
+                        () -> getAutonomousBasicPosition().targetFieldRelativeYaw
+                ),
+                GeneralCommands.getContinuousConditionalCommand(
+                        HoodCommands.getRestCommand(),
+                        HoodCommands.getSetTargetAngleCommand(() -> getAutonomousBasicPosition().targetPitch),
+                        TrenchDetection::isHoodInTrenchZone
+                ),
+                ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond),
+                GeneralCommands.getContinuousConditionalCommand(
+                        new ParallelCommandGroup(
+                                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING),
+                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
+                        ),
+                        new ParallelCommandGroup(
+                                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST),
+                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
+                        ),
+                        () -> RobotContainer.HOOD.atAngle(getAutonomousBasicPosition().targetPitch) &&
+                                RobotContainer.SHOOTER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond)
+                )
+        );
+    }
+
+    public static Command getDoubleSwipeFixedAutonomousShootingCommand() {
+        return new ParallelCommandGroup(
+                SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
+                        () -> 0.0,
+                        () -> 0.0,
+                        () -> getAutonomousDoubleSwipePosition().targetFieldRelativeYaw
+                ),
+                GeneralCommands.getContinuousConditionalCommand(
+                        HoodCommands.getRestCommand(),
+                        HoodCommands.getSetTargetAngleCommand(() -> getAutonomousDoubleSwipePosition().targetPitch),
+                        TrenchDetection::isHoodInTrenchZone
+                ),
+                ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
+                GeneralCommands.getContinuousConditionalCommand(
+                        new ParallelCommandGroup(
+                                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING),
+                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
+                        ),
+                        new ParallelCommandGroup(
+                                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST),
+                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
+                        ),
+                        () -> RobotContainer.HOOD.atAngle(getAutonomousDoubleSwipePosition().targetPitch) &&
+                                RobotContainer.SHOOTER.atVelocity(getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond)
+                )
+        );
+    }
+
+    public static Command getPrepareForDoubleSwipeFixedAutonomousShootingCommand() {
+        return new ParallelCommandGroup(
+                GeneralCommands.getContinuousConditionalCommand(
+                        HoodCommands.getRestCommand(),
+                        HoodCommands.getSetTargetAngleCommand(() -> getAutonomousDoubleSwipePosition().targetPitch),
+                        TrenchDetection::isHoodInTrenchZone
+                ),
+                ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", getAutonomousDoubleSwipePosition()))
+        );
+    }
+
+    private static FixedShootingPosition getAutonomousDoubleSwipePosition() {
+        return AutonomousCommands.IS_AUTO_LEFT_SIDE
+                ? FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE_LEFT
+                : FixedShootingPosition.AUTONOMOUS_DOUBLE_SWIPE_RIGHT;
+    }
+
+    private static FixedShootingPosition getAutonomousBasicPosition() {
+        return AutonomousCommands.IS_AUTO_LEFT_SIDE
+                ? FixedShootingPosition.AUTONOMOUS_BASIC_LEFT
+                : FixedShootingPosition.AUTONOMOUS_BASIC_RIGHT;
+    }
+
     public static RepeatCommand getIntakeSequenceWhileShootingCommand() {
         return new SequentialCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
@@ -431,7 +511,11 @@ public class ShootingCommands {
         RIGHT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(-100.108), new Translation2d(3.939, 0.776326)),
         LEFT_TRENCH(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(100.108), new Translation2d(3.939, 7.293)),
         RIGHT_OF_TOWER(Rotation2d.fromDegrees(28), 9.1, Rotation2d.fromDegrees(-157.736), new Translation2d(0.716, 4.827)),
-        LEFT_OF_TOWER(Rotation2d.fromDegrees(28), 8.85, Rotation2d.fromDegrees(166.564), new Translation2d(0.949, 2.531));
+        LEFT_OF_TOWER(Rotation2d.fromDegrees(28), 8.85, Rotation2d.fromDegrees(166.564), new Translation2d(0.949, 2.531)),
+        AUTONOMOUS_DOUBLE_SWIPE_LEFT(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(120.390), new Translation2d(2.853, 6.768)),
+        AUTONOMOUS_DOUBLE_SWIPE_RIGHT(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(-120.390), new Translation2d(2.853, FieldConstants.FIELD_WIDTH_METERS - 6.768)),
+        AUTONOMOUS_BASIC_LEFT(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(121.574), new Translation2d(2.972, 5.948)),
+        AUTONOMOUS_BASIC_RIGHT(Rotation2d.fromDegrees(28), 8.55, Rotation2d.fromDegrees(-121.574), new Translation2d(2.972, FieldConstants.FIELD_WIDTH_METERS - 5.948));
 
         private final Rotation2d targetPitch;
         private final double targetShootingVelocityMetersPerSecond;

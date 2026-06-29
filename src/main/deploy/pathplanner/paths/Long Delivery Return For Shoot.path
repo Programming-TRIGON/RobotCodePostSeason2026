@@ -1,0 +1,75 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.776471715856482,
+        "y": 7.390781901041667
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.212235481595185,
+        "y": 7.287664109349581
+      },
+      "isLocked": false,
+      "linkedName": "Long Delivery Collect For Shoot End"
+    },
+    {
+      "anchor": {
+        "x": 3.276972873263889,
+        "y": 7.259888888888888
+      },
+      "prevControl": {
+        "x": 3.8276760997864177,
+        "y": 7.493331749461387
+      },
+      "nextControl": {
+        "x": 3.046799064524081,
+        "y": 7.162318310484278
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8528663917824075,
+        "y": 6.7682035590277785
+      },
+      "prevControl": {
+        "x": 3.07865586636395,
+        "y": 6.875530690584488
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.4,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 400.0,
+    "maxAngularAcceleration": 400.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 120.38999999999999
+  },
+  "reversed": false,
+  "folder": "Long Delivery Paths",
+  "idealStartingState": {
+    "velocity": 4.0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

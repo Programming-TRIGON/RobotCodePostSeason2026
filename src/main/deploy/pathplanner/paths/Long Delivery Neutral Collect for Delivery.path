@@ -1,0 +1,111 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.579974030671297,
+        "y": 6.899030960648148
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.842753280934772,
+        "y": 6.066425004192842
+      },
+      "isLocked": false,
+      "linkedName": "Long Delivery StartPath End"
+    },
+    {
+      "anchor": {
+        "x": 7.890180627893519,
+        "y": 5.463866174768518
+      },
+      "prevControl": {
+        "x": 7.773252256239513,
+        "y": 5.742376867482312
+      },
+      "nextControl": {
+        "x": 7.99289441364052,
+        "y": 5.219213083179236
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.890180627893519,
+        "y": 4.675227575231482
+      },
+      "prevControl": {
+        "x": 7.98967082816571,
+        "y": 4.906721760957717
+      },
+      "nextControl": {
+        "x": 7.667423303783747,
+        "y": 4.156914965363706
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.411712890625,
+        "y": 5.026834418402777
+      },
+      "prevControl": {
+        "x": 6.9548577819856225,
+        "y": 4.002639178631875
+      },
+      "nextControl": {
+        "x": 5.934093774753978,
+        "y": 5.927469281548159
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.181616753472223,
+        "y": 6.284916377314814
+      },
+      "prevControl": {
+        "x": 6.355454280445521,
+        "y": 5.247498291070097
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Long Delivery Collect For Delivey End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 3,
+      "rotationDegrees": 122.46276838768108
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.4,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 400.0,
+    "maxAngularAcceleration": 400.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 27.87326106747837
+  },
+  "reversed": false,
+  "folder": "Long Delivery Paths",
+  "idealStartingState": {
+    "velocity": 4.0,
+    "rotation": -73.52216891971507
+  },
+  "useDefaultConstraints": true
+}
