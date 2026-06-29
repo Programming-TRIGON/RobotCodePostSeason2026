@@ -1,6 +1,8 @@
 package frc.trigon.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -8,12 +10,20 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.trigon.lib.commands.CameraPositionCalculationCommand;
 import frc.trigon.lib.commands.WheelRadiusCharacterizationCommand;
 import frc.trigon.lib.hardware.misc.XboxController;
+import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRelativeRestrictedDriveCommand;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.SelfRelativeDriveRestrictedCommand;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.CustomCenterOfRotationDriveRestriction;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneRestrictionsDrive;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.RestrictedZone;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
+import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 /**
  * A class that contains commands that only use parameters and don't require logic.
@@ -35,7 +45,17 @@ public class CommandConstants {
     public static final double PRELOAD_TIMER_SECONDS = 2;
     public static final double
             DEFAULT_SWERVE_SPEED_MULTIPLIER = 1,
-            CLOSE_INTAKE_SWERVE_SPEED_MULTIPLIER = 0.5;
+            SHOOTING_SWERVE_SPEED_MULTIPLIER = 0.5;
+    private static final Translation2d INTAKE_CENTER_OF_ROTATION = new Translation2d(0.418, 0);
+    private static final double
+            BUMPS_ZONE_Y_METERS = 1.12776,
+            BUMPS_ZONE_X_METERS = 5.5118,
+            MINIMUM_DISTANCE_METERS_FROM_BUMP_ZONE = 0.15,
+            BRAKING_DISTANCE_FROM_BUMP_ZONE = 0.4;
+    private static final Translation2d
+            BLUE_BUMPS_ZONE_CENTER = new Translation2d(4.592574, FieldConstants.FIELD_WIDTH_METERS / 2),
+            RED_BUMPS_ZONE_CENTER = new Translation2d(11.947426, FieldConstants.FIELD_WIDTH_METERS / 2);
+    private static final LoggedNetworkBoolean SHOULD_USE_INTAKE_ASSIST = new LoggedNetworkBoolean("Assist/ShouldUseIntakeAssist", false);
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
@@ -70,6 +90,16 @@ public class CommandConstants {
                     Rotation2d.fromDegrees(0),
                     (omegaRadiansPerSecond) -> RobotContainer.SWERVE.selfRelativeDrive(new ChassisSpeeds(0, 0, omegaRadiansPerSecond)),
                     RobotContainer.SWERVE
+            ),
+            INTAKE_CENTER_OF_ROTATION_COMMAND = new FieldRelativeRestrictedDriveCommand(
+                    new CustomCenterOfRotationDriveRestriction(INTAKE_CENTER_OF_ROTATION)
+            ),
+            TRENCH_ASSIST_COMMAND = new FieldRelativeRestrictedDriveCommand(
+                    new ZoneRestrictionsDrive(
+                            true,
+                            getBumpRestrictedZone(getBumpBoundingBox(BLUE_BUMPS_ZONE_CENTER)),
+                            getBumpRestrictedZone(getBumpBoundingBox(RED_BUMPS_ZONE_CENTER))
+                    )
             );
 
     /**
@@ -142,5 +172,17 @@ public class CommandConstants {
     private static double getYPowerFromPov(double pov) {
         final double povRadians = Units.degreesToRadians(pov);
         return Math.sin(-povRadians);
+    }
+
+    private static RestrictedZone getBumpRestrictedZone(BoundingBox bumpBoundingBox) {
+        return new RestrictedZone(bumpBoundingBox, MINIMUM_DISTANCE_METERS_FROM_BUMP_ZONE, BRAKING_DISTANCE_FROM_BUMP_ZONE);
+    }
+
+    private static BoundingBox getBumpBoundingBox(Translation2d bumpZoneCenter) {
+        return new BoundingBox(new Pose2d(bumpZoneCenter, new Rotation2d()), BUMPS_ZONE_Y_METERS, BUMPS_ZONE_X_METERS);
+    }
+
+    public static boolean shouldUseIntakeAssist() {
+        return SHOULD_USE_INTAKE_ASSIST.get();
     }
 }
