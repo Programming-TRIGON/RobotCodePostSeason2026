@@ -63,6 +63,7 @@ public class RobotContainer {
      * @return the command to run in autonomous mode
      */
     public Command getAutonomousCommand() {
+        AutonomousConstants.IS_AUTO_LEFT_SIDE = !autoChooser.get().getName().endsWith("Right");
         return autoChooser.get();
     }
 
