@@ -223,7 +223,7 @@ public class IntakeConstants {
 
     public enum IntakeState {
         REST(0, MAXIMUM_ANGLE, 1),
-        OPEN(0, MINIMUM_ANGLE, 1),
+        OPEN(0, MINIMUM_ANGLE, 1.2),
         CLOSE(0, MAXIMUM_ANGLE, 1),
         POWERED_OPEN(6, MINIMUM_ANGLE, 1),
         POWERED_CLOSE(5, MAXIMUM_ANGLE, 0.7),
