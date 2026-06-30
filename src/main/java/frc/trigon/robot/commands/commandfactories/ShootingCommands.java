@@ -57,7 +57,7 @@ public class ShootingCommands {
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
                         getSetTargetShootingLocationCommand(),
-                        getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
+                        getSafeSwerveWhileShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimHoodForShootingCommand(),
                         ShooterCommands.getAimForShootingCommand(),
                         getIntakeSequenceWhileShootingCommand()
@@ -89,13 +89,25 @@ public class ShootingCommands {
                 getAimHoodForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
                 ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 GeneralCommands.getContinuousConditionalCommand(
-                        getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
                         SwerveCommands.getLockSwerveCommand(),
-                        RobotContainer.SWERVE::isMoving
+                        getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
+                        () -> OperatorConstants.DRIVER_CONTROLLER.getLeftY() == 0 && OperatorConstants.DRIVER_CONTROLLER.getLeftX() == 0 && !RobotContainer.SWERVE.isMoving() && RobotContainer.SWERVE.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw)
                 ),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name())),
                 getIntakeSequenceWhileShootingCommand()
         );
+    }
+
+    private static Command getSafeSwerveWhileShootingCommand(Supplier<Rotation2d> rotation2dSupplier) {
+        return GeneralCommands.getContinuousConditionalCommand(
+                SwerveCommands.getLockSwerveCommand(),
+                getAimSwerveCommand(rotation2dSupplier),
+                ShootingCommands::shouldLockSwerve
+        );
+    }
+
+    private static boolean shouldLockSwerve() {
+        return OperatorConstants.DRIVER_CONTROLLER.getLeftY() == 0 && OperatorConstants.DRIVER_CONTROLLER.getLeftX() == 0 && !RobotContainer.SWERVE.isMoving() && RobotContainer.SWERVE.atAngle(new FlippableRotation2d( SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw(), false));
     }
 
     public static Command getFixedDeliveryShootingCommand() {
