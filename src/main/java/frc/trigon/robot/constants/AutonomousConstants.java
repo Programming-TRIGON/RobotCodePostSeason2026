@@ -8,6 +8,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
@@ -86,5 +87,6 @@ public class AutonomousConstants {
         NamedCommands.registerCommand("PushFuelCommand", AutonomousCommands.getPushFuelWithIntakeCommand());
         NamedCommands.registerCommand("PrepareForShootingCommand", ShootingCommands.getPrepareForShootingCommand());
         NamedCommands.registerCommand("ShootCommand", ShootingCommands.getAutonomousShootingAtHubCommand().withTimeout(5));
+        NamedCommands.registerCommand("InitializeDriveCommand", new InstantCommand(()-> RobotContainer.SWERVE.initializeDrive(true)));
     }
 }

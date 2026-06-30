@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "InitializeDriveCommand"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Double Swipe Start"
