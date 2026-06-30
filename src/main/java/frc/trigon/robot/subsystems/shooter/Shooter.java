@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.utilities.Conversions;
+import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -95,6 +96,9 @@ public class Shooter extends MotorSubsystem {
 
     void aimForShooting() {
         double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
+        if (!RobotContainer.LOADER.atVelocity(3))
+            targetVelocityMetersPerSecond += 0.5;
+        Logger.recordOutput("Shooter/isLoaderGood", !RobotContainer.LOADER.atVelocity(3));
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 

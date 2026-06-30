@@ -44,7 +44,7 @@ public class LoaderConstants {
             null
     );
 
-    private static final double MAXIMUM_DISPLAYABLE_VELOCITY = 12;
+    private static final double MAXIMUM_DISPLAYABLE_VELOCITY = 10;
     private static final String LOADER_MECHANISM_NAME = "LoaderMechanism";
     static final SpeedMechanism2d LOADER_MECHANISM = new SpeedMechanism2d(
             LOADER_MECHANISM_NAME,
