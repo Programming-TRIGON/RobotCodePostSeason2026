@@ -29,6 +29,8 @@ public class MatchTracker {
     public static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
         if (DriverStation.isAutonomousEnabled())
             return true;
+        if (matchTimeSeconds <= 30)
+            return true;
 
         final String gameData = DriverStation.getGameSpecificMessage();
 

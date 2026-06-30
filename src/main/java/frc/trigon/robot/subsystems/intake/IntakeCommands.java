@@ -6,10 +6,20 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.GearRatioCalculationCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
+import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 
 import java.util.Set;
 
 public class IntakeCommands {
+    public static Command getDefaultCommand() {
+        return GeneralCommands.getContinuousConditionalCommand(
+                getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
+                getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
+                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
+        );
+    }
+
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
                 (targetVoltage, targetAngleDegrees) -> {
