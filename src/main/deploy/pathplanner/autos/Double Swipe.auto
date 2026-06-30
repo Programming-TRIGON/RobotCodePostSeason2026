@@ -11,9 +11,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Double Swipe Start"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Double Swipe Start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectCommand"
+                }
+              }
+            ]
           }
         },
         {
