@@ -69,6 +69,19 @@ public class ShootingCommands {
         );
     }
 
+    public static Command getAutonomousShootingAtHubCommand() {
+        return new InstantCommand(ShootingCommands::updateShootingCalculations).andThen(
+                new ParallelCommandGroup(
+                        getUpdateShootingCalculationsCommand(),
+                        getLoadForShootingWhenReadyCommand(() -> false),
+                        new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(ShootingCalculations.TargetShootingLocation.HUB)),
+                        getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
+                        getAimHoodForShootingCommand(),
+                        ShooterCommands.getAimForShootingCommand()
+                )
+        );
+    }
+
     public static Command getFixedShootingAtHubCommand() {
         return new ParallelCommandGroup(
                 getLoadForFixedShootingAtHubWhenReadyCommand(),

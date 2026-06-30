@@ -12,7 +12,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class CameraConstants {
     private static final StandardDeviations APRIL_TAG_CAMERA_STANDARD_DEVIATIONS = new StandardDeviations(
-            0.03,
+            0.016,
             0.01
     );
     public static final Transform3d

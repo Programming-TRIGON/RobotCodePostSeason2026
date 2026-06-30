@@ -60,7 +60,7 @@ public class AutonomousConstants {
     private static void configureAutoBuilder() {
         AutoBuilder.configure(
                 RobotContainer.ROBOT_POSE_ESTIMATOR::getEstimatedRobotPose,
-                RobotContainer.ROBOT_POSE_ESTIMATOR::resetPose,
+                (a) -> {},
                 RobotContainer.SWERVE::getSelfRelativeChassisSpeeds,
                 RobotContainer.SWERVE::drivePathPlanner,
                 AUTO_PATH_FOLLOWING_CONTROLLER,
@@ -84,5 +84,7 @@ public class AutonomousConstants {
         NamedCommands.registerCommand("DoubleSwipePrepareForShootCommand", ShootingCommands.getPrepareForDoubleSwipeFixedAutonomousShootingCommand());
         NamedCommands.registerCommand("BasicShootCommand", ShootingCommands.getBasicFixedAutonomousShootingCommand());
         NamedCommands.registerCommand("PushFuelCommand", AutonomousCommands.getPushFuelWithIntakeCommand());
+        NamedCommands.registerCommand("PrepareForShootingCommand", ShootingCommands.getPrepareForShootingCommand());
+        NamedCommands.registerCommand("ShootCommand", ShootingCommands.getAutonomousShootingAtHubCommand().withTimeout(5));
     }
 }

@@ -42,16 +42,29 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "DoubleSwipePrepareForShootCommand"
+                  "name": "PrepareForShootingCommand"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "DoubleSwipeShootCommand"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PushFuelCommand"
+                }
+              }
+            ]
           }
         },
         {
@@ -105,16 +118,29 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "DoubleSwipePrepareForShootCommand"
+                  "name": "PrepareForShootingCommand"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "DoubleSwipeShootCommand"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PushFuelCommand"
+                }
+              }
+            ]
           }
         }
       ]
