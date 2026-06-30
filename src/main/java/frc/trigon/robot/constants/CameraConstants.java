@@ -15,7 +15,7 @@ public class CameraConstants {
             0.016,
             0.01
     );
-    public static final Transform3d
+    private static final Transform3d
             ROBOT_TO_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
             new Translation3d(
                     -0.355,
