@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "CollectCommand"
+                  "name": "FirstCollectCommand"
                 }
               }
             ]
