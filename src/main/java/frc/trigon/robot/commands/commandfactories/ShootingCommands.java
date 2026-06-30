@@ -328,7 +328,7 @@ public class ShootingCommands {
         return GeneralCommands.getContinuousConditionalCommand(
                 HoodCommands.getRestCommand(),
                 HoodCommands.getAimForShootingCommand(),
-                TrenchDetection::isHoodInTrenchZone
+                () -> TrenchDetection.isHoodInTrenchZone() || OperatorConstants.LOWER_HOOD_TRIGGER.getAsBoolean()
         );
     }
 
