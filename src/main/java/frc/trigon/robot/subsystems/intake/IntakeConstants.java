@@ -227,7 +227,8 @@ public class IntakeConstants {
         CLOSE(0, MAXIMUM_ANGLE, 1),
         POWERED_OPEN(6, MINIMUM_ANGLE, 1),
         POWERED_CLOSE(5, MAXIMUM_ANGLE, 0.7),
-        REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1);
+        REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1),
+        AUTONOMOUS_INTAKE(6, MINIMUM_ANGLE, 1.4);
 
         public final double targetVoltage;
         public final Rotation2d targetAngle;

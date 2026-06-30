@@ -54,7 +54,7 @@ public class CommandConstants {
     private static final Translation2d
             BLUE_BUMPS_ZONE_CENTER = new Translation2d(4.592574, FieldConstants.FIELD_WIDTH_METERS / 2),
             RED_BUMPS_ZONE_CENTER = new Translation2d(11.947426, FieldConstants.FIELD_WIDTH_METERS / 2);
-    private static final LoggedNetworkBoolean SHOULD_USE_INTAKE_ASSIST = new LoggedNetworkBoolean("Assist/ShouldUseIntakeAssist", false);
+    private static final LoggedNetworkBoolean SHOULD_USE_INTAKE_ASSIST = new LoggedNetworkBoolean("/SmartDashboard/Assist/ShouldUseIntakeAssist", false);
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),

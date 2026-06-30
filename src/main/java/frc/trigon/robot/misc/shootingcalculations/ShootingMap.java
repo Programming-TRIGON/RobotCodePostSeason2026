@@ -29,15 +29,15 @@ public class ShootingMap {
     }
 
     private static void addDeliveryPoints() {
-        addPoint(DELIVERY_MAP, 2.50, 4.78, Rotation2d.fromDegrees(21.5), 0.68);
-        addPoint(DELIVERY_MAP, 3.00, 5.41, Rotation2d.fromDegrees(22), 0.75);
-        addPoint(DELIVERY_MAP, 4.00, 6.63, Rotation2d.fromDegrees(24), 0.92);
-        addPoint(DELIVERY_MAP, 5.00, 7.89, Rotation2d.fromDegrees(26), 1.09);
-        addPoint(DELIVERY_MAP, 6.00, 9.30, Rotation2d.fromDegrees(29), 1.29);
-        addPoint(DELIVERY_MAP, 7.00, 10.96, Rotation2d.fromDegrees(32), 1.51);
-        addPoint(DELIVERY_MAP, 8.00, 13.01, Rotation2d.fromDegrees(35), 1.74);
-        addPoint(DELIVERY_MAP, 9.00, 15.69, Rotation2d.fromDegrees(38), 2.01);
-        addPoint(DELIVERY_MAP, 10.00, 19.45, Rotation2d.fromDegrees(41), 2.33);
+        addPoint(DELIVERY_MAP, 2.50, 5, Rotation2d.fromDegrees(21.5), 0.68);
+        addPoint(DELIVERY_MAP, 3.00, 5.61, Rotation2d.fromDegrees(22), 0.75);
+        addPoint(DELIVERY_MAP, 4.00, 6.83, Rotation2d.fromDegrees(24), 0.92);
+        addPoint(DELIVERY_MAP, 5.00, 8.1, Rotation2d.fromDegrees(26), 1.09);
+        addPoint(DELIVERY_MAP, 6.00, 9.50, Rotation2d.fromDegrees(29), 1.29);
+        addPoint(DELIVERY_MAP, 7.00, 11.26, Rotation2d.fromDegrees(32), 1.51);
+        addPoint(DELIVERY_MAP, 8.00, 13.21, Rotation2d.fromDegrees(35), 1.74);
+        addPoint(DELIVERY_MAP, 9.00, 15.89, Rotation2d.fromDegrees(38), 2.01);
+        addPoint(DELIVERY_MAP, 10.00, 19.65, Rotation2d.fromDegrees(41), 2.33);
     }
 
     private static void addPoint(InterpolatingTreeMap<Double, ShotParameters> map, double distanceMeters, double velocityMetersPerSecond, Rotation2d pitch, double timeOfFlightSeconds) {
