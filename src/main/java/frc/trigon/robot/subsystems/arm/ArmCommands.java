@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import java.util.Set;
 
 public class ArmCommands {
-    public static final LoggedNetworkBoolean SHOULD_ARM_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDasboard/ShouldArmDefaultOpen");
+    public static final LoggedNetworkBoolean SHOULD_ARM_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldArmDefaultOpen", false);
 
     public static Command getDefaultCommand() {
         return GeneralCommands.getContinuousConditionalCommand(

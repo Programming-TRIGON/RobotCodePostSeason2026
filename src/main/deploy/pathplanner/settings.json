@@ -5,7 +5,9 @@
   "pathFolders": [
     "Basic Auto Paths",
     "Double Swipe Paths",
-    "Long Delivery Paths"
+    "Long Delivery Paths",
+    "Scatter All",
+    "Scatter one side"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.5,
