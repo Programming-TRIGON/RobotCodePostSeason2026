@@ -21,18 +21,6 @@
           "data": {
             "pathName": "scatter half 2"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "scatter half 3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "scatter half 2"
-          }
         }
       ]
     }
