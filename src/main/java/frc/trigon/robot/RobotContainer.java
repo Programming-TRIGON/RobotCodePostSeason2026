@@ -115,6 +115,8 @@ public class RobotContainer {
 
         OperatorConstants.CLOSE_ARM.onTrue(new InstantCommand(() -> ArmCommands.SHOULD_ARM_DEFAULT_OPEN.set(false)));
         OperatorConstants.OPEN_ARM.onTrue(new InstantCommand(() -> ArmCommands.SHOULD_ARM_DEFAULT_OPEN.set(true)));
+        OperatorConstants.ARM_UP.whileTrue(ArmCommands.getMoveArmUpCommand());
+        OperatorConstants.ARM_DOWN.whileTrue(ArmCommands.getMoveArmDownCommand());
 
 //        OperatorConstants.ENABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableOverrideSwerveAimCommand());
 //        OperatorConstants.DISABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableOverrideSwerveAimCommand());

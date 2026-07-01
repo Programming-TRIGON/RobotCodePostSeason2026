@@ -2,22 +2,41 @@ package frc.trigon.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import java.util.Set;
 
 public class ArmCommands {
     public static final LoggedNetworkBoolean SHOULD_ARM_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldArmDefaultOpen", false);
+    public static final LoggedNetworkNumber ARM_VOLTAGE = new LoggedNetworkNumber("/SmartDashboard/ArmVoltage", 1);
 
     public static Command getDefaultCommand() {
         return GeneralCommands.getContinuousConditionalCommand(
                 getSetTargetStateCommand(ArmConstants.ArmState.OPEN),
                 getSetTargetStateCommand(ArmConstants.ArmState.CLOSE),
                 SHOULD_ARM_DEFAULT_OPEN
+        );
+    }
+
+    public static Command getMoveArmUpCommand() {
+        return new StartEndCommand(
+                () -> RobotContainer.ARM.sysIDDrive(ARM_VOLTAGE.get()),
+                () -> RobotContainer.ARM.stop(),
+                RobotContainer.ARM
+        );
+    }
+
+    public static Command getMoveArmDownCommand() {
+        return new StartEndCommand(
+                () -> RobotContainer.ARM.sysIDDrive(-ARM_VOLTAGE.get()),
+                () -> RobotContainer.ARM.stop(),
+                RobotContainer.ARM
         );
     }
 
