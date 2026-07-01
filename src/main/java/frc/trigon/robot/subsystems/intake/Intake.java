@@ -50,7 +50,7 @@ public class Intake extends MotorSubsystem {
 
     @Override
     public void sysIDDrive(double targetVoltage) {
-        masterAngleMotor.setControl(voltageRequest.withOutput(targetVoltage));
+//        masterAngleMotor.setControl(voltageRequest.withOutput(targetVoltage));
     }
 
     @Override
@@ -103,12 +103,12 @@ public class Intake extends MotorSubsystem {
 
     void setTargetVoltage(double targetVoltage) {
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(targetVoltage);
-        intakeMotor.setControl(voltageRequest.withOutput(targetVoltage));
+//        intakeMotor.setControl(voltageRequest.withOutput(targetVoltage));
     }
 
     void setTargetAngle(Rotation2d targetAngle) {
         this.targetAngle = targetAngle;
-        masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
+//        masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
     }
 
     private void scalePositionRequestSpeed(double speedScalar) {
@@ -124,7 +124,7 @@ public class Intake extends MotorSubsystem {
     private Pose3d calculateVisualizationPose() {
         final Transform3d pitchTransform = new Transform3d(
                 new Translation3d(0, 0, 0),
-                new Rotation3d(0, IntakeConstants.MAXIMUM_ANGLE.minus(getCurrentAngle()).getRadians() , 0)
+                new Rotation3d(0, IntakeConstants.MAXIMUM_ANGLE.minus(getCurrentAngle()).getRadians(), 0)
         );
         return IntakeConstants.INTAKE_VISUALIZATION_ORIGIN_POINT.transformBy(pitchTransform);
     }

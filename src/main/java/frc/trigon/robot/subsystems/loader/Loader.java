@@ -24,7 +24,7 @@ public class Loader extends MotorSubsystem {
 
     @Override
     public void sysIDDrive(double targetDrivePower) {
-        masterMotor.setControl(voltageRequest.withOutput(targetDrivePower));
+//        masterMotor.setControl(voltageRequest.withOutput(targetDrivePower));
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Loader extends MotorSubsystem {
     }
 
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
-        masterMotor.setControl(velocityRequest.withVelocity(metersToRotations(targetVelocityMetersPerSecond)));
+//        masterMotor.setControl(velocityRequest.withVelocity(metersToRotations(targetVelocityMetersPerSecond)));
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
     }
 

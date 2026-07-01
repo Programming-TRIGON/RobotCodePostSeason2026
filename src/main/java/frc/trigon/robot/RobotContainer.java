@@ -13,15 +13,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.commands.CommandConstants;
-import frc.trigon.robot.commands.commandfactories.*;
+import frc.trigon.robot.commands.commandfactories.AutonomousCommands;
+import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.matchTracker.MatchTrackerCommands;
-import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
+import frc.trigon.robot.subsystems.arm.Arm;
+import frc.trigon.robot.subsystems.arm.ArmCommands;
 import frc.trigon.robot.subsystems.hood.Hood;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.indexer.Indexer;
@@ -29,7 +31,6 @@ import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.intake.Intake;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
-import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.loader.Loader;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
@@ -51,6 +52,7 @@ public class RobotContainer {
     public static final Intake INTAKE = new Intake();
     public static final Loader LOADER = new Loader();
     public static final Shooter SHOOTER = new Shooter();
+    public static final Arm ARM = new Arm();
     private LoggedDashboardChooser<Command> autoChooser;
 
     public RobotContainer() {
@@ -81,6 +83,7 @@ public class RobotContainer {
         INTAKE.setDefaultCommand(IntakeCommands.getDefaultCommand());
         LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
         SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
+        ARM.setDefaultCommand(ArmCommands.getDefaultCommand());
     }
 
     private void bindControllerCommands() {
@@ -88,37 +91,40 @@ public class RobotContainer {
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
         OperatorConstants.CAMERAS_DISCONNECTED_TRIGGER.onTrue(CommandConstants.INDICATE_CAMERAS_DISCONNECTED_COMMAND);
         OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
-        OperatorConstants.SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(ShootingCommands.getShootingMapCalibrationCommand());
-        OperatorConstants.TELEPORTATION_FOR_SIMULATION_SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(GeneralCommands.getTeleportRobotForSimulationShootingMapCalibrationCommand(ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION));
-        OperatorConstants.RESET_POSE_TO_FIXED_SHOOTING_LOCATION_TRIGGER.onTrue(ShootingCommands.getResetPoseToFixedShootingLocationCommand());
-        OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
+        OperatorConstants.OPERATOR_CONTROLLER.equals().whileTrue(ArmCommands.getResetArmCommand());
+//        OperatorConstants.SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(ShootingCommands.getShootingMapCalibrationCommand());
+//        OperatorConstants.TELEPORTATION_FOR_SIMULATION_SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(GeneralCommands.getTeleportRobotForSimulationShootingMapCalibrationCommand(ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION));
+//        OperatorConstants.RESET_POSE_TO_FIXED_SHOOTING_LOCATION_TRIGGER.onTrue(ShootingCommands.getResetPoseToFixedShootingLocationCommand());
+//        OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
 
-        OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
-        OperatorConstants.SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BETWEEN_TOWER_AND_HUB));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_IN_FRONT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.IN_FRONT_OF_TOWER));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_CLOSEST_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetClosestTrenchCommand());
-        OperatorConstants.SET_TARGET_FIXED_SCORING_CLOSEST_SIDE_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetClosestSideOfTowerCommand());
-        OperatorConstants.SET_TARGET_FIXED_SCORING_RIGHT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_TRENCH));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_LEFT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_TRENCH));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_RIGHT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_OF_TOWER));
-        OperatorConstants.SET_TARGET_FIXED_SCORING_LEFT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_OF_TOWER));
 
-        OperatorConstants.FIXED_SHOOTING_AT_HUB_TRIGGER.whileTrue(ShootingCommands.getFixedShootingAtHubCommand());
-        OperatorConstants.PREPARE_FOR_FIXED_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForFixedShootingCommand());
-        OperatorConstants.FIXED_DELIVERY_TRIGGER.whileTrue(ShootingCommands.getFixedDeliveryShootingCommand());
-        OperatorConstants.PREPARE_FOR_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForShootingCommand());
+//        OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
+//        OperatorConstants.SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BETWEEN_TOWER_AND_HUB));
+//        OperatorConstants.SET_TARGET_FIXED_SCORING_IN_FRONT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.IN_FRONT_OF_TOWER));
+//        OperatorConstants.SET_TARGET_FIXED_SCORING_CLOSEST_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetClosestTrenchCommand());
+//        OperatorConstants.SET_TARGET_FIXED_SCORING_CLOSEST_SIDE_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetClosestSideOfTowerCommand());
+//        OperatorConstants.SET_TARGET_FIXED_SCORING_RIGHT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_TRENCH));
+//        OperatorConstants.SET_TARGET_FIXED_SCORING_LEFT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_TRENCH));
+//        OperatorConstants.SET_TARGET_FIXED_SCORING_RIGHT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_OF_TOWER));
+//        OperatorConstants.SET_TARGET_FIXED_SCORING_LEFT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_OF_TOWER));
 
-        OperatorConstants.EJECT_FROM_INTAKE_TRIGGER.whileTrue(EjectionCommands.getEjectFromIntakeCommand());
-        OperatorConstants.EJECT_FROM_SHOOTER_TRIGGER.whileTrue(EjectionCommands.getEjectFromShooterCommand());
-        OperatorConstants.ENABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableOverrideSwerveAimCommand());
-        OperatorConstants.DISABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableOverrideSwerveAimCommand());
-        OperatorConstants.INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN)).and(CommandConstants::shouldUseIntakeAssist).whileTrue(CommandConstants.INTAKE_CENTER_OF_ROTATION_COMMAND);
-        OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
-        OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
+//        OperatorConstants.FIXED_SHOOTING_AT_HUB_TRIGGER.whileTrue(ShootingCommands.getFixedShootingAtHubCommand());
+//        OperatorConstants.PREPARE_FOR_FIXED_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForFixedShootingCommand());
+//        OperatorConstants.FIXED_DELIVERY_TRIGGER.whileTrue(ShootingCommands.getFixedDeliveryShootingCommand());
+//        OperatorConstants.PREPARE_FOR_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForShootingCommand());
+
+        OperatorConstants.CLOSE_ARM.onTrue(new InstantCommand(() -> ArmCommands.SHOULD_ARM_DEFAULT_OPEN.set(false)));
+        OperatorConstants.OPEN_ARM.onTrue(new InstantCommand(() -> ArmCommands.SHOULD_ARM_DEFAULT_OPEN.set(true)));
+
+//        OperatorConstants.ENABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableOverrideSwerveAimCommand());
+//        OperatorConstants.DISABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableOverrideSwerveAimCommand());
+//        OperatorConstants.INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN)).and(CommandConstants::shouldUseIntakeAssist).whileTrue(CommandConstants.INTAKE_CENTER_OF_ROTATION_COMMAND);
+//        OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
+//        OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
         OperatorConstants.HUB_ACTIVE_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
-        OperatorConstants.OPEN_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
-        OperatorConstants.CLOSE_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
+//        OperatorConstants.OPEN_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
+//        OperatorConstants.CLOSE_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {

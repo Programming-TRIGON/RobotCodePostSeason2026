@@ -71,7 +71,7 @@ public class Hood extends MotorSubsystem {
 
     @Override
     public void sysIDDrive(double targetVoltage) {
-        motor.setControl(voltageRequest.withOutput(targetVoltage).withIgnoreSoftwareLimits(false));
+//        motor.setControl(voltageRequest.withOutput(targetVoltage).withIgnoreSoftwareLimits(false));
     }
 
     @AutoLogOutput(key = "ShootingCalculations/Conditions/HoodAtTargetAngle")
@@ -102,11 +102,11 @@ public class Hood extends MotorSubsystem {
 
     void setTargetAngle(Rotation2d targetAngle) {
         this.targetAngle = targetAngle;
-        motor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
+        //        motor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
     }
 
     void resetTargetVoltage() {
-        motor.setControl(voltageRequest.withOutput(HoodConstants.HOOD_RESET_VOLTAGE).withIgnoreSoftwareLimits(true));
+        //        motor.setControl(voltageRequest.withOutput(HoodConstants.HOOD_RESET_VOLTAGE).withIgnoreSoftwareLimits(true));
     }
 
     void resetPosition() {

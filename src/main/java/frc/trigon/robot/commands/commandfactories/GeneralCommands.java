@@ -8,11 +8,7 @@ import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.simulatedfield.SimulationFieldHandler;
 import frc.trigon.robot.subsystems.MotorSubsystem;
-import frc.trigon.robot.subsystems.hood.HoodCommands;
-import frc.trigon.robot.subsystems.indexer.IndexerCommands;
-import frc.trigon.robot.subsystems.intake.IntakeCommands;
-import frc.trigon.robot.subsystems.loader.LoaderCommands;
-import frc.trigon.robot.subsystems.shooter.ShooterCommands;
+import frc.trigon.robot.subsystems.arm.ArmCommands;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 
 import java.util.Set;
@@ -27,11 +23,12 @@ public class GeneralCommands {
 
     public static Command getDebuggingCommand() {
         return new ParallelCommandGroup(
-                HoodCommands.getDebuggingCommand(),
-                IndexerCommands.getDebuggingCommand(),
-                IntakeCommands.getDebuggingCommand(),
-                LoaderCommands.getDebuggingCommand(),
-                ShooterCommands.getDebuggingCommand()
+//                HoodCommands.getDebuggingCommand(),
+//                IndexerCommands.getDebuggingCommand(),
+//                IntakeCommands.getDebuggingCommand(),
+//                LoaderCommands.getDebuggingCommand(),
+//                ShooterCommands.getDebuggingCommand(),
+                ArmCommands.getDebuggingCommand()
         );
     }
 
