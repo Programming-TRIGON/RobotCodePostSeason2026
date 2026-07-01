@@ -24,6 +24,7 @@ import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.arm.Arm;
 import frc.trigon.robot.subsystems.arm.ArmCommands;
+import frc.trigon.robot.subsystems.arm.ArmConstants;
 import frc.trigon.robot.subsystems.hood.Hood;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.indexer.Indexer;
@@ -113,10 +114,11 @@ public class RobotContainer {
 //        OperatorConstants.FIXED_DELIVERY_TRIGGER.whileTrue(ShootingCommands.getFixedDeliveryShootingCommand());
 //        OperatorConstants.PREPARE_FOR_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForShootingCommand());
 
-        OperatorConstants.CLOSE_ARM.onTrue(new InstantCommand(() -> ArmCommands.SHOULD_ARM_DEFAULT_OPEN.set(false)));
-        OperatorConstants.OPEN_ARM.onTrue(new InstantCommand(() -> ArmCommands.SHOULD_ARM_DEFAULT_OPEN.set(true)));
-        OperatorConstants.ARM_UP.whileTrue(ArmCommands.getMoveArmUpCommand());
-        OperatorConstants.ARM_DOWN.whileTrue(ArmCommands.getMoveArmDownCommand());
+//        OperatorConstants.CLOSE_ARM.onTrue(new InstantCommand(() -> ArmCommands.DSBSA = false));
+//        OperatorConstants.OPEN_ARM.onTrue(new InstantCommand(() -> ArmCommands.DSBSA = true));
+//        OperatorConstants.ARM_UP.whileTrue(ArmCommands.getMoveArmUpCommand());
+//        OperatorConstants.ARM_DOWN.whileTrue(ArmCommands.getMoveArmDownCommand());
+        OperatorConstants.DRIVER_CONTROLLER.rightBumper().or(OperatorConstants.OPERATOR_CONTROLLER.minus()).whileTrue(ArmCommands.getSetTargetStateCommand(ArmConstants.ArmState.OPEN));
 
 //        OperatorConstants.ENABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableOverrideSwerveAimCommand());
 //        OperatorConstants.DISABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableOverrideSwerveAimCommand());

@@ -65,6 +65,7 @@ public class Arm extends MotorSubsystem {
         Logger.recordOutput("Arm/TargetAngleDegrees", targetState.targetAngle.getDegrees());
         Logger.recordOutput("Arm/CurrentAngleDegrees", currentAngle.getDegrees());
         Logger.recordOutput("Arm/TargetProfiledAngleDegrees", targetProfiledAngle.getDegrees());
+        Logger.recordOutput("Arm/isOpen", ArmCommands.DSBSA);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class Arm extends MotorSubsystem {
     }
 
     void resetTargetVoltage() {
-        motor.setControl(voltageRequest.withOutput(-1).withIgnoreSoftwareLimits(true));
+        motor.setControl(voltageRequest.withOutput(-0.5).withIgnoreSoftwareLimits(true));
     }
 
     void resetPosition() {

@@ -13,15 +13,12 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 import java.util.Set;
 
 public class ArmCommands {
-    public static final LoggedNetworkBoolean SHOULD_ARM_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldArmDefaultOpen", false);
+    public static final LoggedNetworkBoolean SHOULD_ARM_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldArmDefaultOpen");
     public static final LoggedNetworkNumber ARM_VOLTAGE = new LoggedNetworkNumber("/SmartDashboard/ArmVoltage", 1);
+    public static boolean DSBSA = false;
 
     public static Command getDefaultCommand() {
-        return GeneralCommands.getContinuousConditionalCommand(
-                getSetTargetStateCommand(ArmConstants.ArmState.OPEN),
-                getSetTargetStateCommand(ArmConstants.ArmState.CLOSE),
-                SHOULD_ARM_DEFAULT_OPEN
-        );
+        return getSetTargetStateCommand(ArmConstants.ArmState.CLOSE);
     }
 
     public static Command getMoveArmUpCommand() {

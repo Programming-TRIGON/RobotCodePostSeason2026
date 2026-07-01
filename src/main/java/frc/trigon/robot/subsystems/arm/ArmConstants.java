@@ -31,7 +31,7 @@ public class ArmConstants {
             ARM_MASS_KILOGRAMS = 2,
             ARM_LENGTH_METERS = 0.3;
     static final Rotation2d
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(90), // TODO: placeholder, set real max angle
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(160), // TODO: placeholder, set real max angle
             MINIMUM_ANGLE = Rotation2d.fromDegrees(0); // TODO: placeholder, set real min angle
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
@@ -87,7 +87,7 @@ public class ArmConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 35 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 35 : 10;
         config.Slot0.kI = 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.2 : 0;
         config.Slot0.kS = 0;
