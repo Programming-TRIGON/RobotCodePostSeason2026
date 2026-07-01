@@ -48,7 +48,7 @@
   "folder": "Scatter one side",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -17.6501242199301
+    "rotation": -94.51398845800124
   },
   "useDefaultConstraints": true
 }
