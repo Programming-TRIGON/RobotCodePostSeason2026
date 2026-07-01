@@ -87,7 +87,7 @@ public class Intake extends MotorSubsystem {
 
     @AutoLogOutput(key = "Intake/IntakeAtTargetAngle")
     public boolean atTargetState() {
-        return targetState.targetAngle.minus(getCurrentAngle()).getDegrees() < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
+        return Math.abs(targetState.targetAngle.minus(getCurrentAngle()).getDegrees()) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }
 
     void setTargetState(IntakeConstants.IntakeState targetState) {

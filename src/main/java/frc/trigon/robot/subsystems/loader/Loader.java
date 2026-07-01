@@ -44,6 +44,7 @@ public class Loader extends MotorSubsystem {
     public void stop() {
         masterMotor.stopMotor();
         LoaderConstants.LOADER_MECHANISM.setTargetVelocity(0);
+        targetVelocityMetersPerSecond = 0;
     }
 
     @Override
