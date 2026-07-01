@@ -20,8 +20,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class ShooterConstants {
     private static final int
-            MASTER_MOTOR_ID = 31,
-            FOLLOWER_MOTOR_ID = 30;
+            MASTER_MOTOR_ID = 11,
+            FOLLOWER_MOTOR_ID = 10;
     private static final String
             MASTER_MOTOR_NAME = "ShooterMasterMotor",
             FOLLOWER_MOTOR_NAME = "ShooterFollowerMotor";
