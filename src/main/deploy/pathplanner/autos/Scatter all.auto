@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "InitializeDriveCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Scatter half 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Scatter all 2"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": null,
+  "choreoAuto": false
+}
