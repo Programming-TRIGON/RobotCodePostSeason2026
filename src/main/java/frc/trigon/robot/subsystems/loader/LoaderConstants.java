@@ -16,8 +16,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class LoaderConstants {
     private static final int
-            MASTER_MOTOR_ID = 13,
-            FOLLOWER_MOTOR_ID = 14;
+            MASTER_MOTOR_ID = 14,
+            FOLLOWER_MOTOR_ID = 15;
     private static final String
             MASTER_MOTOR_NAME = "LoaderMasterMotor",
             FOLLOWER_MOTOR_NAME = "LoaderFollowerMotor";
@@ -26,11 +26,11 @@ public class LoaderConstants {
             FOLLOWER_MOTOR = new TalonFXMotor(FOLLOWER_MOTOR_ID, FOLLOWER_MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 4;
+    private static final double GEAR_RATIO = 1.35;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
 
     private static final int MOTOR_AMOUNT = 2;
-    private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
+    private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
     private static final double MOMENT_OF_INERTIA = 0.003;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
             GEARBOX,
@@ -71,7 +71,7 @@ public class LoaderConstants {
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
-        
+
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.5 : 1.3;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
