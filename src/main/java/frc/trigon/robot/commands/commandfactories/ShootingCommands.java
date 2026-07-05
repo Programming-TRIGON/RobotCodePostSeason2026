@@ -14,6 +14,7 @@ import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.TrenchDetection;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
+import frc.trigon.robot.misc.shootingcalculations.ShootingState;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
@@ -389,7 +390,7 @@ public class ShootingCommands {
     }
 
     private static boolean isSwerveAtAngle(FlippableRotation2d targetFieldRelativeYaw) {
-        if (SHOULD_OVERRIDE_SWERVE_AIM.getAsBoolean())
+        if (SHOULD_OVERRIDE_SWERVE_AIM != null && SHOULD_OVERRIDE_SWERVE_AIM.getAsBoolean())
             return true;
 
         return RobotContainer.SWERVE.atAngle(targetFieldRelativeYaw);
@@ -429,13 +430,22 @@ public class ShootingCommands {
     }
 
     private static boolean isReadyForShooting(BooleanSupplier isDelivery) {
-        if (!SHOOTING_CALCULATIONS.isReadyToShoot())
+        if (!isReadyToShootWithSwerveOverride())
             return false;
 
         if (isDelivery.getAsBoolean())
             return !isDeliveryHittingHub();
 
         return MatchTracker.isHubActive();
+    }
+
+    private static boolean isReadyToShootWithSwerveOverride() {
+        final ShootingState targetShootingState = SHOOTING_CALCULATIONS.getTargetShootingState();
+        final boolean isYawReady = isSwerveAtAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
+        final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
+        final boolean isVelocityReady = RobotContainer.SHOOTER.atTargetVelocity();
+
+        return isYawReady && isPitchReady && isVelocityReady;
     }
 
     private static boolean isDeliveryHittingHub() {
