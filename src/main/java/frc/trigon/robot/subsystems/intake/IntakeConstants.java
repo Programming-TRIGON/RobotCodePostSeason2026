@@ -49,7 +49,7 @@ public class IntakeConstants {
             INTAKE_MOTOR_GEAR_RATIO = 1.5;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue
-            INTAKE_MOTORS_FOLLOWER_ALIGNMENT_tO_MASTER = MotorAlignmentValue.Opposed,
+            INTAKE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed,
             ANGLE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
             INTAKE_MOTORS_CURRENT_LIMIT = 60,
@@ -227,7 +227,7 @@ public class IntakeConstants {
 
         FOLLOWER_INTAKE_MOTOR.applyConfiguration(config);
 
-        final Follower followerRequest = new Follower(MASTER_INTAKE_MOTOR.getID(), INTAKE_MOTORS_FOLLOWER_ALIGNMENT_tO_MASTER);
+        final Follower followerRequest = new Follower(MASTER_INTAKE_MOTOR.getID(), INTAKE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER);
         FOLLOWER_INTAKE_MOTOR.setControl(followerRequest);
 
         FOLLOWER_INTAKE_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
