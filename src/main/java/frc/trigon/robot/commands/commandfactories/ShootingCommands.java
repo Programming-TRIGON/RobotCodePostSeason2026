@@ -3,6 +3,7 @@ package frc.trigon.robot.commands.commandfactories;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.lib.utilities.flippable.FlippableTranslation2d;
@@ -34,6 +35,23 @@ import java.util.function.Supplier;
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
+    private static final double SHOOTING_READY_DEBOUNCE_SECONDS = 0.2;
+    private static final BooleanEvent IS_READY_TO_SHOOT_AT_HUB = new BooleanEvent(
+            CommandScheduler.getInstance().getActiveButtonLoop(),
+            () -> isReadyForShooting(() -> false)
+    ).debounce(SHOOTING_READY_DEBOUNCE_SECONDS);
+    private static final BooleanEvent IS_READY_TO_SHOOT_FOR_DELIVERY = new BooleanEvent(
+            CommandScheduler.getInstance().getActiveButtonLoop(),
+            () -> isReadyForShooting(() -> true)
+    ).debounce(SHOOTING_READY_DEBOUNCE_SECONDS);
+    private static final BooleanEvent IS_READY_FOR_FIXED_SHOOTING_AT_HUB = new BooleanEvent(
+            CommandScheduler.getInstance().getActiveButtonLoop(),
+            ShootingCommands::isReadyForFixedShootingAtHub
+    ).debounce(SHOOTING_READY_DEBOUNCE_SECONDS);
+    private static final BooleanEvent IS_READY_FOR_FIXED_DELIVERY = new BooleanEvent(
+            CommandScheduler.getInstance().getActiveButtonLoop(),
+            ShootingCommands::isReadyForFixedDelivery
+    ).debounce(SHOOTING_READY_DEBOUNCE_SECONDS);
     public static LoggedNetworkBoolean SHOULD_OVERRIDE_GAME_DATA = new LoggedNetworkBoolean("/SmartDashboard/MatchTracker/IsGameDataOverridden", false);
     public static LoggedNetworkBoolean SHOULD_OVERRIDE_SWERVE_AIM = new LoggedNetworkBoolean("/SmartDashboard/IsSwerveAimOverridden", false);
 
@@ -270,21 +288,21 @@ public class ShootingCommands {
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(() -> false).until(() -> !isReadyForFixedShootingAtHub()),
-                ShootingCommands::isReadyForFixedShootingAtHub
+                IS_READY_FOR_FIXED_SHOOTING_AT_HUB
         ).repeatedly();
     }
 
     private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(() -> true).until(() -> !isReadyForFixedDelivery()),
-                ShootingCommands::isReadyForFixedDelivery
+                IS_READY_FOR_FIXED_DELIVERY
         ).repeatedly();
     }
 
     private static Command getLoadForShootingWhenReadyCommand(BooleanSupplier isDelivery) {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(isDelivery).until(() -> !isReadyForShooting(isDelivery)),
-                () -> isReadyForShooting(isDelivery)
+                () -> isDelivery.getAsBoolean() ? IS_READY_TO_SHOOT_FOR_DELIVERY.getAsBoolean() : IS_READY_TO_SHOOT_AT_HUB.getAsBoolean()
         ).repeatedly();
     }
 

@@ -74,7 +74,7 @@ public class Hood extends MotorSubsystem {
         motor.setControl(voltageRequest.withOutput(targetVoltage).withIgnoreSoftwareLimits(false));
     }
 
-    @AutoLogOutput(key = "ShootingCalculations/Conditions/HoodAtTargetAngle")
+    @AutoLogOutput(key = "Hood/AtTargetAngle")
     public boolean atTargetAngle() {
         return atAngle(targetAngle);
     }

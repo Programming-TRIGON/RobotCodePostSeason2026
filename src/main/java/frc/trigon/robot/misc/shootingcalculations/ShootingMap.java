@@ -35,9 +35,6 @@ public class ShootingMap {
         addPoint(DELIVERY_MAP, 5.00, 8.1, Rotation2d.fromDegrees(26), 1.09);
         addPoint(DELIVERY_MAP, 6.00, 9.50, Rotation2d.fromDegrees(29), 1.29);
         addPoint(DELIVERY_MAP, 7.00, 11.26, Rotation2d.fromDegrees(32), 1.51);
-        addPoint(DELIVERY_MAP, 8.00, 13.21, Rotation2d.fromDegrees(35), 1.74);
-        addPoint(DELIVERY_MAP, 9.00, 15.89, Rotation2d.fromDegrees(38), 2.01);
-        addPoint(DELIVERY_MAP, 10.00, 19.65, Rotation2d.fromDegrees(41), 2.33);
     }
 
     private static void addPoint(InterpolatingTreeMap<Double, ShotParameters> map, double distanceMeters, double velocityMetersPerSecond, Rotation2d pitch, double timeOfFlightSeconds) {

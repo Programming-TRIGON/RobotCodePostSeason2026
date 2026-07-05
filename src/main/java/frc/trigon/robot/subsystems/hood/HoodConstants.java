@@ -68,7 +68,7 @@ public class HoodConstants {
     static final Rotation2d REST_ANGLE = MINIMUM_ANGLE;
     public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(40);
     public static final Rotation2d EJECT_FROM_SHOOTER_PITCH = Rotation2d.fromDegrees(30);
-    static final double HOOD_RESET_VOLTAGE = -0.5;
+    static final double HOOD_RESET_VOLTAGE = -1;
     static final Rotation2d RESET_ANGLE = MINIMUM_ANGLE;
 
     static {

@@ -55,7 +55,11 @@ public class ShootingCalculations {
     public boolean isReadyToShoot() {
         final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
-        final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(targetShootingState.targetShootingVelocityMetersPerSecond());
+        final boolean isVelocityReady = RobotContainer.SHOOTER.atTargetVelocity();
+
+        Logger.recordOutput("ShootingCalculations/isShooterReady", isVelocityReady);
+        Logger.recordOutput("ShootingCalculations/isHoodReady", isPitchReady);
+        Logger.recordOutput("ShootingCalculations/isSwerveReady", isYawReady);
 
         return isYawReady && isPitchReady && isVelocityReady;
     }

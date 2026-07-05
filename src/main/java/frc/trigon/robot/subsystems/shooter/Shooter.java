@@ -73,7 +73,7 @@ public class Shooter extends MotorSubsystem {
         );
     }
 
-    @AutoLogOutput(key = "ShootingCalculations/Conditions/ShooterAtTargetVelocity")
+    @AutoLogOutput(key = "Shooter/AtTargetVelocity")
     public boolean atTargetVelocity() {
         return atVelocity(targetVelocityMetersPerSecond);
     }
@@ -96,9 +96,6 @@ public class Shooter extends MotorSubsystem {
 
     void aimForShooting() {
         double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
-        if (!RobotContainer.LOADER.atVelocity(3))
-            targetVelocityMetersPerSecond += 0.5;
-        Logger.recordOutput("Shooter/isLoaderGood", !RobotContainer.LOADER.atVelocity(3));
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
