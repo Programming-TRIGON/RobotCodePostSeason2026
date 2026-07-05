@@ -29,7 +29,7 @@ public class IntakeConstants {
             FOLLOWER_INTAKE_MOTOR_ID = 10,
             MASTER_ANGLE_MOTOR_ID = 11,
             FOLLOWER_ANGLE_MOTOR_ID = 12,
-            ANGLE_ENCODER_ID = 10;
+            ANGLE_ENCODER_ID = 11;
     private static final String
             MASTER_INTAKE_MOTOR_NAME = "IntakeMotor",
             FOLLOWER_INTAKE_MOTOR_NAME = "IntakeFollowerMotor",
@@ -199,7 +199,7 @@ public class IntakeConstants {
         config.Audio.BeepOnConfig = false;
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         config.Feedback.SensorToMechanismRatio = INTAKE_MOTOR_GEAR_RATIO;
 
