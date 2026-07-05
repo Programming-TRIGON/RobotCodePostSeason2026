@@ -52,7 +52,7 @@ public class IntakeConstants {
             INTAKE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed,
             ANGLE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
-            INTAKE_MOTORS_CURRENT_LIMIT = 60,
+            INTAKE_MOTORS_CURRENT_LIMIT = 50,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2.5,
@@ -68,8 +68,8 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS = 0.369,
             INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(-52),
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(78);
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(-65),
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(80);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
@@ -139,10 +139,10 @@ public class IntakeConstants {
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 90;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0.8;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.39;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 3.8;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.42;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 3.87;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.25;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.34;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
@@ -238,7 +238,7 @@ public class IntakeConstants {
         final CANcoderConfiguration config = new CANcoderConfiguration();
 
         config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        config.MagnetSensor.MagnetOffset = 0;
+        config.MagnetSensor.MagnetOffset = 0.44675;
         config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
 
         ANGLE_ENCODER.applyConfiguration(config);
