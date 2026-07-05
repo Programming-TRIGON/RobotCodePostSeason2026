@@ -121,7 +121,7 @@ public class ShootingCommands {
     private static Command getSafeSwerveWhileShootingCommand(Supplier<Rotation2d> rotation2dSupplier) {
         return GeneralCommands.getContinuousConditionalCommand(
                 SwerveCommands.getLockSwerveCommand(),
-                getAimSwerveCommand(rotation2dSupplier),
+                getAimSwerveWithOverrideCommand(rotation2dSupplier),
                 ShootingCommands::shouldLockSwerve
         );
     }
