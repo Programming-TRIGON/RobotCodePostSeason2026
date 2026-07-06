@@ -26,7 +26,6 @@ import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
-import frc.trigon.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
@@ -36,25 +35,9 @@ import java.util.function.Supplier;
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
-    private static final double SHOOTING_READY_DEBOUNCE_SECONDS = 0.2;
-    private static final BooleanEvent IS_READY_TO_SHOOT_AT_HUB = new BooleanEvent(
-            CommandScheduler.getInstance().getActiveButtonLoop(),
-            () -> isReadyForShooting(() -> false)
-    ).debounce(SHOOTING_READY_DEBOUNCE_SECONDS);
-    private static final BooleanEvent IS_READY_TO_SHOOT_FOR_DELIVERY = new BooleanEvent(
-            CommandScheduler.getInstance().getActiveButtonLoop(),
-            () -> isReadyForShooting(() -> true)
-    ).debounce(SHOOTING_READY_DEBOUNCE_SECONDS);
-    private static final BooleanEvent IS_READY_FOR_FIXED_SHOOTING_AT_HUB = new BooleanEvent(
-            CommandScheduler.getInstance().getActiveButtonLoop(),
-            ShootingCommands::isReadyForFixedShootingAtHub
-    ).debounce(SHOOTING_READY_DEBOUNCE_SECONDS);
-    private static final BooleanEvent IS_READY_FOR_FIXED_DELIVERY = new BooleanEvent(
-            CommandScheduler.getInstance().getActiveButtonLoop(),
-            ShootingCommands::isReadyForFixedDelivery
-    ).debounce(SHOOTING_READY_DEBOUNCE_SECONDS);
     public static LoggedNetworkBoolean SHOULD_OVERRIDE_GAME_DATA = new LoggedNetworkBoolean("/SmartDashboard/MatchTracker/IsGameDataOverridden", false);
     public static LoggedNetworkBoolean SHOULD_OVERRIDE_SWERVE_AIM = new LoggedNetworkBoolean("/SmartDashboard/IsSwerveAimOverridden", false);
+    private static final BooleanEvent SHOULD_STOP_SHOOTING = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForShooting(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery)).debounce(0.2);
 
     public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
@@ -289,21 +272,21 @@ public class ShootingCommands {
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(() -> false).until(() -> !isReadyForFixedShootingAtHub()),
-                IS_READY_FOR_FIXED_SHOOTING_AT_HUB
+                ShootingCommands::isReadyForFixedShootingAtHub
         ).repeatedly();
     }
 
     private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
                 getLoadForShootingCommand(() -> true).until(() -> !isReadyForFixedDelivery()),
-                IS_READY_FOR_FIXED_DELIVERY
+                ShootingCommands::isReadyForFixedDelivery
         ).repeatedly();
     }
 
     private static Command getLoadForShootingWhenReadyCommand(BooleanSupplier isDelivery) {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(isDelivery).until(() -> !isReadyForShooting(isDelivery)),
-                () -> isDelivery.getAsBoolean() ? IS_READY_TO_SHOOT_FOR_DELIVERY.getAsBoolean() : IS_READY_TO_SHOOT_AT_HUB.getAsBoolean()
+                getLoadForShootingCommand(isDelivery).until(SHOULD_STOP_SHOOTING),
+                () -> isReadyForShooting(isDelivery)
         ).repeatedly();
     }
 
