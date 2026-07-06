@@ -38,6 +38,8 @@ public class ShootingCommands {
     public static LoggedNetworkBoolean SHOULD_OVERRIDE_GAME_DATA = new LoggedNetworkBoolean("/SmartDashboard/MatchTracker/IsGameDataOverridden", false);
     public static LoggedNetworkBoolean SHOULD_OVERRIDE_SWERVE_AIM = new LoggedNetworkBoolean("/SmartDashboard/IsSwerveAimOverridden", false);
     private static final BooleanEvent SHOULD_STOP_SHOOTING = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForShooting(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery)).debounce(0.2);
+    private static final BooleanEvent SHOULD_STOP_FIXED_SHOOTING_AT_HUB = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForFixedShootingAtHub()).debounce(0.2);
+    private static final BooleanEvent SHOULD_STOP_FIXED_DELIVERY = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForFixedDelivery()).debounce(0.2);
 
     public static Command getShootingMapCalibrationCommand() {
         return new ParallelCommandGroup(
@@ -58,6 +60,7 @@ public class ShootingCommands {
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
+                        new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForShooting(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery))),
                         getSetTargetShootingLocationCommand(),
                         getSafeSwerveWhileShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimHoodForShootingCommand(),
@@ -76,6 +79,7 @@ public class ShootingCommands {
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(() -> false),
+                        new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForShooting(() -> false))),
                         new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(ShootingCalculations.TargetShootingLocation.HUB)),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimHoodForShootingCommand(),
@@ -87,7 +91,7 @@ public class ShootingCommands {
     public static Command getFixedShootingAtHubCommand() {
         return new ParallelCommandGroup(
                 getLoadForFixedShootingAtHubWhenReadyCommand(),
-                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedShootingAtHub", isReadyForFixedShootingAtHub())),
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedShootingAtHub())),
                 getAimHoodForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
                 ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
 //                GeneralCommands.getContinuousConditionalCommand(
@@ -117,7 +121,7 @@ public class ShootingCommands {
     public static Command getFixedDeliveryShootingCommand() {
         return new ParallelCommandGroup(
                 getLoadForFixedDeliveryWhenReadyCommand(),
-                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedDelivery", isReadyForFixedDelivery())),
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedDelivery())),
                 getAimHoodForFixedShootingCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
 //                getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
@@ -169,6 +173,7 @@ public class ShootingCommands {
                 HoodCommands.getSetTargetAngleCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
                 ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
+                new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedShootingAtHub())),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name()))
         );
     }
@@ -271,14 +276,14 @@ public class ShootingCommands {
 
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(() -> false).until(() -> !isReadyForFixedShootingAtHub()),
+                getLoadForShootingCommand(() -> false).until(SHOULD_STOP_FIXED_SHOOTING_AT_HUB),
                 ShootingCommands::isReadyForFixedShootingAtHub
         ).repeatedly();
     }
 
     private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(() -> true).until(() -> !isReadyForFixedDelivery()),
+                getLoadForShootingCommand(() -> true).until(SHOULD_STOP_FIXED_DELIVERY),
                 ShootingCommands::isReadyForFixedDelivery
         ).repeatedly();
     }
@@ -427,6 +432,11 @@ public class ShootingCommands {
         final boolean isYawReady = isSwerveAtAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
         final boolean isVelocityReady = RobotContainer.SHOOTER.atTargetVelocity();
+
+
+        Logger.recordOutput("ShootingCalculations/Conditions/isShooterReady", isVelocityReady);
+        Logger.recordOutput("ShootingCalculations/Conditions/isHoodReady", isPitchReady);
+        Logger.recordOutput("ShootingCalculations/Conditions/isSwerveReady", isYawReady);
 
         return isYawReady && isPitchReady && isVelocityReady;
     }

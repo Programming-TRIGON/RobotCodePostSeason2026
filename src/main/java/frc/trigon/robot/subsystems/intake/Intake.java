@@ -116,6 +116,7 @@ public class Intake extends MotorSubsystem {
         masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
     }
 
+    @AutoLogOutput(key = "Intake/isIntakeStuckOnHopper")
     boolean isIntakeStuckOnHopper() {
         return masterAngleMotor.getSignal(TalonFXSignal.STATOR_CURRENT) > IntakeConstants.INTAKE_ASSIST_CURRENT_THRESHOLD;
     }

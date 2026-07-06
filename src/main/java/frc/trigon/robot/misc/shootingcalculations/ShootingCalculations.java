@@ -48,22 +48,6 @@ public class ShootingCalculations {
         return targetShootingState;
     }
 
-    /**
-     * @return True if the chassis, hood pitch, and shooter wheels are all at their PID setpoints.
-     */
-    @AutoLogOutput(key = "ShootingCalculations/isReadyToShoot")
-    public boolean isReadyToShoot() {
-        final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
-        final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
-        final boolean isVelocityReady = RobotContainer.SHOOTER.atTargetVelocity();
-
-        Logger.recordOutput("ShootingCalculations/isShooterReady", isVelocityReady);
-        Logger.recordOutput("ShootingCalculations/isHoodReady", isPitchReady);
-        Logger.recordOutput("ShootingCalculations/isSwerveReady", isYawReady);
-
-        return isYawReady && isPitchReady && isVelocityReady;
-    }
-
     @AutoLogOutput(key = "ShootingCalculations/CurrentFuelExitPosition")
     public Translation3d calculateCurrentFuelExitPose(int columnIndex) {
         final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
