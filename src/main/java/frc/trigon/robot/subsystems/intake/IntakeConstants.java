@@ -31,7 +31,7 @@ public class IntakeConstants {
             FOLLOWER_ANGLE_MOTOR_ID = 12,
             ANGLE_ENCODER_ID = 11;
     private static final String
-            MASTER_INTAKE_MOTOR_NAME = "IntakeMotor",
+            MASTER_INTAKE_MOTOR_NAME = "IntakeMasterMotor",
             FOLLOWER_INTAKE_MOTOR_NAME = "IntakeFollowerMotor",
             MASTER_ANGLE_MOTOR_NAME = "IntakeMasterAngleMotor",
             FOLLOWER_ANGLE_MOTOR_NAME = "IntakeFollowerAngleMotor",
@@ -53,10 +53,10 @@ public class IntakeConstants {
             ANGLE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
             INTAKE_MOTORS_CURRENT_LIMIT = 40,
-            ANGLE_MOTORS_CURRENT_LIMIT = 30;
+            ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2.5,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 1.5;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 1;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -69,7 +69,7 @@ public class IntakeConstants {
             INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
             MINIMUM_ANGLE = Rotation2d.fromDegrees(-66),
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(80);
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(70);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
@@ -113,7 +113,7 @@ public class IntakeConstants {
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
-    static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 20; //TODO get real number
+    static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 18;
 
     static {
         configureMasterAngleMotor();
@@ -256,7 +256,7 @@ public class IntakeConstants {
         POWERED_OPEN(6, MINIMUM_ANGLE, 1),
         POWERED_CLOSE(5, MAXIMUM_ANGLE, 0.7),
         REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1),
-        ASSIST_OPEN(-5, MINIMUM_ANGLE, 1),
+        ASSIST_OPEN(-4, MINIMUM_ANGLE, 1),
         AUTONOMOUS_INTAKE(6, MINIMUM_ANGLE, 1.4);
 
         public final double targetVoltage;

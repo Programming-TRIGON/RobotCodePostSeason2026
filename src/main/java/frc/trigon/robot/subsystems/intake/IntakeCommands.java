@@ -1,18 +1,23 @@
 package frc.trigon.robot.subsystems.intake;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.commands.GearRatioCalculationCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
 public class IntakeCommands {
+    private static final BooleanEvent IS_STUCK_ON_HOPPER = new BooleanEvent(
+            CommandScheduler.getInstance().getActiveButtonLoop(),
+            () -> !RobotContainer.INTAKE.atTargetState()
+            && RobotContainer.INTAKE.isIntakeStuckOnHopper()).debounce(0.2);
+
     public static Command getDefaultCommand() {
         return GeneralCommands.getContinuousConditionalCommand(
                 getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
@@ -35,12 +40,10 @@ public class IntakeCommands {
     }
 
     public static Command getSafeSetTargetStateCommand(IntakeConstants.IntakeState targetState) {
-        return GeneralCommands.getContinuousConditionalCommand(
-                getSetTargetStateCommand(targetState).withTimeout(0.5).andThen(getSetTargetStateCommand(IntakeConstants.IntakeState.ASSIST_OPEN)),
-                getSetTargetStateCommand(targetState),
-                () -> targetState.targetAngle == IntakeConstants.MINIMUM_ANGLE
-                        && !RobotContainer.INTAKE.atAngle(IntakeConstants.MINIMUM_ANGLE)
-                        && RobotContainer.INTAKE.isIntakeStuckOnHopper());
+        return new SequentialCommandGroup(
+                getSetTargetStateCommand(targetState).until(() -> IS_STUCK_ON_HOPPER.getAsBoolean() && targetState.targetAngle.equals(IntakeConstants.MINIMUM_ANGLE)),
+                getSetTargetStateCommand(IntakeConstants.IntakeState.ASSIST_OPEN).until(RobotContainer.INTAKE::atTargetState)
+        ).repeatedly();
     }
 
     public static Command getSetTargetStateCommand(IntakeConstants.IntakeState targetState) {
