@@ -52,8 +52,8 @@ public class IntakeConstants {
             INTAKE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed,
             ANGLE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
-            INTAKE_MOTORS_CURRENT_LIMIT = 50,
-            ANGLE_MOTORS_CURRENT_LIMIT = 40;
+            INTAKE_MOTORS_CURRENT_LIMIT = 40,
+            ANGLE_MOTORS_CURRENT_LIMIT = 30;
     static final double
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2.5,
             DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 1.5;

@@ -137,7 +137,7 @@ public class ShootingCommands {
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/isReadyForFixedDelivery", isReadyForFixedDelivery())),
                 getAimHoodForFixedShootingCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
-                getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
+//                getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
                 getIntakeSequenceWhileShootingCommand()
         );
     }
@@ -376,9 +376,9 @@ public class ShootingCommands {
     private static boolean isReadyForFixedDelivery() {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH);
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND);
-        final boolean isAngleReady = isSwerveAtAngle(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW);
+//        final boolean isAngleReady = isSwerveAtAngle(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW);
 
-        return isPitchReady && isVelocityReady && isAngleReady;
+        return isPitchReady && isVelocityReady;// && isAngleReady;
     }
 
     private static boolean isReadyForFixedShootingAtHub() {

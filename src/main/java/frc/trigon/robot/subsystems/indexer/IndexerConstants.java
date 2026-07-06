@@ -54,7 +54,7 @@ public class IndexerConstants {
         config.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 40;
+        config.CurrentLimits.StatorCurrentLimit = 30;
 
         MOTOR.applyConfiguration(config);
         MOTOR.setPhysicsSimulation(SIMULATION);

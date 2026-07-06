@@ -83,7 +83,7 @@ public class LoaderConstants {
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Loader.metersToRotations(15);
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
-        config.CurrentLimits.StatorCurrentLimit = 50;
+        config.CurrentLimits.StatorCurrentLimit = 40;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         MASTER_MOTOR.applyConfiguration(config);
@@ -107,7 +107,7 @@ public class LoaderConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.CurrentLimits.StatorCurrentLimit = 50;
+        config.CurrentLimits.StatorCurrentLimit = 40;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         FOLLOWER_MOTOR.applyConfiguration(config);
@@ -121,8 +121,8 @@ public class LoaderConstants {
     }
 
     public enum LoaderState {
-        LOAD_FOR_DELIVERY(5),
-        LOAD_FOR_SHOOTING(5),
+        LOAD_FOR_DELIVERY(6),
+        LOAD_FOR_SHOOTING(6),
         PRELOAD(1),
         EJECT_FROM_INTAKE(-2),
         EJECT_FROM_SHOOTER(2),
