@@ -68,7 +68,7 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS = 0.369,
             INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(-65),
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(-66),
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(80);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
