@@ -91,6 +91,10 @@ public class Intake extends MotorSubsystem {
         return Math.abs(targetState.targetAngle.minus(getCurrentAngle()).getDegrees()) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }
 
+    boolean atAngle(Rotation2d angle){
+        return Math.abs(angle.minus(getCurrentAngle()).getDegrees()) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
+    }
+
     void setTargetState(IntakeConstants.IntakeState targetState) {
         this.targetState = targetState;
         setTargetState(targetState.targetVoltage, targetState.targetAngle, targetState.speedScalar);
@@ -110,6 +114,10 @@ public class Intake extends MotorSubsystem {
     void setTargetAngle(Rotation2d targetAngle) {
         this.targetAngle = targetAngle;
         masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
+    }
+
+    boolean shouldAssistIntakeOpen() {
+        return masterIntakeMotor.getSignal(TalonFXSignal.STATOR_CURRENT) > IntakeConstants.INTAKE_ASSIST_CURRENT_THRESHOLD;
     }
 
     private void scalePositionRequestSpeed(double speedScalar) {
