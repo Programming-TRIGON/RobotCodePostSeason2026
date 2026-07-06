@@ -113,7 +113,7 @@ public class IntakeConstants {
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
-    static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 100; //TODO get real number
+    static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 20; //TODO get real number
 
     static {
         configureMasterAngleMotor();

@@ -15,7 +15,7 @@ import java.util.Set;
 public class IntakeCommands {
     public static Command getDefaultCommand() {
         return GeneralCommands.getContinuousConditionalCommand(
-                getSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
+                getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
                 getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
                 FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
         );
@@ -35,15 +35,12 @@ public class IntakeCommands {
     }
 
     public static Command getSafeSetTargetStateCommand(IntakeConstants.IntakeState targetState) {
-        return new ConditionalCommand(getAssistIntakeOpenCommand(),
+        return GeneralCommands.getContinuousConditionalCommand(
+                getSetTargetStateCommand(targetState).withTimeout(0.5).andThen(getSetTargetStateCommand(IntakeConstants.IntakeState.ASSIST_OPEN)),
                 getSetTargetStateCommand(targetState),
                 () -> targetState.targetAngle == IntakeConstants.MINIMUM_ANGLE
                         && !RobotContainer.INTAKE.atAngle(IntakeConstants.MINIMUM_ANGLE)
-                        && RobotContainer.INTAKE.shouldAssistIntakeOpen());
-    }
-
-    public static Command getAssistIntakeOpenCommand() {
-        return getSetTargetStateCommand(IntakeConstants.IntakeState.ASSIST_OPEN);
+                        && RobotContainer.INTAKE.isIntakeStuckOnHopper());
     }
 
     public static Command getSetTargetStateCommand(IntakeConstants.IntakeState targetState) {

@@ -116,8 +116,8 @@ public class Intake extends MotorSubsystem {
         masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
     }
 
-    boolean shouldAssistIntakeOpen() {
-        return masterIntakeMotor.getSignal(TalonFXSignal.STATOR_CURRENT) > IntakeConstants.INTAKE_ASSIST_CURRENT_THRESHOLD;
+    boolean isIntakeStuckOnHopper() {
+        return masterAngleMotor.getSignal(TalonFXSignal.STATOR_CURRENT) > IntakeConstants.INTAKE_ASSIST_CURRENT_THRESHOLD;
     }
 
     private void scalePositionRequestSpeed(double speedScalar) {

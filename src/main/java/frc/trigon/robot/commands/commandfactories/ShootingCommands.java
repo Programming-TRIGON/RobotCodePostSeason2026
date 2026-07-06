@@ -256,7 +256,7 @@ public class ShootingCommands {
 
     public static RepeatCommand getIntakeSequenceWhileShootingCommand() {
         return new SequentialCommandGroup(
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
+                IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
                 FuelIntakeCommands.getCloseIntakeWhileShootingCommand().onlyWhile(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER)
         ).repeatedly();
     }
