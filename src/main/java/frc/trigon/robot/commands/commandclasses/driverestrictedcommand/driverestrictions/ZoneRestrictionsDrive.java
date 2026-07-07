@@ -2,6 +2,7 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driveres
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
@@ -63,10 +64,15 @@ public class ZoneRestrictionsDrive implements DriveRestriction {
                 .rotateBy(robotPose.getRotation())
                 .plus(robotPose.getTranslation());
 
-        return new BoundingBox(
+        final BoundingBox boundingBox = new BoundingBox(
                 new Pose2d(robotCenterFieldRelative, robotPose.getRotation()),
                 robotRelativeBoundingBox.getXWidth(),
                 robotRelativeBoundingBox.getYWidth()
         );
+
+        if (RobotHardwareStats.isSimulation())
+            boundingBox.log("ZoneRestrictions/RobotBoundingBox");
+
+        return boundingBox;
     }
 }
