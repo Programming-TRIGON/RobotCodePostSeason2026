@@ -39,6 +39,16 @@ public class IntakeCommands {
         );
     }
 
+    public static Command getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState targetState) {
+        return new SequentialCommandGroup(
+                getSetTargetStateCommand(targetState).until(() -> IS_STUCK_ON_HOPPER.getAsBoolean() && targetState.targetAngle.equals(IntakeConstants.MINIMUM_ANGLE)),
+                new SequentialCommandGroup(
+                        getSetTargetStateCommand(IntakeConstants.IntakeState.ASSIST_OPEN).withTimeout(1),
+                        getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE).withTimeout(0.2)
+                ).repeatedly().until(RobotContainer.INTAKE::atTargetState)
+        ).repeatedly();
+    }
+
     public static Command getSafeSetTargetStateCommand(IntakeConstants.IntakeState targetState) {
         return new SequentialCommandGroup(
                 getSetTargetStateCommand(targetState).until(() -> IS_STUCK_ON_HOPPER.getAsBoolean() && targetState.targetAngle.equals(IntakeConstants.MINIMUM_ANGLE)),

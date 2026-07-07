@@ -89,6 +89,6 @@ public class AutonomousConstants {
         NamedCommands.registerCommand("PrepareForShootingCommand", ShootingCommands.getPrepareForShootingCommand());
         NamedCommands.registerCommand("ShootCommand", ShootingCommands.getAutonomousShootingAtHubCommand().withTimeout(3));
         NamedCommands.registerCommand("InitializeDriveCommand", new InstantCommand(()-> RobotContainer.SWERVE.initializeDrive(true)));
-        NamedCommands.registerCommand("WaitForIntakeToOpenCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(RobotContainer.INTAKE::atTargetState));
+        NamedCommands.registerCommand("WaitForIntakeToOpenCommand", IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(RobotContainer.INTAKE::atTargetState));
     }
 }

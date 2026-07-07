@@ -30,7 +30,7 @@ public class AutonomousCommands {
     }
 
     public static Command getPushFuelWithIntakeCommand() {
-        return new WaitCommand(1.5).andThen(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE));
+        return new WaitCommand(1).andThen(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE));
     }
 
     /**

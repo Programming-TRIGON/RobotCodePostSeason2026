@@ -35,8 +35,8 @@ import java.util.function.Supplier;
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
     private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
-    public static LoggedNetworkBoolean SHOULD_OVERRIDE_GAME_DATA = new LoggedNetworkBoolean("/SmartDashboard/MatchTracker/IsGameDataOverridden", false);
-    public static LoggedNetworkBoolean SHOULD_OVERRIDE_SWERVE_AIM = new LoggedNetworkBoolean("/SmartDashboard/IsSwerveAimOverridden", false);
+    public static final LoggedNetworkBoolean SHOULD_OVERRIDE_GAME_DATA = new LoggedNetworkBoolean("/SmartDashboard/MatchTracker/IsGameDataOverridden", false);
+    public static final LoggedNetworkBoolean SHOULD_OVERRIDE_SWERVE_AIM = new LoggedNetworkBoolean("/SmartDashboard/IsSwerveAimOverridden", false);
     private static final BooleanEvent SHOULD_STOP_SHOOTING = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForShooting(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery)).debounce(0.2);
     private static final BooleanEvent SHOULD_STOP_FIXED_SHOOTING_AT_HUB = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForFixedShootingAtHub()).debounce(0.2);
     private static final BooleanEvent SHOULD_STOP_FIXED_DELIVERY = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForFixedDelivery()).debounce(0.2);
@@ -276,22 +276,22 @@ public class ShootingCommands {
 
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(() -> false).until(SHOULD_STOP_FIXED_SHOOTING_AT_HUB),
-                ShootingCommands::isReadyForFixedShootingAtHub
+                getLoadForShootingCommand(() -> false).until(SHOULD_STOP_FIXED_SHOOTING_AT_HUB.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
+                () -> ShootingCommands.isReadyForFixedShootingAtHub() || OperatorConstants.LOAD_NOW_TRIGGER.getAsBoolean()
         ).repeatedly();
     }
 
     private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(() -> true).until(SHOULD_STOP_FIXED_DELIVERY),
-                ShootingCommands::isReadyForFixedDelivery
+                getLoadForShootingCommand(() -> true).until(SHOULD_STOP_FIXED_DELIVERY.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
+                () -> ShootingCommands.isReadyForFixedDelivery() || OperatorConstants.LOAD_NOW_TRIGGER.getAsBoolean()
         ).repeatedly();
     }
 
     private static Command getLoadForShootingWhenReadyCommand(BooleanSupplier isDelivery) {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(isDelivery).until(SHOULD_STOP_SHOOTING),
-                () -> isReadyForShooting(isDelivery)
+                getLoadForShootingCommand(isDelivery).until(SHOULD_STOP_SHOOTING.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
+                () -> isReadyForShooting(isDelivery) || OperatorConstants.LOAD_NOW_TRIGGER.getAsBoolean()
         ).repeatedly();
     }
 
