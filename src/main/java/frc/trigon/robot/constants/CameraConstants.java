@@ -4,11 +4,9 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.poseestimation.apriltagcamera.AprilTagCamera;
 import frc.trigon.robot.poseestimation.apriltagcamera.AprilTagCameraConstants;
 import frc.trigon.robot.poseestimation.robotposeestimator.StandardDeviations;
-import org.littletonrobotics.junction.Logger;
 
 public class CameraConstants {
     private static final StandardDeviations APRIL_TAG_CAMERA_STANDARD_DEVIATIONS = new StandardDeviations(
@@ -41,13 +39,13 @@ public class CameraConstants {
     public static final AprilTagCamera
             RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
             AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-            "RightAprilTagCamera",
+            "LeftAprilTagCamera",
             ROBOT_TO_RIGHT_APRIL_TAG_CAMERA,
             APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
     ),
             LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
                     AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-                    "LeftAprilTagCamera",
+                    "RightAprilTagCamera",
                     ROBOT_TO_LEFT_APRIL_TAG_CAMERA,
                     APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
             );
