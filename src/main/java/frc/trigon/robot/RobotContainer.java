@@ -102,6 +102,8 @@ public class RobotContainer {
         OperatorConstants.SET_TARGET_FIXED_SCORING_LEFT_TRENCH_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_TRENCH));
         OperatorConstants.SET_TARGET_FIXED_SCORING_RIGHT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.RIGHT_OF_TOWER));
         OperatorConstants.SET_TARGET_FIXED_SCORING_LEFT_OF_TOWER_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.LEFT_OF_TOWER));
+        OperatorConstants.SET_TARGET_FIXED_SCORING_BACK_LEFT_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BACK_LEFT));
+        OperatorConstants.SET_TARGET_FIXED_SCORING_BACK_RIGHT_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BACK_RIGHT));
 
         OperatorConstants.FIXED_SHOOTING_AT_HUB_TRIGGER.whileTrue(ShootingCommands.getFixedShootingAtHubCommand());
         OperatorConstants.PREPARE_FOR_FIXED_SHOOTING_TRIGGER.whileTrue(ShootingCommands.getPrepareForFixedShootingCommand());
