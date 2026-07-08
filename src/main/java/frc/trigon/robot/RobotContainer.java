@@ -110,8 +110,8 @@ public class RobotContainer {
 
         OperatorConstants.EJECT_FROM_INTAKE_TRIGGER.whileTrue(EjectionCommands.getEjectFromIntakeCommand());
         OperatorConstants.EJECT_FROM_SHOOTER_TRIGGER.whileTrue(EjectionCommands.getEjectFromShooterCommand());
-        OperatorConstants.ENABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableOverrideSwerveAimCommand());
-        OperatorConstants.DISABLE_OVERRIDE_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableOverrideSwerveAimCommand());
+        OperatorConstants.ENABLE_OVERRIDE_FIXED_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableFixedOverrideSwerveAimCommand());
+        OperatorConstants.DISABLE_OVERRIDE_FIXED_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableFixedOverrideSwerveAimCommand());
         OperatorConstants.INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN)).and(CommandConstants::shouldUseIntakeAssist).whileTrue(CommandConstants.INTAKE_CENTER_OF_ROTATION_COMMAND);
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));

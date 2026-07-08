@@ -34,9 +34,10 @@ import java.util.function.Supplier;
 
 public class ShootingCommands {
     private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
-    private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.IN_FRONT_OF_TOWER;
+    private static FixedShootingPosition TARGET_FIXED_SHOOTING_AT_HUB_STATE = FixedShootingPosition.LEFT_TRENCH;
     public static final LoggedNetworkBoolean SHOULD_OVERRIDE_GAME_DATA = new LoggedNetworkBoolean("/SmartDashboard/MatchTracker/IsGameDataOverridden", false);
     public static final LoggedNetworkBoolean SHOULD_OVERRIDE_SWERVE_AIM = new LoggedNetworkBoolean("/SmartDashboard/IsSwerveAimOverridden", false);
+    public static final LoggedNetworkBoolean SHOULD_OVERRIDE_FIXED_SHOOTING_SWERVE_AIM = new LoggedNetworkBoolean("/SmartDashboard/IsFixedSwerveAimOverridden", true);
     private static final BooleanEvent SHOULD_STOP_SHOOTING = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForShooting(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery)).debounce(0.2);
     private static final BooleanEvent SHOULD_STOP_FIXED_SHOOTING_AT_HUB = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForFixedShootingAtHub()).debounce(0.2);
     private static final BooleanEvent SHOULD_STOP_FIXED_DELIVERY = new BooleanEvent(CommandScheduler.getInstance().getActiveButtonLoop(), () -> !isReadyForFixedDelivery()).debounce(0.2);
@@ -99,7 +100,7 @@ public class ShootingCommands {
 //                        getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
 //                        () -> OperatorConstants.DRIVER_CONTROLLER.getLeftY() == 0 && OperatorConstants.DRIVER_CONTROLLER.getLeftX() == 0 && !RobotContainer.SWERVE.isMoving() && RobotContainer.SWERVE.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw)
 //                ),
-                getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
+                getAimFixedSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name())),
                 getIntakeSequenceWhileShootingCommand()
         );
@@ -266,11 +267,11 @@ public class ShootingCommands {
         ).repeatedly();
     }
 
-    public static Command getEnableOverrideSwerveAimCommand() {
+    public static Command getEnableFixedOverrideSwerveAimCommand() {
         return new InstantCommand(ShootingCommands::enableOverrideSwerveAim).ignoringDisable(true);
     }
 
-    public static Command getDisableOverrideSwerveAimCommand() {
+    public static Command getDisableFixedOverrideSwerveAimCommand() {
         return new InstantCommand(ShootingCommands::disableOverrideSwerveAim).ignoringDisable(true);
     }
 
@@ -337,6 +338,14 @@ public class ShootingCommands {
         );
     }
 
+    private static Command getAimFixedSwerveWithOverrideCommand(Supplier<Rotation2d> rotationSupplier) {
+        return GeneralCommands.getContinuousConditionalCommand(
+                GeneralCommands.getFieldRelativeDriveCommand(),
+                getAimSwerveCommand(rotationSupplier),
+                () -> SHOULD_OVERRIDE_FIXED_SHOOTING_SWERVE_AIM.getAsBoolean()
+        );
+    }
+
     private static Command getAimSwerveCommand(Supplier<Rotation2d> rotationSupplier) {
         return SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                 () -> CommandConstants.calculateDriveStickAxisValue(OperatorConstants.DRIVER_CONTROLLER.getLeftY()),
@@ -372,9 +381,16 @@ public class ShootingCommands {
     private static boolean isReadyForFixedShootingAtHub() {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch);
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
-        final boolean isAngleReady = isSwerveAtAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw);
+        final boolean isAngleReady = isSwerveAtFixedAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw);
 
         return isPitchReady && isVelocityReady && isAngleReady;
+    }
+
+    private static boolean isSwerveAtFixedAngle(FlippableRotation2d targetFieldRelativeYaw) {
+        if (SHOULD_OVERRIDE_FIXED_SHOOTING_SWERVE_AIM != null && SHOULD_OVERRIDE_FIXED_SHOOTING_SWERVE_AIM.getAsBoolean())
+            return true;
+
+        return RobotContainer.SWERVE.atAngle(targetFieldRelativeYaw);
     }
 
     private static boolean isSwerveAtAngle(FlippableRotation2d targetFieldRelativeYaw) {
@@ -551,11 +567,11 @@ public class ShootingCommands {
     }
 
     public static void enableOverrideSwerveAim() {
-        SHOULD_OVERRIDE_SWERVE_AIM.set(true);
+        SHOULD_OVERRIDE_FIXED_SHOOTING_SWERVE_AIM.set(true);
     }
 
     public static void disableOverrideSwerveAim() {
-        SHOULD_OVERRIDE_SWERVE_AIM.set(false);
+        SHOULD_OVERRIDE_FIXED_SHOOTING_SWERVE_AIM.set(false);
     }
 
     public enum FixedShootingPosition { // TODO: Get all values from shooting calculations IRL
