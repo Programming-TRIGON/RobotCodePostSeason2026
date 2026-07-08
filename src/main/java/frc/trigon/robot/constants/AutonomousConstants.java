@@ -17,6 +17,7 @@ import frc.trigon.robot.commands.commandfactories.AutonomousCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
+import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -88,7 +89,15 @@ public class AutonomousConstants {
         NamedCommands.registerCommand("PushFuelCommand", AutonomousCommands.getPushFuelWithIntakeCommand());
         NamedCommands.registerCommand("PrepareForShootingCommand", ShootingCommands.getPrepareForShootingCommand());
         NamedCommands.registerCommand("ShootCommand", ShootingCommands.getAutonomousShootingAtHubCommand().withTimeout(3));
-        NamedCommands.registerCommand("InitializeDriveCommand", new InstantCommand(()-> RobotContainer.SWERVE.initializeDrive(true)));
-        NamedCommands.registerCommand("WaitForIntakeToOpenCommand", IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(RobotContainer.INTAKE::atTargetState));
+        NamedCommands.registerCommand("InitializeDriveCommand", new InstantCommand(() -> RobotContainer.SWERVE.initializeDrive(true)));
+        NamedCommands.registerCommand(
+                "WaitForIntakeToOpenCommand",
+                (IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN
+                ).alongWith(SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
+                                () -> 0,
+                                () -> 0,
+                                () -> 0
+                        )
+                )).until(RobotContainer.INTAKE::atTargetState));
     }
 }

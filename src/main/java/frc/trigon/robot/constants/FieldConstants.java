@@ -25,7 +25,7 @@ public class FieldConstants {
             new Translation2d(FIELD_LENGTH_METERS, FIELD_WIDTH_METERS)
     );
     private static final List<Integer> I_HATE_YOU = List.of(
-            1, 6, 7, 12, 13, 14, 15, 16, 17, 22, 23, 28, 29, 30, 31, 32
+//            1, 6, 7, 12, 13, 14, 15, 16, 17, 22, 23, 28, 29, 30, 31, 32
     );
 
     private static final boolean SHOULD_USE_HOME_TAG_LAYOUT = false;

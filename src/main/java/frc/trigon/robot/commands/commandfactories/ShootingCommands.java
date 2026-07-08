@@ -446,7 +446,7 @@ public class ShootingCommands {
     private static boolean isReadyToShootWithSwerveOverride() {
         final ShootingState targetShootingState = SHOOTING_CALCULATIONS.getTargetShootingState();
         final boolean isYawReady = isSwerveAtAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
-        final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
+        final boolean isPitchReady = RobotContainer.HOOD.atTargetAngle();
         final boolean isVelocityReady = RobotContainer.SHOOTER.atTargetVelocity();
 
 
