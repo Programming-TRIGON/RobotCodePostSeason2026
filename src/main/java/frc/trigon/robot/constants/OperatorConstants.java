@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
-import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
 
 public class OperatorConstants {
@@ -17,7 +16,6 @@ public class OperatorConstants {
             DRIVER_CONTROLLER_PORT, DRIVER_CONTROLLER_RIGHT_STICK_EXPONENT, DRIVER_CONTROLLER_LEFT_STICK_EXPONENT, DRIVER_CONTROLLER_DEADBAND
     );
     public static final KeyboardController OPERATOR_CONTROLLER = new KeyboardController();
-    private static final double ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS = 3;
 
     public static final double
             POV_DIVIDER = 2,
@@ -35,8 +33,7 @@ public class OperatorConstants {
             FORWARD_QUASISTATIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.right(),
             BACKWARD_QUASISTATIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.left(),
             FORWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.up(),
-            BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down(),
-            CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS);
+            BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down();
     public static final Trigger
             SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightStick().or(OPERATOR_CONTROLLER.d()),
             SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER = DRIVER_CONTROLLER.povUp().or(OPERATOR_CONTROLLER.i()),
