@@ -10,7 +10,9 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.hardware.phoenix6.cancoder.CANcoderEncoder;
@@ -113,7 +115,18 @@ public class IntakeConstants {
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
-    static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 18;
+    static final double
+            ANGLE_STUCK_RETRACT_TIME_SECONDS = 0.5,
+            ANGLE_STUCK_PUSH_TIME_SECONDS = 1;
+    private static final double
+            ANGLE_MOTOR_STUCK_MAXIMUM_VELOCITY_ROTATIONS_PER_SECOND = 0.5,
+            ANGLE_MOTOR_STUCK_CURRENT_THRESHOLD = 18,
+            ANGLE_MOTOR_STUCK_CHECK_DEBOUNCE_TIME_SECONDS = 0.2;
+    static final BooleanEvent IS_ANGLE_MOTOR_STUCK = new BooleanEvent(
+            CommandScheduler.getInstance().getActiveButtonLoop(),//TODO: Ensure positive velocity/current is closing motion
+            () -> MASTER_ANGLE_MOTOR.getSignal(TalonFXSignal.VELOCITY) < ANGLE_MOTOR_STUCK_MAXIMUM_VELOCITY_ROTATIONS_PER_SECOND
+                    && MASTER_ANGLE_MOTOR.getSignal(TalonFXSignal.STATOR_CURRENT) > ANGLE_MOTOR_STUCK_CURRENT_THRESHOLD
+    ).debounce(ANGLE_MOTOR_STUCK_CHECK_DEBOUNCE_TIME_SECONDS);
 
     static {
         configureMasterAngleMotor();

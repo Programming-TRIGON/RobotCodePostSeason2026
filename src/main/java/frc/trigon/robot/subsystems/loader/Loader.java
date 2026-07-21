@@ -31,7 +31,7 @@ public class Loader extends MotorSubsystem {
     public void updateLog(SysIdRoutineLog log) {
         log.motor("LoaderMasterMotor")
                 .angularPosition(Units.Rotations.of(masterMotor.getSignal(TalonFXSignal.POSITION)))
-                .angularVelocity(Units.RotationsPerSecond.of(masterMotor.getSignal(TalonFXSignal.VELOCITY)))
+                .angularVelocity(Units.RotationsPerSecond.of(getCurrentVelocityRotationsPerSecond()))
                 .voltage(Units.Volts.of(masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
     }
 
@@ -78,6 +78,10 @@ public class Loader extends MotorSubsystem {
         return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < LoaderConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
     }
 
+    public double getCurrentVelocityRotationsPerSecond() {
+        return masterMotor.getSignal(TalonFXSignal.VELOCITY);
+    }
+
     void setTargetState(LoaderConstants.LoaderState targetState) {
         setTargetVelocity(targetState.targetVelocity);
     }
@@ -88,7 +92,7 @@ public class Loader extends MotorSubsystem {
     }
 
     private double getCurrentVelocityMetersPerSecond() {
-        return rotationsToMeters(masterMotor.getSignal(TalonFXSignal.VELOCITY));
+        return rotationsToMeters(getCurrentVelocityRotationsPerSecond());
     }
 
     static double rotationsToMeters(double rotations) {

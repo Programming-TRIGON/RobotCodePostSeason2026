@@ -262,8 +262,8 @@ public class ShootingCommands {
 
     public static RepeatCommand getIntakeSequenceWhileShootingCommand() {
         return new SequentialCommandGroup(
-                IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
-                FuelIntakeCommands.getCloseIntakeWhileShootingCommand().onlyWhile(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER)
+                IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(() -> !RobotContainer.SWERVE.isMoving() && !OperatorConstants.INTAKE_TRIGGER.getAsBoolean()),
+                IntakeCommands.getFoldForShootingCommand().onlyWhile(() -> !RobotContainer.SWERVE.isMoving() && !OperatorConstants.INTAKE_TRIGGER.getAsBoolean())
         ).repeatedly();
     }
 
@@ -306,14 +306,14 @@ public class ShootingCommands {
 
     private static ParallelCommandGroup getLoadForDeliveryCommand() {
         return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_DELIVERY),
+                IndexerCommands.getLoadForShootingCommand(true),
                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_DELIVERY)
         );
     }
 
     private static ParallelCommandGroup getLoadForShootingAtHubCommand() {
         return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
+                IndexerCommands.getLoadForShootingCommand(false),
                 LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING)
         );
     }

@@ -44,6 +44,8 @@ public class IndexerConstants {
     public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 1;
     public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -1;
 
+    static final double LOADER_MAXIMUM_VELOCITY_ROTATIONS_PER_SECOND_FOR_UNJAM = 1;
+
     static {
         final TalonFXSConfiguration config = new TalonFXSConfiguration();
 
@@ -64,12 +66,13 @@ public class IndexerConstants {
     }
 
     public enum IndexerState {
-        LOAD_FOR_SHOOTING(2),
-        LOAD_FOR_DELIVERY(2),
+        LOAD_FOR_SHOOTING(3),
+        LOAD_FOR_DELIVERY(3),
         PRELOAD(1),
         AGITATE(1),
-        EJECT_FROM_INTAKE(-2),
-        EJECT_FROM_SHOOTER(2),
+        EJECT_FROM_INTAKE(-3),
+        EJECT_FROM_SHOOTER(3),
+        UNJAM(-1),
         REST(0);
 
         public final double targetVoltage;
