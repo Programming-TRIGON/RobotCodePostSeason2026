@@ -97,7 +97,7 @@ public class Swerve extends MotorSubsystem {
         return Rotation2d.fromDegrees(SwerveConstants.GYRO.getSignal(Pigeon2Signal.YAW));
     }
 
-    public Translation2d getFieldRelativeVelocity() {
+    public Translation2d getFieldRelativeVelocityMetersPerSecond() {
         final ChassisSpeeds chassisSpeeds = getFieldRelativeChassisSpeeds();
         return new Translation2d(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
     }
@@ -107,7 +107,7 @@ public class Swerve extends MotorSubsystem {
         return ChassisSpeeds.fromRobotRelativeSpeeds(selfRelativeSpeeds, RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getRotation());
     }
 
-    public Translation2d getSelfRelativeVelocity() {
+    public Translation2d getSelfRelativeVelocityMetersPerSecond() {
         final ChassisSpeeds chassisSpeeds = getSelfRelativeChassisSpeeds();
         return new Translation2d(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
     }
@@ -193,7 +193,6 @@ public class Swerve extends MotorSubsystem {
      *
      * @param targetSpeeds     the desired robot-relative targetSpeeds
      * @param centerOfRotation the desired robot-relative centerOfRotation
-     *
      */
     public void selfRelativeDrive(ChassisSpeeds targetSpeeds, Translation2d centerOfRotation) {
         final SwerveModuleState[] swerveModuleStates = SwerveConstants.KINEMATICS.toSwerveModuleStates(targetSpeeds, centerOfRotation);

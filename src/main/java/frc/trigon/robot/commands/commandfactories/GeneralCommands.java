@@ -1,5 +1,6 @@
 package frc.trigon.robot.commands.commandfactories;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
@@ -91,6 +92,7 @@ public class GeneralCommands {
      * @return the command
      */
     public static Command runWhen(Command command, BooleanSupplier condition, double debounceTimeSeconds) {
-        return runWhen(new WaitCommand(debounceTimeSeconds).andThen(command.onlyIf(condition)), condition);
+        final Debouncer debouncer = new Debouncer(debounceTimeSeconds);
+        return runWhen(command, () -> debouncer.calculate(condition.getAsBoolean()));
     }
 }

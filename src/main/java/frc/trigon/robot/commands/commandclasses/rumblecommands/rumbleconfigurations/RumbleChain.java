@@ -20,7 +20,7 @@ public class RumbleChain implements RumbleConfiguration {
                 getLinkRumbleCommand() :
                 new SequentialCommandGroup(
                         getLinkRumbleCommand(),
-                        new WaitCommand(delaySeconds),
+                        new WaitCommand(singleRumble.getDurationSeconds() + delaySeconds),
                         nextRumbleLink.getRumbleCommand()
                 );
     }
