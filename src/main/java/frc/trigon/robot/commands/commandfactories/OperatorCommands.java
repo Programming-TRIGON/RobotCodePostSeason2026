@@ -50,7 +50,7 @@ public class OperatorCommands {
     }
 
     private static boolean isMoving() {
-        return RobotContainer.SWERVE.getSelfRelativeVelocityMetersPerSecond().getNorm() < OperatorConstants.MINIMUM_SWERVE_VELOCITY_METERS_PER_SECOND_TO_STOP_RUMBLING;
+        return RobotContainer.SWERVE.getSelfRelativeVelocityMetersPerSecond().getNorm() > OperatorConstants.MINIMUM_SWERVE_VELOCITY_METERS_PER_SECOND_TO_STOP_RUMBLING;
     }
 
     private static RumbleConfiguration determineShiftEndingRumbleConfiguration() {

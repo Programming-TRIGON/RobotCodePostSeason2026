@@ -32,8 +32,10 @@ public class MatchTracker {
             SHIFT_TYPE = "Auton";
             return true;
         }
-        if (matchTimeSeconds <= 30)
+        if (matchTimeSeconds <= 30) {
+            SHIFT_TYPE = "Endgame";
             return true;
+        }
 
         final String gameData = DriverStation.getGameSpecificMessage();
 
@@ -76,7 +78,7 @@ public class MatchTracker {
             SHIFT_TYPE = "Shift 4";
             return !isOurHubActiveInShift1;
         }
-        SHIFT_TYPE = "Endgame";
+        SHIFT_TYPE = "Error";
         return true;
     }
 
@@ -90,15 +92,15 @@ public class MatchTracker {
     }
 
     private static int getShiftNumber(double matchTimeSeconds) {
-        if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_START_TIME_SECONDS)
-            return 0;
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TIME_SECONDS)
-            return 1;
+            return 0;
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TIME_SECONDS)
-            return 2;
+            return 1;
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TIME_SECONDS)
-            return 3;
+            return 2;
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TIME_SECONDS)
+            return 3;
+        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TIME_SECONDS)
             return 4;
         return 5;
     }
