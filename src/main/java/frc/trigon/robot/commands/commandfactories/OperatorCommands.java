@@ -1,7 +1,5 @@
 package frc.trigon.robot.commands.commandfactories;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.rumblecommands.RumbleCommands;
@@ -15,7 +13,7 @@ import frc.trigon.robot.misc.matchTracker.MatchTracker;
 public class OperatorCommands {
     public static Command getRumbleWhenCamerasDisconnectedCommand() {
         return RumbleCommands.getRumbleWhenConditionIsMetCommand(
-                RumbleCommands.PremadeRumbles.DOUBLE_TAP,
+                RumbleCommands.PremadeRumbles.TRIPLE_TAP,
                 () -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras(),
                 OperatorConstants.RUMBLE_WHEN_CAMERAS_DISCONNECTED_DEBOUNCE_TIME_SECONDS
         );
@@ -23,7 +21,7 @@ public class OperatorCommands {
 
     public static Command getRumbleWhenStillCommand() {
         return GeneralCommands.runWhen(
-                RumbleCommands.getRumbleOncePerSecondCommand(() -> RumbleCommands.PremadeRumbles.TINY)
+                RumbleCommands.getRumbleOncePerSecondCommand(() -> RumbleCommands.PremadeRumbles.SMALL)
                         .until(OperatorCommands::isMoving),
                 OperatorCommands::isStill,
                 1
@@ -55,8 +53,8 @@ public class OperatorCommands {
 
     private static RumbleConfiguration determineShiftEndingRumbleConfiguration() {
         if (shouldHeavyRumbleBeforeActiveShiftEnds())
-            return RumbleCommands.PremadeRumbles.SMALL;
-        return RumbleCommands.PremadeRumbles.BIG;
+            return RumbleCommands.PremadeRumbles.BIG;
+        return RumbleCommands.PremadeRumbles.SMALL;
     }
 
     private static boolean shouldRumbleBeforeActiveShiftEnds() {
@@ -68,24 +66,39 @@ public class OperatorCommands {
     }
 
     private static boolean shouldRumbleBeforeActiveShiftStarts() {
-        final double timeBeforeHubActivatesSeconds = MatchTracker.getTimeUntilHubActivatesSeconds();
-        if (timeBeforeHubActivatesSeconds == -1)
+        final double timeUntilHubActivatesSeconds = MatchTracker.getTimeUntilHubActivatesSeconds();
+        if (timeUntilHubActivatesSeconds == -1)
             return false;
 
-        final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
-        final double timeBeforeActiveShiftToRumble = calculateTimeBeforeActiveShiftToRumble(robotPose.getTranslation());
-        return timeBeforeHubActivatesSeconds <= timeBeforeActiveShiftToRumble;
+        final double timeBeforeActiveShiftToRumble = OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS;
+        return timeUntilHubActivatesSeconds <= timeBeforeActiveShiftToRumble;
     }
 
     private static RumbleConfiguration determineShiftStartingRumbleConfiguration() {
-        return RumbleCommands.PremadeRumbles.SMALL;
+        final double timeUntilHubActivatesSeconds = MatchTracker.getTimeUntilHubActivatesSeconds();
+
+        if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_FOUR_RUMBLING_SECONDS)
+            return RumbleCommands.PremadeRumbles.BIG;
+        if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_THREE_RUMBLING_SECONDS)
+            return RumbleCommands.PremadeRumbles.DOUBLE_TAP;
+        if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_TWO_RUMBLING_SECONDS)
+            return RumbleCommands.PremadeRumbles.QUICK_RIGHT_THEN_LEFT;
+        if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS)
+            return RumbleCommands.PremadeRumbles.TINY;
+        return RumbleCommands.PremadeRumbles.NONE;
     }
 
     private static double determineShiftStartingRumbleDelay() {
-        return 0;
-    }
+        final double timeUntilHubActivatesSeconds = MatchTracker.getTimeUntilHubActivatesSeconds();
 
-    private static double calculateTimeBeforeActiveShiftToRumble(Translation2d robotPosition) {
+        if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_FOUR_RUMBLING_SECONDS)
+            return 1;
+        if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_THREE_RUMBLING_SECONDS)
+            return 1;
+        if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_TWO_RUMBLING_SECONDS)
+            return 1.5;
+        if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS)
+            return 2;
         return 0;
     }
 }

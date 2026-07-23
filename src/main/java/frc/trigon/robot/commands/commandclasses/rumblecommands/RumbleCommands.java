@@ -14,11 +14,6 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RumbleCommands {
-    /*
-        TODO: Return to zone - Calculate power based on distance, once per second
-        TODO: Shooting shift ending - x seconds before shift, once per second increasing power
-     */
-
     public static Command getRumbleWhenConditionIsMetCommand(RumbleConfiguration rumbleConfiguration, BooleanSupplier condition) {
         return GeneralCommands.runWhen(
                 rumbleConfiguration.getRumbleCommand(),
@@ -57,6 +52,11 @@ public class RumbleCommands {
                 new RumbleChain.RumbleChainLink(new SingleRumble(0.3, 1), 0.3),
                 new RumbleChain.RumbleChainLink(new SingleRumble(0.3, 1), 0)
         )),
+        TRIPLE_TAP(RumbleChain.constructRumbleChainFromLinks(
+                new RumbleChain.RumbleChainLink(new SingleRumble(0.2, 1), 0.2),
+                new RumbleChain.RumbleChainLink(new SingleRumble(0.2, 1), 0.2),
+                new RumbleChain.RumbleChainLink(new SingleRumble(0.2, 1), 0)
+        )),
         QUICK_LEFT_THEN_RIGHT(RumbleChain.constructRumbleChainFromLinks(
                 new RumbleChain.RumbleChainLink(new SingleRumble(0.2, 1, GenericHID.RumbleType.kLeftRumble), 0),
                 new RumbleChain.RumbleChainLink(new SingleRumble(0.2, 1, GenericHID.RumbleType.kRightRumble), 0)
@@ -64,7 +64,8 @@ public class RumbleCommands {
         QUICK_RIGHT_THEN_LEFT(RumbleChain.constructRumbleChainFromLinks(
                 new RumbleChain.RumbleChainLink(new SingleRumble(0.2, 1, GenericHID.RumbleType.kRightRumble), 0),
                 new RumbleChain.RumbleChainLink(new SingleRumble(0.2, 1, GenericHID.RumbleType.kLeftRumble), 0)
-        ));
+        )),
+        NONE(new SingleRumble(0, 0));
 
         final RumbleConfiguration rumbleConfiguration;
 
