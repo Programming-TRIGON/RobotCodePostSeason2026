@@ -1,6 +1,7 @@
 package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.rumblecommands.RumbleCommands;
 import frc.trigon.robot.commands.commandclasses.rumblecommands.rumbleconfigurations.RumbleConfiguration;
@@ -11,7 +12,16 @@ import frc.trigon.robot.misc.matchTracker.MatchTracker;
  * A class that contains command factories for assisting the operator/driver's control of the robot, such as indication or debugging commands.
  */
 public class OperatorCommands {
-    public static Command getRumbleWhenCamerasDisconnectedCommand() {
+    public static Command getRumbleCommands() {
+        return new ParallelCommandGroup(
+                getRumbleWhenCamerasDisconnectedCommand(),
+                getRumbleWhenStillCommand(),
+                getRumbleToIndicateActiveShiftEndingCommand(),
+                getRumbleToIndicateActiveShiftStartingCommand()
+        );
+    }
+
+    private static Command getRumbleWhenCamerasDisconnectedCommand() {
         return RumbleCommands.getRumbleWhenConditionIsMetCommand(
                 RumbleCommands.PremadeRumbles.TRIPLE_TAP,
                 () -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras(),
@@ -19,7 +29,7 @@ public class OperatorCommands {
         );
     }
 
-    public static Command getRumbleWhenStillCommand() {
+    private static Command getRumbleWhenStillCommand() {
         return GeneralCommands.runWhen(
                 RumbleCommands.getRumbleOncePerSecondCommand(() -> RumbleCommands.PremadeRumbles.SMALL)
                         .until(OperatorCommands::isMoving),
@@ -28,13 +38,13 @@ public class OperatorCommands {
         ).repeatedly();
     }
 
-    public static Command getRumbleToIndicateActiveShiftEndingCommand() {
+    private static Command getRumbleToIndicateActiveShiftEndingCommand() {
         return RumbleCommands.getRumbleOncePerSecondCommand(OperatorCommands::determineShiftEndingRumbleConfiguration)
                 .onlyWhile(OperatorCommands::shouldRumbleBeforeActiveShiftEnds)
                 .repeatedly();
     }
 
-    public static Command getRumbleToIndicateActiveShiftStartingCommand() {
+    private static Command getRumbleToIndicateActiveShiftStartingCommand() {
         return RumbleCommands.getRumbleOncePerPeriodCommand(
                         OperatorCommands::determineShiftStartingRumbleConfiguration,
                         OperatorCommands::determineShiftStartingRumbleDelay

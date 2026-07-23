@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.misc.matchTracker.MatchTracker;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
@@ -16,6 +17,8 @@ public class OperatorConstants {
             DRIVER_CONTROLLER_PORT, DRIVER_CONTROLLER_RIGHT_STICK_EXPONENT, DRIVER_CONTROLLER_LEFT_STICK_EXPONENT, DRIVER_CONTROLLER_DEADBAND
     );
     public static final KeyboardController OPERATOR_CONTROLLER = new KeyboardController();
+
+    public static final LoggedNetworkBoolean SHOULD_RUMBLE = new LoggedNetworkBoolean("ShouldRumble", true);
     public static final double
             RUMBLE_WHEN_CAMERAS_DISCONNECTED_DEBOUNCE_TIME_SECONDS = 3,
             TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_START_RUMBLING_SECONDS = 10,
@@ -42,7 +45,8 @@ public class OperatorConstants {
             FORWARD_QUASISTATIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.right(),
             BACKWARD_QUASISTATIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.left(),
             FORWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.up(),
-            BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down();
+            BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down(),
+            RUMBLE_TRIGGER = new Trigger(SHOULD_RUMBLE);
     public static final Trigger
             SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightStick().or(OPERATOR_CONTROLLER.d()),
             SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER = DRIVER_CONTROLLER.povUp().or(OPERATOR_CONTROLLER.i()),

@@ -84,12 +84,13 @@ public class RobotContainer {
 
     private void bindControllerCommands() {
         OperatorConstants.RESET_HEADING_TRIGGER.onTrue(CommandConstants.RESET_HEADING_COMMAND);
+        OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
         OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
         OperatorConstants.SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(ShootingCommands.getShootingMapCalibrationCommand());
         OperatorConstants.TELEPORTATION_FOR_SIMULATION_SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(GeneralCommands.getTeleportRobotForSimulationShootingMapCalibrationCommand(ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION));
         OperatorConstants.RESET_POSE_TO_FIXED_SHOOTING_LOCATION_TRIGGER.onTrue(ShootingCommands.getResetPoseToFixedShootingLocationCommand());
-        OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
+        OperatorConstants.RUMBLE_TRIGGER.whileTrue(OperatorCommands.getRumbleCommands());
 
         OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
         OperatorConstants.SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BETWEEN_TOWER_AND_HUB));
