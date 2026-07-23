@@ -39,10 +39,14 @@ public class RumbleCommands {
     }
 
     public static Command getRumbleOncePerPeriodCommand(Supplier<RumbleConfiguration> rumbleConfiguration, DoubleSupplier periodSeconds) {
-        return new SequentialCommandGroup(
+        return getRumbleAndWaitCommandSupplier(rumbleConfiguration, periodSeconds).get().repeatedly();
+    }
+
+    private static Supplier<Command> getRumbleAndWaitCommandSupplier(Supplier<RumbleConfiguration> rumbleConfiguration, DoubleSupplier periodSeconds) {
+        return () -> new SequentialCommandGroup(
                 rumbleConfiguration.get().getRumbleCommand(),
                 new WaitCommand(periodSeconds.getAsDouble())
-        ).repeatedly();
+        );
     }
 
     public enum PremadeRumbles implements RumbleConfiguration {//TODO: Tune on computer with DS

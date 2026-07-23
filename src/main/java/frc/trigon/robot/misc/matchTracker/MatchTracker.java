@@ -8,7 +8,7 @@ import org.littletonrobotics.junction.Logger;
 public class MatchTracker {
     private static boolean IS_HUB_STATE_ACTIVE = true;
     private static boolean IS_HUB_ACTIVE_DURING_EVEN_SHIFTS = true;
-    private static String SHIFT_TYPE = "Auton";
+    private static String ACTIVE_SHIFT_NAME = "Auton";
 
     public static boolean hasHubActiveStateChanged() {
         final boolean currentHubActiveState = isHubActive();
@@ -29,11 +29,11 @@ public class MatchTracker {
 
     public static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
         if (DriverStation.isAutonomousEnabled()) {
-            SHIFT_TYPE = "Auton";
+            ACTIVE_SHIFT_NAME = "Auton";
             return true;
         }
         if (matchTimeSeconds <= 30) {
-            SHIFT_TYPE = "Endgame";
+            ACTIVE_SHIFT_NAME = "Endgame";
             return true;
         }
 
@@ -59,26 +59,26 @@ public class MatchTracker {
 
     public static boolean shouldHubBeActiveDuringTeleopShift(double matchTimeSeconds, boolean isOurHubActiveInShift1) {
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TIME_SECONDS) {
-            SHIFT_TYPE = "Transition";
+            ACTIVE_SHIFT_NAME = "Transition";
             return true;
         }
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TIME_SECONDS) {
-            SHIFT_TYPE = "Shift 1";
+            ACTIVE_SHIFT_NAME = "Shift 1";
             return isOurHubActiveInShift1;
         }
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TIME_SECONDS) {
-            SHIFT_TYPE = "Shift 2";
+            ACTIVE_SHIFT_NAME = "Shift 2";
             return !isOurHubActiveInShift1;
         }
         if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TIME_SECONDS) {
-            SHIFT_TYPE = "Shift 3";
+            ACTIVE_SHIFT_NAME = "Shift 3";
             return isOurHubActiveInShift1;
         }
         if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TIME_SECONDS) {
-            SHIFT_TYPE = "Shift 4";
+            ACTIVE_SHIFT_NAME = "Shift 4";
             return !isOurHubActiveInShift1;
         }
-        SHIFT_TYPE = "Error";
+        ACTIVE_SHIFT_NAME = "Error";
         return true;
     }
 
@@ -156,6 +156,6 @@ public class MatchTracker {
         Logger.recordOutput("MatchTracker/MatchTimeSeconds", matchTimeSeconds);
         Logger.recordOutput("MatchTracker/IsHubActive", isHubActive());
         Logger.recordOutput("MatchTracker/TimeUntilAllianceShiftSeconds", getTimeUntilShiftEndSeconds(matchTimeSeconds));
-        Logger.recordOutput("MatchTracker/CurrentShiftType", SHIFT_TYPE);
+        Logger.recordOutput("MatchTracker/CurrentShiftName", ACTIVE_SHIFT_NAME);
     }
 }
