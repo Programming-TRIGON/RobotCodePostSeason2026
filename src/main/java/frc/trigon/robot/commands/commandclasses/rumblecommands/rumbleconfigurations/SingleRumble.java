@@ -12,12 +12,7 @@ public class SingleRumble implements RumbleConfiguration {
     public SingleRumble(double durationSeconds, double power, GenericHID.RumbleType rumbleMotors) {
         this.durationSeconds = durationSeconds;
         this.power = power;
-
-        if (rumbleMotors.equals(GenericHID.RumbleType.kLeftRumble))//Left and right motors are flipped on our controller
-            rumbleMotors = GenericHID.RumbleType.kRightRumble;
-        else if (rumbleMotors.equals(GenericHID.RumbleType.kRightRumble))
-            rumbleMotors = GenericHID.RumbleType.kLeftRumble;
-        this.rumbleMotors = rumbleMotors;
+        setRumbleMotors(rumbleMotors);
     }
 
     public SingleRumble(double durationSeconds, double power) {
@@ -53,6 +48,11 @@ public class SingleRumble implements RumbleConfiguration {
     }
 
     public void setRumbleMotors(GenericHID.RumbleType rumbleMotors) {
+        if (rumbleMotors.equals(GenericHID.RumbleType.kLeftRumble))//Left and right motors are flipped on our controller
+            rumbleMotors = GenericHID.RumbleType.kRightRumble;
+        else if (rumbleMotors.equals(GenericHID.RumbleType.kRightRumble))
+            rumbleMotors = GenericHID.RumbleType.kLeftRumble;
+
         this.rumbleMotors = rumbleMotors;
     }
 }
