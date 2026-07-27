@@ -20,7 +20,7 @@ public class OperatorConstants {
 
     public static final LoggedNetworkBoolean SHOULD_RUMBLE = new LoggedNetworkBoolean("ShouldRumble", false);
     public static final double
-            RUMBLE_WHEN_CAMERAS_DISCONNECTED_DEBOUNCE_TIME_SECONDS = 3,
+            RUMBLE_WHEN_CAMERAS_DISCONNECTED_DEBOUNCE_TIME_SECONDS = 2,
             TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_START_RUMBLING_SECONDS = 8,
             TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_HEAVY_RUMBLE_SECONDS = 3,
             TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS = 12,

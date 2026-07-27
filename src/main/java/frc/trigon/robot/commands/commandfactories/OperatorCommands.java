@@ -25,7 +25,7 @@ public class OperatorCommands {
     private static Command getRumbleWhenCamerasDisconnectedCommand() {
         return RumbleCommands.getRumbleWhenConditionIsMetCommand(
                 RumbleCommands.PremadeRumbles.TRIPLE_TAP,
-                () -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras(),
+                () -> !RobotContainer.ROBOT_POSE_ESTIMATOR.areCamerasConnected(),
                 OperatorConstants.RUMBLE_WHEN_CAMERAS_DISCONNECTED_DEBOUNCE_TIME_SECONDS
         );
     }
