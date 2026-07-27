@@ -2,6 +2,8 @@ package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.rumblecommands.RumbleCommands;
 import frc.trigon.robot.commands.commandclasses.rumblecommands.rumbleconfigurations.RumbleConfiguration;
@@ -15,7 +17,6 @@ public class OperatorCommands {
     public static Command getRumbleCommands() {
         return new ParallelCommandGroup(
                 getRumbleWhenCamerasDisconnectedCommand(),
-                getRumbleWhenStillCommand(),
                 getRumbleToIndicateActiveShiftEndingCommand(),
                 getRumbleToIndicateActiveShiftStartingCommand()
         );
@@ -29,36 +30,21 @@ public class OperatorCommands {
         );
     }
 
-    private static Command getRumbleWhenStillCommand() {
-        return GeneralCommands.runWhen(
-                RumbleCommands.getRumbleOncePerSecondCommand(() -> RumbleCommands.PremadeRumbles.SMALL)
-                        .until(OperatorCommands::isMoving),
-                OperatorCommands::isStill,
-                1
-        ).repeatedly();
-    }
-
     private static Command getRumbleToIndicateActiveShiftEndingCommand() {
-        return RumbleCommands.getRumbleOncePerSecondCommand(OperatorCommands::determineShiftEndingRumbleConfiguration)
-                .onlyWhile(OperatorCommands::shouldRumbleBeforeActiveShiftEnds)
-                .repeatedly();
+        return new SequentialCommandGroup(
+                new WaitUntilCommand(OperatorCommands::shouldRumbleBeforeActiveShiftEnds),
+                RumbleCommands.getRumbleOncePerSecondCommand(OperatorCommands::determineShiftEndingRumbleConfiguration)
+        ).until(() -> !shouldRumbleBeforeActiveShiftEnds()).repeatedly();
     }
 
     private static Command getRumbleToIndicateActiveShiftStartingCommand() {
-        return RumbleCommands.getRumbleOncePerPeriodCommand(
+        return new SequentialCommandGroup(
+                new WaitUntilCommand(OperatorCommands::shouldRumbleBeforeActiveShiftStarts),
+                RumbleCommands.getRumbleOncePerPeriodCommand(
                         OperatorCommands::determineShiftStartingRumbleConfiguration,
                         OperatorCommands::determineShiftStartingRumbleDelay
                 )
-                .onlyWhile(OperatorCommands::shouldRumbleBeforeActiveShiftStarts)
-                .repeatedly();
-    }
-
-    private static boolean isStill() {
-        return !RobotContainer.SWERVE.isMoving();
-    }
-
-    private static boolean isMoving() {
-        return RobotContainer.SWERVE.getSelfRelativeVelocityMetersPerSecond().getNorm() > OperatorConstants.MINIMUM_SWERVE_VELOCITY_METERS_PER_SECOND_TO_STOP_RUMBLING;
+        ).until(() -> !shouldRumbleBeforeActiveShiftStarts()).repeatedly();
     }
 
     private static RumbleConfiguration determineShiftEndingRumbleConfiguration() {
@@ -80,8 +66,7 @@ public class OperatorCommands {
         if (timeUntilHubActivatesSeconds == -1)
             return false;
 
-        final double timeBeforeActiveShiftToRumble = OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS;
-        return timeUntilHubActivatesSeconds <= timeBeforeActiveShiftToRumble;
+        return timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS;
     }
 
     private static RumbleConfiguration determineShiftStartingRumbleConfiguration() {
@@ -90,9 +75,9 @@ public class OperatorCommands {
         if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_FOUR_RUMBLING_SECONDS)
             return RumbleCommands.PremadeRumbles.BIG;
         if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_THREE_RUMBLING_SECONDS)
-            return RumbleCommands.PremadeRumbles.DOUBLE_TAP;
+            return RumbleCommands.PremadeRumbles.SMALL;
         if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_TWO_RUMBLING_SECONDS)
-            return RumbleCommands.PremadeRumbles.QUICK_RIGHT_THEN_LEFT;
+            return RumbleCommands.PremadeRumbles.TINY;
         if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS)
             return RumbleCommands.PremadeRumbles.TINY;
         return RumbleCommands.PremadeRumbles.NONE;
@@ -106,7 +91,7 @@ public class OperatorCommands {
         if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_THREE_RUMBLING_SECONDS)
             return 1;
         if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_TWO_RUMBLING_SECONDS)
-            return 1.5;
+            return 1;
         if (timeUntilHubActivatesSeconds <= OperatorConstants.TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS)
             return 2;
         return 0;

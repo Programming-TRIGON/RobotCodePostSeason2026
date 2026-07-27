@@ -18,16 +18,15 @@ public class OperatorConstants {
     );
     public static final KeyboardController OPERATOR_CONTROLLER = new KeyboardController();
 
-    public static final LoggedNetworkBoolean SHOULD_RUMBLE = new LoggedNetworkBoolean("ShouldRumble", true);
+    public static final LoggedNetworkBoolean SHOULD_RUMBLE = new LoggedNetworkBoolean("ShouldRumble", false);
     public static final double
             RUMBLE_WHEN_CAMERAS_DISCONNECTED_DEBOUNCE_TIME_SECONDS = 3,
-            TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_START_RUMBLING_SECONDS = 10,
+            TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_START_RUMBLING_SECONDS = 8,
             TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_HEAVY_RUMBLE_SECONDS = 3,
             TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS = 12,
             TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_TWO_RUMBLING_SECONDS = 8,
             TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_THREE_RUMBLING_SECONDS = 5,
             TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_FOUR_RUMBLING_SECONDS = 3;
-    public static final double MINIMUM_SWERVE_VELOCITY_METERS_PER_SECOND_TO_STOP_RUMBLING = 1;
 
     public static final double
             POV_DIVIDER = 2,
