@@ -8,6 +8,7 @@ package frc.trigon.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -71,6 +72,7 @@ public class RobotContainer {
     private void configureBindings() {
         bindDefaultCommands();
         bindControllerCommands();
+        bindRumbleTrigger();
     }
 
     private void bindDefaultCommands() {
@@ -90,7 +92,6 @@ public class RobotContainer {
         OperatorConstants.SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(ShootingCommands.getShootingMapCalibrationCommand());
         OperatorConstants.TELEPORTATION_FOR_SIMULATION_SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(GeneralCommands.getTeleportRobotForSimulationShootingMapCalibrationCommand(ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION));
         OperatorConstants.RESET_POSE_TO_FIXED_SHOOTING_LOCATION_TRIGGER.onTrue(ShootingCommands.getResetPoseToFixedShootingLocationCommand());
-        OperatorConstants.RUMBLE_TRIGGER.whileTrue(OperatorCommands.getRumbleCommands());
 
         OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
         OperatorConstants.SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BETWEEN_TOWER_AND_HUB));
@@ -119,6 +120,25 @@ public class RobotContainer {
         OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
         OperatorConstants.OPEN_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
         OperatorConstants.CLOSE_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
+    }
+
+    /**
+     * Binds the trigger that activates all the rumble commands.
+     * WPILib commands scheduled earlier then can be run, aren't started at all.
+     * This unique trigger binding ensures that the command is run even though {@link OperatorConstants#OPERATOR_CONTROLLER} is true before the command can begin on robot initialization.
+     */
+    private void bindRumbleTrigger() {
+        final CommandScheduler commandScheduler = CommandScheduler.getInstance();
+        final Command rumbleCommand = OperatorCommands.getRumbleCommands();
+
+        final Runnable rumbleCommandScheduler = () -> {
+            if (OperatorConstants.RUMBLE_TRIGGER.getAsBoolean())
+                commandScheduler.schedule(rumbleCommand);
+            if (rumbleCommand.isScheduled())
+                rumbleCommand.cancel();
+        };
+
+        CommandScheduler.getInstance().getDefaultButtonLoop().bind(rumbleCommandScheduler);
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {

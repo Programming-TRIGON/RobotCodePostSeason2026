@@ -18,7 +18,7 @@ public class OperatorConstants {
     );
     public static final KeyboardController OPERATOR_CONTROLLER = new KeyboardController();
 
-    public static final LoggedNetworkBoolean SHOULD_RUMBLE = new LoggedNetworkBoolean("ShouldRumble", false);
+    public static final LoggedNetworkBoolean SHOULD_RUMBLE = new LoggedNetworkBoolean("ShouldRumble", true);
     public static final double
             RUMBLE_WHEN_CAMERAS_DISCONNECTED_DEBOUNCE_TIME_SECONDS = 2,
             TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_START_RUMBLING_SECONDS = 8,

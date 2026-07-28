@@ -1,5 +1,6 @@
 package frc.trigon.robot.commands.commandfactories;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -15,11 +16,11 @@ import frc.trigon.robot.misc.matchTracker.MatchTracker;
  */
 public class OperatorCommands {
     public static Command getRumbleCommands() {
-        return new ParallelCommandGroup(
-                getRumbleWhenCamerasDisconnectedCommand(),
-                getRumbleToIndicateActiveShiftEndingCommand(),
-                getRumbleToIndicateActiveShiftStartingCommand()
-        );
+        return new ParallelCommandGroup(//Unique don't run when disabled decorators because .ignoringDisable() doesn't override a parent command
+                getRumbleWhenCamerasDisconnectedCommand(),//.unless(DriverStation::isDisabled).repeatedly(),
+                getRumbleToIndicateActiveShiftEndingCommand().unless(DriverStation::isDisabled).repeatedly(),
+                getRumbleToIndicateActiveShiftStartingCommand().unless(DriverStation::isDisabled).repeatedly()
+        ).ignoringDisable(true);
     }
 
     private static Command getRumbleWhenCamerasDisconnectedCommand() {
