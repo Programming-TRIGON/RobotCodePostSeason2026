@@ -10,7 +10,9 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.hardware.phoenix6.cancoder.CANcoderEncoder;
@@ -25,37 +27,42 @@ import frc.trigon.robot.constants.RobotConstants;
 
 public class IntakeConstants {
     private static final int
-            INTAKE_MOTOR_ID = 9,
-            MASTER_ANGLE_MOTOR_ID = 10,
-            FOLLOWER_ANGLE_MOTOR_ID = 11,
-            ANGLE_ENCODER_ID = 10;
+            MASTER_INTAKE_MOTOR_ID = 9,
+            FOLLOWER_INTAKE_MOTOR_ID = 10,
+            MASTER_ANGLE_MOTOR_ID = 11,
+            FOLLOWER_ANGLE_MOTOR_ID = 12,
+            ANGLE_ENCODER_ID = 11;
     private static final String
-            INTAKE_MOTOR_NAME = "IntakeMotor",
+            MASTER_INTAKE_MOTOR_NAME = "IntakeMasterMotor",
+            FOLLOWER_INTAKE_MOTOR_NAME = "IntakeFollowerMotor",
             MASTER_ANGLE_MOTOR_NAME = "IntakeMasterAngleMotor",
             FOLLOWER_ANGLE_MOTOR_NAME = "IntakeFollowerAngleMotor",
             ANGLE_ENCODER_NAME = "IntakeAngleEncoder";
     static final TalonFXMotor
-            INTAKE_MOTOR = new TalonFXMotor(INTAKE_MOTOR_ID, INTAKE_MOTOR_NAME, RobotConstants.CANIVORE_NAME),
+            MASTER_INTAKE_MOTOR = new TalonFXMotor(MASTER_INTAKE_MOTOR_ID, MASTER_INTAKE_MOTOR_NAME),
+            FOLLOWER_INTAKE_MOTOR = new TalonFXMotor(FOLLOWER_INTAKE_MOTOR_ID, FOLLOWER_INTAKE_MOTOR_NAME),
             MASTER_ANGLE_MOTOR = new TalonFXMotor(MASTER_ANGLE_MOTOR_ID, MASTER_ANGLE_MOTOR_NAME, RobotConstants.CANIVORE_NAME),
             FOLLOWER_ANGLE_MOTOR = new TalonFXMotor(FOLLOWER_ANGLE_MOTOR_ID, FOLLOWER_ANGLE_MOTOR_NAME, RobotConstants.CANIVORE_NAME);
     static final CANcoderEncoder ANGLE_ENCODER = new CANcoderEncoder(ANGLE_ENCODER_ID, ANGLE_ENCODER_NAME, RobotConstants.CANIVORE_NAME);
 
     private static final double
             ARM_SENSOR_TO_MECHANISM_GEAR_RATIO = 0.9,
-            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 46.96 / ARM_SENSOR_TO_MECHANISM_GEAR_RATIO,
+            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 47.021834,
             INTAKE_MOTOR_GEAR_RATIO = 1.5;
     static final boolean FOC_ENABLED = true;
-    private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
+    private static final MotorAlignmentValue
+            INTAKE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed,
+            ANGLE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
-            INTAKE_MOTOR_CURRENT_LIMIT = 40,
+            INTAKE_MOTORS_CURRENT_LIMIT = 40,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 0,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 0;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 1;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
-            INTAKE_MOTOR_AMOUNT = 1;
+            INTAKE_MOTOR_AMOUNT = 2;
     private static final DCMotor
             ANGLE_GEARBOX = DCMotor.getKrakenX44Foc(ANGLE_MOTOR_AMOUNT),
             INTAKE_GEARBOX = DCMotor.getKrakenX60Foc(INTAKE_MOTOR_AMOUNT);
@@ -63,8 +70,8 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS = 0.369,
             INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(0),
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(157.51);
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(-66),
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(70);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
@@ -83,12 +90,12 @@ public class IntakeConstants {
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(0.5).per(Units.Seconds),
-            Units.Volts.of(0.7),
+            Units.Volts.of(1).per(Units.Seconds),
+            Units.Volts.of(1),
             null
     );
 
-    private static String
+    private static final String
             ANGLE_MOTOR_MECHANISM_NAME = "IntakeAngleMotorMechanism",
             INTAKE_MOTOR_MECHANISM_NAME = "IntakeMotorMechanism";
     private static final Color ANGLE_MOTOR_MECHANISM_COLOR = Color.kOrange;
@@ -108,11 +115,24 @@ public class IntakeConstants {
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
+    static final double
+            ANGLE_STUCK_RETRACT_TIME_SECONDS = 0.5,
+            ANGLE_STUCK_PUSH_TIME_SECONDS = 1;
+    private static final double
+            ANGLE_MOTOR_STUCK_MAXIMUM_VELOCITY_ROTATIONS_PER_SECOND = 0.5,
+            ANGLE_MOTOR_STUCK_CURRENT_THRESHOLD = 18,
+            ANGLE_MOTOR_STUCK_CHECK_DEBOUNCE_TIME_SECONDS = 0.2;
+    static final BooleanEvent IS_ANGLE_MOTOR_STUCK = new BooleanEvent(
+            CommandScheduler.getInstance().getActiveButtonLoop(),//TODO: Ensure positive velocity/current is closing motion
+            () -> MASTER_ANGLE_MOTOR.getSignal(TalonFXSignal.VELOCITY) < ANGLE_MOTOR_STUCK_MAXIMUM_VELOCITY_ROTATIONS_PER_SECOND
+                    && MASTER_ANGLE_MOTOR.getSignal(TalonFXSignal.STATOR_CURRENT) > ANGLE_MOTOR_STUCK_CURRENT_THRESHOLD
+    ).debounce(ANGLE_MOTOR_STUCK_CHECK_DEBOUNCE_TIME_SECONDS);
 
     static {
         configureMasterAngleMotor();
         configureFollowerAngleMotor();
-        configureIntakeMotor();
+        configureMasterIntakeMotor();
+        configureFollowerIntakeMotor();
         configureAngleEncoder();
     }
 
@@ -130,13 +150,13 @@ public class IntakeConstants {
         config.Feedback.RotorToSensorRatio = ARM_ROTOR_TO_SENSOR_GEAR_RATIO;
         config.Feedback.SensorToMechanismRatio = ARM_SENSOR_TO_MECHANISM_GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 90;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.5246 : 0;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0.8;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.42;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 3.87;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.34;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
@@ -161,7 +181,8 @@ public class IntakeConstants {
         MASTER_ANGLE_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
         MASTER_ANGLE_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
         MASTER_ANGLE_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
-        MASTER_ANGLE_MOTOR.registerThreadedSignal(TalonFXSignal.POSITION, 100);
+        MASTER_ANGLE_MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
+        MASTER_ANGLE_MOTOR.registerSignal(TalonFXSignal.ROTOR_POSITION, 100);
     }
 
     private static void configureFollowerAngleMotor() {
@@ -178,14 +199,14 @@ public class IntakeConstants {
 
         FOLLOWER_ANGLE_MOTOR.applyConfiguration(config);
 
-        final Follower followerRequest = new Follower(MASTER_ANGLE_MOTOR.getID(), FOLLOWER_ALIGNMENT_TO_MASTER);
+        final Follower followerRequest = new Follower(MASTER_ANGLE_MOTOR.getID(), ANGLE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER);
         FOLLOWER_ANGLE_MOTOR.setControl(followerRequest);
 
         FOLLOWER_ANGLE_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
         FOLLOWER_ANGLE_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
     }
 
-    private static void configureIntakeMotor() {
+    private static void configureMasterIntakeMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.Audio.BeepOnBoot = false;
@@ -197,20 +218,41 @@ public class IntakeConstants {
         config.Feedback.SensorToMechanismRatio = INTAKE_MOTOR_GEAR_RATIO;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = INTAKE_MOTOR_CURRENT_LIMIT;
+        config.CurrentLimits.StatorCurrentLimit = INTAKE_MOTORS_CURRENT_LIMIT;
 
-        INTAKE_MOTOR.applyConfiguration(config);
-        INTAKE_MOTOR.setPhysicsSimulation(INTAKE_SIMULATION);
+        MASTER_INTAKE_MOTOR.applyConfiguration(config);
+        MASTER_INTAKE_MOTOR.setPhysicsSimulation(INTAKE_SIMULATION);
 
-        INTAKE_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
-        INTAKE_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+        MASTER_INTAKE_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
+        MASTER_INTAKE_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+    }
+
+    private static void configureFollowerIntakeMotor() {
+        final TalonFXConfiguration config = new TalonFXConfiguration();
+
+        config.Audio.BeepOnBoot = false;
+        config.Audio.BeepOnConfig = false;
+
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = INTAKE_MOTORS_CURRENT_LIMIT;
+
+        FOLLOWER_INTAKE_MOTOR.applyConfiguration(config);
+
+        final Follower followerRequest = new Follower(MASTER_INTAKE_MOTOR.getID(), INTAKE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER);
+        FOLLOWER_INTAKE_MOTOR.setControl(followerRequest);
+
+        FOLLOWER_INTAKE_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
+        FOLLOWER_INTAKE_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
     }
 
     private static void configureAngleEncoder() {
         final CANcoderConfiguration config = new CANcoderConfiguration();
 
-        config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        config.MagnetSensor.MagnetOffset = 0;
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        config.MagnetSensor.MagnetOffset = 0.44675;
         config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
 
         ANGLE_ENCODER.applyConfiguration(config);
@@ -222,11 +264,13 @@ public class IntakeConstants {
 
     public enum IntakeState {
         REST(0, MAXIMUM_ANGLE, 1),
-        OPEN(0, MINIMUM_ANGLE, 1),
+        OPEN(0, MINIMUM_ANGLE, 1.2),
         CLOSE(0, MAXIMUM_ANGLE, 1),
-        POWERED_OPEN(6, MINIMUM_ANGLE, 1),
-        POWERED_CLOSE(6, MAXIMUM_ANGLE, 1),
-        REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1);
+        POWERED_OPEN(7, MINIMUM_ANGLE, 1),
+        POWERED_CLOSE(5, MAXIMUM_ANGLE, 0.7),
+        REVERSE_POWERED_OPEN(-5, MINIMUM_ANGLE, 1),
+        ASSIST_OPEN(-4, MINIMUM_ANGLE, 1),
+        AUTONOMOUS_INTAKE(7, MINIMUM_ANGLE, 1.4);
 
         public final double targetVoltage;
         public final Rotation2d targetAngle;

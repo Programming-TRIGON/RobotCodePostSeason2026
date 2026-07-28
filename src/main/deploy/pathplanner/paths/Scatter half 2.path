@@ -3,57 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.743112701252236,
-        "y": 7.515348837209302
+        "x": 8.286225402504472,
+        "y": 6.736529516994633
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.598696740199502,
-        "y": 7.519051809058466
+        "x": 8.20509838998211,
+        "y": 5.973935599284436
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ScatterHalf1"
     },
     {
       "anchor": {
-        "x": 5.300751341681575,
-        "y": 7.515348837209302
+        "x": 7.620983899821109,
+        "y": 4.64345259391771
       },
       "prevControl": {
-        "x": 5.050780760691683,
-        "y": 7.5191840216346
+        "x": 8.09914905889724,
+        "y": 4.734531671836972
       },
       "nextControl": {
-        "x": 7.300834548714636,
-        "y": 7.484662474299966
+        "x": 6.939516994633273,
+        "y": 4.513649373881932
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.286225402504472,
-        "y": 6.817656529516994
+        "x": 6.2580500894454385,
+        "y": 5.892808586762076
       },
       "prevControl": {
-        "x": 7.206450286025491,
-        "y": 7.464202622480005
+        "x": 7.004418604651163,
+        "y": 5.130214669051879
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Double Swipe StartPath End"
+      "linkedName": "ScatterHalf2"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.04793028322440064,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 1.142201206140351,
-      "rotationDegrees": -0.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -66,14 +57,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 4.0,
-    "rotation": -96.03637028699238
+    "velocity": 1.0,
+    "rotation": -94.51398845800124
   },
   "reversed": false,
-  "folder": "Double Swipe Paths",
+  "folder": "Scatter one side",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -0.0
+    "rotation": -76.37300514010859
   },
   "useDefaultConstraints": true
 }

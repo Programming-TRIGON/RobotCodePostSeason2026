@@ -7,20 +7,17 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
-import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.AutonomousCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
+import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -47,15 +44,6 @@ public class AutonomousConstants {
                     new PIDConstants(0, 0, 0) :
                     new PIDConstants(0, 0, 0);
 
-
-    public static final PIDController GAME_PIECE_AUTO_DRIVE_Y_PID_CONTROLLER = RobotHardwareStats.isSimulation() ?
-            new PIDController(0.5, 0, 0) :
-            new PIDController(0.3, 0, 0.03);
-    public static final ProfiledPIDController GAME_PIECE_AUTO_DRIVE_X_PID_CONTROLLER = RobotHardwareStats.isSimulation() ?
-            new ProfiledPIDController(0.5, 0, 0, new TrapezoidProfile.Constraints(2.8, 5)) :
-            new ProfiledPIDController(2.4, 0, 0, new TrapezoidProfile.Constraints(2.65, 5.5));
-    public static final double AUTO_COLLECTION_INTAKE_OPEN_CHECK_DISTANCE_METERS = 2;
-
     private static final PPHolonomicDriveController AUTO_PATH_FOLLOWING_CONTROLLER = new PPHolonomicDriveController(
             AUTO_TRANSLATION_PID_CONSTANTS,
             AUTO_ROTATION_PID_CONSTANTS
@@ -74,8 +62,7 @@ public class AutonomousConstants {
     private static void configureAutoBuilder() {
         AutoBuilder.configure(
                 RobotContainer.ROBOT_POSE_ESTIMATOR::getEstimatedRobotPose,
-                (a) -> {
-                },
+                RobotContainer.ROBOT_POSE_ESTIMATOR::resetPose,
                 RobotContainer.SWERVE::getSelfRelativeChassisSpeeds,
                 RobotContainer.SWERVE::drivePathPlanner,
                 AUTO_PATH_FOLLOWING_CONTROLLER,
@@ -94,9 +81,23 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
+        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
+        NamedCommands.registerCommand("FirstCollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.AUTONOMOUS_INTAKE));
         NamedCommands.registerCommand("DoubleSwipeShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
         NamedCommands.registerCommand("DoubleSwipePrepareForShootCommand", ShootingCommands.getPrepareForDoubleSwipeFixedAutonomousShootingCommand());
-        NamedCommands.registerCommand("BasicShootCommand",ShootingCommands.getBasicFixedAutonomousShootingCommand());
+        NamedCommands.registerCommand("BasicShootCommand", ShootingCommands.getBasicFixedAutonomousShootingCommand());
+        NamedCommands.registerCommand("PushFuelCommand", AutonomousCommands.getPushFuelWithIntakeCommand());
+        NamedCommands.registerCommand("PrepareForShootingCommand", ShootingCommands.getPrepareForShootingCommand());
+        NamedCommands.registerCommand("ShootCommand", ShootingCommands.getAutonomousShootingAtHubCommand().withTimeout(3));
+        NamedCommands.registerCommand("InitializeDriveCommand", new InstantCommand(() -> RobotContainer.SWERVE.initializeDrive(true)));
+        NamedCommands.registerCommand(
+                "WaitForIntakeToOpenCommand",
+                (IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN
+                ).alongWith(SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
+                                () -> 0,
+                                () -> 0,
+                                () -> 0
+                        )
+                )).until(RobotContainer.INTAKE::atTargetState));
     }
 }

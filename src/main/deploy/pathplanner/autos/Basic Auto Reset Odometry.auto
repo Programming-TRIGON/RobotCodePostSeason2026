@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootCommand"
+                  "name": "BasicShootCommand"
                 }
               },
               {
@@ -38,7 +38,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }

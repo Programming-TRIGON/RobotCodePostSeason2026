@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.utilities.Conversions;
+import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -43,6 +44,13 @@ public class Shooter extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
         ShooterConstants.FOLLOWER_MOTOR.update();
+
+
+        final double currentVelocityMetersPerSecond = getCurrentVelocityMetersPerSecond();
+        final double targetProfiledVelocityMetersPerSecond = rotationToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
+        Logger.recordOutput("Shooter/CurrentVelocityMetersPerSecond", currentVelocityMetersPerSecond);
+        Logger.recordOutput("Shooter/TargetVelocityMetersPerSecond", this.targetVelocityMetersPerSecond);
+        Logger.recordOutput("Shooter/TargetProfiledVelocityMetersPerSecond", targetProfiledVelocityMetersPerSecond);
     }
 
     @Override
@@ -63,13 +71,9 @@ public class Shooter extends MotorSubsystem {
                 currentVelocityMetersPerSecond,
                 targetProfiledVelocityMetersPerSecond
         );
-
-        Logger.recordOutput("Shooter/CurrentVelocityMetersPerSecond", currentVelocityMetersPerSecond);
-        Logger.recordOutput("Shooter/TargetVelocityMetersPerSecond", this.targetVelocityMetersPerSecond);
-        Logger.recordOutput("Shooter/TargetProfiledVelocityMetersPerSecond", targetProfiledVelocityMetersPerSecond);
     }
 
-    @AutoLogOutput(key = "ShootingCalculations/Conditions/ShooterAtTargetVelocity")
+    @AutoLogOutput(key = "Shooter/AtTargetVelocity")
     public boolean atTargetVelocity() {
         return atVelocity(targetVelocityMetersPerSecond);
     }

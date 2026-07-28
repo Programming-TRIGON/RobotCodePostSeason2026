@@ -13,26 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Basic Auto Align to Hub"
+            "pathName": "Scatter half 1"
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootCommand"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "PushFuelCommand"
-                }
-              }
-            ]
+            "pathName": "Scatter half 2"
           }
         }
       ]

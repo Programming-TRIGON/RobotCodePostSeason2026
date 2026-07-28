@@ -7,7 +7,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class MatchTracker {
     private static boolean IS_HUB_STATE_ACTIVE = true;
-    private static String SHIFT_TYPE = "autonomous";
+    private static boolean IS_HUB_ACTIVE_DURING_EVEN_SHIFTS = true;
+    private static String ACTIVE_SHIFT_NAME = "Auton";
 
     public static boolean hasHubActiveStateChanged() {
         final boolean currentHubActiveState = isHubActive();
@@ -20,19 +21,25 @@ public class MatchTracker {
     }
 
     public static boolean isHubActive() {
-        if (ShootingCommands.SHOULD_OVERRIDE_GAME_DATA.getAsBoolean())
+        if (ShootingCommands.SHOULD_OVERRIDE_GAME_DATA != null && ShootingCommands.SHOULD_OVERRIDE_GAME_DATA.getAsBoolean())
             return true;
 
         return isOurHubActiveAtMatchTime(DriverStation.getMatchTime());
     }
 
     public static boolean isOurHubActiveAtMatchTime(double matchTimeSeconds) {
-        if (DriverStation.isAutonomousEnabled())
+        if (DriverStation.isAutonomousEnabled()) {
+            ACTIVE_SHIFT_NAME = "Auton";
             return true;
+        }
+        if (matchTimeSeconds <= 30) {
+            ACTIVE_SHIFT_NAME = "Endgame";
+            return true;
+        }
 
         final String gameData = DriverStation.getGameSpecificMessage();
 
-        if (!isValidGameData(gameData)) {
+        if (!isGameDataValid(gameData)) {
             Logger.recordOutput("MatchTracker/HasValidGameData", false);
             return true;
         }
@@ -42,48 +49,40 @@ public class MatchTracker {
         final boolean isRedHubInactiveInShift1 =
                 Character.toUpperCase(gameData.charAt(0)) == MatchTrackerConstants.RED_ALLIANCE_GAME_DATA;
 
-        final boolean isOurHubInactiveInShift1 =
+        IS_HUB_ACTIVE_DURING_EVEN_SHIFTS =
                 isRedHubInactiveInShift1 == Flippable.isRedAlliance();
 
-        final boolean isOurHubActiveInShift1 = !isOurHubInactiveInShift1;
+        final boolean isOurHubActiveInShift1 = !IS_HUB_ACTIVE_DURING_EVEN_SHIFTS;
 
         return shouldHubBeActiveDuringTeleopShift(matchTimeSeconds, isOurHubActiveInShift1);
     }
 
     public static boolean shouldHubBeActiveDuringTeleopShift(double matchTimeSeconds, boolean isOurHubActiveInShift1) {
-        if (matchTimeSeconds > MatchTrackerConstants.AUTONOMOUS_TIME_SECOND) {
-            SHIFT_TYPE = "autonomous";
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TIME_SECONDS) {
+            ACTIVE_SHIFT_NAME = "Transition";
             return true;
         }
-        if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_TIME_SECOND && matchTimeSeconds < MatchTrackerConstants.AUTONOMOUS_TIME_SECOND) {
-            SHIFT_TYPE = "transition";
-            return true;
-        }
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS && matchTimeSeconds <  MatchTrackerConstants.TRANSITION_SHIFT_TIME_SECOND) {
-            SHIFT_TYPE = "shift 1";
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TIME_SECONDS) {
+            ACTIVE_SHIFT_NAME = "Shift 1";
             return isOurHubActiveInShift1;
         }
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS && matchTimeSeconds < MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS) {
-            SHIFT_TYPE = "shift 2";
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TIME_SECONDS) {
+            ACTIVE_SHIFT_NAME = "Shift 2";
             return !isOurHubActiveInShift1;
         }
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS && matchTimeSeconds < MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS) {
-            SHIFT_TYPE = "shift 3";
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TIME_SECONDS) {
+            ACTIVE_SHIFT_NAME = "Shift 3";
             return isOurHubActiveInShift1;
         }
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS && matchTimeSeconds < MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS) {
-            SHIFT_TYPE = "shift 4";
+        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TIME_SECONDS) {
+            ACTIVE_SHIFT_NAME = "Shift 4";
             return !isOurHubActiveInShift1;
         }
-        if (matchTimeSeconds < MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS) {
-            SHIFT_TYPE = "endgame";
-            return isOurHubActiveInShift1;
-        }
-
+        ACTIVE_SHIFT_NAME = "Error";
         return true;
     }
 
-    public static boolean isValidGameData(String gameData) {
+    public static boolean isGameDataValid(String gameData) {
         if (gameData == null || gameData.isEmpty())
             return false;
 
@@ -93,44 +92,62 @@ public class MatchTracker {
     }
 
     private static int getShiftNumber(double matchTimeSeconds) {
-        if (matchTimeSeconds > MatchTrackerConstants.AUTONOMOUS_TIME_SECOND)
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TIME_SECONDS)
             return 0;
-
-        if (matchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_TIME_SECOND)
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TIME_SECONDS)
             return 1;
-
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS)
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TIME_SECONDS)
             return 2;
-
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS)
+        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TIME_SECONDS)
             return 3;
-
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS)
+        if (matchTimeSeconds > MatchTrackerConstants.ENDGAME_START_TIME_SECONDS)
             return 4;
+        return 5;
+    }
 
-        if (matchTimeSeconds > MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS)
-            return 5;
+    public static double getTimeUntilHubDeactivatesSeconds() {
+        final double currentMatchTimeSeconds = DriverStation.getMatchTime();
 
-        return 6;
+        final double timeUntilNextShiftSeconds = getTimeUntilShiftEndSeconds(currentMatchTimeSeconds);
+        final int currentShiftNumber = getShiftNumber(currentMatchTimeSeconds);
+
+        if (currentShiftNumber >= 4)
+            return currentMatchTimeSeconds;
+
+        return currentShiftNumber % 2 == 0 ^ IS_HUB_ACTIVE_DURING_EVEN_SHIFTS ?
+                currentShiftNumber == 3 ? currentMatchTimeSeconds : timeUntilNextShiftSeconds + MatchTrackerConstants.SHIFT_DURATION_SECONDS :
+                timeUntilNextShiftSeconds;
+    }
+
+    public static double getTimeUntilHubActivatesSeconds() {
+        final double currentMatchTimeSeconds = DriverStation.getMatchTime();
+
+        final double timeUntilNextShiftSeconds = getTimeUntilShiftEndSeconds(currentMatchTimeSeconds);
+        final int currentShiftNumber = getShiftNumber(currentMatchTimeSeconds);
+
+        if (currentShiftNumber >= 4)
+            return -1;
+
+        return currentShiftNumber % 2 == 0 ^ IS_HUB_ACTIVE_DURING_EVEN_SHIFTS ?
+                timeUntilNextShiftSeconds :
+                currentShiftNumber == 3 ? -1 : timeUntilNextShiftSeconds + MatchTrackerConstants.SHIFT_DURATION_SECONDS;
+    }
+
+    public static double getTimeUntilShiftEndSeconds(double matchTimeSeconds) {
+        return matchTimeSeconds - getNextShiftTimeSeconds(matchTimeSeconds);
     }
 
     private static double getNextShiftTimeSeconds(double matchTimeSeconds) {
         final int currentShiftNumber = getShiftNumber(matchTimeSeconds);
 
         return switch (currentShiftNumber) {
-            case 0 -> MatchTrackerConstants.AUTONOMOUS_TIME_SECOND;
-            case 1 -> MatchTrackerConstants.TRANSITION_SHIFT_TIME_SECOND;
-            case 2 -> MatchTrackerConstants.SHIFT_1_START_TELEOP_TIME_SECONDS;
-            case 3 -> MatchTrackerConstants.SHIFT_2_START_TELEOP_TIME_SECONDS;
-            case 4 -> MatchTrackerConstants.SHIFT_3_START_TELEOP_TIME_SECONDS;
-            case 5 -> MatchTrackerConstants.SHIFT_4_START_TELEOP_TIME_SECONDS;
-            case 6 -> 0;
-            default -> -1;
+            case 0 -> MatchTrackerConstants.SHIFT_1_START_TIME_SECONDS;
+            case 1 -> MatchTrackerConstants.SHIFT_2_START_TIME_SECONDS;
+            case 2 -> MatchTrackerConstants.SHIFT_3_START_TIME_SECONDS;
+            case 3 -> MatchTrackerConstants.SHIFT_4_START_TIME_SECONDS;
+            case 4 -> MatchTrackerConstants.ENDGAME_START_TIME_SECONDS;
+            default -> 0;
         };
-    }
-
-    public static double getTimeUntilShiftEndSeconds(double matchTimeSeconds) {
-        return matchTimeSeconds - getNextShiftTimeSeconds(matchTimeSeconds);
     }
 
     public static void logMatchInfo() {
@@ -139,6 +156,6 @@ public class MatchTracker {
         Logger.recordOutput("MatchTracker/MatchTimeSeconds", matchTimeSeconds);
         Logger.recordOutput("MatchTracker/IsHubActive", isHubActive());
         Logger.recordOutput("MatchTracker/TimeUntilAllianceShiftSeconds", getTimeUntilShiftEndSeconds(matchTimeSeconds));
-        Logger.recordOutput("MatchTracker/ShiftType", SHIFT_TYPE);
+        Logger.recordOutput("MatchTracker/CurrentShiftName", ACTIVE_SHIFT_NAME);
     }
 }

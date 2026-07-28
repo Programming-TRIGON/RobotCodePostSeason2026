@@ -2,6 +2,7 @@ package frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driveres
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
@@ -13,7 +14,7 @@ import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestr
  * All zone restrictions are applied sequentially, each further restricting the previous result.
  * Useful for keeping the robot inside the field boundary or out of specific regions such as opponent protected areas.
  */
-public class ZoneRestrictionsDrive implements DriveRestriction {
+public class ZoneDriveRestriction implements DriveRestriction {
     private final ZoneRestriction[] zoneRestrictions;
 
     /**
@@ -22,7 +23,7 @@ public class ZoneRestrictionsDrive implements DriveRestriction {
      * @param shouldRestrictToField whether to restrict the robot from leaving the field boundary
      * @param zoneRestrictions      the zones to restrict movement relative to
      */
-    public ZoneRestrictionsDrive(boolean shouldRestrictToField, ZoneRestriction... zoneRestrictions) {
+    public ZoneDriveRestriction(boolean shouldRestrictToField, ZoneRestriction... zoneRestrictions) {
         this.zoneRestrictions = shouldRestrictToField
                 ? getZoneRestrictionsWithFieldRestriction(zoneRestrictions)
                 : zoneRestrictions;
@@ -63,10 +64,15 @@ public class ZoneRestrictionsDrive implements DriveRestriction {
                 .rotateBy(robotPose.getRotation())
                 .plus(robotPose.getTranslation());
 
-        return new BoundingBox(
+        final BoundingBox boundingBox = new BoundingBox(
                 new Pose2d(robotCenterFieldRelative, robotPose.getRotation()),
                 robotRelativeBoundingBox.getXWidth(),
                 robotRelativeBoundingBox.getYWidth()
         );
+
+        if (RobotHardwareStats.isSimulation())
+            boundingBox.log("ZoneRestrictions/RobotBoundingBox");
+
+        return boundingBox;
     }
 }

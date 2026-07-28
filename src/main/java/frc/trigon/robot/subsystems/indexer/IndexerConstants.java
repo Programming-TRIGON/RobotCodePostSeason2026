@@ -2,6 +2,7 @@ package frc.trigon.robot.subsystems.indexer;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -13,7 +14,7 @@ import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class IndexerConstants {
-    private static final int MOTOR_ID = 12;
+    private static final int MOTOR_ID = 13;
     private static final String MOTOR_NAME = "IndexerMotor";
     static final TalonFXSMotor MOTOR = new TalonFXSMotor(MOTOR_ID, MOTOR_NAME);
 
@@ -40,8 +41,10 @@ public class IndexerConstants {
             new Translation3d(-0.04721098, 0, 0.156750004),
             new Rotation3d()
     );
-    public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 4.5;
-    public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -3;
+    public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 1;
+    public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -1;
+
+    static final double LOADER_MAXIMUM_VELOCITY_ROTATIONS_PER_SECOND_FOR_UNJAM = 1;
 
     static {
         final TalonFXSConfiguration config = new TalonFXSConfiguration();
@@ -50,9 +53,10 @@ public class IndexerConstants {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.ExternalFeedback.withSensorToMechanismRatio(GEAR_RATIO);
+        config.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 40;
+        config.CurrentLimits.StatorCurrentLimit = 30;
 
         MOTOR.applyConfiguration(config);
         MOTOR.setPhysicsSimulation(SIMULATION);
@@ -62,12 +66,13 @@ public class IndexerConstants {
     }
 
     public enum IndexerState {
-        LOAD_FOR_SHOOTING(5),
-        LOAD_FOR_DELIVERY(7),
-        PRELOAD(3),
+        LOAD_FOR_SHOOTING(3),
+        LOAD_FOR_DELIVERY(3),
+        PRELOAD(1),
         AGITATE(1),
-        EJECT_FROM_INTAKE(-5),
-        EJECT_FROM_SHOOTER(5),
+        EJECT_FROM_INTAKE(-3),
+        EJECT_FROM_SHOOTER(3),
+        UNJAM(-1),
         REST(0);
 
         public final double targetVoltage;

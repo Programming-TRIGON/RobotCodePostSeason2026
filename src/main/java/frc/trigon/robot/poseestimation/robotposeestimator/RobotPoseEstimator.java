@@ -36,7 +36,7 @@ public class RobotPoseEstimator implements AutoCloseable {
     private final AprilTagCamera[] aprilTagCameras;
     private final RelativeRobotPoseSource relativeRobotPoseSource;
     private final boolean shouldUseRelativeRobotPoseSource;
-    private boolean hasUpdateFromCameras = false;
+    private boolean areCamerasConnected = false;
 
     /**
      * Constructs a new RobotPoseEstimator and sets the relativeRobotPoseSource.
@@ -93,7 +93,7 @@ public class RobotPoseEstimator implements AutoCloseable {
      * @param newPose the pose to reset to, relative to the blue alliance's driver station right corner
      */
     public void resetPose(Pose2d newPose) {
-        RobotContainer.SWERVE.setHeading(newPose.getRotation());
+//        RobotContainer.SWERVE.setHeading(newPose.getRotation());
 
         swerveDrivePoseEstimator.resetPose(newPose);
         swerveDriveOdometry.resetPose(newPose);
@@ -121,8 +121,8 @@ public class RobotPoseEstimator implements AutoCloseable {
         return swerveDriveOdometry.getPoseMeters();
     }
 
-    public boolean hasUpdateFromCameras() {
-        return hasUpdateFromCameras;
+    public boolean areCamerasConnected() {
+        return areCamerasConnected;
     }
 
     /**
@@ -217,7 +217,6 @@ public class RobotPoseEstimator implements AutoCloseable {
     private void updateFromAprilTagCameras() {
         final AprilTagCamera[] newResultCameras = getCamerasWithResults();
 
-        this.hasUpdateFromCameras = newResultCameras.length > 0;
         sortCamerasByLatestResultTimestamp(newResultCameras);
 
         for (AprilTagCamera aprilTagCamera : newResultCameras) {
@@ -245,9 +244,14 @@ public class RobotPoseEstimator implements AutoCloseable {
     private AprilTagCamera[] getCamerasWithResults() {
         final AprilTagCamera[] camerasWithNewResult = new AprilTagCamera[aprilTagCameras.length];
         int index = 0;
+        areCamerasConnected = false;
 
         for (AprilTagCamera aprilTagCamera : aprilTagCameras) {
             aprilTagCamera.update();
+
+            if (aprilTagCamera.isConnected())
+                areCamerasConnected = true;
+
             if (aprilTagCamera.hasValidResult() && aprilTagCamera.getEstimatedRobotPose() != null) {
                 camerasWithNewResult[index] = aprilTagCamera;
                 index++;

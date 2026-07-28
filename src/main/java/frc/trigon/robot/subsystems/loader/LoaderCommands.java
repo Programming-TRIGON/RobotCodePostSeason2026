@@ -10,10 +10,10 @@ import java.util.Set;
 public class LoaderCommands {
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
-                RobotContainer.LOADER::setTargetVoltage,
+                RobotContainer.LOADER::setTargetVelocity,
                 false,
                 Set.of(RobotContainer.LOADER),
-                "Debugging/LoaderTargetVoltage"
+                "Debugging/LoaderTargetVelocityMetersPerSecond"
         );
     }
 
