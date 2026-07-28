@@ -15,7 +15,7 @@ import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRelativeRestrictedDriveCommand;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.CustomCenterOfRotationDriveRestriction;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneRestrictionsDrive;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneDriveRestriction;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.RestrictedZone;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
@@ -84,7 +84,7 @@ public class CommandConstants {
                     new CustomCenterOfRotationDriveRestriction(INTAKE_CENTER_OF_ROTATION)
             ),
             TRENCH_ASSIST_COMMAND = new FieldRelativeRestrictedDriveCommand(
-                    new ZoneRestrictionsDrive(
+                    new ZoneDriveRestriction(
                             true,
                             getBumpRestrictedZone(getBumpBoundingBox(BLUE_BUMPS_ZONE_CENTER)),
                             getBumpRestrictedZone(getBumpBoundingBox(RED_BUMPS_ZONE_CENTER))

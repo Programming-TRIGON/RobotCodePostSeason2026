@@ -20,7 +20,7 @@ public class IntakeCommands {
         return GeneralCommands.getContinuousConditionalCommand(
                 getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
                 getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
-                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
+                FuelIntakeCommands.SHOULD_INTAKE_STAY_OPEN
         );
     }
 

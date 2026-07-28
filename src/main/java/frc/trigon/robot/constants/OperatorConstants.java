@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
-import frc.trigon.robot.misc.matchTracker.MatchTracker;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class OperatorConstants {
@@ -69,11 +68,9 @@ public class OperatorConstants {
             PREPARE_FOR_FIXED_SHOOTING_TRIGGER = OPERATOR_CONTROLLER.semicolon().and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             PREPARE_FOR_SHOOTING_TRIGGER = OPERATOR_CONTROLLER.v().and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate());
     public final static Trigger
-            PRELOAD_TRIGGER = (OPERATOR_CONTROLLER.x().or(DRIVER_CONTROLLER.start())).and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = DRIVER_CONTROLLER.leftStick().and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             INTAKE_TRIGGER = (DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.b())).and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             TRENCH_ASSIST_TRIGGER = DRIVER_CONTROLLER.rightBumper(),
-            HUB_ACTIVE_STATE_CHANGED_TRIGGER = new Trigger(MatchTracker::hasHubActiveStateChanged),
             OPEN_INTAKE_DEFAULT_COMMAND = OPERATOR_CONTROLLER.t(),
             CLOSE_INTAKE_DEFAULT_COMMAND = OPERATOR_CONTROLLER.y(),
             LOAD_NOW_TRIGGER = OPERATOR_CONTROLLER.w().or(DRIVER_CONTROLLER.leftStick());

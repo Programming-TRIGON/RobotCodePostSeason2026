@@ -2,10 +2,7 @@ package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
@@ -33,7 +30,7 @@ public class EjectionCommands {
                 getLoadForEjectFromShooterWhenReadyCommand(),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND),
                 HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.EJECT_FROM_SHOOTER_PITCH),
-                ShootingCommands.getIntakeSequenceWhileShootingCommand());
+                FuelIntakeCommands.getIntakeSequenceWhileShootingCommand());
     }
 
     private static Command getLoadForEjectFromShooterWhenReadyCommand() {

@@ -19,8 +19,6 @@ import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
-import frc.trigon.robot.subsystems.intake.IntakeCommands;
-import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
@@ -63,10 +61,10 @@ public class ShootingCommands {
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
                         new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForShooting(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery))),
                         getSetTargetShootingLocationCommand(),
-                        getSafeSwerveWhileShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
+                        getAimSwerveWithOverrideCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimHoodForShootingCommand(),
                         ShooterCommands.getAimForShootingCommand(),
-                        getIntakeSequenceWhileShootingCommand()
+                        FuelIntakeCommands.getIntakeSequenceWhileShootingCommand()
                 )
         ).beforeStarting(
                 () -> CommandConstants.setSwerveSpeedMultiplier(CommandConstants.SHOOTING_SWERVE_SPEED_MULTIPLIER)
@@ -102,21 +100,8 @@ public class ShootingCommands {
 //                ),
                 getAimFixedSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/FixedShootingAtHubState", TARGET_FIXED_SHOOTING_AT_HUB_STATE.name())),
-                getIntakeSequenceWhileShootingCommand()
+                FuelIntakeCommands.getIntakeSequenceWhileShootingCommand()
         );
-    }
-
-    private static Command getSafeSwerveWhileShootingCommand(Supplier<Rotation2d> rotation2dSupplier) {
-        return GeneralCommands.getContinuousConditionalCommand(
-                SwerveCommands.getLockSwerveCommand(),
-                getAimSwerveWithOverrideCommand(rotation2dSupplier),
-                ShootingCommands::shouldLockSwerve
-        );
-    }
-
-    private static boolean shouldLockSwerve() {
-        return false;
-//        return OperatorConstants.DRIVER_CONTROLLER.getLeftY() == 0 && OperatorConstants.DRIVER_CONTROLLER.getLeftX() == 0 && !RobotContainer.SWERVE.isMoving() && RobotContainer.SWERVE.atAngle(new FlippableRotation2d( SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw(), false));
     }
 
     public static Command getFixedDeliveryShootingCommand() {
@@ -126,7 +111,7 @@ public class ShootingCommands {
                 getAimHoodForFixedShootingCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
 //                getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
-                getIntakeSequenceWhileShootingCommand()
+                FuelIntakeCommands.getIntakeSequenceWhileShootingCommand()
         );
     }
 
@@ -260,13 +245,6 @@ public class ShootingCommands {
 //                : FixedShootingPosition.AUTONOMOUS_BASIC_RIGHT;
     }
 
-    public static RepeatCommand getIntakeSequenceWhileShootingCommand() {
-        return new SequentialCommandGroup(
-                IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(() -> !RobotContainer.SWERVE.isMoving() && !OperatorConstants.INTAKE_TRIGGER.getAsBoolean()),
-                IntakeCommands.getFoldForShootingCommand().onlyWhile(() -> !RobotContainer.SWERVE.isMoving() && !OperatorConstants.INTAKE_TRIGGER.getAsBoolean())
-        ).repeatedly();
-    }
-
     public static Command getEnableFixedOverrideSwerveAimCommand() {
         return new InstantCommand(ShootingCommands::enableOverrideSwerveAim).ignoringDisable(true);
     }
@@ -373,9 +351,8 @@ public class ShootingCommands {
     private static boolean isReadyForFixedDelivery() {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH);
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND);
-//        final boolean isAngleReady = isSwerveAtAngle(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW);
 
-        return isPitchReady && isVelocityReady;// && isAngleReady;
+        return isPitchReady && isVelocityReady;
     }
 
     private static boolean isReadyForFixedShootingAtHub() {
