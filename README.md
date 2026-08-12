@@ -4,7 +4,7 @@
 
 # RobotCodePostSeason2026
 
-TRIGON 5990's robot code for the 2026 post season robot, "PLACEHOLDER".
+TRIGON 5990's robot code for the 2026 post season robot, "TWOBO".
 
 # External Programs
 
