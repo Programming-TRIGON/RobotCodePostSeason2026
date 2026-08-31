@@ -26,6 +26,7 @@ import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
+import frc.trigon.robot.subsystems.swerve.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
@@ -373,9 +374,9 @@ public class ShootingCommands {
     private static boolean isReadyForFixedDelivery() {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH);
         final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND);
-//        final boolean isAngleReady = isSwerveAtAngle(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW);
+        final boolean isAngleReady = isSwerveAtAngle(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW);
 
-        return isPitchReady && isVelocityReady;// && isAngleReady;
+        return isPitchReady && isVelocityReady && isAngleReady;
     }
 
     private static boolean isReadyForFixedShootingAtHub() {

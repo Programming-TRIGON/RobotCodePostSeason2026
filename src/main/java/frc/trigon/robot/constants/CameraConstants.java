@@ -39,13 +39,13 @@ public class CameraConstants {
     public static final AprilTagCamera
             RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
             AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-            "LeftAprilTagCamera",
+            "RightAprilTagCamera",
             ROBOT_TO_RIGHT_APRIL_TAG_CAMERA,
             APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
     ),
             LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
                     AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-                    "RightAprilTagCamera",
+                    "LeftAprilTagCamera",
                     ROBOT_TO_LEFT_APRIL_TAG_CAMERA,
                     APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
             );
