@@ -20,12 +20,12 @@ import frc.trigon.lib.hardware.simulation.SingleJointedArmSimulation;
 import frc.trigon.lib.utilities.mechanisms.SingleJointedArmMechanism2d;
 
 public class HoodConstants {
-    private static final int MOTOR_ID = 17;
+    private static final int MOTOR_ID = 18;
     private static final String MOTOR_NAME = "HoodMotor";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 32;
+    static final double GEAR_RATIO = 32;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
@@ -34,7 +34,7 @@ public class HoodConstants {
             HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(62),
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(20);
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(21.5);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
             GEARBOX,
@@ -59,16 +59,16 @@ public class HoodConstants {
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(0.1).per(Units.Seconds),
-            Units.Volts.of(0.3),
+            Units.Volts.of(0.7).per(Units.Seconds),
+            Units.Volts.of(1),
             null
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(1);
     static final Rotation2d REST_ANGLE = MINIMUM_ANGLE;
-    public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(30.203);
+    public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(40);
     public static final Rotation2d EJECT_FROM_SHOOTER_PITCH = Rotation2d.fromDegrees(30);
-    static final double HOOD_RESET_VOLTAGE = 1;
+    static final double HOOD_RESET_VOLTAGE = -1;
     static final Rotation2d RESET_ANGLE = MINIMUM_ANGLE;
 
     static {
@@ -86,24 +86,24 @@ public class HoodConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 35 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 35 : 300;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.22942 : 0;
         config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.016146 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 2.6669 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 2.6669 : 2.6469;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.041586 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.18316 : 0;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.18316 : 0.33039;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 20 : 0;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 20 : 0;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 20 : 3;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 20 : 2;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 60;
+        config.CurrentLimits.StatorCurrentLimit = 30;
 
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAXIMUM_ANGLE.getRotations();

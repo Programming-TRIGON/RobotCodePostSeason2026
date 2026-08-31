@@ -40,22 +40,12 @@ public class ShootingCalculations {
         Logger.recordOutput("ShootingCalculations/TargetShootingVelocityMPS", targetShootingState.targetShootingVelocityMetersPerSecond());
         Logger.recordOutput("ShootingCalculations/TargetMode", currentTargetShootingLocation.name());
         Logger.recordOutput("ShootingCalculations/Conditions/SwerveAtTargetAngle", RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false)));
+
+        logRangeToAllTargets();
     }
 
     public ShootingState getTargetShootingState() {
         return targetShootingState;
-    }
-
-    /**
-     * @return True if the chassis, hood pitch, and shooter wheels are all at their PID setpoints.
-     */
-    @AutoLogOutput(key = "ShootingCalculations/isReadyToShoot")
-    public boolean isReadyToShoot() {
-        final boolean isYawReady = RobotContainer.SWERVE.atAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
-        final boolean isPitchReady = RobotContainer.HOOD.atAngle(targetShootingState.targetPitch());
-        final boolean isVelocityReady = RobotContainer.SHOOTER.atVelocity(targetShootingState.targetShootingVelocityMetersPerSecond());
-
-        return isYawReady && isPitchReady && isVelocityReady;
     }
 
     @AutoLogOutput(key = "ShootingCalculations/CurrentFuelExitPosition")
@@ -82,6 +72,25 @@ public class ShootingCalculations {
         final Pose3d pitchedExitPose = baseExitPose.transformBy(pitchTransform);
 
         return pitchedExitPose.transformBy(laneSpecificExitTransform).getTranslation();
+    }
+
+    private void logRangeToAllTargets() {
+        final Pose2d robotPose = RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose();
+        final Translation2d shooterExitXY = new Pose3d(robotPose)
+                .transformBy(ShooterConstants.FUEL_EXIT_SHOOTER_POSE)
+                .getTranslation().toTranslation2d();
+
+        final double distanceToHub = shooterExitXY.getDistance(FieldConstants.HUB_POSITION.get());
+        final double distanceToRightDelivery = shooterExitXY.getDistance(FieldConstants.RIGHT_DELIVERY_POSITION.get());
+        final double distanceToLeftDelivery = shooterExitXY.getDistance(FieldConstants.LEFT_DELIVERY_POSITION.get());
+        final boolean rightIsCloser = distanceToRightDelivery <= distanceToLeftDelivery;
+        final double distanceToClosestDelivery = rightIsCloser ? distanceToRightDelivery : distanceToLeftDelivery;
+
+        Logger.recordOutput("ShootingCalculations/Distance/HubMeters", distanceToHub);
+        Logger.recordOutput("ShootingCalculations/Distance/RightDeliveryMeters", distanceToRightDelivery);
+        Logger.recordOutput("ShootingCalculations/Distance/LeftDeliveryMeters", distanceToLeftDelivery);
+        Logger.recordOutput("ShootingCalculations/Distance/ClosestDeliveryMeters", distanceToClosestDelivery);
+        Logger.recordOutput("ShootingCalculations/Distance/ClosestDeliveryName", rightIsCloser ? "RIGHT" : "LEFT");
     }
 
     private ShootingState calculateTargetShootingState() {

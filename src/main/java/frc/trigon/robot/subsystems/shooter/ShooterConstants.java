@@ -20,8 +20,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class ShooterConstants {
     private static final int
-            MASTER_MOTOR_ID = 15,
-            FOLLOWER_MOTOR_ID = 16;
+            MASTER_MOTOR_ID = 16,
+            FOLLOWER_MOTOR_ID = 17;
     private static final String
             MASTER_MOTOR_NAME = "ShooterMasterMotor",
             FOLLOWER_MOTOR_NAME = "ShooterFollowerMotor";
@@ -43,7 +43,7 @@ public class ShooterConstants {
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, AVERAGE_GEAR_RATIO, MOMENT_OF_INERTIA);
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(4).per(Units.Second),
+            Units.Volts.of(1).per(Units.Second),
             Units.Volts.of(3),
             null
     );
@@ -64,7 +64,7 @@ public class ShooterConstants {
             new Translation3d(-0.160855914, 0, 0.462125568),
             new Rotation3d(0, 0, Rotation2d.k180deg.getRadians())
     );
-    public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 7.208;
+    public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5;
     public static final double EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 2;
 
     static {
@@ -78,22 +78,22 @@ public class ShooterConstants {
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
 
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.73;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.27773;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.21056;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.0090496;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15.0 : 0;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 0;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : 12.5;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 30;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.Feedback.SensorToMechanismRatio = AVERAGE_GEAR_RATIO;
-        config.Feedback.VelocityFilterTimeConstant = 0;
+        config.Feedback.VelocityFilterTimeConstant = 0.002;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = STATOR_CURRENT_LIMIT_AMPS;
@@ -115,7 +115,7 @@ public class ShooterConstants {
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
 
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;

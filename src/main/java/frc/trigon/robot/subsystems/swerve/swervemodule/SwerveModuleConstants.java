@@ -2,10 +2,7 @@ package frc.trigon.robot.subsystems.swerve.swervemodule;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -27,7 +24,7 @@ public class SwerveModuleConstants {
             STEER_MOTOR_AMOUNT = 1;
     private static final DCMotor
             DRIVE_MOTOR_GEARBOX = DCMotor.getKrakenX60Foc(DRIVE_MOTOR_AMOUNT),
-            STEER_MOTOR_GEARBOX = DCMotor.getFalcon500Foc(STEER_MOTOR_AMOUNT);
+            STEER_MOTOR_GEARBOX = DCMotor.getKrakenX44Foc(STEER_MOTOR_AMOUNT);
 
     public static final SysIdRoutine.Config DRIVE_MOTOR_SYSID_CONFIG = new SysIdRoutine.Config(
             Units.Volts.of(1).per(Units.Second),
@@ -77,12 +74,12 @@ public class SwerveModuleConstants {
         config.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.1;
         config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.1;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 0.5;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.016046 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.8774 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 00.020691 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.016046 : 0.25435;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.8774 : 0.74997;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 00.020691 : 0.045772;
 
         config.Feedback.VelocityFilterTimeConstant = 0;
 
@@ -105,9 +102,11 @@ public class SwerveModuleConstants {
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         config.Feedback.FeedbackRemoteSensorID = feedbackRemoteSensorID;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 120 : 40;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 120 : 32;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0 : 0.27;
+        config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
         config.ClosedLoopGeneral.ContinuousWrap = true;
 
         return config;

@@ -19,20 +19,22 @@ public class ShootingMap {
         addDeliveryPoints();
     }
 
-    private static void addHubPoints() { //TODO: calibrate real robot numbers
-        addPoint(HUB_MAP, 2, 6.2, Rotation2d.fromDegrees(62), 0.76);
-        addPoint(HUB_MAP, 3, 6.85, Rotation2d.fromDegrees(60), 0.92);
-        addPoint(HUB_MAP, 4, 7.75, Rotation2d.fromDegrees(58), 1.06);
-        addPoint(HUB_MAP, 5, 8.4, Rotation2d.fromDegrees(57), 1.16);
-        addPoint(HUB_MAP, 6, 9.2, Rotation2d.fromDegrees(57), 1.3);
+    private static void addHubPoints() {
+        addPoint(HUB_MAP, 4.87760115561, 9.5, Rotation2d.fromDegrees(37), 1.45);
+        addPoint(HUB_MAP, 3.836144086, 8.75, Rotation2d.fromDegrees(28), 1.42);
+        addPoint(HUB_MAP, 2.686144, 8.1, Rotation2d.fromDegrees(25), 1.25);
+        addPoint(HUB_MAP, 2.472544086, 7.7, Rotation2d.fromDegrees(25), 1.18);
+        addPoint(HUB_MAP, 2.041144086, 7.2, Rotation2d.fromDegrees(24), 1.07);
+        addPoint(HUB_MAP, 1.666144086, 6.8, Rotation2d.fromDegrees(22), 1.07);
     }
 
-    private static void addDeliveryPoints() { //TODO: calibrate real robot numbers
-        addPoint(DELIVERY_MAP, 3, 5.65, Rotation2d.fromDegrees(20), 0.540);
-        addPoint(DELIVERY_MAP, 5, 7.1, Rotation2d.fromDegrees(30), 0.8);
-        addPoint(DELIVERY_MAP, 7, 8.7, Rotation2d.fromDegrees(33), 1);
-        addPoint(DELIVERY_MAP, 10, 10.6, Rotation2d.fromDegrees(40), 1.34);
-
+    private static void addDeliveryPoints() {
+        addPoint(DELIVERY_MAP, 2.50, 5.2, Rotation2d.fromDegrees(26.5), 0.68);
+        addPoint(DELIVERY_MAP, 3.00, 5.81, Rotation2d.fromDegrees(27), 0.75);
+        addPoint(DELIVERY_MAP, 4.00, 7.03, Rotation2d.fromDegrees(29), 0.92);
+        addPoint(DELIVERY_MAP, 5.00, 8.3, Rotation2d.fromDegrees(31), 1.09);
+        addPoint(DELIVERY_MAP, 6.00, 9.70, Rotation2d.fromDegrees(34), 1.29);
+        addPoint(DELIVERY_MAP, 7.00, 11.46, Rotation2d.fromDegrees(37), 1.51);
     }
 
     private static void addPoint(InterpolatingTreeMap<Double, ShotParameters> map, double distanceMeters, double velocityMetersPerSecond, Rotation2d pitch, double timeOfFlightSeconds) {

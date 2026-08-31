@@ -14,39 +14,39 @@ public class CameraConstants {
             0.01
     );
     private static final Transform3d
-            ROBOT_TO_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
+            ROBOT_TO_LEFT_APRIL_TAG_CAMERA = new Transform3d(
             new Translation3d(
-                    0.171,
                     -0.355,
+                    0.171,
                     0.191),
             new Rotation3d(
                     Units.degreesToRadians(9.68),
                     Units.degreesToRadians(-22.5),
-                    Units.degreesToRadians(-23.0)
+                    Units.degreesToRadians(180 + 23.0)
             )
     ),
-            ROBOT_TO_LEFT_APRIL_TAG_CAMERA = new Transform3d(
+            ROBOT_TO_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
                     new Translation3d(
-                            0.171,
-                            0.355,
+                            -0.355,
+                            -0.171,
                             0.191),
                     new Rotation3d(
                             Units.degreesToRadians(9.68),
                             Units.degreesToRadians(-22.5),
-                            Units.degreesToRadians(23.0)
+                            Units.degreesToRadians(180 - 23.0)
                     )
             );
     public static final AprilTagCamera
-            RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
+            LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
             AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-            "RightAprilTagCamera",
-            ROBOT_TO_RIGHT_APRIL_TAG_CAMERA,
+            "LeftAprilTagCamera",
+            ROBOT_TO_LEFT_APRIL_TAG_CAMERA,
             APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
     ),
-            LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
+            RIGHT_APRIL_TAG_CAMERA1 = new AprilTagCamera(
                     AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-                    "LeftAprilTagCamera",
-                    ROBOT_TO_LEFT_APRIL_TAG_CAMERA,
+                    "RightAprilTagCamera",
+                    ROBOT_TO_RIGHT_APRIL_TAG_CAMERA,
                     APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
             );
 }

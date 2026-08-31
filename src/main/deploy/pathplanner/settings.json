@@ -5,10 +5,12 @@
   "pathFolders": [
     "Basic Auto Paths",
     "Double Swipe Paths",
-    "Long Delivery Paths"
+    "Long Delivery Paths",
+    "Scatter All",
+    "Scatter one side"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 4.4,
+  "defaultMaxVel": 3.5,
   "defaultMaxAccel": 4.0,
   "defaultMaxAngVel": 400.0,
   "defaultMaxAngAccel": 400.0,
@@ -16,11 +18,11 @@
   "robotMass": 62.0,
   "robotMOI": 6.03,
   "robotTrackwidth": 0.546,
-  "driveWheelRadius": 0.05,
+  "driveWheelRadius": 0.0433765,
   "driveGearing": 6.12,
   "maxDriveSpeed": 5.0,
   "driveMotorType": "krakenX60FOC",
-  "driveCurrentLimit": 80.0,
+  "driveCurrentLimit": 70.0,
   "wheelCOF": 1.6,
   "flModuleX": 0.293,
   "flModuleY": 0.258,

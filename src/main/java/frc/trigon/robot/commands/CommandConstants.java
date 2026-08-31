@@ -14,7 +14,6 @@ import frc.trigon.lib.utilities.BoundingBox;
 import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRelativeRestrictedDriveCommand;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.SelfRelativeDriveRestrictedCommand;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.CustomCenterOfRotationDriveRestriction;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneRestrictionsDrive;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.RestrictedZone;
@@ -55,7 +54,7 @@ public class CommandConstants {
     private static final Translation2d
             BLUE_BUMPS_ZONE_CENTER = new Translation2d(4.592574, FieldConstants.FIELD_WIDTH_METERS / 2),
             RED_BUMPS_ZONE_CENTER = new Translation2d(11.947426, FieldConstants.FIELD_WIDTH_METERS / 2);
-    private static final LoggedNetworkBoolean SHOULD_USE_INTAKE_ASSIST = new LoggedNetworkBoolean("Assist/ShouldUseIntakeAssist", false);
+    private static final LoggedNetworkBoolean SHOULD_USE_INTAKE_ASSIST = new LoggedNetworkBoolean("/SmartDashboard/Assist/ShouldUseIntakeAssist", false);
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
@@ -87,7 +86,7 @@ public class CommandConstants {
             ),
             CALCULATE_CAMERA_POSITION_COMMAND = new CameraPositionCalculationCommand(
                     RobotContainer.ROBOT_POSE_ESTIMATOR::getEstimatedRobotPose,
-                    Rotation2d.fromDegrees(0),
+                    Rotation2d.fromDegrees(180 + 23.0),
                     (omegaRadiansPerSecond) -> RobotContainer.SWERVE.selfRelativeDrive(new ChassisSpeeds(0, 0, omegaRadiansPerSecond)),
                     RobotContainer.SWERVE
             ),
@@ -108,7 +107,7 @@ public class CommandConstants {
      *
      * @param speedMultiplier the multiplier to scale the driving speed by, from 0 (stopped) to 1 (full speed)
      */
-    public static void setSpeedMultiplier(double speedMultiplier) {
+    public static void setSwerveSpeedMultiplier(double speedMultiplier) {
         GeneralCommands.SWERVE_SPEED_MULTIPLIER = speedMultiplier;
     }
 
