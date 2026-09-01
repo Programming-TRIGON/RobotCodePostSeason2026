@@ -82,6 +82,10 @@ public class Intake extends MotorSubsystem {
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
+    public boolean isLimitSwitchPressed() {
+        return !IntakeConstants.INTAKE_LIMIT_SWITCH.get();
+    }
+
     public boolean atState(IntakeConstants.IntakeState targetState) {
         return targetState == this.targetState && atTargetState();
     }
