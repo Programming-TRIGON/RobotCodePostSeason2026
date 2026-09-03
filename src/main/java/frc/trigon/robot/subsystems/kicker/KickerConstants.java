@@ -1,7 +1,6 @@
-package frc.trigon.robot.subsystems.loader;
+package frc.trigon.robot.subsystems.kicker;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -13,9 +12,9 @@ import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
-public class LoaderConstants {
-    private static final int MOTOR_ID = 15;
-    private static final String MOTOR_NAME = "LoaderMotor";
+public class KickerConstants {
+    private static final int MOTOR_ID = 14;
+    private static final String MOTOR_NAME = "KickerMotor";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
@@ -37,9 +36,9 @@ public class LoaderConstants {
     );
 
     private static final double MAXIMUM_DISPLAYABLE_VELOCITY = 10;
-    private static final String LOADER_MECHANISM_NAME = "LoaderMechanism";
-    static final SpeedMechanism2d LOADER_MECHANISM = new SpeedMechanism2d(
-            LOADER_MECHANISM_NAME,
+    private static final String KICKER_MECHANISM_NAME = "KickerMechanism";
+    static final SpeedMechanism2d KICKER_MECHANISM = new SpeedMechanism2d(
+            KICKER_MECHANISM_NAME,
             MAXIMUM_DISPLAYABLE_VELOCITY
     );
 
@@ -49,10 +48,10 @@ public class LoaderConstants {
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {
-        configureLoaderMotor();
+        configureKickerMotor();
     }
 
-    private static void configureLoaderMotor() {
+    private static void configureKickerMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.Audio.BeepOnBoot = false;
@@ -63,15 +62,15 @@ public class LoaderConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 2 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0073773 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.16613 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.019218 : 0;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Loader.metersToRotations(10);
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Loader.metersToRotations(15);
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Kicker.metersToRotations(10);
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Kicker.metersToRotations(15);
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.CurrentLimits.StatorCurrentLimit = 40;
@@ -85,5 +84,20 @@ public class LoaderConstants {
         MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
         MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+    }
+
+    public enum KickerState {
+        LOAD_FOR_DELIVERY(5),
+        LOAD_FOR_SHOOTING(5),
+        PRELOAD(1),
+        EJECT_FROM_INTAKE(-2),
+        EJECT_FROM_SHOOTER(2),
+        REST(0);
+
+        public final double targetVelocity;
+
+        KickerState(double targetVelocity) {
+            this.targetVelocity = targetVelocity;
+        }
     }
 }

@@ -18,14 +18,6 @@ public class LoaderCommands {
         );
     }
 
-    public static Command getSetTargetStateCommand(LoaderConstants.LoaderState targetState) {
-        return new StartEndCommand(
-                () -> RobotContainer.LOADER.setTargetState(targetState),
-                RobotContainer.LOADER::stop,
-                RobotContainer.LOADER
-        );
-    }
-
     public static Command getAimForShootingCommand() {
         return new StartEndCommand(
                 RobotContainer.LOADER::aimForShooting,
