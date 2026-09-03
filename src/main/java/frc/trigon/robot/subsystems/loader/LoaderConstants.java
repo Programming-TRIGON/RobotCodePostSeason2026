@@ -43,6 +43,7 @@ public class LoaderConstants {
             MAXIMUM_DISPLAYABLE_VELOCITY
     );
 
+    public static final double EJECT_FROM_SHOOTER_VELOCITY = -2;
     public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 1;
     public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -1;
     static final double WHEEL_DIAMETER_METERS = 0.05;
