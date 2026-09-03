@@ -84,10 +84,6 @@ public class Loader extends MotorSubsystem {
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
-    void setTargetState(LoaderConstants.LoaderState targetState) {
-        setTargetVelocity(targetState.targetVelocity);
-    }
-
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
         motor.setControl(velocityRequest.withVelocity(metersToRotations(targetVelocityMetersPerSecond)));
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
