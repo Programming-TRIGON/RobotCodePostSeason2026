@@ -94,10 +94,10 @@ public class KickerConstants {
         EJECT_FROM_SHOOTER(2),
         REST(0);
 
-        public final double targetVelocity;
+        public final double targetVelocityMetersPerSecond;
 
-        KickerState(double targetVelocity) {
-            this.targetVelocity = targetVelocity;
+        KickerState(double targetVelocityMetersPerSecond) {
+            this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
         }
     }
 }

@@ -53,7 +53,7 @@ public class Loader extends MotorSubsystem {
     public void updateMechanism() {
         LoaderConstants.LOADER_MECHANISM.update(
                 getCurrentVelocityMetersPerSecond(),
-                rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE))
+                getTargetProfiledVelocityMetersPerSecond()
         );
     }
 
@@ -61,13 +61,13 @@ public class Loader extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
 
-        Logger.recordOutput("Loader/CurrentVelocityMetersPerSecond", getCurrentVelocityMetersPerSecond());
         Logger.recordOutput("Loader/TargetVelocityMetersPerSecond", targetVelocityMetersPerSecond);
-        Logger.recordOutput("Loader/TargetProfiledVelocityMetersPerSecond", rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE)));
+        Logger.recordOutput("Loader/TargetProfiledVelocityMetersPerSecond", getTargetProfiledVelocityMetersPerSecond());
     }
 
-    public double getCurrentVoltage() {
-        return motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE);
+    @AutoLogOutput(key = "Loader/CurrentVelocityMetersPerSecond")
+    public double getCurrentVelocityMetersPerSecond() {
+        return rotationsToMeters(motor.getSignal(TalonFXSignal.VELOCITY));
     }
 
     @AutoLogOutput(key = "Loader/AtTargetVelocity")
@@ -80,7 +80,7 @@ public class Loader extends MotorSubsystem {
     }
 
     void aimForShooting() {
-        double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond();
+        double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond() * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY;
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
@@ -89,8 +89,8 @@ public class Loader extends MotorSubsystem {
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
     }
 
-    private double getCurrentVelocityMetersPerSecond() {
-        return rotationsToMeters(motor.getSignal(TalonFXSignal.VELOCITY));
+    private double getTargetProfiledVelocityMetersPerSecond() {
+        return rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
     }
 
     static double rotationsToMeters(double rotations) {

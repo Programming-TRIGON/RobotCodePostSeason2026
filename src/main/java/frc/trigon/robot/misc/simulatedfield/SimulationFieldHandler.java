@@ -169,7 +169,7 @@ public class SimulationFieldHandler {
      * loader, indexer, and intake all spinning backwards.
      */
     private static boolean isEjectingThroughIntake() {
-        return RobotContainer.LOADER.getCurrentVoltage() < LoaderConstants.EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD
+        return RobotContainer.LOADER.getCurrentVelocityMetersPerSecond() < LoaderConstants.EJECT_FROM_INTAKE_VELOCITY_THRESHOLD
                 && RobotContainer.INDEXER.getCurrentVoltage() < IndexerConstants.EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD
                 && RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN);
     }
@@ -183,7 +183,7 @@ public class SimulationFieldHandler {
     }
 
     private static boolean isShootingFuel() {
-        return RobotContainer.LOADER.getCurrentVoltage() > LoaderConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
+        return RobotContainer.LOADER.getCurrentVelocityMetersPerSecond() > LoaderConstants.LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD
                 && RobotContainer.INDEXER.getCurrentVoltage() > IndexerConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD;
     }
 

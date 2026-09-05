@@ -1,7 +1,6 @@
 package frc.trigon.robot.subsystems.loader;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -45,10 +44,11 @@ public class LoaderConstants {
 
     public static final double EJECT_FROM_INTAKE_VELOCITY = -2;
     public static final double EJECT_FROM_SHOOTER_VELOCITY = 2;
-    public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 1;
-    public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -1;
+    public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 1;
+    public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
     static final double WHEEL_DIAMETER_METERS = 0.05;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
+    static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.8;
 
     static {
         configureLoaderMotor();

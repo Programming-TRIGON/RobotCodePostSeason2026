@@ -9,7 +9,6 @@ import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.robot.subsystems.MotorSubsystem;
-import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -52,7 +51,7 @@ public class Kicker extends MotorSubsystem {
     public void updateMechanism() {
         KickerConstants.KICKER_MECHANISM.update(
                 getCurrentVelocityMetersPerSecond(),
-                rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE))
+                getTargetProfiledVelocityMetersPerSecond()
         );
     }
 
@@ -60,9 +59,9 @@ public class Kicker extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
 
-        Logger.recordOutput("Kicker/CurrentVelocityMetersPerSecond", getCurrentVelocityMetersPerSecond());
+        Logger.recordOutput("Kicker/Voltage", getCurrentVoltage());
         Logger.recordOutput("Kicker/TargetVelocityMetersPerSecond", targetVelocityMetersPerSecond);
-        Logger.recordOutput("Kicker/TargetProfiledVelocityMetersPerSecond", rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE)));
+        Logger.recordOutput("Kicker/TargetProfiledVelocityMetersPerSecond", getTargetProfiledVelocityMetersPerSecond());
     }
 
     public double getCurrentVoltage() {
@@ -79,7 +78,7 @@ public class Kicker extends MotorSubsystem {
     }
 
     void setTargetState(KickerConstants.KickerState targetState) {
-        setTargetVelocity(targetState.targetVelocity);
+        setTargetVelocity(targetState.targetVelocityMetersPerSecond);
     }
 
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
@@ -87,8 +86,13 @@ public class Kicker extends MotorSubsystem {
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
     }
 
+    @AutoLogOutput(key = "Kicker/TargetVelocityMetersPerSecond")
     private double getCurrentVelocityMetersPerSecond() {
         return rotationsToMeters(motor.getSignal(TalonFXSignal.VELOCITY));
+    }
+
+    private double getTargetProfiledVelocityMetersPerSecond() {
+        return rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
     }
 
     static double rotationsToMeters(double rotations) {
