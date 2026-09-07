@@ -2,6 +2,7 @@ package frc.trigon.robot.subsystems.loader;
 
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -79,11 +80,16 @@ public class Loader extends MotorSubsystem {
     }
 
     void aimForShooting() {
-        double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond() * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY;
+        final double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond() * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY;
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
+        targetVelocityMetersPerSecond = MathUtil.clamp(
+                targetVelocityMetersPerSecond,
+                -LoaderConstants.MAX_LOADER_VELOCITY_METERS_PER_SECOND,
+                LoaderConstants.MAX_LOADER_VELOCITY_METERS_PER_SECOND
+        );
         motor.setControl(velocityRequest.withVelocity(metersToRotations(targetVelocityMetersPerSecond)));
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
     }

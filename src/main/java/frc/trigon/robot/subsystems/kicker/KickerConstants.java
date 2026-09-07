@@ -24,7 +24,7 @@ public class KickerConstants {
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
     private static final double MOMENT_OF_INERTIA = 0.003;
-    static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
+    private static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
             GEARBOX,
             GEAR_RATIO,
             MOMENT_OF_INERTIA
@@ -43,12 +43,9 @@ public class KickerConstants {
             MAXIMUM_DISPLAYABLE_VELOCITY
     );
 
-    public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 1;
-    public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
     private static final double OUTER_WHEELS_DIAMETER_METERS = 0.05;
     private static final double INNER_WHEEL_DIAMETER_METERS = 0.05;
-    private static final Rotation2d OUTER_WHEELS_DIP_ANGLE = Rotation2d.fromDegrees(30);
-    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = Math.PI * (OUTER_WHEELS_DIAMETER_METERS * OUTER_WHEELS_DIP_ANGLE.getRadians() * INNER_WHEEL_DIAMETER_METERS) / 120;
+    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = Math.PI * (OUTER_WHEELS_DIAMETER_METERS + INNER_WHEEL_DIAMETER_METERS) / 120;//120 is a constant number used in the conversion factor calculation(according to claude)
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {

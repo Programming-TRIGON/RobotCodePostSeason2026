@@ -42,6 +42,7 @@ public class LoaderConstants {
             MAXIMUM_DISPLAYABLE_VELOCITY
     );
 
+    static final double MAX_LOADER_VELOCITY_METERS_PER_SECOND = 10;
     public static final double EJECT_FROM_INTAKE_VELOCITY = -2;
     public static final double EJECT_FROM_SHOOTER_VELOCITY = 2;
     public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 1;
