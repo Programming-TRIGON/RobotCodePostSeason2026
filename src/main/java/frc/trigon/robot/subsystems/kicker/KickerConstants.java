@@ -3,6 +3,7 @@ package frc.trigon.robot.subsystems.kicker;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -44,7 +45,10 @@ public class KickerConstants {
 
     public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 1;
     public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
-    static final double WHEEL_DIAMETER_METERS = 0.05;
+    private static final double OUTER_WHEELS_DIAMETER_METERS = 0.05;
+    private static final double INNER_WHEEL_DIAMETER_METERS = 0.05;
+    private static final Rotation2d OUTER_WHEELS_DIP_ANGLE = Rotation2d.fromDegrees(30);
+    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = Math.PI * (OUTER_WHEELS_DIAMETER_METERS * OUTER_WHEELS_DIP_ANGLE.getRadians() * INNER_WHEEL_DIAMETER_METERS) / 120;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {

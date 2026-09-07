@@ -102,10 +102,10 @@ public class Kicker extends MotorSubsystem {
     }
 
     static double rotationsToMeters(double rotations) {
-        return Conversions.rotationsToDistance(rotations, KickerConstants.WHEEL_DIAMETER_METERS);
+        return Conversions.rotationsToDistance(rotations, KickerConstants.ANGULAR_TO_LINEAR_CONVERSION_FACTOR);
     }
 
     static double metersToRotations(double meters) {
-        return Conversions.distanceToRotations(meters, KickerConstants.WHEEL_DIAMETER_METERS);
+        return Conversions.distanceToRotations(meters, KickerConstants.ANGULAR_TO_LINEAR_CONVERSION_FACTOR);
     }
 }
