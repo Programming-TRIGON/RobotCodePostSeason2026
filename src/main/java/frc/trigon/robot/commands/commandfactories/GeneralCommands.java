@@ -11,6 +11,7 @@ import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
+import frc.trigon.robot.subsystems.kicker.KickerCommands;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
@@ -30,6 +31,7 @@ public class GeneralCommands {
                 HoodCommands.getDebuggingCommand(),
                 IndexerCommands.getDebuggingCommand(),
                 IntakeCommands.getDebuggingCommand(),
+                KickerCommands.getDebuggingCommand(),
                 LoaderCommands.getDebuggingCommand(),
                 ShooterCommands.getDebuggingCommand()
         );
