@@ -62,7 +62,6 @@ public class Loader extends MotorSubsystem {
         motor.update();
 
         Logger.recordOutput("Loader/TargetVelocityMetersPerSecond", targetVelocityMetersPerSecond);
-        Logger.recordOutput("Loader/TargetProfiledVelocityMetersPerSecond", getTargetProfiledVelocityMetersPerSecond());
     }
 
     @AutoLogOutput(key = "Loader/CurrentVelocityMetersPerSecond")
@@ -89,6 +88,7 @@ public class Loader extends MotorSubsystem {
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
     }
 
+    @AutoLogOutput(key = "Loader/TargetProfiledVelocityMetersPerSecond")
     private double getTargetProfiledVelocityMetersPerSecond() {
         return rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
     }

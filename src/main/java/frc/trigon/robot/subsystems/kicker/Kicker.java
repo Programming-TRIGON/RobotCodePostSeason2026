@@ -59,11 +59,10 @@ public class Kicker extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
 
-        Logger.recordOutput("Kicker/Voltage", getCurrentVoltage());
         Logger.recordOutput("Kicker/TargetVelocityMetersPerSecond", targetVelocityMetersPerSecond);
-        Logger.recordOutput("Kicker/TargetProfiledVelocityMetersPerSecond", getTargetProfiledVelocityMetersPerSecond());
     }
 
+    @AutoLogOutput(key = "Kicker/Voltage")
     public double getCurrentVoltage() {
         return motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE);
     }
@@ -91,6 +90,7 @@ public class Kicker extends MotorSubsystem {
         return rotationsToMeters(motor.getSignal(TalonFXSignal.VELOCITY));
     }
 
+    @AutoLogOutput(key = "Kicker/TargetProfiledVelocityMetersPerSecond")
     private double getTargetProfiledVelocityMetersPerSecond() {
         return rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
     }
