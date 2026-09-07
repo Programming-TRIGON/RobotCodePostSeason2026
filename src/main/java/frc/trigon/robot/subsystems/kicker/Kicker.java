@@ -16,6 +16,7 @@ public class Kicker extends MotorSubsystem {
     private final TalonFXMotor motor = KickerConstants.MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(KickerConstants.FOC_ENABLED);
     private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(KickerConstants.FOC_ENABLED);
+    private KickerConstants.KickerState targetState;
     private double targetVelocityMetersPerSecond = 0;
 
     public Kicker() {
@@ -72,11 +73,16 @@ public class Kicker extends MotorSubsystem {
         return atVelocity(targetVelocityMetersPerSecond);
     }
 
+    public boolean atState(KickerConstants.KickerState targetState) {
+        return atVelocity(targetState.targetVelocityMetersPerSecond) && this.targetState == targetState;
+    }
+
     public boolean atVelocity(double targetVelocityMetersPerSecond) {
         return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < KickerConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
     }
 
     void setTargetState(KickerConstants.KickerState targetState) {
+        this.targetState = targetState;
         setTargetVelocity(targetState.targetVelocityMetersPerSecond);
     }
 
