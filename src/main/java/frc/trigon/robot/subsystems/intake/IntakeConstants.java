@@ -25,10 +25,10 @@ import frc.trigon.robot.constants.RobotConstants;
 
 public class IntakeConstants {
     private static final int
-            MASTER_INTAKE_MOTOR_ID = 9,
-            FOLLOWER_INTAKE_MOTOR_ID = 10,
-            MASTER_ANGLE_MOTOR_ID = 11,
-            FOLLOWER_ANGLE_MOTOR_ID = 12,
+            MASTER_INTAKE_MOTOR_ID = 10,
+            FOLLOWER_INTAKE_MOTOR_ID = 11,
+            MASTER_ANGLE_MOTOR_ID = 12,
+            FOLLOWER_ANGLE_MOTOR_ID = 13,
             ANGLE_ENCODER_ID = 11;
     private static final String
             MASTER_INTAKE_MOTOR_NAME = "IntakeMasterMotor",

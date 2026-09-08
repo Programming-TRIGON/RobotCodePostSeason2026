@@ -2,13 +2,13 @@ package frc.trigon.robot.subsystems.intake;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.GearRatioCalculationCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
-import frc.trigon.robot.commands.commandfactories.GeneralCommands;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -16,15 +16,7 @@ public class IntakeCommands {
     private static final BooleanEvent IS_STUCK_ON_HOPPER = new BooleanEvent(
             CommandScheduler.getInstance().getActiveButtonLoop(),
             () -> !RobotContainer.INTAKE.atTargetState()
-            && RobotContainer.INTAKE.isIntakeStuckOnHopper()).debounce(0.2);
-
-    public static Command getDefaultCommand() {
-        return GeneralCommands.getContinuousConditionalCommand(
-                getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
-                getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
-                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
-        );
-    }
+                    && RobotContainer.INTAKE.isIntakeStuckOnHopper()).debounce(0.2);
 
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
