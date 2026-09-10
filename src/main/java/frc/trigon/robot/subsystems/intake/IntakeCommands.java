@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.GearRatioCalculationCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
+import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
+import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 
 import java.util.Set;
 
@@ -17,6 +19,14 @@ public class IntakeCommands {
             CommandScheduler.getInstance().getActiveButtonLoop(),
             () -> !RobotContainer.INTAKE.atTargetState()
                     && RobotContainer.INTAKE.isIntakeStuckOnHopper()).debounce(0.2);
+
+    public static Command getDefaultCommand() {
+        return GeneralCommands.getContinuousConditionalCommand(
+                IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
+                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
+        );
+    }
 
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(

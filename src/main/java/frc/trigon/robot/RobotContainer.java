@@ -25,6 +25,7 @@ import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.hood.Hood;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hopper.Hopper;
+import frc.trigon.robot.subsystems.hopper.HopperCommands;
 import frc.trigon.robot.subsystems.indexer.Indexer;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
@@ -79,9 +80,9 @@ public class RobotContainer {
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
-        HOPPER.setDefaultCommand(FuelIntakeCommands.getHopperDefaultCommand());
+        HOPPER.setDefaultCommand(HopperCommands.getDefaultCommand());
         INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
-        INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeDefaultCommand());
+        INTAKE.setDefaultCommand(IntakeCommands.getDefaultCommand());
         LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
         SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
     }
@@ -122,8 +123,8 @@ public class RobotContainer {
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
         OperatorConstants.HUB_ACTIVE_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
-        OperatorConstants.CLOSE_INTAKE_AND_HOPPER_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> { FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false); FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(false); }));
-        OperatorConstants.OPEN_INTAKE_AND_HOPPER_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> { FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true); FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(true); }));
+        OperatorConstants.OPEN_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
+        OperatorConstants.CLOSE_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {
