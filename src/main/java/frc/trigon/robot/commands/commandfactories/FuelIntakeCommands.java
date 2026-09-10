@@ -5,17 +5,16 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
-import frc.trigon.robot.subsystems.loader.LoaderCommands;
-import frc.trigon.robot.subsystems.loader.LoaderConstants;
+import frc.trigon.robot.subsystems.kicker.KickerCommands;
+import frc.trigon.robot.subsystems.kicker.KickerConstants;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class FuelIntakeCommands {
     public static LoggedNetworkBoolean SHOULD_INTAKE_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldIntakeDefaultOpen", true);
 
     public static Command getPreloadCommand() {
         return new ParallelCommandGroup(
-                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.PRELOAD)
+                KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.PRELOAD)
         ).withTimeout(CommandConstants.PRELOAD_TIMER_SECONDS);
     }
 

@@ -30,6 +30,9 @@ import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.intake.Intake;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
+import frc.trigon.robot.subsystems.kicker.Kicker;
+import frc.trigon.robot.subsystems.kicker.KickerCommands;
+import frc.trigon.robot.subsystems.kicker.KickerConstants;
 import frc.trigon.robot.subsystems.loader.Loader;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
@@ -49,6 +52,7 @@ public class RobotContainer {
     public static final Hood HOOD = new Hood();
     public static final Indexer INDEXER = new Indexer();
     public static final Intake INTAKE = new Intake();
+    public static final Kicker KICKER = new Kicker();
     public static final Loader LOADER = new Loader();
     public static final Shooter SHOOTER = new Shooter();
     private LoggedDashboardChooser<Command> autoChooser;
@@ -79,7 +83,8 @@ public class RobotContainer {
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
         INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
         INTAKE.setDefaultCommand(IntakeCommands.getDefaultCommand());
-        LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
+        KICKER.setDefaultCommand(KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST));
+        LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
         SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
     }
 
