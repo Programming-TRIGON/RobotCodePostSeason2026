@@ -10,20 +10,20 @@ import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import java.util.Set;
 
 public class HopperCommands {
-    public static Command getDefaultCommand() {
-        return GeneralCommands.getContinuousConditionalCommand(
-                HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE),
-                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
-        );
-    }
-
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
                 RobotContainer.HOPPER::setTargetPositionMeters,
                 false,
                 Set.of(RobotContainer.HOPPER),
                 "Debugging/HopperTargetPositionMeters"
+        );
+    }
+
+    public static Command getDefaultCommand() {
+        return GeneralCommands.getContinuousConditionalCommand(
+                getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
+                getSetTargetStateCommand(HopperConstants.HopperState.CLOSE),
+                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
         );
     }
 

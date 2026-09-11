@@ -11,13 +11,11 @@ import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
 
 public class Hopper extends MotorSubsystem {
     public final TalonFXMotor motor = HopperConstants.MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(HopperConstants.FOC_ENABLED);
-    private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0);
-    private double targetPositionMeters = 0;
+    private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(HopperConstants.FOC_ENABLED);
     private HopperConstants.HopperState targetState;
 
     public Hopper() {
@@ -36,9 +34,9 @@ public class Hopper extends MotorSubsystem {
     public void updateMechanism() {
         HopperConstants.MECHANISM.updateMechanism(
                 getPositionMeters(),
-                targetPositionMeters,
-                Rotation2d.fromDegrees(0),
-                Rotation2d.fromDegrees(0)
+                getProfiledPositionMeters(),
+                Rotation2d.kZero,
+                Rotation2d.kZero
         );
     }
 
@@ -60,9 +58,6 @@ public class Hopper extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         motor.update();
-        Logger.recordOutput("Hopper/TargetPositionMeters", targetPositionMeters);
-        Logger.recordOutput("Hopper/ProfiledPositionMeters", rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE)));
-
     }
 
     @Override
@@ -85,12 +80,20 @@ public class Hopper extends MotorSubsystem {
     }
 
     void setTargetPositionMeters(double targetPositionMeters) {
-        this.targetPositionMeters = targetPositionMeters;
         motor.setControl(positionRequest.withPosition(metersToRotations(targetPositionMeters)));
     }
 
-    double rotationsToMeters(double positionRotations) {
+    private double rotationsToMeters(double positionRotations) {
         return Conversions.rotationsToDistance(positionRotations, HopperConstants.DRUM_DIAMETER_METERS);
+    }
+
+    private double metersToRotations(double positionMeters) {
+        return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
+    }
+
+    @AutoLogOutput(key = "Hopper/ProfiledPositionMeters")
+    private double getProfiledPositionMeters() {
+        return rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
     }
 
     @AutoLogOutput(key = "Hopper/CurrentPositionMeters")
@@ -100,9 +103,5 @@ public class Hopper extends MotorSubsystem {
 
     private double getPositionRotations() {
         return motor.getSignal(TalonFXSignal.POSITION);
-    }
-
-    private double metersToRotations(double positionMeters) {
-        return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
     }
 }

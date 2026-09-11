@@ -40,19 +40,22 @@ public class HopperConstants {
     private static final String MECHANISM_NAME = "HopperMechanism";
     private static final double MAXIMUM_LENGTH_METERS = 0.3;
     private static final double MINIMUM_LENGTH_METERS = 0;
+    private static final double STARTING_LENGTH_METERS = 0.1;
+    private static final double ENDING_LENGTH_METERS = 0.4;
+
     private static final Color MECHANISM_COLOR = Color.kYellow;
     static final ArmElevatorMechanism2d MECHANISM = new ArmElevatorMechanism2d(
             MECHANISM_NAME,
-            MAXIMUM_LENGTH_METERS,
-            MINIMUM_LENGTH_METERS,
+            ENDING_LENGTH_METERS,
+            STARTING_LENGTH_METERS,
             MECHANISM_COLOR
     );
 
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 0,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 0;
-    static final double TOLERANCE_METERS = 0.03;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 2;
+    static final double TOLERANCE_METERS = 0.01;
 
     static {
         final TalonFXConfiguration config = new TalonFXConfiguration();
@@ -62,11 +65,11 @@ public class HopperConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50: 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0;
         config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877: 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 0;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -89,6 +92,8 @@ public class HopperConstants {
         MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
         MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
         MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
+        MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+
     }
 
     public enum HopperState {

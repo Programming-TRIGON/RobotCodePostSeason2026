@@ -20,14 +20,6 @@ public class IntakeCommands {
             () -> !RobotContainer.INTAKE.atTargetState()
                     && RobotContainer.INTAKE.isIntakeStuckOnHopper()).debounce(0.2);
 
-    public static Command getDefaultCommand() {
-        return GeneralCommands.getContinuousConditionalCommand(
-                IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
-                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
-        );
-    }
-
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
                 (targetVoltage, targetAngleDegrees) -> {
@@ -38,6 +30,14 @@ public class IntakeCommands {
                 Set.of(RobotContainer.INTAKE),
                 "Debugging/IntakeTargetVoltage",
                 "Debugging/IntakeTargetAngleDegrees"
+        );
+    }
+
+    public static Command getDefaultCommand() {
+        return GeneralCommands.getContinuousConditionalCommand(
+                getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
+                getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
+                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
         );
     }
 
