@@ -41,13 +41,12 @@ public class HopperConstants {
     private static final double MAXIMUM_LENGTH_METERS = 0.3;
     private static final double MINIMUM_LENGTH_METERS = 0;
     private static final double STARTING_LENGTH_METERS = 0.1;
-    private static final double ENDING_LENGTH_METERS = 0.4;
 
     private static final Color MECHANISM_COLOR = Color.kYellow;
     static final ArmElevatorMechanism2d MECHANISM = new ArmElevatorMechanism2d(
             MECHANISM_NAME,
-            ENDING_LENGTH_METERS,
-            STARTING_LENGTH_METERS,
+            MAXIMUM_LENGTH_METERS + STARTING_LENGTH_METERS,
+            MINIMUM_LENGTH_METERS + STARTING_LENGTH_METERS,
             MECHANISM_COLOR
     );
 
@@ -56,6 +55,8 @@ public class HopperConstants {
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
             DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 2;
     static final double TOLERANCE_METERS = 0.01;
+    static final double HOPPER_RESET_VOLTAGE = -1;
+    static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
 
     static {
         final TalonFXConfiguration config = new TalonFXConfiguration();

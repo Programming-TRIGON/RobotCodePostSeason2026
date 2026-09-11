@@ -27,6 +27,8 @@ public class OperatorConstants {
     public static final Trigger
             RESET_HEADING_TRIGGER = DRIVER_CONTROLLER.y(),
             RESET_HOOD_TRIGGER = OPERATOR_CONTROLLER.a().or(DRIVER_CONTROLLER.b()),
+            RESET_HOPPER_TRIGGER = OPERATOR_CONTROLLER.c(),
+
             TOGGLE_BRAKE_TRIGGER = OPERATOR_CONTROLLER.g().or(RobotController::getUserButton),
             DEBUGGING_TRIGGER = OPERATOR_CONTROLLER.f2(),
             SHOOTING_MAP_CALIBRATION_TRIGGER = OPERATOR_CONTROLLER.f3(),

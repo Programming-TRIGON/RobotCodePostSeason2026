@@ -11,12 +11,13 @@ import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Hopper extends MotorSubsystem {
     public final TalonFXMotor motor = HopperConstants.MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(HopperConstants.FOC_ENABLED);
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(HopperConstants.FOC_ENABLED);
-    private HopperConstants.HopperState targetState;
+    private HopperConstants.HopperState targetState = HopperConstants.HopperState.OPEN;
 
     public Hopper() {
         setName("Hopper");
@@ -25,7 +26,7 @@ public class Hopper extends MotorSubsystem {
     @Override
     public void updateLog(SysIdRoutineLog log) {
         log.motor("HopperMotor")
-                .linearPosition(Units.Meters.of(getPositionRotations()))
+                .linearPosition(Units.Meters.of(getCurrentPositionRotations()))
                 .linearVelocity(Units.MetersPerSecond.of(motor.getSignal(TalonFXSignal.VELOCITY)))
                 .voltage(Units.Volts.of(motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
     }
@@ -33,8 +34,8 @@ public class Hopper extends MotorSubsystem {
     @Override
     public void updateMechanism() {
         HopperConstants.MECHANISM.updateMechanism(
-                getPositionMeters(),
-                getProfiledPositionMeters(),
+                getCurrentPositionMeters(),
+                getTargetProfiledPositionMeters(),
                 Rotation2d.kZero,
                 Rotation2d.kZero
         );
@@ -58,6 +59,7 @@ public class Hopper extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         motor.update();
+        Logger.recordOutput("Hopper/TargetState", targetState);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class Hopper extends MotorSubsystem {
 
     @AutoLogOutput(key = "Hopper/AtTargetState")
     public boolean atTargetState() {
-        return Math.abs(targetState.targetPositionMeters - getPositionMeters()) < HopperConstants.TOLERANCE_METERS;
+        return Math.abs(targetState.targetPositionMeters - getCurrentPositionMeters()) < HopperConstants.TOLERANCE_METERS;
     }
 
     void setTargetState(HopperConstants.HopperState targetState) {
@@ -83,6 +85,25 @@ public class Hopper extends MotorSubsystem {
         motor.setControl(positionRequest.withPosition(metersToRotations(targetPositionMeters)));
     }
 
+    void resetTargetVoltage() {
+        motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_VOLTAGE).withIgnoreSoftwareLimits(true));
+    }
+
+    void resetPosition() {
+        motor.setPosition(HopperConstants.RESET_POSITION_METERS);
+        motor.stopMotor();
+    }
+
+    @AutoLogOutput(key = "Hopper/TargetProfiledPositionMeters")
+    private double getTargetProfiledPositionMeters() {
+        return rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
+    }
+
+    @AutoLogOutput(key = "Hopper/CurrentPositionMeters")
+    private double getCurrentPositionMeters() {
+        return rotationsToMeters(getCurrentPositionRotations());
+    }
+
     private double rotationsToMeters(double positionRotations) {
         return Conversions.rotationsToDistance(positionRotations, HopperConstants.DRUM_DIAMETER_METERS);
     }
@@ -91,17 +112,7 @@ public class Hopper extends MotorSubsystem {
         return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
     }
 
-    @AutoLogOutput(key = "Hopper/ProfiledPositionMeters")
-    private double getProfiledPositionMeters() {
-        return rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
-    }
-
-    @AutoLogOutput(key = "Hopper/CurrentPositionMeters")
-    private double getPositionMeters() {
-        return rotationsToMeters(getPositionRotations());
-    }
-
-    private double getPositionRotations() {
+    private double getCurrentPositionRotations() {
         return motor.getSignal(TalonFXSignal.POSITION);
     }
 }
