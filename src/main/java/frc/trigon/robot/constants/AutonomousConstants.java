@@ -101,6 +101,6 @@ public class AutonomousConstants {
                                 () -> 0
                         )
                 ).alongWith(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN))
-                ).until(RobotContainer.INTAKE::atTargetState));
+                ).until(() -> RobotContainer.INTAKE.atTargetState() && RobotContainer.HOPPER.atTargetState()));
     }
 }
