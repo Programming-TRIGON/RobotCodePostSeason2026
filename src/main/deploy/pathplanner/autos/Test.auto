@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeGamePieces"
+                  "name": "IntakeCommand"
                 }
               },
               {
@@ -41,7 +41,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootGamePieces"
+                  "name": "ShootCommand"
                 }
               }
             ]

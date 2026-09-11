@@ -81,23 +81,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
-        NamedCommands.registerCommand("FirstCollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.AUTONOMOUS_INTAKE));
-        NamedCommands.registerCommand("DoubleSwipeShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
-        NamedCommands.registerCommand("DoubleSwipePrepareForShootCommand", ShootingCommands.getPrepareForDoubleSwipeFixedAutonomousShootingCommand());
-        NamedCommands.registerCommand("BasicShootCommand", ShootingCommands.getBasicFixedAutonomousShootingCommand());
-        NamedCommands.registerCommand("PushFuelCommand", AutonomousCommands.getPushFuelWithIntakeCommand());
-        NamedCommands.registerCommand("PrepareForShootingCommand", ShootingCommands.getPrepareForShootingCommand());
+        NamedCommands.registerCommand("IntakeCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         NamedCommands.registerCommand("ShootCommand", ShootingCommands.getAutonomousShootingAtHubCommand().withTimeout(3));
-        NamedCommands.registerCommand("InitializeDriveCommand", new InstantCommand(() -> RobotContainer.SWERVE.initializeDrive(true)));
-        NamedCommands.registerCommand(
-                "WaitForIntakeToOpenCommand",
-                (IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN
-                ).alongWith(SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
-                                () -> 0,
-                                () -> 0,
-                                () -> 0
-                        )
-                )).until(RobotContainer.INTAKE::atTargetState));
     }
 }
