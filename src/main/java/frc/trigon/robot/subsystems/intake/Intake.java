@@ -91,7 +91,7 @@ public class Intake extends MotorSubsystem {
         return Math.abs(targetState.targetAngle.minus(getCurrentAngle()).getDegrees()) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }
 
-    boolean atAngle(Rotation2d angle){
+    boolean atAngle(Rotation2d angle) {
         return Math.abs(angle.minus(getCurrentAngle()).getDegrees()) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }
 

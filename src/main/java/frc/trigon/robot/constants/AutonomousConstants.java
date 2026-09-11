@@ -15,6 +15,8 @@ import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.AutonomousCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
+import frc.trigon.robot.subsystems.hopper.HopperCommands;
+import frc.trigon.robot.subsystems.hopper.HopperConstants;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
@@ -81,8 +83,8 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
-        NamedCommands.registerCommand("FirstCollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.AUTONOMOUS_INTAKE));
+        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).alongWith(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN)));
+        NamedCommands.registerCommand("FirstCollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.AUTONOMOUS_INTAKE).alongWith(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN)));
         NamedCommands.registerCommand("DoubleSwipeShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
         NamedCommands.registerCommand("DoubleSwipePrepareForShootCommand", ShootingCommands.getPrepareForDoubleSwipeFixedAutonomousShootingCommand());
         NamedCommands.registerCommand("BasicShootCommand", ShootingCommands.getBasicFixedAutonomousShootingCommand());
@@ -98,6 +100,7 @@ public class AutonomousConstants {
                                 () -> 0,
                                 () -> 0
                         )
-                )).until(RobotContainer.INTAKE::atTargetState));
+                ).alongWith(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN))
+                ).until(() -> RobotContainer.INTAKE.atTargetState() && RobotContainer.HOPPER.atTargetState()));
     }
 }
