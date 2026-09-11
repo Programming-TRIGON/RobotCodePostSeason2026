@@ -74,7 +74,7 @@ public class Hopper extends MotorSubsystem {
         return targetState == this.targetState && atTargetState();
     }
 
-    @AutoLogOutput(key = "Hopper/AtTargetMetersPosition")
+    @AutoLogOutput(key = "Hopper/AtTargetState")
     public boolean atTargetState() {
         return Math.abs(targetState.targetPositionMeters - getPositionMeters()) < HopperConstants.TOLERANCE_METERS;
     }
@@ -93,7 +93,7 @@ public class Hopper extends MotorSubsystem {
         return Conversions.rotationsToDistance(positionRotations, HopperConstants.DRUM_DIAMETER_METERS);
     }
 
-    @AutoLogOutput(key = "Hopper/CurrentPositioMeters")
+    @AutoLogOutput(key = "Hopper/CurrentPositionMeters")
     private double getPositionMeters() {
         return rotationsToMeters(getPositionRotations());
     }

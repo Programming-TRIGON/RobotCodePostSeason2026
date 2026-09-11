@@ -62,12 +62,12 @@ public class HopperConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 25 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50: 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.012367 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0384 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095074 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877: 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 30;
