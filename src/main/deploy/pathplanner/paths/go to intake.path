@@ -63,7 +63,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake ",
+      "name": "IntakeGamePieces",
       "waypointRelativePos": 1.367245657568237,
       "endWaypointRelativePos": 2.0,
       "command": null

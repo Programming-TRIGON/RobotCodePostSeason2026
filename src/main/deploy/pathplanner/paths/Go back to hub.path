@@ -85,7 +85,7 @@
   ],
   "eventMarkers": [
     {
-      "name": "shoot",
+      "name": "ShootGamePieces",
       "waypointRelativePos": 3.0,
       "endWaypointRelativePos": null,
       "command": null
