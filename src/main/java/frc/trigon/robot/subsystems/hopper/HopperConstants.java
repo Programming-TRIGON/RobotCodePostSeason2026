@@ -50,12 +50,13 @@ public class HopperConstants {
             MECHANISM_COLOR
     );
 
+    public static final double SAFE_POSITION_FOR_INTAKE_METERS = 0.1;
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
             DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 2;
     static final double TOLERANCE_METERS = 0.01;
-    static final double HOPPER_RESET_VOLTAGE = -1;
+    static final double HOPPER_RESET_POSITION_VOLTAGE = -1;
     static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
 
     static {

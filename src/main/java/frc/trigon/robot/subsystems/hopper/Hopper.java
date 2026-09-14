@@ -76,6 +76,10 @@ public class Hopper extends MotorSubsystem {
         return Math.abs(targetState.targetPositionMeters - getCurrentPositionMeters()) < HopperConstants.TOLERANCE_METERS;
     }
 
+    public boolean isPastPosition(double positionMeters) {
+        return getCurrentPositionMeters() > positionMeters;
+    }
+
     void setTargetState(HopperConstants.HopperState targetState) {
         this.targetState = targetState;
         setTargetPositionMeters(targetState.targetPositionMeters);
@@ -85,8 +89,8 @@ public class Hopper extends MotorSubsystem {
         motor.setControl(positionRequest.withPosition(metersToRotations(targetPositionMeters)));
     }
 
-    void resetTargetVoltage() {
-        motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_VOLTAGE).withIgnoreSoftwareLimits(true));
+    void resetPositionTargetVoltage() {
+        motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
     }
 
     void resetPosition() {

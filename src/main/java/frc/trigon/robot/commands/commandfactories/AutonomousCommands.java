@@ -25,12 +25,12 @@ public class AutonomousCommands {
         return ShootingCommands.getDoubleSwipeFixedAutonomousShootingCommand().withTimeout(timeout);
     }
 
-    public static Command getTimedDeliveryCommand(double timeout){
+    public static Command getTimedDeliveryCommand(double timeout) {
         return ShootingCommands.getFixedDeliveryShootingCommand().withTimeout(timeout);
     }
 
     public static Command getPushFuelWithIntakeCommand() {
-        return new WaitCommand(1).andThen(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE));
+        return new WaitCommand(1).andThen(FuelIntakeCommands.getCloseIntakeAndHopperCommand(IntakeConstants.IntakeState.POWERED_CLOSE));
     }
 
     /**

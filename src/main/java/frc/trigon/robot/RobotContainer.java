@@ -26,12 +26,10 @@ import frc.trigon.robot.subsystems.hood.Hood;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hopper.Hopper;
 import frc.trigon.robot.subsystems.hopper.HopperCommands;
-import frc.trigon.robot.subsystems.hopper.HopperConstants;
 import frc.trigon.robot.subsystems.indexer.Indexer;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.intake.Intake;
-import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.kicker.Kicker;
 import frc.trigon.robot.subsystems.kicker.KickerCommands;
@@ -84,9 +82,9 @@ public class RobotContainer {
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
-        HOPPER.setDefaultCommand(HopperCommands.getDefaultCommand());
+        HOPPER.setDefaultCommand(FuelIntakeCommands.getIntakeAndHopperDefaultCommand());
         INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
-        INTAKE.setDefaultCommand(IntakeCommands.getDefaultCommand());
+        INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeAndHopperDefaultCommand());
         KICKER.setDefaultCommand(KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST));
         LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
         SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
@@ -126,7 +124,7 @@ public class RobotContainer {
         OperatorConstants.DISABLE_OVERRIDE_FIXED_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableFixedOverrideSwerveAimCommand());
         OperatorConstants.INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(FuelIntakeCommands.getIntakeCommand()).and(CommandConstants::shouldUseIntakeAssist).whileTrue(CommandConstants.INTAKE_CENTER_OF_ROTATION_COMMAND);
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
-        OperatorConstants.CLOSE_INTAKE_AND_HOPPER_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE).alongWith(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE)));
+        OperatorConstants.CLOSE_INTAKE_AND_HOPPER_WITHOUT_SHOOTING_TRIGGER.whileTrue(FuelIntakeCommands.getCloseIntakeAndHopperCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
         OperatorConstants.HUB_ACTIVE_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
         OperatorConstants.OPEN_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));

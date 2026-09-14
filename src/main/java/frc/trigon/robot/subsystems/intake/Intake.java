@@ -91,6 +91,10 @@ public class Intake extends MotorSubsystem {
         return Math.abs(targetState.targetAngle.minus(getCurrentAngle()).getDegrees()) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }
 
+    public boolean isPastAngle(Rotation2d angle) {
+        return getCurrentAngle().getDegrees() > angle.getDegrees();
+    }
+
     boolean atAngle(Rotation2d angle) {
         return Math.abs(angle.minus(getCurrentAngle()).getDegrees()) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
     }

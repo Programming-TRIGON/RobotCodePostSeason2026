@@ -112,6 +112,7 @@ public class IntakeConstants {
             new Rotation3d(0, 0, 0)
     );
 
+    public static final Rotation2d SAFE_ANGLE_FOR_HOPPER = Rotation2d.kZero;
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
     static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 18;
 

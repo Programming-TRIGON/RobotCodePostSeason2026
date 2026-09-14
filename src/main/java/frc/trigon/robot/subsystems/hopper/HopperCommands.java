@@ -29,7 +29,7 @@ public class HopperCommands {
 
     public static Command getResetHopperCommand() {
         return new StartEndCommand(
-                RobotContainer.HOPPER::resetTargetVoltage,
+                RobotContainer.HOPPER::resetPositionTargetVoltage,
                 RobotContainer.HOPPER::resetPosition,
                 RobotContainer.HOPPER
         ).ignoringDisable(true);
