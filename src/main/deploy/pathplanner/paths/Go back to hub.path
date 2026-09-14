@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.777,
-        "y": 5.247
+        "x": 7.758,
+        "y": 4.711
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.743188320774343,
-        "y": 4.999297011830819
+        "x": 7.724404004808873,
+        "y": 4.463267666407638
       },
       "isLocked": false,
       "linkedName": null
@@ -67,7 +67,7 @@
     },
     {
       "waypointRelativePos": 1.7676348547717833,
-      "rotationDegrees": -179.7478317671607
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
@@ -83,14 +83,7 @@
       "name": "Point Towards Zone"
     }
   ],
-  "eventMarkers": [
-    {
-      "name": "ShootCommand",
-      "waypointRelativePos": 3.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 4.0,
@@ -101,7 +94,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -29.054604099077096
+    "rotation": 147.76556578105868
   },
   "reversed": false,
   "folder": null,

@@ -8,16 +8,13 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.commands.commandfactories.AutonomousCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
-import frc.trigon.robot.subsystems.swerve.SwerveCommands;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -81,7 +78,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("IntakeCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
+        NamedCommands.registerCommand("IntakeCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).withTimeout(1));
         NamedCommands.registerCommand("ShootCommand", ShootingCommands.getAutonomousShootingAtHubCommand().withTimeout(3));
     }
 }

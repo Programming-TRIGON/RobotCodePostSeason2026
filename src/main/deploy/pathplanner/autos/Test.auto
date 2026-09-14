@@ -15,21 +15,22 @@
                 }
               },
               {
-                "type": "wait",
+                "type": "parallel",
                 "data": {
-                  "waitTime": 2.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeCommand"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Intake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeCommand"
+                      }
+                    }
+                  ]
                 }
               },
               {
