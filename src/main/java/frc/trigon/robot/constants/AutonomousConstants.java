@@ -85,7 +85,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand", FuelIntakeCommands.getSafeOpenIntakeAndHopperCommand(IntakeConstants.IntakeState.POWERED_OPEN));
+        NamedCommands.registerCommand("CollectCommand", FuelIntakeCommands.getSafeIntakeCommand());
         NamedCommands.registerCommand("FirstCollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.AUTONOMOUS_INTAKE).alongWith(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN)));
         NamedCommands.registerCommand("DoubleSwipeShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
         NamedCommands.registerCommand("DoubleSwipePrepareForShootCommand", ShootingCommands.getPrepareForDoubleSwipeFixedAutonomousShootingCommand());
@@ -97,7 +97,7 @@ public class AutonomousConstants {
         NamedCommands.registerCommand(
                 "WaitForIntakeToOpenCommand",
                 new ParallelCommandGroup(
-                        FuelIntakeCommands.getAutonumousSafeOpenIntakeAndHopperCommand(IntakeConstants.IntakeState.POWERED_OPEN),
+                        AutonomousCommands.getAutonumousSafeIntakeAndHopperCommand(),
                         SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                                 () -> 0,
                                 () -> 0,
