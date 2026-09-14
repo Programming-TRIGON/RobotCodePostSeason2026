@@ -2,7 +2,6 @@ package frc.trigon.robot.subsystems.hopper;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
@@ -33,12 +32,6 @@ public class HopperCommands {
                 () -> RobotContainer.HOPPER.setTargetState(targetState),
                 RobotContainer.HOPPER::stop,
                 RobotContainer.HOPPER
-        );
-    }
-
-    public static Command getWaitUntilSafeForIntakeCommand() {
-        return new WaitUntilCommand(
-                () -> RobotContainer.HOPPER.isPastPosition(HopperConstants.MINIMUM_POSITION_FOR_INTAKE_METERS)
         );
     }
 

@@ -80,6 +80,15 @@ public class Hopper extends MotorSubsystem {
         return getCurrentPositionMeters() > positionMeters;
     }
 
+    void applyResetPositionVoltage() {
+        motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
+    }
+
+    void resetPosition() {
+         motor.setPosition(HopperConstants.RESET_POSITION_METERS);
+        motor.stopMotor();
+    }
+
     void setTargetState(HopperConstants.HopperState targetState) {
         this.targetState = targetState;
         setTargetPositionMeters(targetState.targetPositionMeters);
@@ -87,15 +96,6 @@ public class Hopper extends MotorSubsystem {
 
     void setTargetPositionMeters(double targetPositionMeters) {
         motor.setControl(positionRequest.withPosition(metersToRotations(targetPositionMeters)));
-    }
-
-    void applyResetPositionVoltage() {
-        motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
-    }
-
-    void resetPosition() {
-        motor.setPosition(HopperConstants.RESET_POSITION_METERS);
-        motor.stopMotor();
     }
 
     @AutoLogOutput(key = "Hopper/TargetProfiledPositionMeters")
@@ -108,15 +108,15 @@ public class Hopper extends MotorSubsystem {
         return rotationsToMeters(getCurrentPositionRotations());
     }
 
+    private double getCurrentPositionRotations() {
+        return motor.getSignal(TalonFXSignal.POSITION);
+    }
+
     private double rotationsToMeters(double positionRotations) {
         return Conversions.rotationsToDistance(positionRotations, HopperConstants.DRUM_DIAMETER_METERS);
     }
 
     private double metersToRotations(double positionMeters) {
         return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
-    }
-
-    private double getCurrentPositionRotations() {
-        return motor.getSignal(TalonFXSignal.POSITION);
     }
 }

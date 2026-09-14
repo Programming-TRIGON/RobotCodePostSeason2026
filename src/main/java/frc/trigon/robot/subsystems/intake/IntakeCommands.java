@@ -63,12 +63,6 @@ public class IntakeCommands {
         );
     }
 
-    public static Command getWaitUntilSafeForHopperCommand() {
-        return new WaitUntilCommand(
-                () -> RobotContainer.INTAKE.isPastAngle(IntakeConstants.SAFE_ANGLE_FOR_HOPPER)
-        );
-    }
-
     public static Command getGearRatioCalculationCommand() {
         return new GearRatioCalculationCommand(
                 IntakeConstants.MASTER_ANGLE_MOTOR,

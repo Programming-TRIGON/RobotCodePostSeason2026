@@ -82,9 +82,9 @@ public class RobotContainer {
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
-        HOPPER.setDefaultCommand(HopperCommands.getDefaultCommand());
+        HOPPER.setDefaultCommand(FuelIntakeCommands.getHopperDefaultCommand());
         INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
-        INTAKE.setDefaultCommand(IntakeCommands.getDefaultCommand());
+        INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeDefaultCommand());
         KICKER.setDefaultCommand(KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST));
         LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
         SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());

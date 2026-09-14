@@ -39,7 +39,7 @@ public class AutonomousCommands {
     public static Command getAutonumousSafeIntakeAndHopperCommand() {
         return new ParallelCommandGroup(
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                HopperCommands.getWaitUntilSafeForIntakeCommand().andThen(IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
+                FuelIntakeCommands.getWaitUntilSafeForIntakeCommand().andThen(IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
         );
     }
 

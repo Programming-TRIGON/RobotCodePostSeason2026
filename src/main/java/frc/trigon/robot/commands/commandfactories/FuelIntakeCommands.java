@@ -2,6 +2,8 @@ package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.subsystems.hopper.HopperCommands;
 import frc.trigon.robot.subsystems.hopper.HopperConstants;
@@ -21,15 +23,29 @@ public class FuelIntakeCommands {
     }
 
     public static Command getCloseIntakeWhileShootingCommand() {
-        return new ParallelCommandGroup(
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE)
+        return IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE);
+    }
+
+    public static Command getIntakeDefaultCommand() {
+        return GeneralCommands.getContinuousConditionalCommand(
+                getWaitUntilSafeForIntakeCommand().andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN)),
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
+                SHOULD_INTAKE_DEFAULT_OPEN
+        );
+    }
+
+    public static Command getHopperDefaultCommand() {
+        return GeneralCommands.getContinuousConditionalCommand(
+                HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
+                getWaitUntilSafeForHopperCommand().andThen(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE)),
+                SHOULD_INTAKE_DEFAULT_OPEN
         );
     }
 
     public static Command getIntakeCommand() {
         return new ParallelCommandGroup(
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                HopperCommands.getWaitUntilSafeForIntakeCommand()
+                getWaitUntilSafeForIntakeCommand()
                         .andThen(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
         );
     }
@@ -37,7 +53,7 @@ public class FuelIntakeCommands {
     public static Command getSafeIntakeCommand() {
         return new ParallelCommandGroup(
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                HopperCommands.getWaitUntilSafeForIntakeCommand()
+                getWaitUntilSafeForIntakeCommand()
                         .andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
         );
     }
@@ -45,7 +61,7 @@ public class FuelIntakeCommands {
     public static Command getSafeOpenIntakeAndHopperCommand() {
         return new ParallelCommandGroup(
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                HopperCommands.getWaitUntilSafeForIntakeCommand()
+                getWaitUntilSafeForIntakeCommand()
                         .andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN))
         );
     }
@@ -53,7 +69,7 @@ public class FuelIntakeCommands {
     public static Command getPoweredCloseIntakeAndHopperCommand() {
         return new ParallelCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE),
-                IntakeCommands.getWaitUntilSafeForHopperCommand()
+                getWaitUntilSafeForHopperCommand()
                         .andThen(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE))
         );
     }
@@ -61,8 +77,20 @@ public class FuelIntakeCommands {
     public static Command getCloseIntakeAndHopperCommand() {
         return new ParallelCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
-                IntakeCommands.getWaitUntilSafeForHopperCommand()
+                getWaitUntilSafeForHopperCommand()
                         .andThen(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE))
+        );
+    }
+
+    public static Command getWaitUntilSafeForIntakeCommand() {
+        return new WaitUntilCommand(
+                () -> RobotContainer.HOPPER.isPastPosition(HopperConstants.MINIMUM_POSITION_FOR_INTAKE_METERS)
+        );
+    }
+
+    public static Command getWaitUntilSafeForHopperCommand() {
+        return new WaitUntilCommand(
+                () -> RobotContainer.INTAKE.isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER)
         );
     }
 }
