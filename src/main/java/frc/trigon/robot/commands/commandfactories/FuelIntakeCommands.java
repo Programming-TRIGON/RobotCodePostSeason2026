@@ -28,17 +28,19 @@ public class FuelIntakeCommands {
 
     public static Command getIntakeDefaultCommand() {
         return GeneralCommands.getContinuousConditionalCommand(
-                getWaitUntilSafeForIntakeCommand().andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN)),
+                IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
-                SHOULD_INTAKE_DEFAULT_OPEN
+                () -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
+                        && RobotContainer.HOPPER.isPastPosition(HopperConstants.MINIMUM_POSITION_FOR_INTAKE_METERS)
         );
     }
 
     public static Command getHopperDefaultCommand() {
         return GeneralCommands.getContinuousConditionalCommand(
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                getWaitUntilSafeForHopperCommand().andThen(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE)),
-                SHOULD_INTAKE_DEFAULT_OPEN
+                HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE),
+                () -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
+                        || !RobotContainer.INTAKE.isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER)
         );
     }
 
