@@ -1,8 +1,6 @@
 package frc.trigon.robot.commands.commandfactories;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.subsystems.hopper.HopperCommands;
@@ -12,6 +10,8 @@ import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.kicker.KickerCommands;
 import frc.trigon.robot.subsystems.kicker.KickerConstants;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+
+import java.util.function.BooleanSupplier;
 
 public class FuelIntakeCommands {
     public static LoggedNetworkBoolean SHOULD_INTAKE_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldIntakeDefaultOpen", true);
@@ -37,50 +37,38 @@ public class FuelIntakeCommands {
 
     public static Command getHopperDefaultCommand() {
         return GeneralCommands.getContinuousConditionalCommand(
-                HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE),
-                () -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
-                        || !RobotContainer.INTAKE.isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER)
+                HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
+                () -> !FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
+                        && RobotContainer.INTAKE.isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER)
         );
     }
 
-    public static Command getIntakeCommand() {
+    public static Command getIntakeCommand(HopperConstants.HopperState hopperState, IntakeConstants.IntakeState intakeState, BooleanSupplier isSafe) {
         return new ParallelCommandGroup(
-                HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                getWaitUntilSafeForIntakeCommand()
-                        .andThen(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
-        );
-    }
-
-    public static Command getSafeIntakeCommand() {
-        return new ParallelCommandGroup(
-                HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                getWaitUntilSafeForIntakeCommand()
-                        .andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
+                HopperCommands.getSetTargetStateCommand(hopperState),
+                getWaitUntilSafeForIntakeCommand().andThen(getSafeOrUnsafeSetTargetStateCommand(intakeState, isSafe))
         );
     }
 
     public static Command getSafeOpenIntakeAndHopperCommand() {
         return new ParallelCommandGroup(
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                getWaitUntilSafeForIntakeCommand()
-                        .andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN))
+                getWaitUntilSafeForIntakeCommand().andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN))
         );
     }
 
     public static Command getPoweredCloseIntakeAndHopperCommand() {
         return new ParallelCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE),
-                getWaitUntilSafeForHopperCommand()
-                        .andThen(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE))
+                getWaitUntilSafeForHopperCommand().andThen(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE))
         );
     }
 
     public static Command getCloseIntakeAndHopperCommand() {
         return new ParallelCommandGroup(
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
-                getWaitUntilSafeForHopperCommand()
-                        .andThen(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE))
+                getWaitUntilSafeForHopperCommand().andThen(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE))
         );
     }
 
@@ -93,6 +81,14 @@ public class FuelIntakeCommands {
     public static Command getWaitUntilSafeForHopperCommand() {
         return new WaitUntilCommand(
                 () -> RobotContainer.INTAKE.isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER)
+        );
+    }
+
+    private static Command getSafeOrUnsafeSetTargetStateCommand(IntakeConstants.IntakeState intakeState, BooleanSupplier isSafe) {
+        return new ConditionalCommand(
+                IntakeCommands.getSafeSetTargetStateCommand(intakeState),
+                IntakeCommands.getSetTargetStateCommand(intakeState),
+                isSafe
         );
     }
 }

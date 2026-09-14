@@ -85,7 +85,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand", FuelIntakeCommands.getSafeIntakeCommand());
+        NamedCommands.registerCommand("CollectCommand", FuelIntakeCommands.getIntakeCommand(HopperConstants.HopperState.OPEN, IntakeConstants.IntakeState.POWERED_OPEN, () -> true));
         NamedCommands.registerCommand("FirstCollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.AUTONOMOUS_INTAKE).alongWith(HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN)));
         NamedCommands.registerCommand("DoubleSwipeShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
         NamedCommands.registerCommand("DoubleSwipePrepareForShootCommand", ShootingCommands.getPrepareForDoubleSwipeFixedAutonomousShootingCommand());

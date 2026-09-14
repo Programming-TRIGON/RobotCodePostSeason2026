@@ -41,7 +41,6 @@ public class HopperConstants {
     private static final double MAXIMUM_LENGTH_METERS = 0.3;
     private static final double MINIMUM_LENGTH_METERS = 0;
     private static final double STARTING_LENGTH_METERS = 0.1;
-
     private static final Color MECHANISM_COLOR = Color.kYellow;
     static final ArmElevatorMechanism2d MECHANISM = new ArmElevatorMechanism2d(
             MECHANISM_NAME,
