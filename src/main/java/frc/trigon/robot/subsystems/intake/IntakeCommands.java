@@ -2,12 +2,13 @@ package frc.trigon.robot.subsystems.intake;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.GearRatioCalculationCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
-import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 
 import java.util.Set;
 
@@ -27,14 +28,6 @@ public class IntakeCommands {
                 Set.of(RobotContainer.INTAKE),
                 "Debugging/IntakeTargetVoltage",
                 "Debugging/IntakeTargetAngleDegrees"
-        );
-    }
-
-    public static Command getDefaultCommand() {
-        return GeneralCommands.getContinuousConditionalCommand(
-                FuelIntakeCommands.getSafeOpenIntakeAndHopperCommand(),
-                FuelIntakeCommands.getCloseIntakeAndHopperCommand(),
-                FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN
         );
     }
 

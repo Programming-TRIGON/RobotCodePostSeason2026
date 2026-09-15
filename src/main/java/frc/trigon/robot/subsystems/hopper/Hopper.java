@@ -59,12 +59,22 @@ public class Hopper extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         motor.update();
+        HopperConstants.LIMIT_SWITCH.updateSensor();
         Logger.recordOutput("Hopper/TargetState", targetState);
     }
 
     @Override
     public void stop() {
         motor.stopMotor();
+    }
+
+    public boolean isPastMinimumPositionForIntake() {
+        return isPastPosition(HopperConstants.MINIMUM_POSITION_FOR_INTAKE_METERS);
+    }
+
+    @AutoLogOutput(key = "Hopper/IsLimitSwitchPressed")
+    public boolean isLimitSwitchPressed() {
+        return HopperConstants.LIMIT_SWITCH.getBinaryValue();
     }
 
     public boolean atState(HopperConstants.HopperState targetState) {
@@ -76,16 +86,12 @@ public class Hopper extends MotorSubsystem {
         return Math.abs(targetState.targetPositionMeters - getCurrentPositionMeters()) < HopperConstants.TOLERANCE_METERS;
     }
 
-    public boolean isPastPosition(double positionMeters) {
-        return getCurrentPositionMeters() > positionMeters;
-    }
-
     void applyResetPositionVoltage() {
         motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
     }
 
     void resetPosition() {
-         motor.setPosition(HopperConstants.RESET_POSITION_METERS);
+        motor.setPosition(HopperConstants.RESET_POSITION_METERS);
         motor.stopMotor();
     }
 
@@ -118,5 +124,9 @@ public class Hopper extends MotorSubsystem {
 
     private double metersToRotations(double positionMeters) {
         return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
+    }
+
+    private boolean isPastPosition(double positionMeters) {
+        return getCurrentPositionMeters() > positionMeters;
     }
 }

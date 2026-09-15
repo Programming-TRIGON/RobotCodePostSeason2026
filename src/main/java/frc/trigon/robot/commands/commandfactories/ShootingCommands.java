@@ -17,9 +17,9 @@ import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.shootingcalculations.ShootingState;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
-import frc.trigon.robot.subsystems.hopper.HopperConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
+import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.kicker.KickerCommands;
 import frc.trigon.robot.subsystems.kicker.KickerConstants;
@@ -271,7 +271,7 @@ public class ShootingCommands {
 
     public static RepeatCommand getIntakeSequenceWhileShootingCommand() {
         return new SequentialCommandGroup(
-                FuelIntakeCommands.getIntakeCommand(HopperConstants.HopperState.OPEN, IntakeConstants.IntakeState.POWERED_OPEN, () -> true).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
+                IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN).until(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER),
                 FuelIntakeCommands.getCloseIntakeWhileShootingCommand().onlyWhile(OperatorConstants.CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER)
         ).repeatedly();
     }

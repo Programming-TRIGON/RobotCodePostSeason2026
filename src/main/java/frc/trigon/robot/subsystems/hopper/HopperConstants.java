@@ -8,16 +8,25 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
+import frc.trigon.lib.hardware.misc.simplesensor.SimpleSensor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.lib.utilities.mechanisms.ArmElevatorMechanism2d;
 
+import java.util.function.DoubleSupplier;
+
 public class HopperConstants {
-    private static final int MOTOR_ID = 9;
-    private static final String MOTOR_NAME = "HopperMotor";
+    private static final int
+            MOTOR_ID = 9,
+            LIMIT_SWITCH_CHANNEL = 0;
+    private static final String
+            MOTOR_NAME = "HopperMotor",
+            LIMIT_SWITCH_NAME = "HopperLimitSwitch";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
+    static final SimpleSensor LIMIT_SWITCH = SimpleSensor.createDigitalSensor(LIMIT_SWITCH_CHANNEL, LIMIT_SWITCH_NAME);
+
 
     static final boolean FOC_ENABLED = true;
     private static final double GEAR_RATIO = 11.25;
@@ -38,8 +47,8 @@ public class HopperConstants {
     );
 
     private static final String MECHANISM_NAME = "HopperMechanism";
-    private static final double MAXIMUM_LENGTH_METERS = 0.3;
-    private static final double MINIMUM_LENGTH_METERS = 0;
+    static final double MAXIMUM_LENGTH_METERS = 0.3;
+    static final double MINIMUM_LENGTH_METERS = 0;
     private static final double STARTING_LENGTH_METERS = 0.1;
     private static final Color MECHANISM_COLOR = Color.kYellow;
     static final ArmElevatorMechanism2d MECHANISM = new ArmElevatorMechanism2d(
@@ -49,7 +58,7 @@ public class HopperConstants {
             MECHANISM_COLOR
     );
 
-    public static final double MINIMUM_POSITION_FOR_INTAKE_METERS = 0.1;
+    static final double MINIMUM_POSITION_FOR_INTAKE_METERS = 0.1;
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
@@ -57,8 +66,14 @@ public class HopperConstants {
     static final double TOLERANCE_METERS = 0.01;
     static final double HOPPER_RESET_POSITION_VOLTAGE = -1;
     static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
+    private static final DoubleSupplier LIMIT_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> Conversions.rotationsToDistance(MOTOR.getSignal(TalonFXSignal.POSITION), DRUM_DIAMETER_METERS) >= MAXIMUM_LENGTH_METERS - TOLERANCE_METERS ? 1 : 0;
 
     static {
+        configureMotor();
+        configureLimitSwitch();
+    }
+
+    private static void configureMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -94,7 +109,10 @@ public class HopperConstants {
         MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
         MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+    }
 
+    private static void configureLimitSwitch() {
+        LIMIT_SWITCH.setSimulationSupplier(LIMIT_SWITCH_SIMULATION_VALUE_SUPPLIER);
     }
 
     public enum HopperState {

@@ -82,6 +82,10 @@ public class Intake extends MotorSubsystem {
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
+    public boolean isPastMinimumAngleForHopper() {
+        return isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER);
+    }
+
     public boolean atState(IntakeConstants.IntakeState targetState) {
         return targetState == this.targetState && atTargetState();
     }
@@ -89,10 +93,6 @@ public class Intake extends MotorSubsystem {
     @AutoLogOutput(key = "Intake/IntakeAtTargetAngle")
     public boolean atTargetState() {
         return Math.abs(targetState.targetAngle.minus(getCurrentAngle()).getDegrees()) < IntakeConstants.ANGLE_TOLERANCE.getDegrees();
-    }
-
-    public boolean isPastAngle(Rotation2d angle) {
-        return getCurrentAngle().getDegrees() > angle.getDegrees();
     }
 
     boolean atAngle(Rotation2d angle) {
@@ -141,5 +141,9 @@ public class Intake extends MotorSubsystem {
                 new Rotation3d(0, IntakeConstants.MAXIMUM_ANGLE.minus(getCurrentAngle()).getRadians(), 0)
         );
         return IntakeConstants.INTAKE_VISUALIZATION_ORIGIN_POINT.transformBy(pitchTransform);
+    }
+
+    private boolean isPastAngle(Rotation2d angle) {
+        return getCurrentAngle().getDegrees() > angle.getDegrees();
     }
 }
