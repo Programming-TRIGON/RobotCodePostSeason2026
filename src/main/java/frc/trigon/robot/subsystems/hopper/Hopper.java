@@ -18,6 +18,7 @@ public class Hopper extends MotorSubsystem {
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(HopperConstants.FOC_ENABLED);
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(HopperConstants.FOC_ENABLED);
     private HopperConstants.HopperState targetState = HopperConstants.HopperState.OPEN;
+    private boolean isReedSwitchTriggered = false;
 
     public Hopper() {
         setName("Hopper");
@@ -36,7 +37,7 @@ public class Hopper extends MotorSubsystem {
         HopperConstants.MECHANISM.updateMechanism(
                 getCurrentPositionMeters(),
                 getTargetProfiledPositionMeters(),
-                Rotation2d.kZero,
+                Rotation2d.kZero, //Set to 0 because the hopper does not rotate so the arm values are not needed
                 Rotation2d.kZero
         );
     }
@@ -60,6 +61,7 @@ public class Hopper extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
         HopperConstants.REED_SWITCH.updateSensor();
+        resetPositionIfReedSwitchTriggered();
         Logger.recordOutput("Hopper/TargetState", targetState);
     }
 
@@ -68,8 +70,9 @@ public class Hopper extends MotorSubsystem {
         motor.stopMotor();
     }
 
+    @AutoLogOutput(key = "Hopper/IsPastMinimumPositionForIntakeToOpen")
     public boolean isPastMinimumPositionForIntakeToOpen() {
-        return isPastPosition(HopperConstants.MINIMUM_POSITION_FOR_INTAKE_TO_OPEN_METERS);
+        return isPastPosition();
     }
 
     public boolean atState(HopperConstants.HopperState targetState) {
@@ -81,17 +84,12 @@ public class Hopper extends MotorSubsystem {
         return Math.abs(targetState.targetPositionMeters - getCurrentPositionMeters()) < HopperConstants.TOLERANCE_METERS;
     }
 
-    @AutoLogOutput(key = "Hopper/IsReedSwitchTriggered")
-    public boolean isReedSwitchTriggered() {
-        return HopperConstants.REED_SWITCH.getBinaryValue();
-    }
-
     void applyResetPositionVoltage() {
         motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
     }
 
-    void resetPosition(double targetPositionMeters) {
-        motor.setPosition(metersToRotations(targetPositionMeters));
+    void resetPosition() {
+        motor.setPosition(metersToRotations(HopperConstants.RESET_POSITION_METERS));
         motor.stopMotor();
     }
 
@@ -126,7 +124,19 @@ public class Hopper extends MotorSubsystem {
         return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
     }
 
-    private boolean isPastPosition(double positionMeters) {
-        return getCurrentPositionMeters() > positionMeters;
+    private boolean isPastPosition() {
+        return getCurrentPositionMeters() > HopperConstants.MINIMUM_POSITION_FOR_INTAKE_TO_START_OPENING_METERS;
+    }
+
+    private void resetPositionIfReedSwitchTriggered() {
+        final boolean isTriggered = isReedSwitchTriggered();
+        if (isTriggered && !isReedSwitchTriggered)
+            motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
+        isReedSwitchTriggered = isTriggered;
+    }
+
+    @AutoLogOutput(key = "Hopper/IsReedSwitchTriggered")
+    private boolean isReedSwitchTriggered() {
+        return HopperConstants.REED_SWITCH.getBinaryValue();
     }
 }

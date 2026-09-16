@@ -1,7 +1,6 @@
 package frc.trigon.robot.subsystems.hopper;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
@@ -26,16 +25,10 @@ public class HopperCommands {
         );
     }
 
-    public static Command getResetToReedSwitchPositionCommand() {
-        return new InstantCommand(
-                () -> RobotContainer.HOPPER.resetPosition(HopperConstants.REED_SWITCH_RESET_POSITION_METERS)
-        );
-    }
-
     public static Command getResetHopperCommand() {
         return new StartEndCommand(
                 RobotContainer.HOPPER::applyResetPositionVoltage,
-                () -> RobotContainer.HOPPER.resetPosition(HopperConstants.RESET_POSITION_METERS),
+                () -> RobotContainer.HOPPER.resetPosition(),
                 RobotContainer.HOPPER
         ).ignoringDisable(true);
     }

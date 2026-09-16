@@ -23,10 +23,9 @@ public class HopperConstants {
             REED_SWITCH_CHANNEL = 0;
     private static final String
             MOTOR_NAME = "HopperMotor",
-            REED_SWITCH_NAME = "HopperLimitSwitch";
+            REED_SWITCH_NAME = "HopperReedSwitch";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
     static final SimpleSensor REED_SWITCH = SimpleSensor.createDigitalSensor(REED_SWITCH_CHANNEL, REED_SWITCH_NAME);
-
 
     static final boolean FOC_ENABLED = true;
     private static final double GEAR_RATIO = 11.25;
@@ -58,11 +57,8 @@ public class HopperConstants {
             MECHANISM_COLOR
     );
 
-    static final double MINIMUM_POSITION_FOR_INTAKE_TO_OPEN_METERS = 0.1;
+    static final double MINIMUM_POSITION_FOR_INTAKE_TO_START_OPENING_METERS = 0.1;
     static final double DRUM_DIAMETER_METERS = 0.09144;
-    static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 2;
     static final double TOLERANCE_METERS = 0.01;
     static final double HOPPER_RESET_POSITION_VOLTAGE = -1;
     static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
@@ -71,7 +67,7 @@ public class HopperConstants {
 
     static {
         configureMotor();
-        configureLimitSwitch();
+        configureReedSwitch();
     }
 
     private static void configureMotor() {
@@ -98,8 +94,8 @@ public class HopperConstants {
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Conversions.distanceToRotations(MINIMUM_LENGTH_METERS, DRUM_DIAMETER_METERS);
 
-        config.MotionMagic.MotionMagicCruiseVelocity = DEFAULT_MAXIMUM_VELOCITY;
-        config.MotionMagic.MotionMagicAcceleration = DEFAULT_MAXIMUM_ACCELERATION;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 8 : 2;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 8 : 2;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         MOTOR.applyConfiguration(config);
@@ -112,7 +108,7 @@ public class HopperConstants {
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
     }
 
-    private static void configureLimitSwitch() {
+    private static void configureReedSwitch() {
         REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
     }
 

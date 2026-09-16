@@ -82,8 +82,9 @@ public class Intake extends MotorSubsystem {
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
+    @AutoLogOutput(key = "Intake/isPastMinimumAngleForHopperToClose")
     public boolean isPastMinimumAngleForHopperToClose() {
-        return isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER_TO_CLOSE);
+        return isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING);
     }
 
     public boolean atState(IntakeConstants.IntakeState targetState) {
