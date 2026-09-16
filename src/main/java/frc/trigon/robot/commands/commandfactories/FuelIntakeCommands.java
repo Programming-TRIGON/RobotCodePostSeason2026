@@ -1,7 +1,9 @@
 package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.subsystems.hopper.HopperCommands;
@@ -14,7 +16,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class FuelIntakeCommands {
     public static LoggedNetworkBoolean SHOULD_INTAKE_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldIntakeDefaultOpen", true);
-    public static LoggedNetworkBoolean SHOULD_HOPPER_DEFAULT_CLOSE = new LoggedNetworkBoolean("/SmartDashboard/ShouldHopperDefaultClose", false);
+    public static LoggedNetworkBoolean SHOULD_HOPPER_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldHopperDefaultOpen", true);
 
     public static Command getPreloadCommand() {
         return new ParallelCommandGroup(
@@ -31,8 +33,8 @@ public class FuelIntakeCommands {
                 IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
                 () -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
-                        && !FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_CLOSE.get()
-                        && RobotContainer.HOPPER.isPastMinimumPositionForIntake()
+                        && FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.get()
+                        && RobotContainer.HOPPER.isPastMinimumPositionForIntakeToOpen()
         );
     }
 
@@ -40,8 +42,29 @@ public class FuelIntakeCommands {
         return GeneralCommands.getContinuousConditionalCommand(
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE),
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
-                () -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_CLOSE.get()
-                        && RobotContainer.INTAKE.isPastMinimumAngleForHopper()
+                () -> !FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.get()
+                        && RobotContainer.INTAKE.isPastMinimumAngleForHopperToClose()
         );
     }
+
+    public static Command getIntakeCommand() {
+        return new ParallelCommandGroup(
+                getResetHopperDefaultToOpenCommand(),
+                getWaitUntilSafeForIntakeCommand()
+                        .andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
+        );
+    }
+
+    public static Command getWaitUntilSafeForIntakeCommand() {
+        return new WaitUntilCommand(
+                RobotContainer.HOPPER::isPastMinimumPositionForIntakeToOpen
+        );
+    }
+
+    public static Command getResetHopperDefaultToOpenCommand() {
+        return new InstantCommand(
+                () -> SHOULD_HOPPER_DEFAULT_OPEN.set(true)
+        );
+    }
+
 }

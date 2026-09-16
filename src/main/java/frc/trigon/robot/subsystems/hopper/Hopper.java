@@ -68,12 +68,12 @@ public class Hopper extends MotorSubsystem {
         motor.stopMotor();
     }
 
-    public boolean isPastMinimumPositionForIntake() {
-        return isPastPosition(HopperConstants.MINIMUM_POSITION_FOR_INTAKE_METERS);
+    public boolean isPastMinimumPositionForIntakeToOpen() {
+        return isPastPosition(HopperConstants.MINIMUM_POSITION_FOR_INTAKE_TO_OPEN_METERS);
     }
 
-    @AutoLogOutput(key = "Hopper/IsLimitSwitchPressed")
-    public boolean isLimitSwitchPressed() {
+    @AutoLogOutput(key = "Hopper/IsReedSwitchTriggered")
+    public boolean isReedSwitchTriggered() {
         return HopperConstants.REED_SWITCH.getBinaryValue();
     }
 

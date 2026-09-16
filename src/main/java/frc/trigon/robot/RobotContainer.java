@@ -123,15 +123,15 @@ public class RobotContainer {
         OperatorConstants.EJECT_FROM_SHOOTER_TRIGGER.whileTrue(EjectionCommands.getEjectFromShooterCommand());
         OperatorConstants.ENABLE_OVERRIDE_FIXED_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableFixedOverrideSwerveAimCommand());
         OperatorConstants.DISABLE_OVERRIDE_FIXED_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableFixedOverrideSwerveAimCommand());
-        OperatorConstants.INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN)).and(CommandConstants::shouldUseIntakeAssist).whileTrue(CommandConstants.INTAKE_CENTER_OF_ROTATION_COMMAND);
+        OperatorConstants.INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(FuelIntakeCommands.getIntakeCommand()).and(CommandConstants::shouldUseIntakeAssist).whileTrue(CommandConstants.INTAKE_CENTER_OF_ROTATION_COMMAND);
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
         OperatorConstants.HUB_ACTIVE_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
-        OperatorConstants.OPEN_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
-        OperatorConstants.CLOSE_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
-        OperatorConstants.OPEN_HOPPER_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_CLOSE.set(true)));
-        OperatorConstants.CLOSE_HOPPER_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_CLOSE.set(false)));
+        OperatorConstants.SET_INTAKE_DEFAULT_TO_OPEN_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
+        OperatorConstants.SET_INTAKE_DEFAULT_TO_CLOSE_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
+        OperatorConstants.SET_HOPPER_DEFAULT_TO_OPEN_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(true)));
+        OperatorConstants.SET_HOPPER_DEFAULT_TO_CLOSE_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(false)));
 
     }
 

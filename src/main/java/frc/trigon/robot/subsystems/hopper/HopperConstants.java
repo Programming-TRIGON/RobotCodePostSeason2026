@@ -58,7 +58,7 @@ public class HopperConstants {
             MECHANISM_COLOR
     );
 
-    static final double MINIMUM_POSITION_FOR_INTAKE_METERS = 0.1;
+    static final double MINIMUM_POSITION_FOR_INTAKE_TO_OPEN_METERS = 0.1;
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double
             DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,

@@ -82,8 +82,8 @@ public class Intake extends MotorSubsystem {
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
-    public boolean isPastMinimumAngleForHopper() {
-        return isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER);
+    public boolean isPastMinimumAngleForHopperToClose() {
+        return isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER_TO_CLOSE);
     }
 
     public boolean atState(IntakeConstants.IntakeState targetState) {
