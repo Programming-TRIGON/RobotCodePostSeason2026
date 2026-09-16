@@ -145,6 +145,7 @@ public class RobotContainer {
         Flippable.init();
         LEDConstants.init();
         AutonomousConstants.init();
+        HoodCommands.getResetHoodOnInitCommand();
     }
 
     private void buildAutoChooser() {
