@@ -20,12 +20,12 @@ import java.util.function.DoubleSupplier;
 public class HopperConstants {
     private static final int
             MOTOR_ID = 9,
-            LIMIT_SWITCH_CHANNEL = 0;
+            REED_SWITCH_CHANNEL = 0;
     private static final String
             MOTOR_NAME = "HopperMotor",
-            LIMIT_SWITCH_NAME = "HopperLimitSwitch";
+            REED_SWITCH_NAME = "HopperLimitSwitch";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
-    static final SimpleSensor LIMIT_SWITCH = SimpleSensor.createDigitalSensor(LIMIT_SWITCH_CHANNEL, LIMIT_SWITCH_NAME);
+    static final SimpleSensor REED_SWITCH = SimpleSensor.createDigitalSensor(REED_SWITCH_CHANNEL, REED_SWITCH_NAME);
 
 
     static final boolean FOC_ENABLED = true;
@@ -66,7 +66,7 @@ public class HopperConstants {
     static final double TOLERANCE_METERS = 0.01;
     static final double HOPPER_RESET_POSITION_VOLTAGE = -1;
     static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
-    private static final DoubleSupplier LIMIT_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> Conversions.rotationsToDistance(MOTOR.getSignal(TalonFXSignal.POSITION), DRUM_DIAMETER_METERS) >= MAXIMUM_LENGTH_METERS - TOLERANCE_METERS ? 1 : 0;
+    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> Conversions.rotationsToDistance(MOTOR.getSignal(TalonFXSignal.POSITION), DRUM_DIAMETER_METERS) >= MAXIMUM_LENGTH_METERS - TOLERANCE_METERS ? 1 : 0;
 
     static {
         configureMotor();
@@ -112,7 +112,7 @@ public class HopperConstants {
     }
 
     private static void configureLimitSwitch() {
-        LIMIT_SWITCH.setSimulationSupplier(LIMIT_SWITCH_SIMULATION_VALUE_SUPPLIER);
+        REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
     }
 
     public enum HopperState {

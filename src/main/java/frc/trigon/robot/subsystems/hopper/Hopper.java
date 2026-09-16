@@ -59,7 +59,7 @@ public class Hopper extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         motor.update();
-        HopperConstants.LIMIT_SWITCH.updateSensor();
+        HopperConstants.REED_SWITCH.updateSensor();
         Logger.recordOutput("Hopper/TargetState", targetState);
     }
 
@@ -74,7 +74,7 @@ public class Hopper extends MotorSubsystem {
 
     @AutoLogOutput(key = "Hopper/IsLimitSwitchPressed")
     public boolean isLimitSwitchPressed() {
-        return HopperConstants.LIMIT_SWITCH.getBinaryValue();
+        return HopperConstants.REED_SWITCH.getBinaryValue();
     }
 
     public boolean atState(HopperConstants.HopperState targetState) {
