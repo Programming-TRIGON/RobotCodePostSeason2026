@@ -77,6 +77,8 @@ public class HoodConstants {
 
     static {
         configureMotor();
+        if (!RobotHardwareStats.isSimulation())
+            resetHoodPositionIfFirstBoot();
     }
 
     private static void configureMotor() {
@@ -122,9 +124,6 @@ public class HoodConstants {
         MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
         MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
-
-        if (!RobotHardwareStats.isSimulation())
-            resetHoodPositionIfFirstBoot();
     }
 
     private static void resetHoodPositionIfFirstBoot() {
