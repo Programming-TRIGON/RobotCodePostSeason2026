@@ -1,9 +1,6 @@
 package frc.trigon.robot.commands.commandfactories;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.subsystems.hopper.HopperCommands;
@@ -47,13 +44,7 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getIntakeCommand() {
-        return new ParallelCommandGroup(
-                getPrepareHopperForIntakeCommand(IntakeConstants.IntakeState.POWERED_OPEN)
-        );
-    }
-
-    public static Command getPrepareHopperForIntakeCommand(IntakeConstants.IntakeState intakeTargetState) {
+    public static Command getOpenHopperAndSetIntakeTargetStateCommand(IntakeConstants.IntakeState intakeTargetState) {
         return new ParallelCommandGroup(
                 getSetHopperAndIntakeDefaultOpenCommand(),
                 getSetIntakeStateWhenHopperSafeCommand(intakeTargetState)
@@ -68,11 +59,13 @@ public class FuelIntakeCommands {
     }
 
     public static Command getSetIntakeStateWhenHopperSafeCommand(IntakeConstants.IntakeState targetState) {
-        return getWaitUntilSafeForIntakeCommand()
-                .andThen(IntakeCommands.getSetTargetStateCommand(targetState));
+        return new SequentialCommandGroup(
+                getWaitUntilSafeForIntakeToOpenCommand(),
+                IntakeCommands.getSetTargetStateCommand(targetState)
+        );
     }
 
-    public static Command getWaitUntilSafeForIntakeCommand() {
+    public static Command getWaitUntilSafeForIntakeToOpenCommand() {
         return new WaitUntilCommand(
                 RobotContainer.HOPPER::isPastMinimumPositionForIntakeToOpen
         );

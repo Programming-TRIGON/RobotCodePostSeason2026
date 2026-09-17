@@ -18,7 +18,6 @@ public class Hopper extends MotorSubsystem {
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(HopperConstants.FOC_ENABLED);
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(HopperConstants.FOC_ENABLED);
     private HopperConstants.HopperState targetState = HopperConstants.HopperState.OPEN;
-    private boolean isReedSwitchTriggered = false;
 
     public Hopper() {
         setName("Hopper");
@@ -37,7 +36,7 @@ public class Hopper extends MotorSubsystem {
         HopperConstants.MECHANISM.updateMechanism(
                 getCurrentPositionMeters(),
                 getTargetProfiledPositionMeters(),
-                Rotation2d.kZero, //Set to 0 because the hopper does not rotate so the arm values are not needed
+                Rotation2d.kZero, // Set to 0 because the hopper does not rotate so the arm values are not needed
                 Rotation2d.kZero
         );
     }
@@ -72,16 +71,16 @@ public class Hopper extends MotorSubsystem {
 
     @AutoLogOutput(key = "Hopper/IsPastMinimumPositionForIntakeToOpen")
     public boolean isPastMinimumPositionForIntakeToOpen() {
-        return isPastPosition();
+        return getCurrentPositionMeters() > HopperConstants.MINIMUM_POSITION_FOR_INTAKE_TO_START_OPENING_METERS;
     }
 
     public boolean atState(HopperConstants.HopperState targetState) {
-        return targetState == this.targetState && atTargetState();
+        return targetState == this.targetState && atPosition(targetState.targetPositionMeters);
     }
 
     @AutoLogOutput(key = "Hopper/AtTargetState")
     public boolean atTargetState() {
-        return Math.abs(targetState.targetPositionMeters - getCurrentPositionMeters()) < HopperConstants.TOLERANCE_METERS;
+        return atState(this.targetState);
     }
 
     void applyResetPositionVoltage() {
@@ -124,19 +123,22 @@ public class Hopper extends MotorSubsystem {
         return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
     }
 
-    private boolean isPastPosition() {
-        return getCurrentPositionMeters() > HopperConstants.MINIMUM_POSITION_FOR_INTAKE_TO_START_OPENING_METERS;
+    private void resetPositionIfReedSwitchTriggered() {
+        if (isReedSwitchTriggered() && !isAtResetPosition())
+            motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
+        setTargetPositionMeters(targetState.targetPositionMeters);
     }
 
-    private void resetPositionIfReedSwitchTriggered() {
-        final boolean isTriggered = isReedSwitchTriggered();
-        if (isTriggered && !isReedSwitchTriggered)
-            motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
-        isReedSwitchTriggered = isTriggered;
+    private boolean isAtResetPosition() {
+        return atPosition(HopperConstants.REED_SWITCH_RESET_POSITION_METERS);
     }
 
     @AutoLogOutput(key = "Hopper/IsReedSwitchTriggered")
     private boolean isReedSwitchTriggered() {
         return HopperConstants.REED_SWITCH.getBinaryValue();
+    }
+
+    private boolean atPosition(double targetPositionMeters) {
+        return Math.abs(getCurrentPositionMeters() - targetPositionMeters) < HopperConstants.TOLERANCE_METERS;
     }
 }
