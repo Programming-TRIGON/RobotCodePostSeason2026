@@ -48,6 +48,12 @@ public class HoodConstants {
             SHOULD_SIMULATE_GRAVITY
     );
 
+    static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
+            Units.Volts.of(0.7).per(Units.Seconds),
+            Units.Volts.of(1),
+            null
+    );
+
     private static final String MECHANISM_NAME = "HoodMechanism";
     private static final Color MECHANISM_COLOR = Color.kYellow;
     static final SingleJointedArmMechanism2d MECHANISM = new SingleJointedArmMechanism2d(
@@ -58,12 +64,6 @@ public class HoodConstants {
     static final Pose3d HOOD_VISUALIZATION_ORIGIN_POINT = new Pose3d(
             new Translation3d(-0.2758, 0, 0.45400412),
             new Rotation3d(0, MINIMUM_ANGLE.getRadians(), 0)
-    );
-
-    static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(0.7).per(Units.Seconds),
-            Units.Volts.of(1),
-            null
     );
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(1);
