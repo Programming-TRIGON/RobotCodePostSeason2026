@@ -20,6 +20,7 @@ import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SingleJointedArmSimulation;
 import frc.trigon.lib.utilities.mechanisms.SingleJointedArmMechanism2d;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
+import org.littletonrobotics.junction.Logger;
 
 public class HoodConstants {
     private static final int MOTOR_ID = 18;
@@ -130,9 +131,10 @@ public class HoodConstants {
         CommandScheduler.getInstance().schedule(GeneralCommands.getDelayedCommand(RESET_HOOD_ON_BOOT_WAIT_TIME, () -> {
             try {
                 final double motorPositionRotations = MOTOR.getSignal(TalonFXSignal.POSITION);
-                if (motorPositionRotations < (MINIMUM_ANGLE.getDegrees()))
+                if (motorPositionRotations < (MINIMUM_ANGLE.getRotations()))
                     MOTOR.setPosition(RESET_ANGLE.getRotations());
             } catch (final Exception ignore) {
+                Logger.recordOutput("Hood/Errors", ignore.getMessage());
             }
         }));
     }
