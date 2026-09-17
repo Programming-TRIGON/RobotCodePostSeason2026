@@ -12,12 +12,15 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SingleJointedArmSimulation;
 import frc.trigon.lib.utilities.mechanisms.SingleJointedArmMechanism2d;
+import frc.trigon.robot.commands.commandfactories.GeneralCommands;
+import org.littletonrobotics.junction.Logger;
 
 public class HoodConstants {
     private static final int MOTOR_ID = 18;
@@ -46,6 +49,12 @@ public class HoodConstants {
             SHOULD_SIMULATE_GRAVITY
     );
 
+    static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
+            Units.Volts.of(0.7).per(Units.Seconds),
+            Units.Volts.of(1),
+            null
+    );
+
     private static final String MECHANISM_NAME = "HoodMechanism";
     private static final Color MECHANISM_COLOR = Color.kYellow;
     static final SingleJointedArmMechanism2d MECHANISM = new SingleJointedArmMechanism2d(
@@ -58,21 +67,18 @@ public class HoodConstants {
             new Rotation3d(0, MINIMUM_ANGLE.getRadians(), 0)
     );
 
-    static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(0.7).per(Units.Seconds),
-            Units.Volts.of(1),
-            null
-    );
-
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(1);
     static final Rotation2d REST_ANGLE = MINIMUM_ANGLE;
     public static final Rotation2d FIXED_DELIVERY_SHOOTING_HOOD_PITCH = Rotation2d.fromDegrees(40);
     public static final Rotation2d EJECT_FROM_SHOOTER_PITCH = Rotation2d.fromDegrees(30);
     static final double HOOD_RESET_VOLTAGE = -1;
     static final Rotation2d RESET_ANGLE = MINIMUM_ANGLE;
+    private static final double RESET_HOOD_ON_BOOT_WAIT_TIME_SECONDS = 15;
 
     static {
         configureMotor();
+        if (!RobotHardwareStats.isSimulation())
+            resetHoodPositionIfFirstBoot();
     }
 
     private static void configureMotor() {
@@ -118,5 +124,17 @@ public class HoodConstants {
         MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
         MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+    }
+
+    private static void resetHoodPositionIfFirstBoot() {
+        CommandScheduler.getInstance().schedule(GeneralCommands.getDelayedCommand(RESET_HOOD_ON_BOOT_WAIT_TIME_SECONDS, () -> {
+            try {
+                final double motorPositionRotations = MOTOR.getSignal(TalonFXSignal.POSITION);
+                if (motorPositionRotations < (MINIMUM_ANGLE.getRotations()))
+                    MOTOR.setPosition(RESET_ANGLE.getRotations());
+            } catch (Exception e) {
+                Logger.recordOutput("Hood/Errors", e.getMessage());
+            }
+        }));
     }
 }
