@@ -14,39 +14,79 @@ public class CameraConstants {
             0.01
     );
     private static final Transform3d
-            ROBOT_TO_LEFT_APRIL_TAG_CAMERA = new Transform3d(
-            new Translation3d(
-                    -0.355,
-                    0.171,
-                    0.191),
-            new Rotation3d(
-                    Units.degreesToRadians(9.68),
-                    Units.degreesToRadians(-22.5),
-                    Units.degreesToRadians(180 + 23.0)
-            )
-    ),
-            ROBOT_TO_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
+            ROBOT_TO_BACK_LEFT_APRIL_TAG_CAMERA = new Transform3d(
                     new Translation3d(
-                            -0.355,
-                            -0.171,
-                            0.191),
+                        -0.356,
+                        0.246,
+                        0.416
+                    ),
                     new Rotation3d(
-                            Units.degreesToRadians(9.68),
-                            Units.degreesToRadians(-22.5),
-                            Units.degreesToRadians(180 - 23.0)
+                        Units.degreesToRadians(8.956),
+                        Units.degreesToRadians(180 - 30),
+                        Units.degreesToRadians(180 - 20)
+                    )
+            ),
+
+            ROBOT_TO_BACK_RIGHT_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
+                    new Translation3d(
+                            -0.356,
+                            -0.246,
+                            0.416
+                    ),
+                    new Rotation3d(
+                            Units.degreesToRadians(8.956),
+                            Units.degreesToRadians(180 - 30),
+                            Units.degreesToRadians(180 + 20)
+                    )
+            ),
+            ROBOT_TO_BACK_SIDE_LEFT_APRIL_TAG_CAMERA = new Transform3d(
+                    new Translation3d(
+                            -0.319,
+                            0.291,
+                            0.227
+                    ),
+                    new Rotation3d(
+                            0,
+                            Units.degreesToRadians(30),
+                            Units.degreesToRadians(-70)
+                    )
+            ),
+            ROBOT_TO_BACK_SIDE_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
+                    new Translation3d(
+                            -0.319,
+                            -0.291,
+                            0.227
+                    ),
+                    new Rotation3d(
+                            0,
+                            Units.degreesToRadians(30),
+                            Units.degreesToRadians(70)
                     )
             );
+
     public static final AprilTagCamera
-            LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
+            BACK_LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
             AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-            "LeftAprilTagCamera",
-            ROBOT_TO_LEFT_APRIL_TAG_CAMERA,
+            "BackLeftAprilTagCamera",
+            ROBOT_TO_BACK_LEFT_APRIL_TAG_CAMERA,
             APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
-    ),
-            RIGHT_APRIL_TAG_CAMERA1 = new AprilTagCamera(
+            ),
+            BACK_RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
                     AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-                    "RightAprilTagCamera",
-                    ROBOT_TO_RIGHT_APRIL_TAG_CAMERA,
+                    "BackRightAprilTagCamera",
+                    ROBOT_TO_BACK_RIGHT_RIGHT_APRIL_TAG_CAMERA,
+                    APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
+            ),
+            BACK_SIDE_LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
+                    AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
+                    "BackSideLeftAprilTagCamera",
+                    ROBOT_TO_BACK_SIDE_LEFT_APRIL_TAG_CAMERA,
+                    APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
+            ),
+            BACK_SIDE_RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
+                    AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
+                    "BackSideRightAprilTagCamera",
+                    ROBOT_TO_BACK_SIDE_RIGHT_APRIL_TAG_CAMERA,
                     APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
             );
 }
