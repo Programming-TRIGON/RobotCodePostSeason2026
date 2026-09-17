@@ -124,12 +124,12 @@ public class Hopper extends MotorSubsystem {
     }
 
     private void resetPositionIfReedSwitchTriggered() {
-        if (isReedSwitchTriggered() && !isAtResetPosition())
+        if (isReedSwitchTriggered() && !isAtReedSwitchResetPosition())
             motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
         setTargetPositionMeters(targetState.targetPositionMeters);
     }
 
-    private boolean isAtResetPosition() {
+    private boolean isAtReedSwitchResetPosition() {
         return atPosition(HopperConstants.REED_SWITCH_RESET_POSITION_METERS);
     }
 
