@@ -133,7 +133,7 @@ public class HoodConstants {
                 final double motorPositionRotations = MOTOR.getSignal(TalonFXSignal.POSITION);
                 if (motorPositionRotations < (MINIMUM_ANGLE.getRotations()))
                     MOTOR.setPosition(RESET_ANGLE.getRotations());
-            } catch (final Exception e) {
+            } catch (Exception e) {
                 Logger.recordOutput("Hood/Errors", e.getMessage());
             }
         }));
