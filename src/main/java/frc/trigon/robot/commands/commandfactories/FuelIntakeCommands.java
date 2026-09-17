@@ -53,9 +53,10 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getWaitUntilSafeForIntakeCommand() {
-        return new WaitUntilCommand(
-                RobotContainer.HOPPER::isPastMinimumPositionForIntakeToOpen
+    public static Command getPrepareHopperForIntakeCommand(){
+        return new ParallelCommandGroup(
+                getSetHopperDefaultOpenCommand(),
+                getWaitUntilSafeForIntakeCommand()
         );
     }
 
@@ -65,10 +66,9 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getPrepareHopperForIntakeCommand(){
-        return new ParallelCommandGroup(
-                getSetHopperDefaultOpenCommand(),
-                getWaitUntilSafeForIntakeCommand()
+    public static Command getWaitUntilSafeForIntakeCommand() {
+        return new WaitUntilCommand(
+                RobotContainer.HOPPER::isPastMinimumPositionForIntakeToOpen
         );
     }
 }
