@@ -29,10 +29,6 @@ public class HoodCommands {
         ).ignoringDisable(true);
     }
 
-    public static Command getResetHoodOnInitCommand() {
-        return new WaitCommand(HoodConstants.RESET_HOOD_ON_INIT_WAIT_TIME).andThen(getResetHoodCommand());
-    }
-
     public static Command getAimForShootingCommand() {
         return new ExecuteEndCommand(
                 RobotContainer.HOOD::aimForShooting,
