@@ -26,7 +26,6 @@ public class CameraConstants {
                         Units.degreesToRadians(180 - 20)
                     )
             ),
-
             ROBOT_TO_BACK_RIGHT_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
                     new Translation3d(
                             -0.356,
@@ -66,10 +65,10 @@ public class CameraConstants {
 
     public static final AprilTagCamera
             BACK_LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
-            AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
-            "BackLeftAprilTagCamera",
-            ROBOT_TO_BACK_LEFT_APRIL_TAG_CAMERA,
-            APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
+                    AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
+                    "BackLeftAprilTagCamera",
+                    ROBOT_TO_BACK_LEFT_APRIL_TAG_CAMERA,
+                    APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
             ),
             BACK_RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
                     AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
