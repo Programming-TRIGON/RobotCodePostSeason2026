@@ -95,7 +95,7 @@ public class AutonomousConstants {
         NamedCommands.registerCommand(
                 "WaitForIntakeToOpenCommand",
                 new ParallelCommandGroup(
-                        IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN),
+                        FuelIntakeCommands.getPrepareHopperForIntakeCommand(IntakeConstants.IntakeState.POWERED_OPEN),
                         SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                                 () -> 0,
                                 () -> 0,

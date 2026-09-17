@@ -49,26 +49,44 @@ public class FuelIntakeCommands {
 
     public static Command getIntakeCommand() {
         return new ParallelCommandGroup(
-                getPrepareHopperForIntakeCommand().andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
+                getPrepareHopperForIntakeCommand(IntakeConstants.IntakeState.POWERED_OPEN)
         );
     }
 
-    public static Command getPrepareHopperForIntakeCommand(){
+    public static Command getPrepareHopperForIntakeCommand(IntakeConstants.IntakeState intakeTargetState) {
         return new ParallelCommandGroup(
-                getSetHopperDefaultOpenCommand(),
-                getWaitUntilSafeForIntakeCommand()
+                getSetHopperAndIntakeDefaultOpenCommand(),
+                getSetIntakeStateWhenHopperSafeCommand(intakeTargetState)
         );
     }
 
-    public static Command getSetHopperDefaultOpenCommand() {
-        return new InstantCommand(
-                () -> SHOULD_HOPPER_DEFAULT_OPEN.set(true)
+    public static Command getSetHopperAndIntakeDefaultOpenCommand() {
+        return new ParallelCommandGroup(
+                getSetIntakeDefaultOpenCommand(),
+                getSetHopperDefaultOpenCommand()
         );
+    }
+
+    public static Command getSetIntakeStateWhenHopperSafeCommand(IntakeConstants.IntakeState targetState) {
+        return getWaitUntilSafeForIntakeCommand()
+                .andThen(IntakeCommands.getSetTargetStateCommand(targetState));
     }
 
     public static Command getWaitUntilSafeForIntakeCommand() {
         return new WaitUntilCommand(
                 RobotContainer.HOPPER::isPastMinimumPositionForIntakeToOpen
+        );
+    }
+
+    private static Command getSetHopperDefaultOpenCommand() {
+        return new InstantCommand(
+                () -> SHOULD_HOPPER_DEFAULT_OPEN.set(true)
+        );
+    }
+
+    private static Command getSetIntakeDefaultOpenCommand() {
+        return new InstantCommand(
+                () -> SHOULD_INTAKE_DEFAULT_OPEN.set(true)
         );
     }
 }

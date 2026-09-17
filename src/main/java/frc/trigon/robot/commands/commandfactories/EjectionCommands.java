@@ -24,7 +24,7 @@ public class EjectionCommands {
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_INTAKE),
                 KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.EJECT_FROM_INTAKE),
                 LoaderCommands.getSetTargetVelocityCommand(() -> LoaderConstants.EJECT_FROM_INTAKE_VELOCITY),
-                FuelIntakeCommands.getPrepareHopperForIntakeCommand().andThen(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN))
+                FuelIntakeCommands.getPrepareHopperForIntakeCommand(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN)
         );
     }
 
