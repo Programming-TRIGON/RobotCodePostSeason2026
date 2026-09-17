@@ -38,7 +38,7 @@ public class CameraConstants {
                             Units.degreesToRadians(180 + 20)
                     )
             ),
-            ROBOT_TO_BACK_SIDE_LEFT_APRIL_TAG_CAMERA = new Transform3d(
+            ROBOT_TO_SIDE_LEFT_APRIL_TAG_CAMERA = new Transform3d(
                     new Translation3d(
                             -0.319,
                             0.291,
@@ -50,7 +50,7 @@ public class CameraConstants {
                             Units.degreesToRadians(-70)
                     )
             ),
-            ROBOT_TO_BACK_SIDE_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
+            ROBOT_TO_SIDE_RIGHT_APRIL_TAG_CAMERA = new Transform3d(
                     new Translation3d(
                             -0.319,
                             -0.291,
@@ -76,16 +76,16 @@ public class CameraConstants {
                     ROBOT_TO_BACK_RIGHT_RIGHT_APRIL_TAG_CAMERA,
                     APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
             ),
-            BACK_SIDE_LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
+            SIDE_LEFT_APRIL_TAG_CAMERA = new AprilTagCamera(
                     AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
                     "BackSideLeftAprilTagCamera",
-                    ROBOT_TO_BACK_SIDE_LEFT_APRIL_TAG_CAMERA,
+                    ROBOT_TO_SIDE_LEFT_APRIL_TAG_CAMERA,
                     APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
             ),
-            BACK_SIDE_RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
+            SIDE_RIGHT_APRIL_TAG_CAMERA = new AprilTagCamera(
                     AprilTagCameraConstants.AprilTagCameraType.PHOTON_CAMERA,
                     "BackSideRightAprilTagCamera",
-                    ROBOT_TO_BACK_SIDE_RIGHT_APRIL_TAG_CAMERA,
+                    ROBOT_TO_SIDE_RIGHT_APRIL_TAG_CAMERA,
                     APRIL_TAG_CAMERA_STANDARD_DEVIATIONS
             );
 }

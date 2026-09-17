@@ -35,7 +35,6 @@ import frc.trigon.robot.subsystems.kicker.KickerCommands;
 import frc.trigon.robot.subsystems.kicker.KickerConstants;
 import frc.trigon.robot.subsystems.loader.Loader;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
-import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.Shooter;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.swerve.Swerve;
@@ -47,8 +46,8 @@ public class RobotContainer {
     public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator(
             CameraConstants.BACK_LEFT_APRIL_TAG_CAMERA,
             CameraConstants.BACK_RIGHT_APRIL_TAG_CAMERA,
-            CameraConstants.BACK_SIDE_LEFT_APRIL_TAG_CAMERA,
-            CameraConstants.BACK_SIDE_RIGHT_APRIL_TAG_CAMERA
+            CameraConstants.SIDE_LEFT_APRIL_TAG_CAMERA,
+            CameraConstants.SIDE_RIGHT_APRIL_TAG_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
