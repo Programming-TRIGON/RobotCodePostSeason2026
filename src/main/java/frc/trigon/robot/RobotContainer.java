@@ -48,7 +48,7 @@ public class RobotContainer {
             CameraConstants.BACK_LEFT_APRIL_TAG_CAMERA,
             CameraConstants.BACK_RIGHT_APRIL_TAG_CAMERA,
             CameraConstants.BACK_SIDE_LEFT_APRIL_TAG_CAMERA,
-            CameraConstants.BACK_SIDE_RIGHT_APRIL_TAG_CAMERA;
+            CameraConstants.BACK_SIDE_RIGHT_APRIL_TAG_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
