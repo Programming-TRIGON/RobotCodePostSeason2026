@@ -73,7 +73,7 @@ public class HoodConstants {
     public static final Rotation2d EJECT_FROM_SHOOTER_PITCH = Rotation2d.fromDegrees(30);
     static final double HOOD_RESET_VOLTAGE = -1;
     static final Rotation2d RESET_ANGLE = MINIMUM_ANGLE;
-    private static final double RESET_HOOD_ON_BOOT_WAIT_TIME = 15;
+    private static final double RESET_HOOD_ON_BOOT_WAIT_TIME_SECONDS = 15;
 
     static {
         configureMotor();
@@ -128,7 +128,7 @@ public class HoodConstants {
     }
 
     private static void resetHoodPositionIfFirstBoot() {
-        CommandScheduler.getInstance().schedule(GeneralCommands.getDelayedCommand(RESET_HOOD_ON_BOOT_WAIT_TIME, () -> {
+        CommandScheduler.getInstance().schedule(GeneralCommands.getDelayedCommand(RESET_HOOD_ON_BOOT_WAIT_TIME_SECONDS, () -> {
             try {
                 final double motorPositionRotations = MOTOR.getSignal(TalonFXSignal.POSITION);
                 if (motorPositionRotations < (MINIMUM_ANGLE.getRotations()))
