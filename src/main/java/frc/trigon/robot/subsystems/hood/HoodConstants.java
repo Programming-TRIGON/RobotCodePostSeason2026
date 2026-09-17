@@ -72,7 +72,7 @@ public class HoodConstants {
     public static final Rotation2d EJECT_FROM_SHOOTER_PITCH = Rotation2d.fromDegrees(30);
     static final double HOOD_RESET_VOLTAGE = -1;
     static final Rotation2d RESET_ANGLE = MINIMUM_ANGLE;
-    static final double RESET_HOOD_ON_BOOT_WAIT_TIME = 15;
+    private static final double RESET_HOOD_ON_BOOT_WAIT_TIME = 15;
 
     static {
         configureMotor();
