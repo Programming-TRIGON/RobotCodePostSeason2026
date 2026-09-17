@@ -49,9 +49,7 @@ public class FuelIntakeCommands {
 
     public static Command getIntakeCommand() {
         return new ParallelCommandGroup(
-                getResetHopperDefaultToOpenCommand(),
-                getWaitUntilSafeForIntakeCommand()
-                        .andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
+                getPrepareHopperForIntakeCommand().andThen(IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN))
         );
     }
 
@@ -61,10 +59,16 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getResetHopperDefaultToOpenCommand() {
+    public static Command getSetHopperDefaultOpenCommand() {
         return new InstantCommand(
                 () -> SHOULD_HOPPER_DEFAULT_OPEN.set(true)
         );
     }
 
+    public static Command getPrepareHopperForIntakeCommand(){
+        return new ParallelCommandGroup(
+                getSetHopperDefaultOpenCommand(),
+                getWaitUntilSafeForIntakeCommand()
+        );
+    }
 }
