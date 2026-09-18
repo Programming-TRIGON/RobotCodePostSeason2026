@@ -63,8 +63,7 @@ public class HopperConstants {
     static final double HOPPER_RESET_POSITION_VOLTAGE = -1;
     static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
     static final double REED_SWITCH_RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
-    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER =
-            () -> Conversions.rotationsToDistance(MOTOR.getSignal(TalonFXSignal.POSITION), DRUM_DIAMETER_METERS) >= REED_SWITCH_RESET_POSITION_METERS - TOLERANCE_METERS ? 1 : 0;
+    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> Conversions.rotationsToDistance(MOTOR.getSignal(TalonFXSignal.POSITION), DRUM_DIAMETER_METERS) >= REED_SWITCH_RESET_POSITION_METERS - TOLERANCE_METERS ? 1 : 0;
 
     static {
         configureMotor();
