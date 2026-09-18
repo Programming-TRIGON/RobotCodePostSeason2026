@@ -44,7 +44,7 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getOpenHopperAndSetIntakeTargetStateCommand(IntakeConstants.IntakeState intakeTargetState) {
+    public static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState intakeTargetState) {
         return new ParallelCommandGroup(
                 getSetHopperAndIntakeDefaultOpenCommand(),
                 getSetIntakeStateWhenHopperSafeCommand(intakeTargetState)

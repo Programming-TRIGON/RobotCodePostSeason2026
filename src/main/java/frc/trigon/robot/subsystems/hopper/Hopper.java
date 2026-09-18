@@ -61,7 +61,7 @@ public class Hopper extends MotorSubsystem {
         motor.update();
         HopperConstants.REED_SWITCH.updateSensor();
         resetPositionIfReedSwitchTriggered();
-        Logger.recordOutput("Hopper/TargetState", targetState);
+        Logger.recordOutput("Hopper/CurrentTargetState", targetState.name());
     }
 
     @Override
@@ -74,13 +74,13 @@ public class Hopper extends MotorSubsystem {
         return getCurrentPositionMeters() > HopperConstants.MINIMUM_POSITION_FOR_INTAKE_TO_START_OPENING_METERS;
     }
 
-    public boolean atState(HopperConstants.HopperState targetState) {
-        return targetState == this.targetState && atPosition(targetState.targetPositionMeters);
-    }
-
     @AutoLogOutput(key = "Hopper/AtTargetState")
     public boolean atTargetState() {
         return atState(this.targetState);
+    }
+
+    public boolean atState(HopperConstants.HopperState targetState) {
+        return targetState == this.targetState && atPosition(targetState.targetPositionMeters);
     }
 
     void applyResetPositionVoltage() {
@@ -89,7 +89,6 @@ public class Hopper extends MotorSubsystem {
 
     void resetPosition() {
         motor.setPosition(metersToRotations(HopperConstants.RESET_POSITION_METERS));
-        motor.stopMotor();
     }
 
     void setTargetState(HopperConstants.HopperState targetState) {
@@ -126,7 +125,6 @@ public class Hopper extends MotorSubsystem {
     private void resetPositionIfReedSwitchTriggered() {
         if (isReedSwitchTriggered() && !isAtReedSwitchResetPosition())
             motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
-        setTargetPositionMeters(targetState.targetPositionMeters);
     }
 
     private boolean isAtReedSwitchResetPosition() {
