@@ -40,14 +40,15 @@ public class FuelIntakeCommands {
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE),
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
                 () -> !FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.get()
+                        && FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
                         && RobotContainer.INTAKE.isPastMinimumAngleForHopperToClose()
         );
     }
 
-    public static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState intakeTargetState) {
+    public static Command getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState intakeTargetState) {
         return new ParallelCommandGroup(
                 getSetHopperAndIntakeDefaultOpenCommand(),
-                getSetIntakeStateWhenHopperSafeCommand(intakeTargetState)
+                getSetIntakeStateWhenHopperReadyCommand(intakeTargetState)
         );
     }
 
@@ -58,7 +59,7 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getSetIntakeStateWhenHopperSafeCommand(IntakeConstants.IntakeState targetState) {
+    public static Command getSetIntakeStateWhenHopperReadyCommand(IntakeConstants.IntakeState targetState) {
         return new SequentialCommandGroup(
                 getWaitUntilSafeForIntakeToOpenCommand(),
                 IntakeCommands.getSetTargetStateCommand(targetState)

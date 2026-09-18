@@ -5,6 +5,8 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
@@ -60,7 +62,7 @@ public class Hopper extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
         HopperConstants.REED_SWITCH.updateSensor();
-        resetPositionIfReedSwitchTriggered();
+        configurePositionResettingTrigger();
         Logger.recordOutput("Hopper/CurrentTargetState", targetState.name());
     }
 
@@ -122,13 +124,9 @@ public class Hopper extends MotorSubsystem {
         return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
     }
 
-    private void resetPositionIfReedSwitchTriggered() {
-        if (isReedSwitchTriggered() && !isAtReedSwitchResetPosition())
-            motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
-    }
-
-    private boolean isAtReedSwitchResetPosition() {
-        return atPosition(HopperConstants.REED_SWITCH_RESET_POSITION_METERS);
+    private void configurePositionResettingTrigger() {
+        final Trigger reedSwitchTrigger = new Trigger(this::isReedSwitchTriggered).debounce(HopperConstants.REED_SWITCH_DEBOUNCE_TIME_SECONDS);
+        reedSwitchTrigger.onTrue(new InstantCommand(() -> motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS))).ignoringDisable(true));
     }
 
     @AutoLogOutput(key = "Hopper/IsReedSwitchTriggered")
