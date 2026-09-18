@@ -7,7 +7,6 @@ import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
-import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.kicker.KickerCommands;
 import frc.trigon.robot.subsystems.kicker.KickerConstants;
@@ -24,7 +23,7 @@ public class EjectionCommands {
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_INTAKE),
                 KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.EJECT_FROM_INTAKE),
                 LoaderCommands.getSetTargetVelocityCommand(() -> LoaderConstants.EJECT_FROM_INTAKE_VELOCITY),
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN)
+                FuelIntakeCommands.getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN)
         );
     }
 

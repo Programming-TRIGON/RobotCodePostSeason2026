@@ -23,7 +23,7 @@ import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import org.littletonrobotics.junction.Logger;
 
 public class HoodConstants {
-    private static final int MOTOR_ID = 18;
+    private static final int MOTOR_ID = 19;
     private static final String MOTOR_NAME = "HoodMotor";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
