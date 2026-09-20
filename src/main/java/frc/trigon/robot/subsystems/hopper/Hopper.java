@@ -23,6 +23,7 @@ public class Hopper extends MotorSubsystem {
 
     public Hopper() {
         setName("Hopper");
+        configurePositionResettingTrigger();
     }
 
     @Override
@@ -62,7 +63,6 @@ public class Hopper extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
         HopperConstants.REED_SWITCH.updateSensor();
-        configurePositionResettingTrigger();
         Logger.recordOutput("Hopper/CurrentTargetState", targetState.name());
     }
 

@@ -15,6 +15,8 @@ import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.lib.utilities.mechanisms.ArmElevatorMechanism2d;
 
+import java.util.function.DoubleSupplier;
+
 public class HopperConstants {
     private static final int
             MOTOR_ID = 9,
@@ -62,8 +64,14 @@ public class HopperConstants {
     static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
     static final double REED_SWITCH_RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
     static final double REED_SWITCH_DEBOUNCE_TIME_SECONDS = 0.1;
+    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> 0;
 
     static {
+        configureMotor();
+        configureReedSwitch();
+    }
+
+    private static void configureMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -99,6 +107,10 @@ public class HopperConstants {
         MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
         MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+    }
+
+    private static void configureReedSwitch() {
+        REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
     }
 
     public enum HopperState {
