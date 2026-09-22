@@ -5,7 +5,9 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.hardware.misc.simplesensor.SimpleSensor;
@@ -15,7 +17,6 @@ import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.lib.utilities.mechanisms.ArmElevatorMechanism2d;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class HopperConstants {
@@ -65,7 +66,11 @@ public class HopperConstants {
     static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
     static final double REED_SWITCH_RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
     static final double REED_SWITCH_DEBOUNCE_TIME_SECONDS = 0.1;
-    public static final BooleanSupplier IS_REED_SWITCH_TRIGGERED = REED_SWITCH::getBinaryValue;
+    static final BooleanEvent REED_SWITCH_EVENT =
+            new BooleanEvent(
+                    CommandScheduler.getInstance().getDefaultButtonLoop(),
+                    REED_SWITCH::getBinaryValue
+            );
     private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> 0;
 
     static {

@@ -5,8 +5,6 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
@@ -63,7 +61,7 @@ public class Hopper extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
         HopperConstants.REED_SWITCH.updateSensor();
-        Logger.recordOutput("Hopper/IsReedSwitchTriggered", HopperConstants.IS_REED_SWITCH_TRIGGERED);
+        Logger.recordOutput("Hopper/IsReedSwitchTriggered", HopperConstants.REED_SWITCH_EVENT.getAsBoolean());
         Logger.recordOutput("Hopper/TargetState", targetState.name());
     }
 
@@ -90,8 +88,8 @@ public class Hopper extends MotorSubsystem {
         motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
     }
 
-    void resetPosition() {
-        motor.setPosition(metersToRotations(HopperConstants.RESET_POSITION_METERS));
+    void resetPosition(double targetPositionMeters) {
+        motor.setPosition(metersToRotations(targetPositionMeters));
     }
 
     void setTargetState(HopperConstants.HopperState targetState) {
@@ -126,8 +124,9 @@ public class Hopper extends MotorSubsystem {
     }
 
     private void configurePositionResettingTrigger() {
-        final Trigger reedSwitchTrigger = new Trigger(HopperConstants.IS_REED_SWITCH_TRIGGERED).debounce(HopperConstants.REED_SWITCH_DEBOUNCE_TIME_SECONDS);
-        reedSwitchTrigger.onTrue(new InstantCommand(() -> motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS))).ignoringDisable(true));
+        HopperConstants.REED_SWITCH_EVENT
+                .debounce(HopperConstants.REED_SWITCH_DEBOUNCE_TIME_SECONDS)
+                .ifHigh(() -> resetPosition(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
     }
 
     private boolean atPosition(double targetPositionMeters) {

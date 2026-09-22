@@ -30,7 +30,6 @@ public class FuelIntakeCommands {
                 IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.OPEN),
                 IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE),
                 () -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
-                        && FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.get()
                         && RobotContainer.HOPPER.isPastMinimumPositionForIntakeToOpen()
         );
     }
@@ -40,14 +39,15 @@ public class FuelIntakeCommands {
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE),
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
                 () -> !FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.get()
+                        && !FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
                         && RobotContainer.INTAKE.isPastMinimumAngleForHopperToClose()
         );
     }
 
-    public static Command getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState intakeState) {
+    public static Command getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState targetState) {
         return new ParallelCommandGroup(
                 getSetHopperAndIntakeDefaultOpenCommand(),
-                getSetIntakeOpenStateWhenHopperReadyCommand(intakeState)
+                getSetIntakeOpenStateWhenHopperReadyCommand(targetState)
         );
     }
 
@@ -58,10 +58,10 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState intakeState) {
+    public static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState targetState) {
         return new SequentialCommandGroup(
                 getWaitUntilSafeForIntakeToOpenCommand(),
-                IntakeCommands.getSetTargetStateCommand(intakeState)
+                IntakeCommands.getSetTargetStateCommand(targetState)
         );
     }
 
