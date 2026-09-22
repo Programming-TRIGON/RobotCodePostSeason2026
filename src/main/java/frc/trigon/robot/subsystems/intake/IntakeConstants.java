@@ -68,6 +68,7 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS = 0.369,
             INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
+            MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING = Rotation2d.kZero,
             MINIMUM_ANGLE = Rotation2d.fromDegrees(-66),
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(70);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
@@ -112,7 +113,6 @@ public class IntakeConstants {
             new Rotation3d(0, 0, 0)
     );
 
-    static final Rotation2d MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING = Rotation2d.kZero;
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
     static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 18;
 

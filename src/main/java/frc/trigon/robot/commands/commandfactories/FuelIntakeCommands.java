@@ -44,10 +44,10 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState intakeOpenState) {
+    public static Command getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState intakeState) {
         return new ParallelCommandGroup(
                 getSetHopperAndIntakeDefaultOpenCommand(),
-                getSetIntakeOpenStateWhenHopperReadyCommand(intakeOpenState)
+                getSetIntakeOpenStateWhenHopperReadyCommand(intakeState)
         );
     }
 
@@ -58,10 +58,10 @@ public class FuelIntakeCommands {
         );
     }
 
-    public static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState intakeOpenState) {
+    public static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState intakeState) {
         return new SequentialCommandGroup(
                 getWaitUntilSafeForIntakeToOpenCommand(),
-                IntakeCommands.getSetTargetStateCommand(intakeOpenState)
+                IntakeCommands.getSetTargetStateCommand(intakeState)
         );
     }
 

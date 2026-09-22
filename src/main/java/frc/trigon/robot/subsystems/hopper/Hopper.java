@@ -63,7 +63,8 @@ public class Hopper extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
         HopperConstants.REED_SWITCH.updateSensor();
-        Logger.recordOutput("Hopper/CurrentTargetState", targetState.name());
+        Logger.recordOutput("Hopper/IsReedSwitchTriggered", HopperConstants.IS_REED_SWITCH_TRIGGERED);
+        Logger.recordOutput("Hopper/TargetState", targetState.name());
     }
 
     @Override
@@ -125,13 +126,8 @@ public class Hopper extends MotorSubsystem {
     }
 
     private void configurePositionResettingTrigger() {
-        final Trigger reedSwitchTrigger = new Trigger(this::isReedSwitchTriggered).debounce(HopperConstants.REED_SWITCH_DEBOUNCE_TIME_SECONDS);
+        final Trigger reedSwitchTrigger = new Trigger(HopperConstants.IS_REED_SWITCH_TRIGGERED).debounce(HopperConstants.REED_SWITCH_DEBOUNCE_TIME_SECONDS);
         reedSwitchTrigger.onTrue(new InstantCommand(() -> motor.setPosition(metersToRotations(HopperConstants.REED_SWITCH_RESET_POSITION_METERS))).ignoringDisable(true));
-    }
-
-    @AutoLogOutput(key = "Hopper/IsReedSwitchTriggered")
-    private boolean isReedSwitchTriggered() {
-        return HopperConstants.REED_SWITCH.getBinaryValue();
     }
 
     private boolean atPosition(double targetPositionMeters) {
