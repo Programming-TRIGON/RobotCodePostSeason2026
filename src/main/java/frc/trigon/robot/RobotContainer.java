@@ -121,7 +121,6 @@ public class RobotContainer {
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
-        OperatorConstants.HUB_ACTIVE_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
         OperatorConstants.OPEN_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
         OperatorConstants.CLOSE_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
     }
