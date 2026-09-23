@@ -43,8 +43,10 @@ import java.util.List;
 
 public class RobotContainer {
     public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator(
-            CameraConstants.LEFT_APRIL_TAG_CAMERA,
-            CameraConstants.RIGHT_APRIL_TAG_CAMERA1
+            CameraConstants.BACK_LEFT_APRIL_TAG_CAMERA,
+            CameraConstants.BACK_RIGHT_APRIL_TAG_CAMERA,
+            CameraConstants.SIDE_LEFT_APRIL_TAG_CAMERA,
+            CameraConstants.SIDE_RIGHT_APRIL_TAG_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
