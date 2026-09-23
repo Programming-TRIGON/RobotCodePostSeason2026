@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class MatchTracker {
-    private static final LoggedNetworkBoolean HUB_ACTIVE_OVERRIDE = new LoggedNetworkBoolean("MatchTracker/HubActiveOverride", false);
+    private static final LoggedNetworkBoolean HUB_ACTIVE_OVERRIDE = new LoggedNetworkBoolean("SmartDashboard/MatchTracker/HubActiveOverride", false);
 
     public static void logInfo() {
         Logger.recordOutput("MatchTracker/IsHubActive", isHubActive());
@@ -38,11 +38,10 @@ public class MatchTracker {
                     MatchTrackerConstants.END_GAME_SHIFT_START_TIME_SECONDS
                             + (5 - shift) * MatchTrackerConstants.SHIFT_TIME_SECONDS;
 
-            if (didShiftPass(shiftStartTime)) {
+            if (currentMatchTimeSeconds < shiftStartTime) {
                 final boolean autoWinnerHubActive = shift % 2 == 0;
 
                 final boolean hubActive = autoWinnerHubActive == didOurAllianceWinAuto;
-
                 if (hubActive)
                     return true;
 
