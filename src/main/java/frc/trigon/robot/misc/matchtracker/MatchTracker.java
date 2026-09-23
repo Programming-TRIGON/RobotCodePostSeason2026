@@ -3,14 +3,21 @@ package frc.trigon.robot.misc.matchtracker;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class MatchTracker {
-    private static boolean isRedAlliance = Flippable.isRedAlliance();
     private static final LoggedNetworkBoolean hubActiveOverride = new LoggedNetworkBoolean("MatchTracker/HubActiveOverride", false);
+
+    public static void logInfo() {
+        Logger.recordOutput("MatchTracker/IsHubActive", isHubActive());
+        Logger.recordOutput("MatchTracker/TimeUntilNextShift", getTimeUntilNextShift());
+        Logger.recordOutput("MatchTracker/SecondsLeftInMatch", getCurrentMatchTimeSeconds());
+    }
 
     @AutoLogOutput(key = "MatchTracker/IsHubActive")
     public static boolean isHubActive() {
+        boolean isRedAlliance = Flippable.isRedAlliance();
         double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
         char autoWinner = getAutoWinner();
 
@@ -67,7 +74,6 @@ public class MatchTracker {
         return currentMatchTimeSeconds < MatchTrackerConstants.TRANSITION_SHIFT_START_TIME_SECONDS;
     }
 
-    @AutoLogOutput(key = "MatchTracker/TimeUntilNextShift")
     private static double getTimeUntilNextShift() {
         double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
 
@@ -106,7 +112,6 @@ public class MatchTracker {
         return currentMatchTimeSeconds;
     }
 
-    @AutoLogOutput(key = "MatchTracker/SecondsLeftInMatch")
     private static double getCurrentMatchTimeSeconds() {
         return DriverStation.getMatchTime();
     }

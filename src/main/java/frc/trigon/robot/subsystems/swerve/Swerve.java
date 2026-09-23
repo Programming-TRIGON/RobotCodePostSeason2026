@@ -69,6 +69,7 @@ public class Swerve extends MotorSubsystem {
 
         updatePoseEstimatorStates();
         RobotContainer.ROBOT_POSE_ESTIMATOR.periodic();
+        MatchTracker.logInfo();
         TrenchDetection.logTrenchBoundingBoxes();
     }
 
