@@ -67,11 +67,10 @@ public class HopperConstants {
     static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
     static final double REED_SWITCH_RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
     static final double REED_SWITCH_DEBOUNCE_TIME_SECONDS = 0.1;
-    static final BooleanEvent REED_SWITCH_EVENT =
-            new BooleanEvent(
-                    CommandScheduler.getInstance().getDefaultButtonLoop(),
-                    REED_SWITCH::getBinaryValue
-            ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS).rising();
+    static final BooleanEvent REED_SWITCH_EVENT = new BooleanEvent(
+            CommandScheduler.getInstance().getDefaultButtonLoop(),
+            REED_SWITCH::getBinaryValue
+    ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS).rising();
 
     static {
         configureMotor();
