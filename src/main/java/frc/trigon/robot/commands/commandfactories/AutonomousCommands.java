@@ -25,7 +25,7 @@ public class AutonomousCommands {
         return ShootingCommands.getDoubleSwipeFixedAutonomousShootingCommand().withTimeout(timeout);
     }
 
-    public static Command getTimedDeliveryCommand(double timeout){
+    public static Command getTimedDeliveryCommand(double timeout) {
         return ShootingCommands.getFixedDeliveryShootingCommand().withTimeout(timeout);
     }
 

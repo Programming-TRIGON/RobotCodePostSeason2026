@@ -9,6 +9,7 @@ import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.simulatedfield.SimulationFieldHandler;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
+import frc.trigon.robot.subsystems.hopper.HopperCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.kicker.KickerCommands;
@@ -29,6 +30,7 @@ public class GeneralCommands {
     public static Command getDebuggingCommand() {
         return new ParallelCommandGroup(
                 HoodCommands.getDebuggingCommand(),
+                HopperCommands.getDebuggingCommand(),
                 IndexerCommands.getDebuggingCommand(),
                 IntakeCommands.getDebuggingCommand(),
                 KickerCommands.getDebuggingCommand(),
