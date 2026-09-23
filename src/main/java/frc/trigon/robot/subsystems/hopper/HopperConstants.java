@@ -70,7 +70,7 @@ public class HopperConstants {
             new BooleanEvent(
                     CommandScheduler.getInstance().getDefaultButtonLoop(),
                     REED_SWITCH::getBinaryValue
-            );
+            ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS);
     private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> 0;
 
     static {

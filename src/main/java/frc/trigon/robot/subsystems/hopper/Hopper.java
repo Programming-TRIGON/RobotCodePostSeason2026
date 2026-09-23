@@ -21,7 +21,7 @@ public class Hopper extends MotorSubsystem {
 
     public Hopper() {
         setName("Hopper");
-        configurePositionResettingTrigger();
+        configurePositionResettingEvent();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class Hopper extends MotorSubsystem {
         motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
     }
 
-    void resetPosition(double targetPositionMeters) {
+    void setPosition(double targetPositionMeters) {
         motor.setPosition(metersToRotations(targetPositionMeters));
     }
 
@@ -123,10 +123,10 @@ public class Hopper extends MotorSubsystem {
         return Conversions.distanceToRotations(positionMeters, HopperConstants.DRUM_DIAMETER_METERS);
     }
 
-    private void configurePositionResettingTrigger() {
+    private void configurePositionResettingEvent() {
         HopperConstants.REED_SWITCH_EVENT
-                .debounce(HopperConstants.REED_SWITCH_DEBOUNCE_TIME_SECONDS)
-                .ifHigh(() -> resetPosition(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
+                .rising()
+                .ifHigh(() -> setPosition(HopperConstants.REED_SWITCH_RESET_POSITION_METERS));
     }
 
     private boolean atPosition(double targetPositionMeters) {
