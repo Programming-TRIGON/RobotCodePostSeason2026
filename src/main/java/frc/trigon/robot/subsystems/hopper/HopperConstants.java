@@ -118,6 +118,10 @@ public class HopperConstants {
 
     private static void configureReedSwitch() {
         REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
+        REED_SWITCH_EVENT
+                .rising().
+                ifHigh(() -> MOTOR.setPosition(Conversions.distanceToRotations(REED_SWITCH_RESET_POSITION_METERS, DRUM_DIAMETER_METERS))
+        );
     }
 
     public enum HopperState {
