@@ -83,12 +83,12 @@ public class Hopper extends MotorSubsystem {
         return targetState == this.targetState && atPosition(targetState.targetPositionMeters);
     }
 
-    void applyResetPositionVoltage() {
-        motor.setControl(voltageRequest.withOutput(HopperConstants.HOPPER_RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
+    void applyResetPositionVoltage(double targetVoltage) {
+        motor.setControl(voltageRequest.withOutput(targetVoltage).withIgnoreSoftwareLimits(true));
     }
 
-    void resetPosition() {
-        motor.setPosition(metersToRotations(HopperConstants.RESET_POSITION_METERS));
+    void resetToClosePositionMeters() {
+        motor.setPosition(metersToRotations(HopperConstants.RESET_TO_CLOSE_POSITION_METERS));
     }
 
     void setTargetState(HopperConstants.HopperState targetState) {

@@ -7,9 +7,11 @@ package frc.trigon.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.commands.CommandConstants;
@@ -80,6 +82,7 @@ public class RobotContainer {
     private void configureBindings() {
         bindDefaultCommands();
         bindControllerCommands();
+        bindRobotModeTriggers();
     }
 
     private void bindDefaultCommands() {
@@ -102,7 +105,7 @@ public class RobotContainer {
         OperatorConstants.TELEPORTATION_FOR_SIMULATION_SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(GeneralCommands.getTeleportRobotForSimulationShootingMapCalibrationCommand(ShootingCalculations.TargetShootingLocation.RIGHT_DELIVERY_LOCATION));
         OperatorConstants.RESET_POSE_TO_FIXED_SHOOTING_LOCATION_TRIGGER.onTrue(ShootingCommands.getResetPoseToFixedShootingLocationCommand());
         OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
-        OperatorConstants.RESET_HOPPER_TRIGGER.whileTrue(HopperCommands.getResetHopperCommand());
+        OperatorConstants.RESET_HOPPER_TRIGGER.whileTrue(HopperCommands.getManualResetHopperToClosePositionCommand());
 
         OperatorConstants.SHOOTING_TRIGGER.whileTrue(ShootingCommands.getShootingCommand());
         OperatorConstants.SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER.onTrue(ShootingCommands.getSetFixedShootingStateCommand(ShootingCommands.FixedShootingPosition.BETWEEN_TOWER_AND_HUB));
@@ -134,6 +137,11 @@ public class RobotContainer {
         OperatorConstants.SET_INTAKE_DEFAULT_TO_CLOSE_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
         OperatorConstants.SET_HOPPER_DEFAULT_TO_OPEN_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(true)));
         OperatorConstants.SET_HOPPER_DEFAULT_TO_CLOSE_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(false)));
+    }
+
+    private void bindRobotModeTriggers() {
+        new Trigger(DriverStation::isEnabled).onTrue(HopperCommands.getResetHopperToReedSwitchCommand());
+        new Trigger(DriverStation::isEnabled).onFalse(HopperCommands.getResetHopperPositionToCloseCommand());
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {
