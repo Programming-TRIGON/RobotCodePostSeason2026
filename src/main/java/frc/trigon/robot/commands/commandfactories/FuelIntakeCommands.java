@@ -46,26 +46,20 @@ public class FuelIntakeCommands {
 
     public static Command getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState targetState) {
         return new ParallelCommandGroup(
-                getSetHopperAndIntakeDefaultOpenCommand(),
+                getSetIntakeDefaultOpenCommand(),
+                getSetHopperDefaultOpenCommand(),
                 getSetIntakeOpenStateWhenHopperReadyCommand(targetState)
         );
     }
 
-    public static Command getSetHopperAndIntakeDefaultOpenCommand() {
-        return new ParallelCommandGroup(
-                getSetIntakeDefaultOpenCommand(),
-                getSetHopperDefaultOpenCommand()
-        );
-    }
-
-    public static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState targetState) {
+    private static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState targetState) {
         return new SequentialCommandGroup(
                 getWaitUntilSafeForIntakeToOpenCommand(),
                 IntakeCommands.getSetTargetStateCommand(targetState)
         );
     }
 
-    public static Command getWaitUntilSafeForIntakeToOpenCommand() {
+    private static Command getWaitUntilSafeForIntakeToOpenCommand() {
         return new WaitUntilCommand(
                 RobotContainer.HOPPER::isPastMinimumPositionForIntakeToOpen
         );

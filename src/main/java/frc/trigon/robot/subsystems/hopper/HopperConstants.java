@@ -35,6 +35,7 @@ public class HopperConstants {
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
     private static final double MOMENT_OF_INERTIA = 0.003;
+    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> 0;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
             GEARBOX,
             GEAR_RATIO,
@@ -70,10 +71,7 @@ public class HopperConstants {
             new BooleanEvent(
                     CommandScheduler.getInstance().getDefaultButtonLoop(),
                     REED_SWITCH::getBinaryValue
-            )
-                    .debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS)
-                    .rising();
-    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> 0;
+            ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS).rising();
 
     static {
         configureMotor();
@@ -121,7 +119,6 @@ public class HopperConstants {
     private static void configureReedSwitch() {
         REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
         REED_SWITCH_EVENT.ifHigh(() -> MOTOR.setPosition(Conversions.distanceToRotations(REED_SWITCH_RESET_POSITION_METERS, DRUM_DIAMETER_METERS)));
-
     }
 
     public enum HopperState {
