@@ -25,9 +25,8 @@ public class MatchTracker {
         final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
         final char autoWinner = getAutoWinner();
 
-        if (autoWinner != 'R' && autoWinner != 'B') {
+        if (autoWinner != 'R' && autoWinner != 'B')
             return false;
-        }
 
         final boolean didOurAllianceWinAuto = isRedAlliance == (autoWinner == 'R');
 
