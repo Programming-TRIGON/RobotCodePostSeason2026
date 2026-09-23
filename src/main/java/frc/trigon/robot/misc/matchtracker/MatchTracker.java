@@ -15,35 +15,47 @@ public class MatchTracker {
     }
 
     public static boolean isHubActive() {
-        final boolean isRedAlliance = Flippable.isRedAlliance();
-        final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
-        final char autoWinner = getAutoWinner();
-        final boolean isRedWonAuto = autoWinner == 'R';
-
         if (HUB_ACTIVE_OVERRIDE.get())
             return true;
 
         if (DriverStation.isAutonomousEnabled())
             return true;
 
-        if (autoWinner != 'R' && autoWinner != 'B')
+        final boolean isRedAlliance = Flippable.isRedAlliance();
+        final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
+        final char autoWinner = getAutoWinner();
+
+        if (autoWinner != 'R' && autoWinner != 'B') {
             return false;
+        }
+
+        final boolean didOurAllianceWinAuto = isRedAlliance == (autoWinner == 'R');
 
         if (didShiftPass(MatchTrackerConstants.END_GAME_SHIFT_START_TIME_SECONDS))
             return true;
 
-        if (didShiftPass(MatchTrackerConstants.FOURTH_SHIFT_START_TIME_SECONDS))
-            return isRedAlliance == isRedWonAuto;
+        for (int shift = 4; shift >= 1; shift--) {
+            final double shiftStartTime =
+                    MatchTrackerConstants.END_GAME_SHIFT_START_TIME_SECONDS
+                            + (5 - shift) * MatchTrackerConstants.SHIFT_TIME_SECONDS;
 
-        if (didShiftPass(MatchTrackerConstants.THIRD_SHIFT_START_TIME_SECONDS))
-            return isRedAlliance != isRedWonAuto;
+            if (didShiftPass(shiftStartTime)) {
+                final boolean autoWinnerHubActive = shift % 2 == 0;
 
-        if (didShiftPass(MatchTrackerConstants.SECOND_SHIFT_START_TIME_SECONDS))
-            return isRedAlliance == isRedWonAuto;
+                final boolean hubActive = autoWinnerHubActive == didOurAllianceWinAuto;
 
-        if (didShiftPass(MatchTrackerConstants.FIRST_SHIFT_START_TIME_SECONDS))
-            return isRedAlliance != isRedWonAuto;
+                if (hubActive)
+                    return true;
 
+                final double nextShiftStartTime =
+                        shift == 4
+                                ? MatchTrackerConstants.END_GAME_SHIFT_START_TIME_SECONDS
+                                : MatchTrackerConstants.END_GAME_SHIFT_START_TIME_SECONDS
+                                + (4 - shift) * MatchTrackerConstants.SHIFT_TIME_SECONDS;
+
+                return didShiftPass(nextShiftStartTime);
+            }
+        }
         return currentMatchTimeSeconds < MatchTrackerConstants.TRANSITION_SHIFT_START_TIME_SECONDS;
     }
 
@@ -61,7 +73,14 @@ public class MatchTracker {
         if (!DriverStation.isTeleopEnabled())
             return 0;
 
-        for (double shiftStartTime : MatchTrackerConstants.SHIFT_START_TIMES) {
+        if (currentMatchTimeSeconds > MatchTrackerConstants.TRANSITION_SHIFT_START_TIME_SECONDS)
+            return currentMatchTimeSeconds - MatchTrackerConstants.TRANSITION_SHIFT_START_TIME_SECONDS;
+
+        for (int i = 4; i >= 0; i--) {
+            final double shiftStartTime =
+                    MatchTrackerConstants.END_GAME_SHIFT_START_TIME_SECONDS
+                            + i * MatchTrackerConstants.SHIFT_TIME_SECONDS;
+
             if (currentMatchTimeSeconds > shiftStartTime)
                 return currentMatchTimeSeconds - shiftStartTime;
         }
@@ -75,10 +94,12 @@ public class MatchTracker {
 
     private static char getAutoWinner() {
         final String gameData = DriverStation.getGameSpecificMessage();
-        final char autoWinner = gameData.charAt(0);
 
-        if (gameData.isEmpty())
+        if (gameData.isEmpty()) {
             return 0;
+        }
+
+        final char autoWinner = gameData.charAt(0);
 
         return autoWinner == 'R' || autoWinner == 'B' ? autoWinner : 0;
     }
