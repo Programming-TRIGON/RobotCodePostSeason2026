@@ -37,7 +37,8 @@ public class HopperCommands {
 
     public static Command getResetHopperToReedSwitchCommand() {
         return new FunctionalCommand(
-                () -> {},
+                () -> {
+                },
                 () -> RobotContainer.HOPPER.applyResetPositionVoltage(HopperConstants.RESET_TO_REED_SWITCH_POSITION_VOLTAGE),
                 interrupted -> RobotContainer.HOPPER.stop(),
                 HopperConstants.REED_SWITCH::getBinaryValue,
@@ -46,8 +47,9 @@ public class HopperCommands {
     }
 
     public static Command getResetHopperPositionToCloseCommand() {
-        return new InstantCommand(
-                RobotContainer.HOPPER::resetToClosePositionMeters
-        ).ignoringDisable(true);
+        return new InstantCommand(() -> {
+            if (!HopperConstants.REED_SWITCH.getBinaryValue())
+                RobotContainer.HOPPER.resetToClosePositionMeters();
+        }).ignoringDisable(true);
     }
 }
