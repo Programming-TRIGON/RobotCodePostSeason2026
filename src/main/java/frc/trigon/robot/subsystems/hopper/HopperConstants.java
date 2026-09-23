@@ -70,7 +70,9 @@ public class HopperConstants {
             new BooleanEvent(
                     CommandScheduler.getInstance().getDefaultButtonLoop(),
                     REED_SWITCH::getBinaryValue
-            ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS);
+            )
+                    .debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS)
+                    .rising();
     private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> 0;
 
     static {
@@ -118,10 +120,8 @@ public class HopperConstants {
 
     private static void configureReedSwitch() {
         REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
-        REED_SWITCH_EVENT
-                .rising().
-                ifHigh(() -> MOTOR.setPosition(Conversions.distanceToRotations(REED_SWITCH_RESET_POSITION_METERS, DRUM_DIAMETER_METERS))
-        );
+        REED_SWITCH_EVENT.ifHigh(() -> MOTOR.setPosition(Conversions.distanceToRotations(REED_SWITCH_RESET_POSITION_METERS, DRUM_DIAMETER_METERS)));
+
     }
 
     public enum HopperState {
