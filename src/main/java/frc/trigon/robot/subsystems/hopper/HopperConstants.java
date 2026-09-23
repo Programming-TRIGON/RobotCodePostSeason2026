@@ -1,0 +1,133 @@
+package frc.trigon.robot.subsystems.hopper;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.trigon.lib.hardware.RobotHardwareStats;
+import frc.trigon.lib.hardware.misc.simplesensor.SimpleSensor;
+import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
+import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
+import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
+import frc.trigon.lib.utilities.Conversions;
+import frc.trigon.lib.utilities.mechanisms.ArmElevatorMechanism2d;
+
+import java.util.function.DoubleSupplier;
+
+public class HopperConstants {
+    private static final int
+            MOTOR_ID = 9,
+            REED_SWITCH_CHANNEL = 0;
+    private static final String
+            MOTOR_NAME = "HopperMotor",
+            REED_SWITCH_NAME = "HopperReedSwitch";
+    static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
+    static final SimpleSensor REED_SWITCH = SimpleSensor.createDigitalSensor(REED_SWITCH_CHANNEL, REED_SWITCH_NAME);
+
+    static final boolean FOC_ENABLED = true;
+    private static final double GEAR_RATIO = 11.25;
+
+    private static final int MOTOR_AMOUNT = 1;
+    private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
+    private static final double MOMENT_OF_INERTIA = 0.003;
+    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> 0;
+    static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
+            GEARBOX,
+            GEAR_RATIO,
+            MOMENT_OF_INERTIA
+    );
+
+    static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
+            Units.Volts.of(1).per(Units.Seconds),
+            Units.Volts.of(1),
+            null
+    );
+
+    private static final String MECHANISM_NAME = "HopperMechanism";
+    static final double MAXIMUM_LENGTH_METERS = 0.3;
+    static final double MINIMUM_LENGTH_METERS = 0;
+    private static final double STARTING_LENGTH_METERS = 0.1;
+    private static final Color MECHANISM_COLOR = Color.kYellow;
+    static final ArmElevatorMechanism2d MECHANISM = new ArmElevatorMechanism2d(
+            MECHANISM_NAME,
+            MAXIMUM_LENGTH_METERS + STARTING_LENGTH_METERS,
+            MINIMUM_LENGTH_METERS + STARTING_LENGTH_METERS,
+            MECHANISM_COLOR
+    );
+
+    static final double MINIMUM_POSITION_FOR_INTAKE_TO_START_OPENING_METERS = 0.1;
+    static final double DRUM_DIAMETER_METERS = 0.09144;
+    static final double TOLERANCE_METERS = 0.01;
+    static final double HOPPER_RESET_POSITION_VOLTAGE = -2;
+    static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
+    static final double REED_SWITCH_RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
+    static final double REED_SWITCH_DEBOUNCE_TIME_SECONDS = 0.1;
+    static final BooleanEvent REED_SWITCH_EVENT = new BooleanEvent(
+            CommandScheduler.getInstance().getDefaultButtonLoop(),
+            REED_SWITCH::getBinaryValue
+    ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS).rising();
+
+    static {
+        configureMotor();
+        configureReedSwitch();
+    }
+
+    private static void configureMotor() {
+        final TalonFXConfiguration config = new TalonFXConfiguration();
+
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
+
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 0;
+        config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0;
+
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = 30;
+
+        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Conversions.distanceToRotations(MAXIMUM_LENGTH_METERS, DRUM_DIAMETER_METERS);
+
+        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Conversions.distanceToRotations(MINIMUM_LENGTH_METERS, DRUM_DIAMETER_METERS);
+
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 8 : 2;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 8 : 2;
+        config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
+
+        MOTOR.applyConfiguration(config);
+        MOTOR.setPhysicsSimulation(SIMULATION);
+
+        MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
+        MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+        MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
+        MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
+        MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+    }
+
+    private static void configureReedSwitch() {
+        REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
+        REED_SWITCH_EVENT.ifHigh(() -> MOTOR.setPosition(Conversions.distanceToRotations(REED_SWITCH_RESET_POSITION_METERS, DRUM_DIAMETER_METERS)));
+    }
+
+    public enum HopperState {
+        OPEN(MAXIMUM_LENGTH_METERS),
+        CLOSE(MINIMUM_LENGTH_METERS);
+
+        public final double targetPositionMeters;
+
+        HopperState(double targetPositionMeters) {
+            this.targetPositionMeters = targetPositionMeters;
+        }
+    }
+}

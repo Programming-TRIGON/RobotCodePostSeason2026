@@ -13,7 +13,7 @@ import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class LoaderConstants {
-    private static final int MOTOR_ID = 15;
+    private static final int MOTOR_ID = 16;
     private static final String MOTOR_NAME = "LoaderMotor";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
