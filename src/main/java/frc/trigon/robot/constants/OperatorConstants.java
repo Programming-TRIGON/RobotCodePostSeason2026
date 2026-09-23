@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.misc.matchTracker.MatchTracker;
+import frc.trigon.robot.misc.matchtracker.MatchTracker;
 
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
@@ -67,7 +67,9 @@ public class OperatorConstants {
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             INTAKE_TRIGGER = (DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.b())).and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             TRENCH_ASSIST_TRIGGER = DRIVER_CONTROLLER.rightBumper(),
-            HUB_ACTIVE_STATE_CHANGED_TRIGGER = new Trigger(MatchTracker::hasHubActiveStateChanged),
+
+            OPEN_INTAKE_DEFAULT_COMMAND = OPERATOR_CONTROLLER.t(),
+            CLOSE_INTAKE_DEFAULT_COMMAND = OPERATOR_CONTROLLER.y(),
             SET_INTAKE_DEFAULT_TO_OPEN_TRIGGER = OPERATOR_CONTROLLER.t(),
             SET_INTAKE_DEFAULT_TO_CLOSE_TRIGGER = OPERATOR_CONTROLLER.y(),
             SET_HOPPER_DEFAULT_TO_OPEN_TRIGGER = OPERATOR_CONTROLLER.comma(),

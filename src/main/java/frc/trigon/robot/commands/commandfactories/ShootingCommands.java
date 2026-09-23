@@ -12,7 +12,7 @@ import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.constants.FieldConstants;
 import frc.trigon.robot.constants.OperatorConstants;
 import frc.trigon.robot.misc.TrenchDetection;
-import frc.trigon.robot.misc.matchTracker.MatchTracker;
+import frc.trigon.robot.misc.matchtracker.MatchTracker;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.shootingcalculations.ShootingState;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
