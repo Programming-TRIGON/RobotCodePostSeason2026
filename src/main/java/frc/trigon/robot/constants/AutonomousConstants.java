@@ -13,6 +13,7 @@ import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
+import frc.trigon.robot.commands.commandfactories.autonomous.AutonomousGenerator;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import org.json.simple.parser.ParseException;
@@ -54,6 +55,7 @@ public class AutonomousConstants {
         CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
         configureAutoBuilder();
         registerCommands();
+        AutonomousGenerator.init();
     }
 
     private static void configureAutoBuilder() {
