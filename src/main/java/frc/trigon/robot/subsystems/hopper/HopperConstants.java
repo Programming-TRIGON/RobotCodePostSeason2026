@@ -35,7 +35,6 @@ public class HopperConstants {
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
     private static final double MOMENT_OF_INERTIA = 0.003;
-    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> 0;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
             GEARBOX,
             GEAR_RATIO,
@@ -63,14 +62,15 @@ public class HopperConstants {
     static final double MINIMUM_POSITION_FOR_INTAKE_TO_START_OPENING_METERS = 0.1;
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double TOLERANCE_METERS = 0.01;
-    static final double HOPPER_RESET_POSITION_VOLTAGE = -2;
-    static final double RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
+    static final double RESET_TO_OPEN_POSITION_VOLTAGE = 2;
+    static final double RESET_TO_CLOSE_POSITION_METERS = MINIMUM_LENGTH_METERS;
     static final double REED_SWITCH_RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
     static final double REED_SWITCH_DEBOUNCE_TIME_SECONDS = 0.1;
     static final BooleanEvent REED_SWITCH_EVENT = new BooleanEvent(
             CommandScheduler.getInstance().getDefaultButtonLoop(),
             REED_SWITCH::getBinaryValue
     ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS).rising();
+    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> Conversions.rotationsToDistance(MOTOR.getSignal(TalonFXSignal.POSITION), DRUM_DIAMETER_METERS) >= REED_SWITCH_RESET_POSITION_METERS ? 1 : 0;
 
     static {
         configureMotor();
