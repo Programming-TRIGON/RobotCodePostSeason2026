@@ -62,8 +62,7 @@ public class HopperConstants {
     static final double MINIMUM_POSITION_FOR_INTAKE_TO_START_OPENING_METERS = 0.1;
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double TOLERANCE_METERS = 0.01;
-    static final double RESET_TO_CLOSE_POSITION_VOLTAGE = -2;
-    static final double RESET_TO_REED_SWITCH_POSITION_VOLTAGE = 2;
+    static final double RESET_TO_OPEN_POSITION_VOLTAGE = 2;
     static final double RESET_TO_CLOSE_POSITION_METERS = MINIMUM_LENGTH_METERS;
     static final double REED_SWITCH_RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
     static final double REED_SWITCH_DEBOUNCE_TIME_SECONDS = 0.1;

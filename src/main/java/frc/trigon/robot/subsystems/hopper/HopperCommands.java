@@ -1,9 +1,7 @@
 package frc.trigon.robot.subsystems.hopper;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 
@@ -27,29 +25,28 @@ public class HopperCommands {
         );
     }
 
-    public static Command getManualResetHopperToClosePositionCommand() {
-        return new StartEndCommand(
-                () -> RobotContainer.HOPPER.applyResetPositionVoltage(HopperConstants.RESET_TO_CLOSE_POSITION_VOLTAGE),
-                RobotContainer.HOPPER::resetToClosePositionMeters,
-                RobotContainer.HOPPER
-        ).ignoringDisable(true);
+    public static Command getResetHopperPositionCommand() {
+        return new ConditionalCommand(
+                getResetHopperToOpenCommand(),
+                getResetHopperToClosePositionCommand(),
+                DriverStation::isEnabled
+        );
     }
 
-    public static Command getResetHopperToReedSwitchCommand() {
+    public static Command getResetHopperToClosePositionCommand() {
+        return new InstantCommand(
+                RobotContainer.HOPPER::resetToClosePositionMeters
+        );
+    }
+
+    public static Command getResetHopperToOpenCommand() {
         return new FunctionalCommand(
                 () -> {
                 },
-                () -> RobotContainer.HOPPER.applyResetPositionVoltage(HopperConstants.RESET_TO_REED_SWITCH_POSITION_VOLTAGE),
+                RobotContainer.HOPPER::applyResetPositionVoltage,
                 interrupted -> RobotContainer.HOPPER.stop(),
                 HopperConstants.REED_SWITCH::getBinaryValue,
                 RobotContainer.HOPPER
         );
-    }
-
-    public static Command getResetHopperPositionToCloseCommand() {
-        return new InstantCommand(() -> {
-            if (!HopperConstants.REED_SWITCH.getBinaryValue())
-                RobotContainer.HOPPER.resetToClosePositionMeters();
-        }).ignoringDisable(true);
     }
 }
