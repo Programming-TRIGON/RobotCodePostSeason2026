@@ -27,23 +27,23 @@ public class HopperCommands {
 
     public static Command getResetHopperPositionCommand() {
         return new ConditionalCommand(
-                getResetHopperToOpenCommand(),
+                getResetHopperToOpenPositionCommand(),
                 getResetHopperToClosePositionCommand(),
                 DriverStation::isEnabled
         );
     }
 
-    public static Command getResetHopperToClosePositionCommand() {
+    private static Command getResetHopperToClosePositionCommand() {
         return new InstantCommand(
                 RobotContainer.HOPPER::resetToClosePositionMeters
         );
     }
 
-    public static Command getResetHopperToOpenCommand() {
+    private static Command getResetHopperToOpenPositionCommand() {
         return new FunctionalCommand(
+                RobotContainer.HOPPER::applyResetPositionVoltage,
                 () -> {
                 },
-                RobotContainer.HOPPER::applyResetPositionVoltage,
                 interrupted -> RobotContainer.HOPPER.stop(),
                 HopperConstants.REED_SWITCH::getBinaryValue,
                 RobotContainer.HOPPER
