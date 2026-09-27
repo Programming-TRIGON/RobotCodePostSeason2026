@@ -1,11 +1,9 @@
 package frc.trigon.robot.misc.matchtracker;
 
-
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-
 
 public class MatchTracker {
     private static final LoggedNetworkBoolean HUB_ACTIVE_OVERRIDE = new LoggedNetworkBoolean("SmartDashboard/MatchTracker/HubActiveOverride", false);
