@@ -21,17 +21,14 @@ public class MatchTracker {
         final boolean isRedAlliance = Flippable.isRedAlliance();
         final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
         final char autoWinner = getAutoWinner();
-
-        if (autoWinner == 0)
-            return true;
-
-        if (didShiftPassIncludingEarlyHubActivation(MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
-            return true;
-
         final boolean didOurAllianceWinAuto = didOurAllianceWinAuto(isRedAlliance, autoWinner);
+
+        if (autoWinner == 0 || didShiftPassIncludingEarlyHubActivation(MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
+            return true;
 
         if (currentMatchTimeSeconds < MatchTrackerConstants.FOURTH_SHIFT_START_TIME_SECONDS)
             return didOurAllianceWinAuto;
+//      No need to check early activation for the next shift, since it is endgame and is already handled separately.
 
         if (currentMatchTimeSeconds < MatchTrackerConstants.THIRD_SHIFT_START_TIME_SECONDS) {
             if (!didOurAllianceWinAuto)
@@ -60,10 +57,7 @@ public class MatchTracker {
     private static double getTimeUntilNextShift() {
         final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
 
-        if (DriverStation.isAutonomousEnabled())
-            return currentMatchTimeSeconds;
-
-        if (didShiftPass(MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
+        if (DriverStation.isAutonomousEnabled() || didShiftPass(MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
             return currentMatchTimeSeconds;
 
         if (didShiftPass(MatchTrackerConstants.FOURTH_SHIFT_START_TIME_SECONDS))
@@ -73,7 +67,7 @@ public class MatchTracker {
             return currentMatchTimeSeconds - MatchTrackerConstants.FOURTH_SHIFT_START_TIME_SECONDS;
 
         if (didShiftPass(MatchTrackerConstants.SECOND_SHIFT_START_TIME_SECONDS))
-            return currentMatchTimeSeconds   - MatchTrackerConstants.THIRD_SHIFT_START_TIME_SECONDS;
+            return currentMatchTimeSeconds - MatchTrackerConstants.THIRD_SHIFT_START_TIME_SECONDS;
 
         if (didShiftPass(MatchTrackerConstants.FIRST_SHIFT_START_TIME_SECONDS))
             return currentMatchTimeSeconds - MatchTrackerConstants.SECOND_SHIFT_START_TIME_SECONDS;
@@ -83,7 +77,6 @@ public class MatchTracker {
 
         return currentMatchTimeSeconds;
     }
-
 
     private static boolean didShiftPassIncludingEarlyHubActivation(double shiftStartTimeSeconds) {
         final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
