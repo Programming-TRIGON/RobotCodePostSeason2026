@@ -8,5 +8,6 @@ public class MatchTrackerConstants {
             THIRD_SHIFT_START_TIME_SECONDS = 80,
             FOURTH_SHIFT_START_TIME_SECONDS = 55,
             END_GAME_START_TIME_SECONDS = 30,
+            SHIFT_TIME_SECONDS = 25,
             HUB_ACTIVATION_EARLY_SECONDS = 2;
 }
