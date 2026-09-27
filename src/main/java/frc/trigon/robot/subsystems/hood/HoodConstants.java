@@ -28,7 +28,7 @@ public class HoodConstants {
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    static final double GEAR_RATIO = 32;
+    static final double GEAR_RATIO = 31;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
@@ -36,8 +36,8 @@ public class HoodConstants {
             HOOD_MASS_KILOGRAMS = 2,
             HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(62),
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(21.5);
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(59.25),
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(27);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
             GEARBOX,
