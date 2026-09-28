@@ -19,7 +19,7 @@ public class MatchTracker {
         final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
         final boolean isRedAlliance = Flippable.isRedAlliance();
 
-        if (HUB_ACTIVE_OVERRIDE.get() || DriverStation.isAutonomousEnabled() || autoWinner == ' ' || didShiftPassIncludingEarlyHubActivation(MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
+        if (HUB_ACTIVE_OVERRIDE.get() || DriverStation.isAutonomousEnabled() || autoWinner == ' ' || didShiftPassIncludingEarlyHubActivation(currentMatchTimeSeconds, MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
             return true;
 
         for (int shift = 4; shift >= 1; shift--) {
