@@ -16,6 +16,7 @@ public class MatchTracker {
 
     public static boolean isHubActive() {
         final char autoWinner = getAutoWinner();
+        final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
         final boolean isRedAlliance = Flippable.isRedAlliance();
 
         if (HUB_ACTIVE_OVERRIDE.get() || DriverStation.isAutonomousEnabled() || autoWinner == ' ' || didShiftPassIncludingEarlyHubActivation(MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
@@ -24,11 +25,11 @@ public class MatchTracker {
         for (int shift = 4; shift >= 1; shift--) {
             final double shiftStartTimeSeconds = getShiftStartTimeSeconds(shift);
 
-            if (didShiftPass(shiftStartTimeSeconds)) {
+            if (didShiftPass(currentMatchTimeSeconds, shiftStartTimeSeconds)) {
                 if (isAutoWinnerHubActive(shift) == didOurAllianceWinAuto(isRedAlliance, autoWinner))
                     return true;
 
-                return didShiftPassIncludingEarlyHubActivation(shiftStartTimeSeconds - MatchTrackerConstants.SHIFT_TIME_SECONDS);
+                return didShiftPassIncludingEarlyHubActivation(shiftStartTimeSeconds, shiftStartTimeSeconds - MatchTrackerConstants.SHIFT_TIME_SECONDS);
             }
         }
 
@@ -38,17 +39,17 @@ public class MatchTracker {
     private static double getSecondsUntilNextShift() {
         final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
 
-        if (DriverStation.isAutonomousEnabled() || didShiftPass(MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
+        if (DriverStation.isAutonomousEnabled() || didShiftPass(currentMatchTimeSeconds ,MatchTrackerConstants.END_GAME_START_TIME_SECONDS))
             return currentMatchTimeSeconds;
 
         for (int shift = 4; shift >= 1; shift--) {
-            final double shiftStartTime = getShiftStartTimeSeconds(shift);
+            final double shiftStartTimeSeconds = getShiftStartTimeSeconds(shift);
 
-            if (didShiftPass(shiftStartTime))
-                return currentMatchTimeSeconds - (shiftStartTime - MatchTrackerConstants.SHIFT_TIME_SECONDS);
+            if (didShiftPass(currentMatchTimeSeconds, shiftStartTimeSeconds))
+                return currentMatchTimeSeconds - (shiftStartTimeSeconds - MatchTrackerConstants.SHIFT_TIME_SECONDS);
         }
 
-        if (didShiftPass(MatchTrackerConstants.TRANSITION_SHIFT_START_TIME_SECONDS))
+        if (didShiftPass(currentMatchTimeSeconds, MatchTrackerConstants.TRANSITION_SHIFT_START_TIME_SECONDS))
             return currentMatchTimeSeconds - MatchTrackerConstants.FIRST_SHIFT_START_TIME_SECONDS;
 
         return currentMatchTimeSeconds;
@@ -65,13 +66,11 @@ public class MatchTracker {
         return autoWinner == 'R' || autoWinner == 'B' ? autoWinner : ' ';
     }
 
-    private static boolean didShiftPassIncludingEarlyHubActivation(double shiftStartTimeSeconds) {
-        final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
+    private static boolean didShiftPassIncludingEarlyHubActivation(double currentMatchTimeSeconds, double shiftStartTimeSeconds) {
         return currentMatchTimeSeconds <= shiftStartTimeSeconds + MatchTrackerConstants.HUB_ACTIVATION_EARLY_SECONDS;
     }
 
-    private static boolean didShiftPass(double shiftStartTimeSeconds) {
-        final double currentMatchTimeSeconds = getCurrentMatchTimeSeconds();
+    private static boolean didShiftPass(double currentMatchTimeSeconds, double shiftStartTimeSeconds) {
         return currentMatchTimeSeconds <= shiftStartTimeSeconds;
     }
 
