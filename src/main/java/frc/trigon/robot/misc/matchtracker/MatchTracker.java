@@ -29,7 +29,7 @@ public class MatchTracker {
                 if (isAutoWinnerHubActive(shift) == didOurAllianceWinAuto(isRedAlliance, autoWinner))
                     return true;
 
-                return didShiftPassIncludingEarlyHubActivation(shiftStartTimeSeconds, shiftStartTimeSeconds - MatchTrackerConstants.SHIFT_TIME_SECONDS);
+                return didShiftPassIncludingEarlyHubActivation(currentMatchTimeSeconds, shiftStartTimeSeconds - MatchTrackerConstants.SHIFT_TIME_SECONDS);
             }
         }
 
