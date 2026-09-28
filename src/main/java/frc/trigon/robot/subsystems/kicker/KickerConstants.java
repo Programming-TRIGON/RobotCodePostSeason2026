@@ -66,9 +66,9 @@ public class KickerConstants {
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 2 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0073773 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.16613 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.019218 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0010769 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.23196 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.015158 : 0;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Kicker.metersToRotations(10);
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Kicker.metersToRotations(15);
