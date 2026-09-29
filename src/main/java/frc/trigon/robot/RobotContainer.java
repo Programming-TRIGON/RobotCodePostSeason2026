@@ -90,7 +90,7 @@ public class RobotContainer {
         INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeDefaultCommand());
         KICKER.setDefaultCommand(KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST));
         LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
-        SHOOTER.setDefaultCommand(ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.SHOOTER_DEFAULT_VELOCITY_METERS_PER_SECOND));
+        SHOOTER.setDefaultCommand(ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND));
     }
 
     private void bindControllerCommands() {
