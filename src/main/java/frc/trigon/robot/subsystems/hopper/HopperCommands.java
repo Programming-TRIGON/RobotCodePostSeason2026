@@ -39,7 +39,7 @@ public class HopperCommands {
     private static Command getResetHopperToClosePositionCommand() {
         return new InstantCommand(
                 RobotContainer.HOPPER::resetToClosePositionMeters
-        );
+        ).ignoringDisable(true);
     }
 
     private static Command getResetHopperToOpenPositionCommand() {
