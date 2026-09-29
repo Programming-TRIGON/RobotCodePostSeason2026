@@ -47,6 +47,6 @@ public class HopperCommands {
                 RobotContainer.HOPPER::applyResetPositionVoltage,
                 RobotContainer.HOPPER::stop,
                 RobotContainer.HOPPER
-        );
+        ).until(HopperConstants.REED_SWITCH_EVENT);
     }
 }
