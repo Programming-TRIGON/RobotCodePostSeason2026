@@ -1,7 +1,10 @@
 package frc.trigon.robot.subsystems.hopper;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 
@@ -40,12 +43,9 @@ public class HopperCommands {
     }
 
     private static Command getResetHopperToOpenPositionCommand() {
-        return new FunctionalCommand(
+        return new StartEndCommand(
                 RobotContainer.HOPPER::applyResetPositionVoltage,
-                () -> {
-                },
-                interrupted -> RobotContainer.HOPPER.stop(),
-                HopperConstants.REED_SWITCH::getBinaryValue,
+                RobotContainer.HOPPER::stop,
                 RobotContainer.HOPPER
         );
     }
