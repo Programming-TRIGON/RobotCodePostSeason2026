@@ -29,13 +29,6 @@ public class ShooterCommands {
         );
     }
 
-    public static Command getDefaultCommand() {
-        return new RunCommand(
-                RobotContainer.SHOOTER::setTargetVelocityForDefaultCommand,
-                RobotContainer.SHOOTER
-        );
-    }
-
     public static Command getAimForShootingCommand() {
         return new ExecuteEndCommand(
                 RobotContainer.SHOOTER::aimForShooting,
