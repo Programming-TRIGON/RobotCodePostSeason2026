@@ -18,7 +18,6 @@ import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
 import frc.trigon.robot.constants.LEDConstants;
 import frc.trigon.robot.constants.OperatorConstants;
-import frc.trigon.robot.misc.matchTracker.MatchTrackerCommands;
 import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
@@ -39,6 +38,7 @@ import frc.trigon.robot.subsystems.loader.Loader;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.shooter.Shooter;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
+import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 import frc.trigon.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -90,7 +90,7 @@ public class RobotContainer {
         INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeDefaultCommand());
         KICKER.setDefaultCommand(KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST));
         LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
-        SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
+        SHOOTER.setDefaultCommand(ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND));
     }
 
     private void bindControllerCommands() {
@@ -129,7 +129,6 @@ public class RobotContainer {
         OperatorConstants.PRELOAD_TRIGGER.onTrue(FuelIntakeCommands.getPreloadCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
-        OperatorConstants.HUB_ACTIVE_STATE_CHANGED_TRIGGER.onTrue(MatchTrackerCommands.getRumbleCommand());
         OperatorConstants.SET_INTAKE_DEFAULT_TO_OPEN_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
         OperatorConstants.SET_INTAKE_DEFAULT_TO_CLOSE_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
         OperatorConstants.SET_HOPPER_DEFAULT_TO_OPEN_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(true)));
