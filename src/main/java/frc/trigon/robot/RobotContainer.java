@@ -38,6 +38,7 @@ import frc.trigon.robot.subsystems.loader.Loader;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.shooter.Shooter;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
+import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 import frc.trigon.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -89,7 +90,7 @@ public class RobotContainer {
         INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeDefaultCommand());
         KICKER.setDefaultCommand(KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST));
         LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
-        SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
+        SHOOTER.setDefaultCommand(ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND));
     }
 
     private void bindControllerCommands() {
