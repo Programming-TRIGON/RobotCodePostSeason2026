@@ -3,7 +3,6 @@ package frc.trigon.robot.subsystems.kicker;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -19,7 +18,7 @@ public class KickerConstants {
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 1.35;
+    private static final double GEAR_RATIO = 1.875;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
@@ -43,9 +42,10 @@ public class KickerConstants {
             MAXIMUM_DISPLAYABLE_VELOCITY
     );
 
-    private static final double OUTER_WHEELS_DIAMETER_METERS = 0.05;
-    private static final double INNER_WHEEL_DIAMETER_METERS = 0.05;
-    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = Math.PI * (OUTER_WHEELS_DIAMETER_METERS + INNER_WHEEL_DIAMETER_METERS) / 120;//120 is a constant number used in the conversion factor calculation(according to claude)
+    private static final double
+            BACK_WHEELS_DIAMETER_METERS = 0.04,
+            REAR_WHEEL_DIAMETER_METERS = 0.05;
+    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = Math.PI * (BACK_WHEELS_DIAMETER_METERS + REAR_WHEEL_DIAMETER_METERS) / 120; // 120 is a constant number used in the conversion factor calculation(according to claude)
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {
@@ -66,9 +66,9 @@ public class KickerConstants {
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 2 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0073773 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.16613 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.019218 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0010769 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.23196 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.015158 : 0;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Kicker.metersToRotations(10);
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Kicker.metersToRotations(15);
