@@ -2,6 +2,7 @@ package frc.trigon.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.trigon.lib.commands.ExecuteEndCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
@@ -29,8 +30,9 @@ public class ShooterCommands {
     }
 
     public static Command getDefaultCommand() {
-        return new InstantCommand(
-                RobotContainer.SHOOTER::setTargetVelocityForDefaultCommand
+        return new RunCommand(
+                RobotContainer.SHOOTER::setTargetVelocityForDefaultCommand,
+                RobotContainer.SHOOTER
         );
     }
 
