@@ -27,6 +27,10 @@ public class ShooterCommands {
         );
     }
 
+    public static Command getDefaultCommand(double targetVelocityMetersPerSecond) {
+        return getSetTargetVelocityCommand(() -> targetVelocityMetersPerSecond * ShooterConstants.SHOOTER_DEFAULT_VELOCITY_MULTIPLIER);
+    }
+
     public static Command getAimForShootingCommand() {
         return new ExecuteEndCommand(
                 RobotContainer.SHOOTER::aimForShooting,

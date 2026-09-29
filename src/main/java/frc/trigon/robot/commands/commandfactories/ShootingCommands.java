@@ -184,7 +184,7 @@ public class ShootingCommands {
     }
 
     public static Command getShooterDefaultCommand() {
-        return ShooterCommands.getSetTargetVelocityCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond() * ShooterConstants.SHOOTER_DEFAULT_VELOCITY_MULTIPLIER);
+        return ShooterCommands.getDefaultCommand(SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond());
     }
 
     public static Command getBasicFixedAutonomousShootingCommand() {
