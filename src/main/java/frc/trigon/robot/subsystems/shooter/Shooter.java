@@ -99,6 +99,11 @@ public class Shooter extends MotorSubsystem {
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
+    void setTargetVelocityForDefaultCommand() {
+        double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond() * ShooterConstants.SHOOTER_DEFAULT_VELOCITY_MULTIPLIER;
+        setTargetVelocity(targetVelocityMetersPerSecond);
+    }
+
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
         motor.setControl(velocityRequest.withVelocity(meterToRotations(targetVelocityMetersPerSecond)));

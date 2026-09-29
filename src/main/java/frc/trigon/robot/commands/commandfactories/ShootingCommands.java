@@ -183,10 +183,6 @@ public class ShootingCommands {
         );
     }
 
-    public static Command getShooterDefaultCommand() {
-        return ShooterCommands.getDefaultCommand(SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond());
-    }
-
     public static Command getBasicFixedAutonomousShootingCommand() {
         return new ParallelCommandGroup(
                 SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
