@@ -457,10 +457,12 @@ public class ShootingCommands {
         final ShootingState targetShootingState = SHOOTING_CALCULATIONS.getTargetShootingState();
         final boolean isYawReady = isSwerveAtAngle(new FlippableRotation2d(targetShootingState.targetFieldRelativeYaw(), false));
         final boolean isPitchReady = RobotContainer.HOOD.atTargetAngle();
+        final boolean isKickerVelocityReady = RobotContainer.KICKER.atTargetVelocity();
         final boolean isLoaderVelocityReady = RobotContainer.LOADER.atTargetVelocity();
         final boolean isShooterVelocityReady = RobotContainer.SHOOTER.atTargetVelocity();
 
         Logger.recordOutput("ShootingCalculations/Conditions/isLoaderReady", isLoaderVelocityReady);
+        Logger.recordOutput("ShootingCalculations/Conditions/isKickerVelocityReady", isKickerVelocityReady);
         Logger.recordOutput("ShootingCalculations/Conditions/isShooterReady", isShooterVelocityReady);
         Logger.recordOutput("ShootingCalculations/Conditions/isHoodReady", isPitchReady);
         Logger.recordOutput("ShootingCalculations/Conditions/isSwerveReady", isYawReady);

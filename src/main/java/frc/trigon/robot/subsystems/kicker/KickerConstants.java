@@ -45,7 +45,7 @@ public class KickerConstants {
     private static final double
             BACK_WHEELS_DIAMETER_METERS = 0.04,
             REAR_WHEEL_DIAMETER_METERS = 0.05;
-    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = Math.PI * (BACK_WHEELS_DIAMETER_METERS + REAR_WHEEL_DIAMETER_METERS) / 120; // 120 is a constant number used in the conversion factor calculation(according to claude)
+    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = (BACK_WHEELS_DIAMETER_METERS + REAR_WHEEL_DIAMETER_METERS) / 2;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {
