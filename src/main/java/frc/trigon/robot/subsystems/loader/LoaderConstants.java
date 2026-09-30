@@ -53,10 +53,6 @@ public class LoaderConstants {
     public static final double FIXED_DELIVERY_SHOOTING_LOADER_VELOCITY_METERS_PER_SECOND = 5;
 
     static {
-        configureLoaderMotor();
-    }
-
-    private static void configureLoaderMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.Audio.BeepOnBoot = false;
