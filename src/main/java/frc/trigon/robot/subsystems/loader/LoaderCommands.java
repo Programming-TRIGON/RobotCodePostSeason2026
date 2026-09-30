@@ -2,6 +2,7 @@ package frc.trigon.robot.subsystems.loader;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.trigon.lib.commands.ExecuteEndCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 
@@ -19,7 +20,7 @@ public class LoaderCommands {
     }
 
     public static Command getAimForShootingCommand(DoubleSupplier shooterTargetVelocityMetersPerSecond) {
-        return new StartEndCommand(
+        return new ExecuteEndCommand(
                 () -> RobotContainer.LOADER.aimForShooting(shooterTargetVelocityMetersPerSecond.getAsDouble()),
                 RobotContainer.LOADER::stop,
                 RobotContainer.LOADER

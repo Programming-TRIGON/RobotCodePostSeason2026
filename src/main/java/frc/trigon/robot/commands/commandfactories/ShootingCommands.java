@@ -384,7 +384,7 @@ public class ShootingCommands {
 
     private static boolean isReadyForFixedDelivery() {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH);
-        final boolean isLoaderVelocityReady = RobotContainer.LOADER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND);
+        final boolean isLoaderVelocityReady = RobotContainer.LOADER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY);
         final boolean isShooterVelocityReady = RobotContainer.SHOOTER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND);
         final boolean isAngleReady = isSwerveAtAngle(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW);
 
@@ -393,7 +393,7 @@ public class ShootingCommands {
 
     private static boolean isReadyForFixedShootingAtHub() {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch);
-        final boolean isLoaderVelocityReady = RobotContainer.LOADER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
+        final boolean isLoaderVelocityReady = RobotContainer.LOADER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY);
         final boolean isShooterVelocityReady = RobotContainer.SHOOTER.atVelocity(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond);
         final boolean isAngleReady = isSwerveAtFixedAngle(TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw);
 
