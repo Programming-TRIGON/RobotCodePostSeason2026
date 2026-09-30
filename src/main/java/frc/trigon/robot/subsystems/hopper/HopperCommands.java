@@ -28,23 +28,9 @@ public class HopperCommands {
         );
     }
 
-    public static Command getResetHopperPositionCommand() {
-        return new ConditionalCommand(
-                getResetHopperToOpenPositionCommand(),
-                getResetHopperToClosePositionCommand(),
-                DriverStation::isEnabled
-        );
-    }
-
-    private static Command getResetHopperToClosePositionCommand() {
-        return new InstantCommand(
-                RobotContainer.HOPPER::resetToClosePositionMeters
-        ).ignoringDisable(true);
-    }
-
-    private static Command getResetHopperToOpenPositionCommand() {
+    public static Command getResetHopperToClosePositionCommand() {
         return new StartEndCommand(
-                RobotContainer.HOPPER::applyResetPositionVoltage,
+                RobotContainer.HOPPER::applyResetToClosePositionVoltage,
                 RobotContainer.HOPPER::stop,
                 RobotContainer.HOPPER
         ).until(HopperConstants.REED_SWITCH_EVENT);
