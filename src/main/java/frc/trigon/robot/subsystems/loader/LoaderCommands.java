@@ -18,9 +18,9 @@ public class LoaderCommands {
         );
     }
 
-    public static Command getAimForShootingCommand() {
+    public static Command getAimForShootingCommand(DoubleSupplier shooterTargetVelocityMetersPerSecond) {
         return new StartEndCommand(
-                RobotContainer.LOADER::aimForShooting,
+                () -> RobotContainer.LOADER.aimForShooting(shooterTargetVelocityMetersPerSecond.getAsDouble()),
                 RobotContainer.LOADER::stop,
                 RobotContainer.LOADER
         );

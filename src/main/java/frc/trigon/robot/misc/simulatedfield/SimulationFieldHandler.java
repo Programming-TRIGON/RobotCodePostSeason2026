@@ -186,7 +186,7 @@ public class SimulationFieldHandler {
 
     private static boolean isShootingFuel() {
         return RobotContainer.LOADER.getCurrentVelocityMetersPerSecond() > LoaderConstants.LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD
-                && RobotContainer.KICKER.atState(KickerConstants.KickerState.LOAD_FOR_SHOOTING)
+                && RobotContainer.KICKER.atState(KickerConstants.KickerState.LOAD_FOR_SHOOTING) || RobotContainer.KICKER.atState(KickerConstants.KickerState.LOAD_FOR_DELIVERY)
                 && RobotContainer.INDEXER.getCurrentVoltage() > IndexerConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD;
     }
 

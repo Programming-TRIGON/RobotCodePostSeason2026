@@ -49,10 +49,6 @@ public class KickerConstants {
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {
-        configureKickerMotor();
-    }
-
-    private static void configureKickerMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.Audio.BeepOnBoot = false;

@@ -23,6 +23,7 @@ import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.kicker.KickerCommands;
 import frc.trigon.robot.subsystems.kicker.KickerConstants;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
+import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 import frc.trigon.robot.subsystems.swerve.SwerveCommands;
@@ -63,6 +64,7 @@ public class ShootingCommands {
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
+                        LoaderCommands.getAimForShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond()),
                         new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForShooting(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery))),
                         getSetTargetShootingLocationCommand(),
                         getSafeSwerveWhileShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
@@ -82,6 +84,7 @@ public class ShootingCommands {
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(() -> false),
+                        LoaderCommands.getAimForShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond()),
                         new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForShooting(() -> false))),
                         new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(ShootingCalculations.TargetShootingLocation.HUB)),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
@@ -94,6 +97,7 @@ public class ShootingCommands {
     public static Command getFixedShootingAtHubCommand() {
         return new ParallelCommandGroup(
                 getLoadForFixedShootingAtHubWhenReadyCommand(),
+                LoaderCommands.getAimForShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedShootingAtHub())),
                 getAimHoodForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
                 ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
@@ -126,7 +130,7 @@ public class ShootingCommands {
                 getLoadForFixedDeliveryWhenReadyCommand(),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedDelivery())),
                 getAimHoodForFixedShootingCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
-                LoaderCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
+                LoaderCommands.getSetTargetVelocityCommand(() -> LoaderConstants.FIXED_DELIVERY_SHOOTING_LOADER_VELOCITY_METERS_PER_SECOND),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
 //                getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
                 getIntakeSequenceWhileShootingCommand()
