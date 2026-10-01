@@ -28,8 +28,8 @@ public class HopperCommands {
     public static Command getResetHopperPositionCommand() {
         return new StartEndCommand(
                 RobotContainer.HOPPER::applyResetPositionVoltage,
-                RobotContainer.HOPPER::stop,
+                RobotContainer.HOPPER::resetPosition,
                 RobotContainer.HOPPER
-        ).until(HopperConstants.REED_SWITCH_EVENT);
+        ).until(HopperConstants.REED_SWITCH_EVENT).ignoringDisable(true);
     }
 }
