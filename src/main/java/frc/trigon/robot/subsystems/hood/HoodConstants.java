@@ -28,7 +28,7 @@ public class HoodConstants {
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    static final double GEAR_RATIO = 32;
+    static final double GEAR_RATIO = 31;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
@@ -36,8 +36,8 @@ public class HoodConstants {
             HOOD_MASS_KILOGRAMS = 2,
             HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(62),
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(21.5);
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(59.25),
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(27);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
             GEARBOX,
@@ -92,13 +92,13 @@ public class HoodConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 35 : 300;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 300;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.22942 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.016146 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 2.6669 : 2.6469;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.041586 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.18316 : 0.33039;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.054002 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 2.6476 : 2.6469;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.079846 : 0;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.151 : 0.33039;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
