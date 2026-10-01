@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.utilities.Conversions;
+import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Loader extends MotorSubsystem {
+    private final ShootingCalculations shootingCalculations = ShootingCalculations.getInstance();
     private final TalonFXMotor motor = LoaderConstants.MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
     private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
@@ -77,7 +79,12 @@ public class Loader extends MotorSubsystem {
         return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < LoaderConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
     }
 
-    void aimForShooting(double shooterTargetVelocityMetersPerSecond) {
+    void aimForShooting() {
+        final double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond() * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY;
+        setTargetVelocity(targetVelocityMetersPerSecond);
+    }
+
+    void aimForFixedShooting(double shooterTargetVelocityMetersPerSecond) {
         final double targetVelocityMetersPerSecond = shooterTargetVelocityMetersPerSecond * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY;
         setTargetVelocity(targetVelocityMetersPerSecond);
     }

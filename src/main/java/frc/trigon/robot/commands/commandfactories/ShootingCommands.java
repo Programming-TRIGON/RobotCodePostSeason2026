@@ -64,7 +64,7 @@ public class ShootingCommands {
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery),
-                        LoaderCommands.getAimForShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond()),
+                        LoaderCommands.getAimForShootingCommand(),
                         new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForShooting(() -> SHOOTING_CALCULATIONS.getCurrentTargetShootingLocation().isDelivery))),
                         getSetTargetShootingLocationCommand(),
                         getSafeSwerveWhileShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
@@ -84,7 +84,7 @@ public class ShootingCommands {
                 new ParallelCommandGroup(
                         getUpdateShootingCalculationsCommand(),
                         getLoadForShootingWhenReadyCommand(() -> false),
-                        LoaderCommands.getAimForShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond()),
+                        LoaderCommands.getAimForShootingCommand(),
                         new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForShooting(() -> false))),
                         new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(ShootingCalculations.TargetShootingLocation.HUB)),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
@@ -97,7 +97,7 @@ public class ShootingCommands {
     public static Command getFixedShootingAtHubCommand() {
         return new ParallelCommandGroup(
                 getLoadForFixedShootingAtHubWhenReadyCommand(),
-                LoaderCommands.getAimForShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
+                LoaderCommands.getAimForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedShootingAtHub())),
                 getAimHoodForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
                 ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
