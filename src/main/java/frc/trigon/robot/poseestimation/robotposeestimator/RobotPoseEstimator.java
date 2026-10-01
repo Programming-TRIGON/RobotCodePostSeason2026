@@ -115,7 +115,7 @@ public class RobotPoseEstimator implements AutoCloseable {
      */
     @AutoLogOutput(key = "Poses/Robot/PoseEstimator/EstimatedOdometryPose")
     public Pose2d getEstimatedOdometryPose() {
-        return swerveDriveOdometry.getPose().plus(new Transform2d(100, 0, Rotation2d.kZero));
+        return swerveDriveOdometry.getPose().plus(new Transform2d(0, 0, Rotation2d.kZero));
     }
 
     public boolean hasUpdateFromCameras() {
