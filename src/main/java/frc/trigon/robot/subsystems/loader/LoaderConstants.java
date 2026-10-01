@@ -42,20 +42,17 @@ public class LoaderConstants {
             MAXIMUM_DISPLAYABLE_VELOCITY
     );
 
-    static final double MAX_LOADER_VELOCITY_METERS_PER_SECOND = 10;
+    static final double MAXIMUM_LOADER_VELOCITY_METERS_PER_SECOND = 10;
     public static final double EJECT_FROM_INTAKE_VELOCITY = -2;
     public static final double EJECT_FROM_SHOOTER_VELOCITY = 2;
     public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 1;
     public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
     static final double WHEEL_DIAMETER_METERS = 0.05;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
-    static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.8;
+    public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.8;
+    public static final double FIXED_DELIVERY_SHOOTING_LOADER_VELOCITY_METERS_PER_SECOND = 5;
 
     static {
-        configureLoaderMotor();
-    }
-
-    private static void configureLoaderMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.Audio.BeepOnBoot = false;

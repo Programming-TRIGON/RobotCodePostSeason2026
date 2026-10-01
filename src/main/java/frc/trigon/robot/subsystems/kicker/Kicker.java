@@ -68,7 +68,7 @@ public class Kicker extends MotorSubsystem {
         return motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE);
     }
 
-    @AutoLogOutput(key = "Loader/AtTargetVelocity")
+    @AutoLogOutput(key = "Kicker/AtTargetVelocity")
     public boolean atTargetVelocity() {
         return atVelocity(targetVelocityMetersPerSecond);
     }
@@ -91,7 +91,7 @@ public class Kicker extends MotorSubsystem {
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
     }
 
-    @AutoLogOutput(key = "Kicker/TargetVelocityMetersPerSecond")
+    @AutoLogOutput(key = "Kicker/CurrentVelocityMetersPerSecond")
     private double getCurrentVelocityMetersPerSecond() {
         return rotationsToMeters(motor.getSignal(TalonFXSignal.VELOCITY));
     }
