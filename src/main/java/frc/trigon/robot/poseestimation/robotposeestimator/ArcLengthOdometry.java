@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 /**
  * A custom odometry implementation that calculates robot translation by averaging the individual
  * arc lengths traveled by each swerve module.
- * This class calculates the arc displacement of a module is because it provides more accurate odometry.
+ * This class calculates the arc displacement of a module because it provides more accurate odometry.
  * This is because the change in angle for each module is not instantaneous, causing it to move in an arc and not a
  * straight line between cycles. We do this by calculating the radius of the arc, and then determining the two radii
  * vectors making up the arc. Finally, we subtract the vectors to find the displacement vector.
@@ -23,6 +23,10 @@ public class ArcLengthOdometry {
 
     /**
      * Constructs a custom Arc Length Odometry class.
+     *
+     * @param gyroAngle       the current angle reported by the gyroscope
+     * @param modulePositions the current wheel positions reported by each swerve module
+     * @param initialPose     the starting pose of the robot on the field
      */
     public ArcLengthOdometry(Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Pose2d initialPose) {
         this.amountOfModules = modulePositions.length;
@@ -36,15 +40,32 @@ public class ArcLengthOdometry {
         }
     }
 
+    /**
+     * Resets the robot's position on the field to the specified pose.
+     *
+     * @param poseMeters the position on the field that your robot is at
+     */
     public void resetPose(Pose2d poseMeters) {
         this.pose = poseMeters;
         this.previousAngle = poseMeters.getRotation();
     }
 
+    /**
+     * Returns the current estimated position of the robot on the field.
+     *
+     * @return the current pose of the robot
+     */
     public Pose2d getPose() {
         return pose;
     }
 
+    /**
+     * Updates the robot's position on the field using the arc length displacement of the swerve modules.
+     *
+     * @param gyroAngle       the current angle reported by the gyro
+     * @param modulePositions the current wheel positions reported by each swerve module
+     * @return the new, updated pose of the robot
+     */
     public Pose2d update(Rotation2d gyroAngle, SwerveModulePosition[] modulePositions) {
         final Rotation2d currentRobotAngle = gyroAngle.plus(gyroOffset);
         final Rotation2d deltaRobotHeading = currentRobotAngle.minus(previousAngle);
@@ -86,14 +107,18 @@ public class ArcLengthOdometry {
         final Rotation2d currentModuleFieldHeading = currentRobotAngle.plus(currentModulePosition.angle);
         final Rotation2d previousModuleFieldHeading = previousAngle.plus(previousModulePosition.angle);
 
-        final double deltaHeading = currentModuleFieldHeading.minus(previousModuleFieldHeading).getRadians();
+        final Rotation2d deltaHeading = currentModuleFieldHeading.minus(previousModuleFieldHeading);
 
-        if (Math.abs(deltaHeading) < 1e-6)
+        if (Math.abs(deltaHeading.getRadians()) < 1e-6)
             return new Translation2d(deltaDistanceMeters, currentModulePosition.angle);
 
-        final double radiusMeters = deltaDistanceMeters / deltaHeading;
-        final Translation2d centerToPrevious = new Translation2d(radiusMeters, previousModulePosition.angle.minus(Rotation2d.fromDegrees(90)));
-        final Translation2d centerToCurrent = centerToPrevious.rotateBy(Rotation2d.fromRadians(deltaHeading));
+        return calculateArcDisplacementVector(deltaDistanceMeters, deltaHeading, previousModulePosition.angle);
+    }
+
+    private Translation2d calculateArcDisplacementVector(double deltaDistanceMeters, Rotation2d deltaHeading, Rotation2d previousModuleAngle) {
+        final double radiusMeters = deltaDistanceMeters / deltaHeading.getRadians();
+        final Translation2d centerToPrevious = new Translation2d(radiusMeters, previousModuleAngle.minus(Rotation2d.fromDegrees(90)));
+        final Translation2d centerToCurrent = centerToPrevious.rotateBy(Rotation2d.fromRadians(deltaHeading.getRadians()));
 
         return centerToCurrent.minus(centerToPrevious);
     }
