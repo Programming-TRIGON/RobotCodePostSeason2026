@@ -80,15 +80,15 @@ public class ShooterConstants {
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
 
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.73;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.8;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.27773;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.21056;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.0090496;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.19466;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.20615;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.035007;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : 12.5;
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 30;
