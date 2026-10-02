@@ -45,7 +45,7 @@ public class KickerConstants {
     private static final double
             BACK_WHEELS_DIAMETER_METERS = 0.04,
             REAR_WHEEL_DIAMETER_METERS = 0.05;
-    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = Math.PI * (BACK_WHEELS_DIAMETER_METERS + REAR_WHEEL_DIAMETER_METERS) / 120; // 120 is a constant number used in the conversion factor calculation(according to claude)
+    static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = (BACK_WHEELS_DIAMETER_METERS + REAR_WHEEL_DIAMETER_METERS) / 2; // 120 is a constant number used in the conversion factor calculation(according to claude)
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
 
     static {
@@ -63,12 +63,12 @@ public class KickerConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 2 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 2 : 0.8;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0010769 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.23196 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.015158 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0010769 : 0.20918;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.23196 : 0.22463;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.015158 : 0.0071274;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Kicker.metersToRotations(10);
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Kicker.metersToRotations(15);

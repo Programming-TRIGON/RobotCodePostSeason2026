@@ -39,8 +39,8 @@ public class FuelIntakeCommands {
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.CLOSE),
                 HopperCommands.getSetTargetStateCommand(HopperConstants.HopperState.OPEN),
                 () -> !FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.get()
-                        && !FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
-                        && RobotContainer.INTAKE.isPastMinimumAngleForHopperToClose()
+                        //&& !FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.get()
+                        //&& RobotContainer.INTAKE.isPastMinimumAngleForHopperToClose()
         );
     }
 

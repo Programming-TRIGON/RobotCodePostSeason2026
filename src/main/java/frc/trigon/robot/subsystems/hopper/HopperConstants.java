@@ -42,8 +42,8 @@ public class HopperConstants {
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(1).per(Units.Seconds),
-            Units.Volts.of(1),
+            Units.Volts.of(2.5).per(Units.Seconds),
+            Units.Volts.of(4.5),
             null
     );
 
@@ -87,15 +87,15 @@ public class HopperConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 80;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0.35;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0.18359375;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 2;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0.2;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 30;
+        config.CurrentLimits.StatorCurrentLimit = 60;
 
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Conversions.distanceToRotations(MAXIMUM_LENGTH_METERS, DRUM_DIAMETER_METERS);
@@ -103,8 +103,8 @@ public class HopperConstants {
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Conversions.distanceToRotations(MINIMUM_LENGTH_METERS, DRUM_DIAMETER_METERS);
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 8 : 2;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 8 : 2;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 8 : 5;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 8 : 15;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         MOTOR.applyConfiguration(config);

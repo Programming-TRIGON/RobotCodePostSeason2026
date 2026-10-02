@@ -29,13 +29,13 @@ public class GeneralCommands {
 
     public static Command getDebuggingCommand() {
         return new ParallelCommandGroup(
-                HoodCommands.getDebuggingCommand(),
-                HopperCommands.getDebuggingCommand(),
-                IndexerCommands.getDebuggingCommand(),
-                IntakeCommands.getDebuggingCommand(),
-                KickerCommands.getDebuggingCommand(),
-                LoaderCommands.getDebuggingCommand(),
-                ShooterCommands.getDebuggingCommand()
+//                HoodCommands.getDebuggingCommand(),
+//                HopperCommands.getDebuggingCommand()
+//                IndexerCommands.getDebuggingCommand(),
+//                IntakeCommands.getDebuggingCommand(),
+                KickerCommands.getDebuggingCommand()
+//                LoaderCommands.getDebuggingCommand(),
+//                ShooterCommands.getDebuggingCommand()
         );
     }
 
