@@ -69,5 +69,6 @@ public class OperatorConstants {
             HUB_ACTIVE_STATE_CHANGED_TRIGGER = new Trigger(MatchTracker::hasHubActiveStateChanged),
             OPEN_INTAKE_DEFAULT_COMMAND = OPERATOR_CONTROLLER.t(),
             CLOSE_INTAKE_DEFAULT_COMMAND = OPERATOR_CONTROLLER.y(),
-            LOAD_NOW_TRIGGER = OPERATOR_CONTROLLER.w().or(DRIVER_CONTROLLER.leftTrigger());
+            LOAD_NOW_TRIGGER = OPERATOR_CONTROLLER.w().or(DRIVER_CONTROLLER.leftTrigger()),
+            TEST = OPERATOR_CONTROLLER.p();
 }

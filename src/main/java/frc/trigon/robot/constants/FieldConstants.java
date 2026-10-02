@@ -34,6 +34,9 @@ public class FieldConstants {
     public static final HashMap<Integer, Pose3d> TAG_ID_TO_POSE = fieldLayoutToTagIDToPoseMap();
     public static final FlippableTranslation2d RIGHT_OF_TOWER_POSITION = new FlippableTranslation2d(0.949, 2.531, true);
     public static final FlippableTranslation2d LEFT_OF_TOWER_POSITION = new FlippableTranslation2d(0.716, 4.827, true);
+    private static final double
+            IDLE_SCORING_X_POSITION = 3,
+            IDLE_SCORING_Y_POSITION = 0.65;
 
     public static final double ALLIANCE_ZONE_LENGTH_METERS = 4.5;
     private static final double
@@ -47,6 +50,9 @@ public class FieldConstants {
             HUB_POSITION = new FlippableTranslation2d(TAG_ID_TO_POSE.get(26).getX() + (Units.inchesToMeters(47) / 2), FIELD_WIDTH_METERS / 2, true),
             RIGHT_DELIVERY_POSITION = new FlippableTranslation2d(BLUE_RELATIVE_DELIVERY_POSITION_X, (FIELD_WIDTH_METERS / 2) - DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS, true),
             LEFT_DELIVERY_POSITION = new FlippableTranslation2d(BLUE_RELATIVE_DELIVERY_POSITION_X, (FIELD_WIDTH_METERS / 2) + DELIVERY_POSITION_Y_OFFSET_FROM_CENTER_METERS, true);
+    public static final FlippablePose2d
+            IDLE_RIGHT_SCORING_POSE = new FlippablePose2d(IDLE_SCORING_X_POSITION, IDLE_SCORING_Y_POSITION, Rotation2d.kZero,true),
+            IDLE_LEFT_SCORING_POSE = mirror(IDLE_RIGHT_SCORING_POSE);
 
     /**
      * The trench bounding box coordinates in meters.
