@@ -66,7 +66,7 @@ public class RobotContainer {
         buildAutoChooser();
         configureBindings();
 
-        configureSysIDBindings(KICKER);
+        //configureSysIDBindings(LOADER);
     }
 
     /**
@@ -83,14 +83,14 @@ public class RobotContainer {
     }
 
     private void bindDefaultCommands() {
-//        SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
-//        HOOD.setDefaultCommand(HoodCommands.getRestCommand());
-//        HOPPER.setDefaultCommand(FuelIntakeCommands.getHopperDefaultCommand());
-//        INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
-    //        INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeDefaultCommand());
-//        KICKER.setDefaultCommand(KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST));
-//        LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
-//        SHOOTER.setDefaultCommand(ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND));
+        SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
+        HOOD.setDefaultCommand(HoodCommands.getRestCommand());
+        HOPPER.setDefaultCommand(FuelIntakeCommands.getHopperDefaultCommand());
+        INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
+        INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeDefaultCommand());
+        KICKER.setDefaultCommand(KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST));
+        LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
+        SHOOTER.setDefaultCommand(ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND));
     }
 
     private void bindControllerCommands() {
