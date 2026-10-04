@@ -26,7 +26,7 @@ public class SwerveModule {
     private final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0).withUpdateFreqHz(SwerveModuleConstants.DRIVE_VELOCITY_REQUEST_UPDATE_FREQUENCY_HERTZ).withEnableFOC(SwerveModuleConstants.ENABLE_FOC);
     private final VoltageOut driveVoltageRequest = new VoltageOut(0).withEnableFOC(SwerveModuleConstants.ENABLE_FOC);
     private final double wheelDiameter;
-    private boolean shouldDriveMotorUseClosedLoop = true;
+    private boolean shouldDriveMotorUseClosedLoop = false;
     private SwerveModuleState targetState = new SwerveModuleState();
     private double[]
             latestOdometryDrivePositions,

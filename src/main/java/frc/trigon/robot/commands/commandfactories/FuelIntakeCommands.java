@@ -54,7 +54,7 @@ public class FuelIntakeCommands {
 
     private static Command getSetIntakeOpenStateWhenHopperReadyCommand(IntakeConstants.IntakeState targetState) {
         return new SequentialCommandGroup(
-                getWaitUntilSafeForIntakeToOpenCommand(),
+//                getWaitUntilSafeForIntakeToOpenCommand(),
                 IntakeCommands.getSetTargetStateCommand(targetState)
         );
     }

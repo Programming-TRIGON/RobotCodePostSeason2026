@@ -105,7 +105,7 @@ public class SwerveModuleConstants {
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 120 : 32;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0 : 0.27;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0 : 0.2;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
         config.ClosedLoopGeneral.ContinuousWrap = true;
 

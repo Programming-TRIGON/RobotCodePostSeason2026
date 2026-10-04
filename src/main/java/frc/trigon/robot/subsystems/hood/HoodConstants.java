@@ -50,8 +50,8 @@ public class HoodConstants {
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(0.7).per(Units.Seconds),
-            Units.Volts.of(1),
+            Units.Volts.of(0.3).per(Units.Seconds),
+            Units.Volts.of(0.6),
             null
     );
 
@@ -88,17 +88,17 @@ public class HoodConstants {
         config.Audio.BeepOnConfig = false;
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 300;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 350;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.054002 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 2.6476 : 2.6469;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 2.6476 : 2.8;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.079846 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.151 : 0.33039;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.151 : 0.65;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.Slot0.GravityArmPositionOffset = 0;
