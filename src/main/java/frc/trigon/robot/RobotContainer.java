@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.commands.commandfactories.*;
+import frc.trigon.robot.commands.commandfactories.autonomous.AutonomousGenerator;
 import frc.trigon.robot.commands.commandfactories.autonomous.GeneralAutonomousCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
 import frc.trigon.robot.constants.CameraConstants;
@@ -66,8 +67,7 @@ public class RobotContainer {
      * @return the command to run in autonomous mode
      */
     public Command getAutonomousCommand() {
-        AutonomousCommands.IS_AUTO_LEFT_SIDE = !autoChooser.get().getName().endsWith("Right");
-        return autoChooser.get();
+        return AutonomousGenerator.getAutonomousCommand();
     }
 
     private void configureBindings() {

@@ -30,6 +30,13 @@ public class GeneralAutonomousCommands {
     }
 
 /*    public static Command getAutonomousCollectFromNaturalZoneCommand() {
+        return new SequentialCommandGroup(
+                SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(
+
+                )
+                //TODO: code.
+
+        )
     }*/
 
 
