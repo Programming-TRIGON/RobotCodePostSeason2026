@@ -66,7 +66,7 @@ public class RobotContainer {
         buildAutoChooser();
         configureBindings();
 
-        configureSysIDBindings(HOOD);
+        //configureSysIDBindings(HOPPER);
     }
 
     /**

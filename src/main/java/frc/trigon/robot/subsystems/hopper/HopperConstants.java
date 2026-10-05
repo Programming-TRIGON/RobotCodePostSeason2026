@@ -30,7 +30,7 @@ public class HopperConstants {
     static final SimpleSensor REED_SWITCH = SimpleSensor.createDigitalSensor(REED_SWITCH_CHANNEL, REED_SWITCH_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 11.25;
+    private static final double GEAR_RATIO = 20.25;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
@@ -42,8 +42,8 @@ public class HopperConstants {
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(2.5).per(Units.Seconds),
-            Units.Volts.of(4.5),
+            Units.Volts.of(1).per(Units.Seconds),
+            Units.Volts.of(1.2),
             null
     );
 
@@ -87,12 +87,12 @@ public class HopperConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 80;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 60;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0.35;
         config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0.18359375;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 2;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0.2;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 1.6;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 60;
