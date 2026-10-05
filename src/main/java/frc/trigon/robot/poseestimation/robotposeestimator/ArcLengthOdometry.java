@@ -35,9 +35,8 @@ public class ArcLengthOdometry {
         this.previousAngle = initialPose.getRotation();
 
         this.previousWheelPositions = new SwerveModulePosition[amountOfModules];
-        for (int i = 0; i < amountOfModules; i++) {
+        for (int i = 0; i < amountOfModules; i++)
             this.previousWheelPositions[i] = new SwerveModulePosition(modulePositions[i].distanceMeters, modulePositions[i].angle);
-        }
     }
 
     /**
