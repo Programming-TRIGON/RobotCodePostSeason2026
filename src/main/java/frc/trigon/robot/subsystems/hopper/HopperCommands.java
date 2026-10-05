@@ -25,11 +25,11 @@ public class HopperCommands {
         );
     }
 
-    public static Command getResetHopperCommand() {
+    public static Command getResetHopperPositionCommand() {
         return new StartEndCommand(
                 RobotContainer.HOPPER::applyResetPositionVoltage,
                 RobotContainer.HOPPER::resetPosition,
                 RobotContainer.HOPPER
-        ).ignoringDisable(true);
+        ).until(HopperConstants.REED_SWITCH_EVENT).ignoringDisable(true);
     }
 }

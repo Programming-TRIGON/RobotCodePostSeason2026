@@ -18,7 +18,7 @@ public class LoaderConstants {
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 1.35;
+    private static final double GEAR_RATIO = 1.33;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
@@ -69,9 +69,9 @@ public class LoaderConstants {
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 2 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0062837 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.16664 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.019085 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0050067 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.16429 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.019305 : 0;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Loader.metersToRotations(10);
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Loader.metersToRotations(15);
