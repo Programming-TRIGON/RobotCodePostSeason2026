@@ -28,7 +28,7 @@ public class LoaderCommands {
     }
 
     public static Command getAimForFixedShootingCommand(DoubleSupplier shooterTargetVelocityMetersPerSecond) {
-        return new StartEndCommand(
+        return new ExecuteEndCommand(
                 () -> RobotContainer.LOADER.aimForFixedShooting(shooterTargetVelocityMetersPerSecond.getAsDouble()),
                 RobotContainer.LOADER::stop,
                 RobotContainer.LOADER
