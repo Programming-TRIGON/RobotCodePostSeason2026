@@ -47,6 +47,7 @@ public class KickerConstants {
             REAR_WHEEL_DIAMETER_METERS = 0.05;
     static final double ANGULAR_TO_LINEAR_CONVERSION_FACTOR = (BACK_WHEELS_DIAMETER_METERS + REAR_WHEEL_DIAMETER_METERS) / 2;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
+    public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 2.5;
 
     static {
         final TalonFXConfiguration config = new TalonFXConfiguration();

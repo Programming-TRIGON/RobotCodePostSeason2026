@@ -50,7 +50,6 @@ public class LoaderConstants {
     static final double WHEEL_DIAMETER_METERS = 0.05;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
     public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.8;
-    public static final double FIXED_DELIVERY_SHOOTING_LOADER_VELOCITY_METERS_PER_SECOND = 5;
 
     static {
         final TalonFXConfiguration config = new TalonFXConfiguration();
