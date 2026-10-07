@@ -36,7 +36,7 @@ public class LoaderCommands {
     }
 
     public static Command getSetTargetVelocityCommand(DoubleSupplier targetVelocityMetersPerSecond) {
-        return new StartEndCommand(
+        return new ExecuteEndCommand(
                 () -> RobotContainer.LOADER.setTargetVelocity(targetVelocityMetersPerSecond.getAsDouble()),
                 RobotContainer.LOADER::stop,
                 RobotContainer.LOADER
