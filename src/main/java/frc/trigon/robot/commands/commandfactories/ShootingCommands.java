@@ -179,7 +179,7 @@ public class ShootingCommands {
     public static Command getPrepareForFixedShootingCommand() {
         return new ParallelCommandGroup(
                 HoodCommands.getSetTargetAngleCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
-                LoaderCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
+                LoaderCommands.getAimForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedShootingAtHub())),
