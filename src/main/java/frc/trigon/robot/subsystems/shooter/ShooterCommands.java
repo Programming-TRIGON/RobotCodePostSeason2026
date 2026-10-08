@@ -28,7 +28,6 @@ public class ShooterCommands {
                 getSetTargetVelocityCommand(() -> ShooterConstants.DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND),
                 getStopCommand(),
                 () -> SHOULD_SHOOTER_DEFAULT_ON.get()
-
         );
     }
 
