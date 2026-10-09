@@ -3,10 +3,7 @@ package frc.trigon.robot.poseestimation.robotposeestimator;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -31,7 +28,7 @@ import java.util.Map;
  */
 public class RobotPoseEstimator implements AutoCloseable {
     private final SwerveDrivePoseEstimator swerveDrivePoseEstimator = createSwerveDrivePoseEstimator();
-    private final SwerveDriveOdometry swerveDriveOdometry = createSwerveDriveOdometry();
+    private final ArcLengthOdometry swerveDriveOdometry = createSwerveDriveOdometry();
     private final Field2d field = new Field2d();
     private final AprilTagCamera[] aprilTagCameras;
     private final RelativeRobotPoseSource relativeRobotPoseSource;
@@ -118,7 +115,7 @@ public class RobotPoseEstimator implements AutoCloseable {
      */
     @AutoLogOutput(key = "Poses/Robot/PoseEstimator/EstimatedOdometryPose")
     public Pose2d getEstimatedOdometryPose() {
-        return swerveDriveOdometry.getPoseMeters();
+        return swerveDriveOdometry.getPose().plus(new Transform2d(0, 0, Rotation2d.kZero));
     }
 
     public boolean hasUpdateFromCameras() {
@@ -261,7 +258,7 @@ public class RobotPoseEstimator implements AutoCloseable {
         QuickSortHandler.sort(aprilTagCameras, AprilTagCamera::getLatestResultTimestampSeconds);
     }
 
-    private SwerveDriveOdometry createSwerveDriveOdometry() {
+    private ArcLengthOdometry createSwerveDriveOdometry() {
         final SwerveModulePosition[] swerveModulePositions = {
                 new SwerveModulePosition(),
                 new SwerveModulePosition(),
@@ -269,10 +266,10 @@ public class RobotPoseEstimator implements AutoCloseable {
                 new SwerveModulePosition()
         };
 
-        return new SwerveDriveOdometry(
-                SwerveConstants.KINEMATICS,
+        return new ArcLengthOdometry(
                 new Rotation2d(),
-                swerveModulePositions
+                swerveModulePositions,
+                new Pose2d()
         );
     }
 
