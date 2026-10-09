@@ -84,11 +84,16 @@ public class Loader extends MotorSubsystem {
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
+    void aimForFixedShooting(double shooterTargetVelocityMetersPerSecond) {
+        final double targetVelocityMetersPerSecond = shooterTargetVelocityMetersPerSecond * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY;
+        setTargetVelocity(targetVelocityMetersPerSecond);
+    }
+
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
         targetVelocityMetersPerSecond = MathUtil.clamp(
                 targetVelocityMetersPerSecond,
-                -LoaderConstants.MAX_LOADER_VELOCITY_METERS_PER_SECOND,
-                LoaderConstants.MAX_LOADER_VELOCITY_METERS_PER_SECOND
+                -LoaderConstants.MAXIMUM_LOADER_VELOCITY_METERS_PER_SECOND,
+                LoaderConstants.MAXIMUM_LOADER_VELOCITY_METERS_PER_SECOND
         );
         motor.setControl(velocityRequest.withVelocity(metersToRotations(targetVelocityMetersPerSecond)));
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;

@@ -37,7 +37,7 @@ public class HoodConstants {
             HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
             MAXIMUM_ANGLE = Rotation2d.fromDegrees(59.25),
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(27);
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(23);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
             GEARBOX,
