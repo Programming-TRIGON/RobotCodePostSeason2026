@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.misc.matchtracker.MatchTracker;
 
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;

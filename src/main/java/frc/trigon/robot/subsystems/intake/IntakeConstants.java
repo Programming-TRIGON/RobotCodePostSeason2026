@@ -45,7 +45,7 @@ public class IntakeConstants {
 
     private static final double
             ARM_SENSOR_TO_MECHANISM_GEAR_RATIO = 0.9,
-            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 47.021834,
+            ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 50.360544,
             INTAKE_MOTOR_GEAR_RATIO = 1.5;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue
@@ -68,8 +68,8 @@ public class IntakeConstants {
             INTAKE_LENGTH_METERS = 0.369,
             INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(-66),
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(70);
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(0),
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(120);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
@@ -88,7 +88,7 @@ public class IntakeConstants {
     );
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
-            Units.Volts.of(1).per(Units.Seconds),
+            Units.Volts.of(0.5).per(Units.Seconds),
             Units.Volts.of(1),
             null
     );
@@ -138,16 +138,16 @@ public class IntakeConstants {
         config.Feedback.RotorToSensorRatio = ARM_ROTOR_TO_SENSOR_GEAR_RATIO;
         config.Feedback.SensorToMechanismRatio = ARM_SENSOR_TO_MECHANISM_GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 90;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 8;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0.8;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.42;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 3.87;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 3;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.33984375;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 4.300000190734863;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.34;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.356171875;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        config.Slot0.GravityArmPositionOffset = 0;
+        config.Slot0.GravityArmPositionOffset = 0.1666;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
         config.MotionMagic.MotionMagicCruiseVelocity = DEFAULT_MAXIMUM_VELOCITY;
@@ -157,10 +157,10 @@ public class IntakeConstants {
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = ANGLE_MOTORS_CURRENT_LIMIT;
 
-        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAXIMUM_ANGLE.getRotations();
-        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MINIMUM_ANGLE.getRotations();
+//        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+//        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAXIMUM_ANGLE.getRotations();
+//        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+//        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MINIMUM_ANGLE.getRotations();
 
         MASTER_ANGLE_MOTOR.applyConfiguration(config);
         MASTER_ANGLE_MOTOR.setPhysicsSimulation(INTAKE_ANGLE_SIMULATION);
@@ -180,7 +180,7 @@ public class IntakeConstants {
         config.Audio.BeepOnConfig = false;
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = ANGLE_MOTORS_CURRENT_LIMIT;
@@ -239,8 +239,8 @@ public class IntakeConstants {
     private static void configureAngleEncoder() {
         final CANcoderConfiguration config = new CANcoderConfiguration();
 
-        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        config.MagnetSensor.MagnetOffset = 0.44675;
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        config.MagnetSensor.MagnetOffset = -0.22216796875;
         config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
 
         ANGLE_ENCODER.applyConfiguration(config);
