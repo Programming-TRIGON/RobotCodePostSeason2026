@@ -68,7 +68,7 @@ public class Kicker extends MotorSubsystem {
         return motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE);
     }
 
-    @AutoLogOutput(key = "Loader/AtTargetVelocity")
+    @AutoLogOutput(key = "Kicker/AtTargetVelocity")
     public boolean atTargetVelocity() {
         return atVelocity(targetVelocityMetersPerSecond);
     }
@@ -81,6 +81,11 @@ public class Kicker extends MotorSubsystem {
         return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < KickerConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
     }
 
+    @AutoLogOutput(key = "Kicker/CurrentVelocityMetersPerSecond")
+    public double getCurrentVelocityMetersPerSecond() {
+        return rotationsToMeters(motor.getSignal(TalonFXSignal.VELOCITY));
+    }
+
     void setTargetState(KickerConstants.KickerState targetState) {
         this.targetState = targetState;
         setTargetVelocity(targetState.targetVelocityMetersPerSecond);
@@ -89,11 +94,6 @@ public class Kicker extends MotorSubsystem {
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
         motor.setControl(velocityRequest.withVelocity(metersToRotations(targetVelocityMetersPerSecond)));
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
-    }
-
-    @AutoLogOutput(key = "Kicker/TargetVelocityMetersPerSecond")
-    private double getCurrentVelocityMetersPerSecond() {
-        return rotationsToMeters(motor.getSignal(TalonFXSignal.VELOCITY));
     }
 
     @AutoLogOutput(key = "Kicker/TargetProfiledVelocityMetersPerSecond")
