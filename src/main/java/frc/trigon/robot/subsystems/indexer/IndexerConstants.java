@@ -19,7 +19,7 @@ public class IndexerConstants {
     static final TalonFXSMotor MOTOR = new TalonFXSMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 4;
+    private static final double GEAR_RATIO = 3.25;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEAR_BOX = DCMotor.getMinion(MOTOR_AMOUNT);
