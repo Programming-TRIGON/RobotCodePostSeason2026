@@ -69,7 +69,7 @@ public class IntakeConstants {
             INTAKE_MASS_KILOGRAMS = 3.2;
     static final Rotation2d
             MINIMUM_ANGLE = Rotation2d.fromDegrees(0),
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(120);
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(155);
     private static final boolean SHOULD_ARM_SIMULATE_GRAVITY = true;
     private static final double INTAKE_MOTOR_MOMENT_OF_INERTIA = 0.003;
     static final SingleJointedArmSimulation INTAKE_ANGLE_SIMULATION = new SingleJointedArmSimulation(
@@ -114,7 +114,7 @@ public class IntakeConstants {
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
     static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 18;
-    static final Rotation2d MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING = Rotation2d.kZero;
+    static final Rotation2d MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING = Rotation2d.fromDegrees(140);
 
     static {
         configureMasterAngleMotor();
