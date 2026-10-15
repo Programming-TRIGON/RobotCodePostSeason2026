@@ -19,7 +19,6 @@ public class Loader extends MotorSubsystem {
     private final TalonFXMotor masterMotor = LoaderConstants.MASTER_MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
     private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
-    private LoaderConstants.LoaderState targetState;
     private double targetVelocityMetersPerSecond = 0;
 
     public Loader() {
