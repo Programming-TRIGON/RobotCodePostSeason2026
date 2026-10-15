@@ -127,19 +127,4 @@ public class LoaderConstants {
         FOLLOWER_MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
         FOLLOWER_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
     }
-
-    public enum LoaderState {
-        LOAD_FOR_DELIVERY(5),
-        LOAD_FOR_SHOOTING(5),
-        PRELOAD(1),
-        EJECT_FROM_INTAKE(-2),
-        EJECT_FROM_SHOOTER(2),
-        REST(0);
-
-        public final double targetVelocityMetersPerSecond;
-
-        LoaderState(double targetVelocityMetersPerSecond) {
-            this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
-        }
-    }
 }
