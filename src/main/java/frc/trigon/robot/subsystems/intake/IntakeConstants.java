@@ -147,7 +147,7 @@ public class IntakeConstants {
         config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.365234375;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        config.Slot0.GravityArmPositionOffset = 0.134765625;
+        config.Slot0.GravityArmPositionOffset = -0.16015625;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
         config.MotionMagic.MotionMagicCruiseVelocity = DEFAULT_MAXIMUM_VELOCITY;
