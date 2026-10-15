@@ -114,7 +114,7 @@ public class IntakeConstants {
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
     static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 18;
-    static final Rotation2d MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING = Rotation2d.kZero;
+    static final Rotation2d MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING = Rotation2d.fromDegrees(140);
 
     static {
         configureMasterAngleMotor();

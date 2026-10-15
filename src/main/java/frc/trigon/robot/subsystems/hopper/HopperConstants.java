@@ -20,14 +20,9 @@ import frc.trigon.lib.utilities.mechanisms.ArmElevatorMechanism2d;
 import java.util.function.DoubleSupplier;
 
 public class HopperConstants {
-    private static final int
-            MOTOR_ID = 9,
-            REED_SWITCH_CHANNEL = 0;
-    private static final String
-            MOTOR_NAME = "HopperMotor",
-            REED_SWITCH_NAME = "HopperReedSwitch";
+    private static final int MOTOR_ID = 9;
+    private static final String MOTOR_NAME = "HopperMotor";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
-    static final SimpleSensor REED_SWITCH = SimpleSensor.createDigitalSensor(REED_SWITCH_CHANNEL, REED_SWITCH_NAME);
 
     static final boolean FOC_ENABLED = true;
     private static final double GEAR_RATIO = 20.25;
@@ -66,17 +61,9 @@ public class HopperConstants {
     static final double
             RESET_POSITION_VOLTAGE = -2,
             RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
-    private static final double REED_SWITCH_DEBOUNCE_TIME_SECONDS = 0.1;
-    static final BooleanEvent REED_SWITCH_EVENT = new BooleanEvent(
-            CommandScheduler.getInstance().getDefaultButtonLoop(),
-            REED_SWITCH::getBinaryValue
-    ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS).rising();
-    private static final double REED_SWITCH_RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
-    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> Conversions.rotationsToDistance(MOTOR.getSignal(TalonFXSignal.POSITION), DRUM_DIAMETER_METERS) <= REED_SWITCH_RESET_POSITION_METERS ? 1 : 0;
 
     static {
         configureMotor();
-        configureReedSwitch();
     }
 
     private static void configureMotor() {
@@ -115,11 +102,6 @@ public class HopperConstants {
         MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
         MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
-    }
-
-    private static void configureReedSwitch() {
-        REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
-        REED_SWITCH_EVENT.ifHigh(() -> MOTOR.setPosition(Conversions.distanceToRotations(REED_SWITCH_RESET_POSITION_METERS, DRUM_DIAMETER_METERS)));
     }
 
     public enum HopperState {
