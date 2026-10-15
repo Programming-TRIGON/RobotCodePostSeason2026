@@ -29,15 +29,15 @@ public class SwerveConstants {
             REAR_LEFT_ID = 3,
             REAR_RIGHT_ID = 4;
     private static final double
-            FRONT_LEFT_STEER_ENCODER_OFFSET_ROTATIONS = -0.265869140625,
-            FRONT_RIGHT_STEER_ENCODER_OFFSET_ROTATIONS = -0.29248046875,
-            REAR_LEFT_STEER_ENCODER_OFFSET_ROTATIONS = -0.286376953125,
-            REAR_RIGHT_STEER_ENCODER_OFFSET_ROTATIONS = 0.047119140625;
+            FRONT_LEFT_STEER_ENCODER_OFFSET_ROTATIONS = -0.26611328125,
+            FRONT_RIGHT_STEER_ENCODER_OFFSET_ROTATIONS = -0.28564453125,
+            REAR_LEFT_STEER_ENCODER_OFFSET_ROTATIONS = -0.28564453125,
+            REAR_RIGHT_STEER_ENCODER_OFFSET_ROTATIONS = 0.05126953125;
     private static final double
-            FRONT_LEFT_WHEEL_DIAMETER = 0.043331 * 2,
-            FRONT_RIGHT_WHEEL_DIAMETER = 0.043145 * 2,
-            REAR_LEFT_WHEEL_DIAMETER = 0.043362 * 2,
-            REAR_RIGHT_WHEEL_DIAMETER = 0.043673 * 2;
+            FRONT_LEFT_WHEEL_DIAMETER = 0.042634 * 2,
+            FRONT_RIGHT_WHEEL_DIAMETER = 0.043088 * 2,
+            REAR_LEFT_WHEEL_DIAMETER = 0.043452 * 2,
+            REAR_RIGHT_WHEEL_DIAMETER = 0.043774 * 2;
     static final SwerveModule[] SWERVE_MODULES = new SwerveModule[]{
             new SwerveModule(FRONT_LEFT_ID, FRONT_LEFT_STEER_ENCODER_OFFSET_ROTATIONS, FRONT_LEFT_WHEEL_DIAMETER),
             new SwerveModule(FRONT_RIGHT_ID, FRONT_RIGHT_STEER_ENCODER_OFFSET_ROTATIONS, FRONT_RIGHT_WHEEL_DIAMETER),
@@ -106,9 +106,9 @@ public class SwerveConstants {
     private static void configureGyro() {
         final Pigeon2Configuration config = new Pigeon2Configuration();
 
-        config.MountPose.MountPoseYaw = -179.51104736328125;
-        config.MountPose.MountPosePitch = 1.4400229454040527;
-        config.MountPose.MountPoseRoll = -144.35397338867188;
+        config.MountPose.MountPoseYaw = 1.9531769752502441;
+        config.MountPose.MountPosePitch = 0.907737672328949;
+        config.MountPose.MountPoseRoll = -177.89974975585938;
 
         GYRO.applyConfiguration(config);
         GYRO.setSimulationYawVelocitySupplier(() -> RobotContainer.SWERVE.getRotationalVelocityRadiansPerSecond());//IMPORTANT: Leave as lambda expression, method reference will crash code

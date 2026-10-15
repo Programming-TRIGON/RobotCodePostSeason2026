@@ -85,8 +85,8 @@ public class KickerConstants {
     }
 
     public enum KickerState {
-        LOAD_FOR_DELIVERY(5),
-        LOAD_FOR_SHOOTING(5),
+        LOAD_FOR_DELIVERY(6),
+        LOAD_FOR_SHOOTING(6),
         PRELOAD(1),
         EJECT_FROM_INTAKE(-2),
         EJECT_FROM_SHOOTER(2),

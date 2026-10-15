@@ -64,8 +64,8 @@ public class IndexerConstants {
     }
 
     public enum IndexerState {
-        LOAD_FOR_SHOOTING(2),
-        LOAD_FOR_DELIVERY(2),
+        LOAD_FOR_SHOOTING(3),
+        LOAD_FOR_DELIVERY(3),
         PRELOAD(1),
         AGITATE(1),
         EJECT_FROM_INTAKE(-2),
