@@ -20,8 +20,6 @@ import frc.trigon.robot.subsystems.hood.HoodConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
-import frc.trigon.robot.subsystems.kicker.KickerCommands;
-import frc.trigon.robot.subsystems.kicker.KickerConstants;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
@@ -51,8 +49,7 @@ public class ShootingCommands {
                 ShooterCommands.getDebuggingCommand(),
                 GeneralCommands.runWhen(
                         new ParallelCommandGroup(
-                                IndexerCommands.getDebuggingCommand(),
-                                KickerCommands.getDebuggingCommand()
+                                IndexerCommands.getDebuggingCommand()
                         ),
                         () -> RobotContainer.HOOD.atTargetAngle() && RobotContainer.SHOOTER.atTargetVelocity() && RobotContainer.LOADER.atTargetVelocity()
                 ).until(() -> !RobotContainer.HOOD.atTargetAngle() || !RobotContainer.SHOOTER.atTargetVelocity() || !RobotContainer.LOADER.atTargetVelocity()).repeatedly()
@@ -203,15 +200,12 @@ public class ShootingCommands {
                 ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond),
                 GeneralCommands.getContinuousConditionalCommand(
                         new ParallelCommandGroup(
-                                KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.LOAD_FOR_SHOOTING),
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
                         ),
                         new ParallelCommandGroup(
-                                KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST),
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
                         ),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousBasicPosition().targetPitch) &&
-                                RobotContainer.KICKER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond) &&
                                 RobotContainer.SHOOTER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond)
                 )
         );
@@ -233,11 +227,9 @@ public class ShootingCommands {
                 ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
                 GeneralCommands.getContinuousConditionalCommand(
                         new ParallelCommandGroup(
-                                KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.LOAD_FOR_SHOOTING),
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
                         ),
                         new ParallelCommandGroup(
-                                KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.REST),
                                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
                         ),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousDoubleSwipePosition().targetPitch) &&
@@ -318,15 +310,13 @@ public class ShootingCommands {
 
     private static ParallelCommandGroup getLoadForDeliveryCommand() {
         return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_DELIVERY),
-                KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.LOAD_FOR_DELIVERY)
+                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_DELIVERY)
         );
     }
 
     private static ParallelCommandGroup getLoadForShootingAtHubCommand() {
         return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
-                KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.LOAD_FOR_SHOOTING)
+                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
         );
     }
 

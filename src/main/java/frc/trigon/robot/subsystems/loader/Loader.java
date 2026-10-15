@@ -16,9 +16,10 @@ import org.littletonrobotics.junction.Logger;
 
 public class Loader extends MotorSubsystem {
     private final ShootingCalculations shootingCalculations = ShootingCalculations.getInstance();
-    private final TalonFXMotor motor = LoaderConstants.MOTOR;
+    private final TalonFXMotor masterMotor = LoaderConstants.MASTER_MOTOR;
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
     private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
+    private LoaderConstants.LoaderState targetState;
     private double targetVelocityMetersPerSecond = 0;
 
     public Loader() {
@@ -27,15 +28,15 @@ public class Loader extends MotorSubsystem {
 
     @Override
     public void sysIDDrive(double targetDrivePower) {
-        motor.setControl(voltageRequest.withOutput(targetDrivePower));
+        masterMotor.setControl(voltageRequest.withOutput(targetDrivePower));
     }
 
     @Override
     public void updateLog(SysIdRoutineLog log) {
         log.motor("LoaderMotor")
-                .angularPosition(Units.Rotations.of(motor.getSignal(TalonFXSignal.POSITION)))
-                .angularVelocity(Units.RotationsPerSecond.of(motor.getSignal(TalonFXSignal.VELOCITY)))
-                .voltage(Units.Volts.of(motor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
+                .angularPosition(Units.Rotations.of(masterMotor.getSignal(TalonFXSignal.POSITION)))
+                .angularVelocity(Units.RotationsPerSecond.of(masterMotor.getSignal(TalonFXSignal.VELOCITY)))
+                .voltage(Units.Volts.of(masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class Loader extends MotorSubsystem {
 
     @Override
     public void stop() {
-        motor.stopMotor();
+        masterMotor.stopMotor();
         LoaderConstants.LOADER_MECHANISM.setTargetVelocity(0);
         targetVelocityMetersPerSecond = 0;
     }
@@ -60,14 +61,14 @@ public class Loader extends MotorSubsystem {
 
     @Override
     public void updatePeriodically() {
-        motor.update();
+        masterMotor.update();
 
         Logger.recordOutput("Loader/TargetVelocityMetersPerSecond", targetVelocityMetersPerSecond);
     }
 
     @AutoLogOutput(key = "Loader/CurrentVelocityMetersPerSecond")
     public double getCurrentVelocityMetersPerSecond() {
-        return rotationsToMeters(motor.getSignal(TalonFXSignal.VELOCITY));
+        return rotationsToMeters(masterMotor.getSignal(TalonFXSignal.VELOCITY));
     }
 
     @AutoLogOutput(key = "Loader/AtTargetVelocity")
@@ -89,19 +90,24 @@ public class Loader extends MotorSubsystem {
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
+    void setTargetState(LoaderConstants.LoaderState targetState) {
+        this.targetState = targetState;
+        setTargetVelocity(targetState.targetVelocityMetersPerSecond);
+    }
+
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
         targetVelocityMetersPerSecond = MathUtil.clamp(
                 targetVelocityMetersPerSecond,
                 -LoaderConstants.MAXIMUM_LOADER_VELOCITY_METERS_PER_SECOND,
                 LoaderConstants.MAXIMUM_LOADER_VELOCITY_METERS_PER_SECOND
         );
-        motor.setControl(velocityRequest.withVelocity(metersToRotations(targetVelocityMetersPerSecond)));
+        masterMotor.setControl(velocityRequest.withVelocity(metersToRotations(targetVelocityMetersPerSecond)));
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
     }
 
     @AutoLogOutput(key = "Loader/TargetProfiledVelocityMetersPerSecond")
     private double getTargetProfiledVelocityMetersPerSecond() {
-        return rotationsToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
+        return rotationsToMeters(masterMotor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
     }
 
     static double rotationsToMeters(double rotations) {

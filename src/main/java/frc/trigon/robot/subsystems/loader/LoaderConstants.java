@@ -1,7 +1,9 @@
 package frc.trigon.robot.subsystems.loader;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
@@ -13,14 +15,22 @@ import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class LoaderConstants {
-    private static final int MOTOR_ID = 16;
-    private static final String MOTOR_NAME = "LoaderMotor";
-    static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
+    private static final int
+            MASTER_MOTOR_ID = 15,
+            FOLLOWER_MOTOR_ID = 16;
+    private static final String
+            MASTER_MOTOR_NAME = "LoaderMasterMotor",
+            FOLLOWER_MOTOR_NAME = "LoaderFollowerMotor";
+
+    static final TalonFXMotor
+            MASTER_MOTOR = new TalonFXMotor(MASTER_MOTOR_ID, MASTER_MOTOR_NAME),
+            FOLLOWER_MOTOR = new TalonFXMotor(FOLLOWER_MOTOR_ID, FOLLOWER_MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 1.33;
+    private static final double GEAR_RATIO = 2.83333333333;
+    private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Aligned;
 
-    private static final int MOTOR_AMOUNT = 1;
+    private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
     private static final double MOMENT_OF_INERTIA = 0.003;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(
@@ -52,6 +62,11 @@ public class LoaderConstants {
     public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.8;
 
     static {
+        configureLoaderMasterMotor();
+        configureLoaderFollowerMotor();
+    }
+
+    private static void configureLoaderMasterMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.Audio.BeepOnBoot = false;
@@ -76,13 +91,55 @@ public class LoaderConstants {
         config.CurrentLimits.StatorCurrentLimit = 40;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        MOTOR.applyConfiguration(config);
-        MOTOR.setPhysicsSimulation(SIMULATION);
+        MASTER_MOTOR.applyConfiguration(config);
+        MASTER_MOTOR.setPhysicsSimulation(SIMULATION);
 
-        MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
-        MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
-        MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
-        MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
-        MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
+        MASTER_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+    }
+
+    private static void configureLoaderFollowerMotor() {
+        final TalonFXConfiguration config = new TalonFXConfiguration();
+
+        config.Audio.BeepOnBoot = false;
+        config.Audio.BeepOnConfig = false;
+
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
+
+        config.CurrentLimits.StatorCurrentLimit = 40;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        FOLLOWER_MOTOR.applyConfiguration(config);
+        FOLLOWER_MOTOR.setPhysicsSimulation(SIMULATION);
+
+        final Follower followRequest = new Follower(MASTER_MOTOR.getID(), FOLLOWER_ALIGNMENT_TO_MASTER);
+        FOLLOWER_MOTOR.setControl(followRequest);
+
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.STATOR_CURRENT, 100);
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.MOTOR_VOLTAGE, 100);
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
+        FOLLOWER_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+    }
+
+    public enum LoaderState {
+        LOAD_FOR_DELIVERY(5),
+        LOAD_FOR_SHOOTING(5),
+        PRELOAD(1),
+        EJECT_FROM_INTAKE(-2),
+        EJECT_FROM_SHOOTER(2),
+        REST(0);
+
+        public final double targetVelocityMetersPerSecond;
+
+        LoaderState(double targetVelocityMetersPerSecond) {
+            this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
+        }
     }
 }

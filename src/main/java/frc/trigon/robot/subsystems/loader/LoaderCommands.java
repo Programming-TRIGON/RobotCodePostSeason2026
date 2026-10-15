@@ -6,6 +6,7 @@ import frc.trigon.lib.commands.ExecuteEndCommand;
 import frc.trigon.lib.commands.NetworkTablesCommand;
 import frc.trigon.robot.RobotContainer;
 
+import java.awt.*;
 import java.util.Set;
 import java.util.function.DoubleSupplier;
 
@@ -22,6 +23,22 @@ public class LoaderCommands {
     public static Command getAimForShootingCommand() {
         return new ExecuteEndCommand(
                 RobotContainer.LOADER::aimForShooting,
+                RobotContainer.LOADER::stop,
+                RobotContainer.LOADER
+        );
+    }
+
+    public static Command getLoaderPreloadCommand() {
+        return new StartEndCommand(
+                RobotContainer.LOADER::aimForShooting,
+                RobotContainer.LOADER::stop,
+                RobotContainer.LOADER
+        );
+    }
+
+    public static Command getSetTargetStateCommand(LoaderConstants.LoaderState targetState) {
+        return new StartEndCommand(
+                () -> RobotContainer.LOADER.setTargetState(targetState),
                 RobotContainer.LOADER::stop,
                 RobotContainer.LOADER
         );
