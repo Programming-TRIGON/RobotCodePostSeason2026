@@ -199,12 +199,8 @@ public class ShootingCommands {
                 LoaderCommands.getSetTargetVelocityCommand(() -> getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond),
                 ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond),
                 GeneralCommands.getContinuousConditionalCommand(
-                        new ParallelCommandGroup(
-                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
-                        ),
-                        new ParallelCommandGroup(
-                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
-                        ),
+                        IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
+                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousBasicPosition().targetPitch) &&
                                 RobotContainer.SHOOTER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond)
                 )
@@ -226,12 +222,8 @@ public class ShootingCommands {
                 LoaderCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
                 ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
                 GeneralCommands.getContinuousConditionalCommand(
-                        new ParallelCommandGroup(
-                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
-                        ),
-                        new ParallelCommandGroup(
-                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST)
-                        ),
+                        IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
+                        IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousDoubleSwipePosition().targetPitch) &&
                                 RobotContainer.LOADER.atVelocity(getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond) &&
                                 RobotContainer.SHOOTER.atVelocity(getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond)
@@ -302,21 +294,9 @@ public class ShootingCommands {
 
     private static Command getLoadForShootingCommand(BooleanSupplier isDelivery) {
         return GeneralCommands.getContinuousConditionalCommand(
-                getLoadForDeliveryCommand(),
-                getLoadForShootingAtHubCommand(),
+                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_DELIVERY),
+                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
                 isDelivery
-        );
-    }
-
-    private static ParallelCommandGroup getLoadForDeliveryCommand() {
-        return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_DELIVERY)
-        );
-    }
-
-    private static ParallelCommandGroup getLoadForShootingAtHubCommand() {
-        return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING)
         );
     }
 

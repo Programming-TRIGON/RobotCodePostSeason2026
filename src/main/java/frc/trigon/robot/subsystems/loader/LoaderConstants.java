@@ -45,7 +45,7 @@ public class LoaderConstants {
             null
     );
 
-    private static final double MAXIMUM_DISPLAYABLE_VELOCITY = 10;
+    private static final double MAXIMUM_DISPLAYABLE_VELOCITY = 15;
     private static final String LOADER_MECHANISM_NAME = "LoaderMechanism";
     static final SpeedMechanism2d LOADER_MECHANISM = new SpeedMechanism2d(
             LOADER_MECHANISM_NAME,
@@ -59,7 +59,7 @@ public class LoaderConstants {
     public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
     static final double WHEEL_DIAMETER_METERS = 0.05;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
-    public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.8;
+    public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.4;
 
     static {
         configureLoaderMasterMotor();
@@ -77,12 +77,12 @@ public class LoaderConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 2 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.024919 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0050067 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.16429 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.019305 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0082118 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.34824 : 0;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0080956 : 0;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Loader.metersToRotations(10);
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : Loader.metersToRotations(15);
