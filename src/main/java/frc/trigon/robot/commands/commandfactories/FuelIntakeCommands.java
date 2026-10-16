@@ -7,8 +7,7 @@ import frc.trigon.robot.subsystems.hopper.HopperCommands;
 import frc.trigon.robot.subsystems.hopper.HopperConstants;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
-import frc.trigon.robot.subsystems.kicker.KickerCommands;
-import frc.trigon.robot.subsystems.kicker.KickerConstants;
+import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class FuelIntakeCommands {
@@ -17,7 +16,7 @@ public class FuelIntakeCommands {
 
     public static Command getPreloadCommand() {
         return new ParallelCommandGroup(
-                KickerCommands.getSetTargetStateCommand(KickerConstants.KickerState.PRELOAD)
+                LoaderCommands.getLoaderPreloadCommand()
         ).withTimeout(CommandConstants.PRELOAD_TIMER_SECONDS);
     }
 
