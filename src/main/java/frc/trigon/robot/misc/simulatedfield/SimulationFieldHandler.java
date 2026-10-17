@@ -9,7 +9,6 @@ import frc.trigon.robot.misc.shootingcalculations.ShootingCalculations;
 import frc.trigon.robot.misc.shootingcalculations.shootingvisualization.VisualizeFuelShootingCommand;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
-import frc.trigon.robot.subsystems.kicker.KickerConstants;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.ShooterConstants;
 
@@ -171,7 +170,6 @@ public class SimulationFieldHandler {
      */
     private static boolean isEjectingThroughIntake() {
         return RobotContainer.LOADER.getCurrentVelocityMetersPerSecond() < LoaderConstants.EJECT_FROM_INTAKE_VELOCITY_THRESHOLD
-                && RobotContainer.KICKER.atState(KickerConstants.KickerState.EJECT_FROM_INTAKE)
                 && RobotContainer.INDEXER.getCurrentVoltage() < IndexerConstants.EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD
                 && RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN);
     }
@@ -186,8 +184,7 @@ public class SimulationFieldHandler {
 
     private static boolean isShootingFuel() {
         return RobotContainer.INDEXER.getCurrentVoltage() > IndexerConstants.LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD
-                && RobotContainer.LOADER.getCurrentVelocityMetersPerSecond() > LoaderConstants.LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD
-                && RobotContainer.KICKER.getCurrentVelocityMetersPerSecond() > KickerConstants.LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD;
+                && RobotContainer.LOADER.getCurrentVelocityMetersPerSecond() > LoaderConstants.LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD;
     }
 
     private static List<SimulatedGamePiece> getEjectableFuels() {
