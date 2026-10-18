@@ -29,15 +29,11 @@ public class GeneralAutonomousCommands {
         return ShootingCommands.getFixedDeliveryShootingCommand().withTimeout(AutonomousConstants.NORMAL_DELIVERY_TIMEOUT);
     }
 
-/*    public static Command getAutonomousCollectFromNaturalZoneCommand() {
+    public static Command getAutonomousCollectFromNaturalZoneCommand() {
         return new SequentialCommandGroup(
                 SafeAutonomousDriveCommands.getSafeDriveToPoseCommand(
-
-                )
-                //TODO: code.
-
         )
-    }*/
+    }
 
 
 
