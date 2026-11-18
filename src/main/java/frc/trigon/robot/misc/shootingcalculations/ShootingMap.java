@@ -20,12 +20,16 @@ public class ShootingMap {
     }
 
     private static void addHubPoints() {
-        addPoint(HUB_MAP, 4.87760115561, 9.5, Rotation2d.fromDegrees(37), 1.45);
-        addPoint(HUB_MAP, 3.836144086, 8.75, Rotation2d.fromDegrees(28), 1.42);
-        addPoint(HUB_MAP, 2.686144, 8.1, Rotation2d.fromDegrees(25), 1.25);
-        addPoint(HUB_MAP, 2.472544086, 7.7, Rotation2d.fromDegrees(25), 1.18);
-        addPoint(HUB_MAP, 2.041144086, 7.2, Rotation2d.fromDegrees(24), 1.07);
-        addPoint(HUB_MAP, 1.666144086, 6.8, Rotation2d.fromDegrees(22), 1.07);
+        addPoint(HUB_MAP, 182.34,4.06, Rotation2d.fromDegrees(23), 0.83);
+        addPoint(HUB_MAP, 227.34, 4.06, Rotation2d.fromDegrees(25), 0.93);
+        addPoint(HUB_MAP, 262.34, 4.29, Rotation2d.fromDegrees(26.3), 0.91);
+        addPoint(HUB_MAP, 297.34, 4.45, Rotation2d.fromDegrees(26.3), 0.93);
+        addPoint(HUB_MAP, 332.34, 4.6, Rotation2d.fromDegrees(27.5),0);
+//        addPoint(HUB_MAP, , , , );
+//        addPoint(HUB_MAP, , , , );
+//        addPoint(HUB_MAP, , , , );
+//        addPoint(HUB_MAP, , , , );
+//        addPoint(HUB_MAP, , , , );
     }
 
     private static void addDeliveryPoints() {

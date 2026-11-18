@@ -79,9 +79,8 @@ public class Loader extends MotorSubsystem {
         return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < LoaderConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
     }
 
-    void aimForShooting() {
-        final double targetVelocityMetersPerSecond = shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond() * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY;
-        setTargetVelocity(targetVelocityMetersPerSecond);
+    void setTargetState(LoaderConstants.LoaderState targetState) {
+        setTargetVelocity(targetState.targetVelocity);
     }
 
     void aimForFixedShooting(double shooterTargetVelocityMetersPerSecond) {

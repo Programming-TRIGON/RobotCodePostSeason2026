@@ -27,8 +27,8 @@ public class LoaderConstants {
             FOLLOWER_MOTOR = new TalonFXMotor(FOLLOWER_MOTOR_ID, FOLLOWER_MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 2.83333333333;
-    private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Aligned;
+    private static final double GEAR_RATIO = 2;
+    private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
@@ -59,7 +59,7 @@ public class LoaderConstants {
     public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
     static final double WHEEL_DIAMETER_METERS = 0.05;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
-    public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.4;
+    public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.67;//צח;
 
     static {
         configureLoaderMasterMotor();
@@ -73,22 +73,22 @@ public class LoaderConstants {
         config.Audio.BeepOnConfig = false;
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.024919 : 0;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.024919 : 1;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0082118 : 0;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.34824 : 0;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0080956 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0082118 : 0.27438;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.34824 : 0.2474;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0080956 : 0.012686;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : Loader.metersToRotations(10);
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60 : Loader.metersToRotations(15);
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
-        config.CurrentLimits.StatorCurrentLimit = 40;
+        config.CurrentLimits.StatorCurrentLimit = 50;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         MASTER_MOTOR.applyConfiguration(config);
@@ -108,7 +108,7 @@ public class LoaderConstants {
         config.Audio.BeepOnConfig = false;
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
@@ -126,5 +126,20 @@ public class LoaderConstants {
         FOLLOWER_MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
         FOLLOWER_MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
         FOLLOWER_MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
+    }
+
+    public enum LoaderState {
+        LOAD_FOR_DELIVERY(5),
+        LOAD_FOR_SHOOTING(5),
+        PRELOAD(1),
+        EJECT_FROM_INTAKE(-2),
+        EJECT_FROM_SHOOTER(2),
+        REST(0);
+
+        public final double targetVelocity;
+
+        LoaderState(double targetVelocity) {
+            this.targetVelocity = targetVelocity;
+        }
     }
 }

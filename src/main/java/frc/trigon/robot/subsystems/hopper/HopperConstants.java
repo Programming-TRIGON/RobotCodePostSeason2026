@@ -59,8 +59,8 @@ public class HopperConstants {
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double TOLERANCE_METERS = 0.01;
     static final double
-            RESET_POSITION_VOLTAGE = -2,
-            RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
+            RESET_POSITION_VOLTAGE = 2,
+            RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
 
     static {
         configureMotor();

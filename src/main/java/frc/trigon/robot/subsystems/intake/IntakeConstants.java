@@ -46,17 +46,17 @@ public class IntakeConstants {
     private static final double
             ARM_SENSOR_TO_MECHANISM_GEAR_RATIO = 0.9,
             ARM_ROTOR_TO_SENSOR_GEAR_RATIO = 53.036554,
-            INTAKE_MOTOR_GEAR_RATIO = 1.5;
+            INTAKE_MOTOR_GEAR_RATIO = 2.55;
     static final boolean FOC_ENABLED = true;
     private static final MotorAlignmentValue
             INTAKE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed,
             ANGLE_MOTORS_FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double
-            INTAKE_MOTORS_CURRENT_LIMIT = 40,
+            INTAKE_MOTORS_CURRENT_LIMIT = 60,
             ANGLE_MOTORS_CURRENT_LIMIT = 40;
     static final double
-            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 2,
-            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 1;
+            DEFAULT_MAXIMUM_VELOCITY = RobotHardwareStats.isSimulation() ? 8 : 3,
+            DEFAULT_MAXIMUM_ACCELERATION = RobotHardwareStats.isSimulation() ? 8 : 2;
 
     private static final int
             ANGLE_MOTOR_AMOUNT = 2,
@@ -114,7 +114,7 @@ public class IntakeConstants {
 
     static final Rotation2d ANGLE_TOLERANCE = Rotation2d.fromDegrees(2);
     static final double INTAKE_ASSIST_CURRENT_THRESHOLD = 18;
-    static final Rotation2d MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING = Rotation2d.fromDegrees(140);
+    static final Rotation2d MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING = Rotation2d.fromDegrees(100);
 
     static {
         configureMasterAngleMotor();
@@ -258,7 +258,7 @@ public class IntakeConstants {
         REST(0, MAXIMUM_ANGLE, 1),
         OPEN(0, MINIMUM_ANGLE, 1.2),
         CLOSE(0, MAXIMUM_ANGLE, 1),
-        POWERED_OPEN(5, MINIMUM_ANGLE, 1),
+        POWERED_OPEN(6, MINIMUM_ANGLE, 1),
         POWERED_CLOSE(4, MAXIMUM_ANGLE, 0.7),
         REVERSE_POWERED_OPEN(-3, MINIMUM_ANGLE, 1),
         ASSIST_OPEN(-2, MINIMUM_ANGLE, 1),

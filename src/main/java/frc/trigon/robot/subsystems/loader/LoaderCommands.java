@@ -20,9 +20,9 @@ public class LoaderCommands {
         );
     }
 
-    public static Command getAimForShootingCommand() {
-        return new ExecuteEndCommand(
-                RobotContainer.LOADER::aimForShooting,
+    public static Command getSetTargetStateCommand(LoaderConstants.LoaderState targetState) {
+        return new StartEndCommand(
+                () -> RobotContainer.LOADER.setTargetState(targetState),
                 RobotContainer.LOADER::stop,
                 RobotContainer.LOADER
         );
@@ -30,15 +30,7 @@ public class LoaderCommands {
 
     public static Command getLoaderPreloadCommand() {
         return new StartEndCommand(
-                RobotContainer.LOADER::aimForShooting,
-                RobotContainer.LOADER::stop,
-                RobotContainer.LOADER
-        );
-    }
-
-    public static Command getAimForFixedShootingCommand(DoubleSupplier shooterTargetVelocityMetersPerSecond) {
-        return new ExecuteEndCommand(
-                () -> RobotContainer.LOADER.aimForFixedShooting(shooterTargetVelocityMetersPerSecond.getAsDouble()),
+                ()-> RobotContainer.LOADER.setTargetState(LoaderConstants.LoaderState.PRELOAD),
                 RobotContainer.LOADER::stop,
                 RobotContainer.LOADER
         );

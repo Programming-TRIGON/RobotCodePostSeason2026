@@ -64,12 +64,12 @@ public class IndexerConstants {
     }
 
     public enum IndexerState {
-        LOAD_FOR_SHOOTING(3),
-        LOAD_FOR_DELIVERY(3),
+        LOAD_FOR_SHOOTING(8),
+        LOAD_FOR_DELIVERY(8),
         PRELOAD(1),
         AGITATE(1),
-        EJECT_FROM_INTAKE(-2),
-        EJECT_FROM_SHOOTER(2),
+        EJECT_FROM_INTAKE(-6),
+        EJECT_FROM_SHOOTER(8),
         REST(0);
 
         public final double targetVoltage;

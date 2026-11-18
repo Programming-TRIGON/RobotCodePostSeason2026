@@ -19,7 +19,7 @@ public class EjectionCommands {
     public static Command getEjectFromIntakeCommand() {
         return new ParallelCommandGroup(
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_INTAKE),
-                LoaderCommands.getSetTargetVelocityCommand(() -> LoaderConstants.EJECT_FROM_INTAKE_VELOCITY),
+                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.EJECT_FROM_INTAKE),
                 FuelIntakeCommands.getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN)
         );
     }
@@ -42,7 +42,7 @@ public class EjectionCommands {
     private static ParallelCommandGroup getLoadForEjectFromShooterCommand() {
         return new ParallelCommandGroup(
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_SHOOTER),
-                LoaderCommands.getSetTargetVelocityCommand(() -> LoaderConstants.EJECT_FROM_SHOOTER_VELOCITY)
+                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.EJECT_FROM_SHOOTER)
         );
     }
 
