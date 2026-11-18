@@ -3,7 +3,8 @@ package frc.trigon.robot.poseestimation.robotposeestimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 /**
@@ -14,111 +15,132 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
  * straight line between cycles. We do this by calculating the radius of the arc, and then determining the two radii
  * vectors making up the arc. Finally, we subtract the vectors to find the displacement vector.
  */
-public class ArcLengthOdometry {
-    private final int amountOfModules;
-    private final Rotation2d gyroOffset;
+public class ArcLengthOdometry extends Odometry<SwerveModulePosition[]> {
+    private static final double SMALL_ANGLE_THRESHOLD_RADIANS = 1e-9;
+
+    private final SwerveDriveKinematics kinematics;
+    private final Translation2d meanModuleLocation;
+    private final int numberOfModules;
+    private final SwerveModulePosition[] previousModulePositions;
+
     private Pose2d pose;
-    private Rotation2d previousAngle;
-    private final SwerveModulePosition[] previousWheelPositions;
+    private Rotation2d gyroOffset;
+    private Rotation2d previousHeading;
 
-    /**
-     * Constructs a custom Arc Length Odometry class.
-     *
-     * @param gyroAngle       the current angle reported by the gyroscope
-     * @param modulePositions the current wheel positions reported by each swerve module
-     * @param initialPose     the starting pose of the robot on the field
-     */
-    public ArcLengthOdometry(Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Pose2d initialPose) {
-        this.amountOfModules = modulePositions.length;
+    public ArcLengthOdometry(SwerveDriveKinematics kinematics, Rotation2d gyroAngle, SwerveModulePosition[] modulePositions) {
+        this(kinematics, gyroAngle, modulePositions, Pose2d.kZero);
+    }
+
+    public ArcLengthOdometry(SwerveDriveKinematics kinematics, Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Pose2d initialPose) {
+        super(kinematics, gyroAngle, modulePositions, initialPose);
+        this.kinematics = kinematics;
+        this.numberOfModules = modulePositions.length;
+        this.meanModuleLocation = calculateMeanModuleLocation(kinematics.getModules());
+        this.previousModulePositions = kinematics.copy(modulePositions);
+
         this.pose = initialPose;
-        this.gyroOffset = pose.getRotation().minus(gyroAngle);
-        this.previousAngle = initialPose.getRotation();
-
-        this.previousWheelPositions = new SwerveModulePosition[amountOfModules];
-        for (int i = 0; i < amountOfModules; i++)
-            this.previousWheelPositions[i] = new SwerveModulePosition(modulePositions[i].distanceMeters, modulePositions[i].angle);
+        this.gyroOffset = gyroAngle.unaryMinus().rotateBy(initialPose.getRotation());
+        this.previousHeading = initialPose.getRotation();
     }
 
-    /**
-     * Resets the robot's position on the field to the specified pose.
-     *
-     * @param poseMeters the position on the field that your robot is at
-     */
-    public void resetPose(Pose2d poseMeters) {
-        this.pose = poseMeters;
-        this.previousAngle = poseMeters.getRotation();
-    }
-
-    /**
-     * Returns the current estimated position of the robot on the field.
-     *
-     * @return the current pose of the robot
-     */
-    public Pose2d getPose() {
-        return pose;
-    }
-
-    /**
-     * Updates the robot's position on the field using the arc length displacement of the swerve modules.
-     *
-     * @param gyroAngle       the current angle reported by the gyro
-     * @param modulePositions the current wheel positions reported by each swerve module
-     * @return the new, updated pose of the robot
-     */
+    @Override
     public Pose2d update(Rotation2d gyroAngle, SwerveModulePosition[] modulePositions) {
-        final Rotation2d currentRobotAngle = gyroAngle.plus(gyroOffset);
-        final Rotation2d deltaRobotHeading = currentRobotAngle.minus(previousAngle);
+        checkModuleCount(modulePositions);
+        final Rotation2d heading = gyroAngle.rotateBy(gyroOffset);
 
-        final Translation2d averagedTravelVector = calculateAveragedTravelVector(modulePositions, currentRobotAngle);
+        Translation2d summedModuleDisplacements = Translation2d.kZero;
+        for (int i = 0; i < numberOfModules; i++)
+            summedModuleDisplacements = summedModuleDisplacements.plus(
+                    calculateModuleArcDisplacementFieldRelative(previousModulePositions[i], modulePositions[i], previousHeading, heading)
+            );
 
-        final Twist2d twist = new Twist2d(
-                averagedTravelVector.getX(),
-                averagedTravelVector.getY(),
-                deltaRobotHeading.getRadians()
+        final Translation2d averageModuleDisplacement = summedModuleDisplacements.div(numberOfModules);
+        final Translation2d robotCenterDisplacement = averageModuleDisplacement.minus(
+                meanModuleLocation.rotateBy(heading).minus(meanModuleLocation.rotateBy(previousHeading))
         );
 
-        pose = pose.exp(twist);
-        previousAngle = currentRobotAngle;
-
+        pose = new Pose2d(pose.getTranslation().plus(robotCenterDisplacement), heading);
+        kinematics.copyInto(modulePositions, previousModulePositions);
+        previousHeading = heading;
         return pose;
     }
 
-    private Translation2d calculateAveragedTravelVector(SwerveModulePosition[] modulePositions, Rotation2d currentRobotAngle) {
-        Translation2d totalTravelVector = new Translation2d();
-
-        for (int i = 0; i < amountOfModules; i++) {
-            final SwerveModulePosition currentModulePosition = modulePositions[i];
-            final SwerveModulePosition previousModulePosition = previousWheelPositions[i];
-
-            final Translation2d moduleArcVector = calculateModuleTravelVector(currentModulePosition, previousModulePosition, currentRobotAngle);
-            totalTravelVector = totalTravelVector.plus(moduleArcVector);
-
-            previousModulePosition.distanceMeters = currentModulePosition.distanceMeters;
-            previousModulePosition.angle = currentModulePosition.angle;
-        }
-
-        return totalTravelVector.div(amountOfModules);
+    @Override
+    public void resetPosition(Rotation2d gyroAngle, SwerveModulePosition[] modulePositions, Pose2d newPose) {
+        checkModuleCount(modulePositions);
+        super.resetPosition(gyroAngle, modulePositions, newPose);
+        pose = newPose;
+        previousHeading = newPose.getRotation();
+        gyroOffset = gyroAngle.unaryMinus().rotateBy(newPose.getRotation());
+        kinematics.copyInto(modulePositions, previousModulePositions);
     }
 
-    private Translation2d calculateModuleTravelVector(SwerveModulePosition currentModulePosition, SwerveModulePosition previousModulePosition, Rotation2d currentRobotAngle) {
-        final double deltaDistanceMeters = currentModulePosition.distanceMeters - previousModulePosition.distanceMeters;
-
-        final Rotation2d currentModuleFieldHeading = currentRobotAngle.plus(currentModulePosition.angle);
-        final Rotation2d previousModuleFieldHeading = previousAngle.plus(previousModulePosition.angle);
-
-        final Rotation2d deltaHeading = currentModuleFieldHeading.minus(previousModuleFieldHeading);
-
-        if (Math.abs(deltaHeading.getRadians()) < 1e-6)
-            return new Translation2d(deltaDistanceMeters, currentModulePosition.angle);
-
-        return calculateArcDisplacementVector(deltaDistanceMeters, deltaHeading, previousModulePosition.angle);
+    @Override
+    public void resetPose(Pose2d newPose) {
+        super.resetPose(newPose);
+        gyroOffset = gyroOffset.rotateBy(pose.getRotation().unaryMinus()).rotateBy(newPose.getRotation());
+        pose = newPose;
+        previousHeading = newPose.getRotation();
     }
 
-    private Translation2d calculateArcDisplacementVector(double deltaDistanceMeters, Rotation2d deltaHeading, Rotation2d previousModuleAngle) {
-        final double radiusMeters = deltaDistanceMeters / deltaHeading.getRadians();
-        final Translation2d centerToPrevious = new Translation2d(radiusMeters, previousModuleAngle.minus(Rotation2d.fromDegrees(90)));
-        final Translation2d centerToCurrent = centerToPrevious.rotateBy(Rotation2d.fromRadians(deltaHeading.getRadians()));
+    @Override
+    public void resetTranslation(Translation2d translation) {
+        super.resetTranslation(translation);
+        pose = new Pose2d(translation, pose.getRotation());
+    }
 
-        return centerToCurrent.minus(centerToPrevious);
+    @Override
+    public void resetRotation(Rotation2d rotation) {
+        super.resetRotation(rotation);
+        gyroOffset = gyroOffset.rotateBy(pose.getRotation().unaryMinus()).rotateBy(rotation);
+        pose = new Pose2d(pose.getTranslation(), rotation);
+        previousHeading = rotation;
+    }
+
+    @Override
+    public Pose2d getPoseMeters() {
+        return pose;
+    }
+
+    /**
+     * Calculates the field-relative displacement of a single module, assuming it travelled along a circular arc.
+     *
+     * @param previousPosition the module's previous position
+     * @param currentPosition  the module's current position
+     * @param previousHeading  the robot's previous heading
+     * @param currentHeading   the robot's current heading
+     * @return the module's displacement relative to the field
+     */
+    static Translation2d calculateModuleArcDisplacementFieldRelative(SwerveModulePosition previousPosition, SwerveModulePosition currentPosition, Rotation2d previousHeading, Rotation2d currentHeading) {
+        final double distanceTravelledMeters = currentPosition.distanceMeters - previousPosition.distanceMeters;
+        final Rotation2d previousModuleFieldAngle = previousHeading.plus(previousPosition.angle);
+        final Rotation2d currentModuleFieldAngle = currentHeading.plus(currentPosition.angle);
+        final double moduleFieldAngleChangeRadians = currentModuleFieldAngle.minus(previousModuleFieldAngle).getRadians();
+
+        final double halfAngleChangeRadians = moduleFieldAngleChangeRadians / 2;
+        final double chordLengthMeters = distanceTravelledMeters * sinc(halfAngleChangeRadians);
+        final Rotation2d chordDirection = previousModuleFieldAngle.plus(Rotation2d.fromRadians(halfAngleChangeRadians));
+        return new Translation2d(chordLengthMeters, chordDirection);
+    }
+
+    /**
+     * @return sin(x) / x, which approaches 1 as x approaches 0. When the module didn't turn this is a straight line
+     */
+    private static double sinc(double x) {
+        if (Math.abs(x) < SMALL_ANGLE_THRESHOLD_RADIANS)
+            return 1 - x * x / 6;
+        return Math.sin(x) / x;
+    }
+
+    private static Translation2d calculateMeanModuleLocation(Translation2d[] moduleLocations) {
+        Translation2d sum = Translation2d.kZero;
+        for (Translation2d moduleLocation : moduleLocations)
+            sum = sum.plus(moduleLocation);
+        return sum.div(moduleLocations.length);
+    }
+
+    private void checkModuleCount(SwerveModulePosition[] modulePositions) {
+        if (modulePositions.length != numberOfModules)
+            throw new IllegalArgumentException("Number of modules is not consistent with number of wheel locations provided in constructor");
     }
 }
