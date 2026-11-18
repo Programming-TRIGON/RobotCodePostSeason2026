@@ -59,7 +59,7 @@ public class LoaderConstants {
     public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
     static final double WHEEL_DIAMETER_METERS = 0.05;
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
-    public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.67;//צח;
+    public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.67;
 
     static {
         configureLoaderMasterMotor();
@@ -129,8 +129,8 @@ public class LoaderConstants {
     }
 
     public enum LoaderState {
-        LOAD_FOR_DELIVERY(5),
-        LOAD_FOR_SHOOTING(5),
+        LOAD_FOR_DELIVERY(7),
+        LOAD_FOR_SHOOTING(7),
         PRELOAD(1),
         EJECT_FROM_INTAKE(-2),
         EJECT_FROM_SHOOTER(2),
