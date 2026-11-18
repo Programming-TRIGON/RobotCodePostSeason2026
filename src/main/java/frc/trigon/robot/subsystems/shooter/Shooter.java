@@ -3,6 +3,7 @@ package frc.trigon.robot.subsystems.shooter;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
@@ -19,6 +20,8 @@ public class Shooter extends MotorSubsystem {
     private final VoltageOut voltageRequest = new VoltageOut(0).withEnableFOC(ShooterConstants.FOC_ENABLED);
     private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(ShooterConstants.FOC_ENABLED);
     private double targetVelocityMetersPerSecond = 0;
+    private double appliedVelocityMultiplier = 1;
+    private double shootingBoostStartTimestampSeconds = Double.NEGATIVE_INFINITY;
 
     public Shooter() {
         setName("Shooter");
@@ -36,6 +39,8 @@ public class Shooter extends MotorSubsystem {
     public void stop() {
         motor.stopMotor();
         targetVelocityMetersPerSecond = 0;
+        appliedVelocityMultiplier = 1;
+        shootingBoostStartTimestampSeconds = Double.NEGATIVE_INFINITY;
         ShooterConstants.MECHANISM.setTargetVelocity(0);
     }
 
@@ -43,8 +48,7 @@ public class Shooter extends MotorSubsystem {
     public void updatePeriodically() {
         motor.update();
         ShooterConstants.FOLLOWER_MOTOR.update();
-
-
+        updateShootingBoost();
         final double currentVelocityMetersPerSecond = getCurrentVelocityMetersPerSecond();
         final double targetProfiledVelocityMetersPerSecond = rotationToMeters(motor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
         Logger.recordOutput("Shooter/CurrentVelocityMetersPerSecond", currentVelocityMetersPerSecond);
@@ -78,7 +82,8 @@ public class Shooter extends MotorSubsystem {
     }
 
     public boolean atVelocity(double targetVelocityMetersPerSecond) {
-        return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < ShooterConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
+        final double boostedTargetVelocityMetersPerSecond = targetVelocityMetersPerSecond * appliedVelocityMultiplier;
+        return Math.abs(getCurrentVelocityMetersPerSecond() - boostedTargetVelocityMetersPerSecond) < ShooterConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
     }
 
     public double getCurrentVelocityMetersPerSecond() {
@@ -98,9 +103,29 @@ public class Shooter extends MotorSubsystem {
         setTargetVelocity(targetVelocityMetersPerSecond);
     }
 
+    void startShootingBoost() {
+        shootingBoostStartTimestampSeconds = Timer.getFPGATimestamp();
+    }
+
     void setTargetVelocity(double targetVelocityMetersPerSecond) {
         this.targetVelocityMetersPerSecond = targetVelocityMetersPerSecond;
-        motor.setControl(velocityRequest.withVelocity(meterToRotations(targetVelocityMetersPerSecond)));
+        appliedVelocityMultiplier = calculateShootingBoostMultiplier();
+        motor.setControl(velocityRequest.withVelocity(meterToRotations(targetVelocityMetersPerSecond * appliedVelocityMultiplier)));
+    }
+
+    private void updateShootingBoost() {
+        if (targetVelocityMetersPerSecond == 0)
+            return;
+
+        if (calculateShootingBoostMultiplier() != appliedVelocityMultiplier)
+            setTargetVelocity(targetVelocityMetersPerSecond);
+    }
+
+    private double calculateShootingBoostMultiplier() {
+        final double timeSinceShootingStartSeconds = Timer.getFPGATimestamp() - shootingBoostStartTimestampSeconds;
+        if (timeSinceShootingStartSeconds < ShooterConstants.SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS)
+            return 1 + ShooterConstants.SHOOTING_START_VELOCITY_BOOST_PERCENTAGE / 100;
+        return 1;
     }
 
     private double meterToRotations(double distanceMeters) {
