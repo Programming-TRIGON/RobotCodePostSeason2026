@@ -15,6 +15,10 @@ import java.util.function.DoubleSupplier;
 public class ShooterCommands {
     public static LoggedNetworkBoolean SHOULD_SHOOTER_DEFAULT_ON = new LoggedNetworkBoolean("/SmartDashboard/ShouldShooterDefaultOn", true);
 
+    public static Command getBoostedDebuggingCommand() {
+        return getDebuggingCommand().beforeStarting(RobotContainer.SHOOTER::startShootingBoost);
+    }
+
     public static Command getDebuggingCommand() {
         return new NetworkTablesCommand(
                 RobotContainer.SHOOTER::setTargetVelocity,

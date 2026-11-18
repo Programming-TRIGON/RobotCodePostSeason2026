@@ -46,7 +46,7 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 HoodCommands.getDebuggingCommand(),
                 LoaderCommands.getDebuggingCommand(),
-                ShooterCommands.getDebuggingCommand(),
+                ShooterCommands.getBoostedDebuggingCommand(),
                 GeneralCommands.runWhen(
                         new ParallelCommandGroup(
                                 IndexerCommands.getDebuggingCommand()
