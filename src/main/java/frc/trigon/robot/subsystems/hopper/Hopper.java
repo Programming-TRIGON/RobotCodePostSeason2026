@@ -59,8 +59,6 @@ public class Hopper extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         motor.update();
-        HopperConstants.REED_SWITCH.updateSensor();
-        Logger.recordOutput("Hopper/IsReedSwitchTriggered", HopperConstants.REED_SWITCH_EVENT);
         Logger.recordOutput("Hopper/TargetState", targetState.name());
     }
 
