@@ -3,10 +3,7 @@ package frc.trigon.robot.poseestimation.robotposeestimator;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -28,10 +25,13 @@ import java.util.Map;
 
 /**
  * A class that estimates the robot's pose using WPILib's {@link SwerveDrivePoseEstimator} and {@link SwerveDriveOdometry}.
+ * It also runs an {@link ArcLengthOdometry} next to the regular odometry, so the two can be compared.
+ * The arc length odometry is only logged, and isn't used by the pose estimator.
  */
 public class RobotPoseEstimator implements AutoCloseable {
     private final SwerveDrivePoseEstimator swerveDrivePoseEstimator = createSwerveDrivePoseEstimator();
     private final SwerveDriveOdometry swerveDriveOdometry = createSwerveDriveOdometry();
+    private final ArcLengthOdometry arcLengthOdometry = createArcLengthOdometry();
     private final Field2d field = new Field2d();
     private final AprilTagCamera[] aprilTagCameras;
     private final RelativeRobotPoseSource relativeRobotPoseSource;
@@ -84,7 +84,9 @@ public class RobotPoseEstimator implements AutoCloseable {
     public void resetHeading() {
         final Rotation2d resetRotation = Flippable.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero;
         swerveDrivePoseEstimator.resetRotation(resetRotation);
-        swerveDriveOdometry.resetPose(new Pose2d(getEstimatedRobotPose().getTranslation(), resetRotation));
+        final Pose2d resetOdometryPose = new Pose2d(getEstimatedRobotPose().getTranslation(), resetRotation);
+        swerveDriveOdometry.resetPose(resetOdometryPose);
+        arcLengthOdometry.resetPose(resetOdometryPose);
     }
 
     /**
@@ -97,12 +99,15 @@ public class RobotPoseEstimator implements AutoCloseable {
 
         swerveDrivePoseEstimator.resetPose(newPose);
         swerveDriveOdometry.resetPose(newPose);
+        arcLengthOdometry.resetPose(newPose);
         if (shouldUseRelativeRobotPoseSource)
             relativeRobotPoseSource.resetOffset(newPose);
     }
 
     public void resetOdometry() {
-        swerveDriveOdometry.resetPose(getEstimatedRobotPose());
+        final Pose2d estimatedRobotPose = getEstimatedRobotPose();
+        swerveDriveOdometry.resetPose(estimatedRobotPose);
+        arcLengthOdometry.resetPose(estimatedRobotPose);
     }
 
     /**
@@ -114,11 +119,29 @@ public class RobotPoseEstimator implements AutoCloseable {
     }
 
     /**
-     * @return the odometry's estimated pose of the robot, relative to the blue alliance's driver station right corner
+     * @return the regular (WPILib) odometry's estimated pose of the robot, relative to the blue alliance's driver station right corner
      */
     @AutoLogOutput(key = "Poses/Robot/PoseEstimator/EstimatedOdometryPose")
     public Pose2d getEstimatedOdometryPose() {
         return swerveDriveOdometry.getPoseMeters();
+    }
+
+    /**
+     * Used for comparing the arc length odometry against the regular odometry. Not used by the pose estimator.
+     *
+     * @return the arc length odometry's estimated pose of the robot, relative to the blue alliance's driver station right corner
+     */
+    @AutoLogOutput(key = "Poses/Robot/PoseEstimator/EstimatedArcLengthOdometryPose")
+    public Pose2d getEstimatedArcLengthOdometryPose() {
+        return arcLengthOdometry.getPoseMeters();
+    }
+
+    /**
+     * @return the distance between the arc length odometry pose and the regular odometry pose, in meters
+     */
+    @AutoLogOutput(key = "Poses/Robot/PoseEstimator/ArcLengthToRegularOdometryDistanceMeters")
+    public double getArcLengthToRegularOdometryDistanceMeters() {
+        return getEstimatedArcLengthOdometryPose().getTranslation().getDistance(getEstimatedOdometryPose().getTranslation());
     }
 
     public boolean hasUpdateFromCameras() {
@@ -129,6 +152,7 @@ public class RobotPoseEstimator implements AutoCloseable {
      * Updates the pose estimator with the given swerve wheel positions and gyro rotations.
      * This function accepts an array of swerve wheel positions and an array of gyro rotations because the odometry can be updated at a faster rate than the main loop (which is 50 hertz).
      * This means you could have a couple of odometry updates per main loop, and you would want to update the pose estimator with all of them.
+     * Both the regular odometry and the arc length odometry are updated with every sample.
      *
      * @param swerveWheelPositions the swerve wheel positions accumulated since the last update
      * @param gyroRotations        the gyro rotations accumulated since the last update
@@ -137,6 +161,7 @@ public class RobotPoseEstimator implements AutoCloseable {
         for (int i = 0; i < swerveWheelPositions.length; i++) {
             swerveDrivePoseEstimator.updateWithTime(timestamps[i], gyroRotations[i], swerveWheelPositions[i]);
             swerveDriveOdometry.update(gyroRotations[i], swerveWheelPositions[i]);
+            arcLengthOdometry.update(gyroRotations[i], swerveWheelPositions[i]);
         }
     }
 
@@ -262,35 +287,38 @@ public class RobotPoseEstimator implements AutoCloseable {
     }
 
     private SwerveDriveOdometry createSwerveDriveOdometry() {
-        final SwerveModulePosition[] swerveModulePositions = {
-                new SwerveModulePosition(),
-                new SwerveModulePosition(),
-                new SwerveModulePosition(),
-                new SwerveModulePosition()
-        };
-
         return new SwerveDriveOdometry(
                 SwerveConstants.KINEMATICS,
                 new Rotation2d(),
-                swerveModulePositions
+                createEmptySwerveModulePositions()
+        );
+    }
+
+    private ArcLengthOdometry createArcLengthOdometry() {
+        return new ArcLengthOdometry(
+                SwerveConstants.KINEMATICS,
+                new Rotation2d(),
+                createEmptySwerveModulePositions()
         );
     }
 
     private SwerveDrivePoseEstimator createSwerveDrivePoseEstimator() {
-        final SwerveModulePosition[] swerveModulePositions = {
+        return new SwerveDrivePoseEstimator(
+                SwerveConstants.KINEMATICS,
+                new Rotation2d(),
+                createEmptySwerveModulePositions(),
+                new Pose2d(),
+                RobotPoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.toMatrix(),
+                VecBuilder.fill(0, 0, 0)
+        );
+    }
+
+    private SwerveModulePosition[] createEmptySwerveModulePositions() {
+        return new SwerveModulePosition[]{
                 new SwerveModulePosition(),
                 new SwerveModulePosition(),
                 new SwerveModulePosition(),
                 new SwerveModulePosition()
         };
-
-        return new SwerveDrivePoseEstimator(
-                SwerveConstants.KINEMATICS,
-                new Rotation2d(),
-                swerveModulePositions,
-                new Pose2d(),
-                RobotPoseEstimatorConstants.ODOMETRY_STANDARD_DEVIATIONS.toMatrix(),
-                VecBuilder.fill(0, 0, 0)
-        );
     }
 }
