@@ -138,16 +138,16 @@ public class IntakeConstants {
         config.Feedback.RotorToSensorRatio = ARM_ROTOR_TO_SENSOR_GEAR_RATIO;
         config.Feedback.SensorToMechanismRatio = ARM_SENSOR_TO_MECHANISM_GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 33;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 70 : 54.313;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 8;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.330078125;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 3.7300000190734863;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0;
-        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.365234375;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 7.9799;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0012995 : 0.060373;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 4.2246 : 6.3447;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.13211 : 0.43541;
+        config.Slot0.kG = RobotHardwareStats.isSimulation() ? 0.15639 : 0.31855;
 
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        config.Slot0.GravityArmPositionOffset = -0.16015625;
+        config.Slot0.GravityArmPositionOffset = -0.011709;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
         config.MotionMagic.MotionMagicCruiseVelocity = DEFAULT_MAXIMUM_VELOCITY;
