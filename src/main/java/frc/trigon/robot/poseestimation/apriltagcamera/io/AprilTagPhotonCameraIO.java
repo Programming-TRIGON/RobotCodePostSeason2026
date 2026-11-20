@@ -48,6 +48,8 @@ public class AprilTagPhotonCameraIO extends AprilTagCameraIO {
     }
 
     private PhotonPipelineResult getLatestPipelineResult() {
+        if (!photonCamera.isConnected())
+            return null;
         final List<PhotonPipelineResult> unreadResults = photonCamera.getAllUnreadResults();
         return unreadResults.isEmpty() ? null : unreadResults.get(unreadResults.size() - 1);
     }
