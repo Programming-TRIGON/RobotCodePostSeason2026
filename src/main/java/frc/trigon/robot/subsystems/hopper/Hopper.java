@@ -59,8 +59,6 @@ public class Hopper extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         motor.update();
-        HopperConstants.REED_SWITCH.updateSensor();
-        Logger.recordOutput("Hopper/IsReedSwitchTriggered", HopperConstants.REED_SWITCH_EVENT);
         Logger.recordOutput("Hopper/TargetState", targetState.name());
     }
 
@@ -83,12 +81,20 @@ public class Hopper extends MotorSubsystem {
         return targetState == this.targetState && atPosition(targetState.targetPositionMeters);
     }
 
-    void applyResetPositionVoltage() {
-        motor.setControl(voltageRequest.withOutput(HopperConstants.RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
+    void applyResetClosedPositionVoltage() {
+        motor.setControl(voltageRequest.withOutput(HopperConstants.RESET_CLOSED_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
     }
 
-    void resetPosition() {
-        motor.setPosition(metersToRotations(HopperConstants.RESET_POSITION_METERS));
+    void resetClosedPosition() {
+        motor.setPosition(metersToRotations(HopperConstants.RESET_CLOSED_POSITION_METERS));
+    }
+
+    void applyResetOpenPositionVoltage() {
+        motor.setControl(voltageRequest.withOutput(HopperConstants.RESET_OPEN_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
+    }
+
+    void resetOpenPosition() {
+        motor.setPosition(metersToRotations(HopperConstants.RESET_OPEN_POSITION_METERS));
     }
 
     void setTargetState(HopperConstants.HopperState targetState) {

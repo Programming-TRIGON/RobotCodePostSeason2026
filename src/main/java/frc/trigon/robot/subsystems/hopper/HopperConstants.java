@@ -5,29 +5,21 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
-import frc.trigon.lib.hardware.misc.simplesensor.SimpleSensor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.lib.utilities.mechanisms.ArmElevatorMechanism2d;
 
-import java.util.function.DoubleSupplier;
-
 public class HopperConstants {
     private static final int
-            MOTOR_ID = 9,
-            REED_SWITCH_CHANNEL = 0;
+            MOTOR_ID = 9;
     private static final String
-            MOTOR_NAME = "HopperMotor",
-            REED_SWITCH_NAME = "HopperReedSwitch";
+            MOTOR_NAME = "HopperMotor";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
-    static final SimpleSensor REED_SWITCH = SimpleSensor.createDigitalSensor(REED_SWITCH_CHANNEL, REED_SWITCH_NAME);
 
     static final boolean FOC_ENABLED = true;
     private static final double GEAR_RATIO = 11.25;
@@ -64,19 +56,13 @@ public class HopperConstants {
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double TOLERANCE_METERS = 0.01;
     static final double
-            RESET_POSITION_VOLTAGE = -2,
-            RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
-    private static final double REED_SWITCH_DEBOUNCE_TIME_SECONDS = 0.1;
-    static final BooleanEvent REED_SWITCH_EVENT = new BooleanEvent(
-            CommandScheduler.getInstance().getDefaultButtonLoop(),
-            REED_SWITCH::getBinaryValue
-    ).debounce(REED_SWITCH_DEBOUNCE_TIME_SECONDS).rising();
-    private static final double REED_SWITCH_RESET_POSITION_METERS = MINIMUM_LENGTH_METERS;
-    private static final DoubleSupplier REED_SWITCH_SIMULATION_VALUE_SUPPLIER = () -> Conversions.rotationsToDistance(MOTOR.getSignal(TalonFXSignal.POSITION), DRUM_DIAMETER_METERS) <= REED_SWITCH_RESET_POSITION_METERS ? 1 : 0;
+            RESET_CLOSED_POSITION_VOLTAGE = -2,
+            RESET_CLOSED_POSITION_METERS = MINIMUM_LENGTH_METERS,
+            RESET_OPEN_POSITION_VOLTAGE = 2,
+            RESET_OPEN_POSITION_METERS = MAXIMUM_LENGTH_METERS;
 
     static {
         configureMotor();
-        configureReedSwitch();
     }
 
     private static void configureMotor() {
@@ -115,11 +101,6 @@ public class HopperConstants {
         MOTOR.registerSignal(TalonFXSignal.POSITION, 100);
         MOTOR.registerSignal(TalonFXSignal.VELOCITY, 100);
         MOTOR.registerSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE, 100);
-    }
-
-    private static void configureReedSwitch() {
-        REED_SWITCH.setSimulationSupplier(REED_SWITCH_SIMULATION_VALUE_SUPPLIER);
-        REED_SWITCH_EVENT.ifHigh(() -> MOTOR.setPosition(Conversions.distanceToRotations(REED_SWITCH_RESET_POSITION_METERS, DRUM_DIAMETER_METERS)));
     }
 
     public enum HopperState {
