@@ -31,15 +31,15 @@ public class ShooterConstants {
 
     static final boolean FOC_ENABLED = true;
     public static final double
-            TOP_WHEEL_GEAR_RATIO = 1.416,
-            BOTTOM_WHEEL_GEAR_RATIO = 2;
+            TOP_WHEEL_GEAR_RATIO = 0.9804,
+            BOTTOM_WHEEL_GEAR_RATIO = 1.667;
     static final double AVERAGE_GEAR_RATIO = (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
-    private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
+    private static final double STATOR_CURRENT_LIMIT_AMPS = 80;
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
-    private static final double MOMENT_OF_INERTIA = 0.0035;
+    private static final double MOMENT_OF_INERTIA = 0.0082;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, AVERAGE_GEAR_RATIO, MOMENT_OF_INERTIA);
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
@@ -56,8 +56,8 @@ public class ShooterConstants {
     );
 
     public static final double
-            TOP_WHEEL_DIAMETER = 0.1016,
-            BOTTOM_WHEEL_DIAMETER = 0.05;
+            TOP_WHEEL_DIAMETER = 0.05,
+            BOTTOM_WHEEL_DIAMETER = 0.1016;
     static final double EFFECTIVE_WHEEL_DIAMETER = AVERAGE_GEAR_RATIO * 0.5 * ((TOP_WHEEL_DIAMETER / TOP_WHEEL_GEAR_RATIO) + (BOTTOM_WHEEL_DIAMETER / BOTTOM_WHEEL_GEAR_RATIO));
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
     public static final Transform3d FUEL_EXIT_SHOOTER_POSE = new Transform3d(
