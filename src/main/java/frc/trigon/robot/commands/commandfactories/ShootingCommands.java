@@ -269,20 +269,14 @@ public class ShootingCommands {
 
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForFixedShootingCommand(
-                        () -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond,
-                        false
-                ).until(SHOULD_STOP_FIXED_SHOOTING_AT_HUB.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
+                getLoadForFixedShootingCommand(false).until(SHOULD_STOP_FIXED_SHOOTING_AT_HUB.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
                 () -> ShootingCommands.isReadyForFixedShootingAtHub() || OperatorConstants.LOAD_NOW_TRIGGER.getAsBoolean()
         ).repeatedly();
     }
 
     private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForFixedShootingCommand(
-                        () -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND,
-                        true
-                ).until(SHOULD_STOP_FIXED_DELIVERY.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
+                getLoadForFixedShootingCommand(true).until(SHOULD_STOP_FIXED_DELIVERY.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
                 () -> ShootingCommands.isReadyForFixedDelivery() || OperatorConstants.LOAD_NOW_TRIGGER.getAsBoolean()
         ).repeatedly();
     }
@@ -308,18 +302,17 @@ public class ShootingCommands {
         );
     }
 
-    private static Command getLoadForFixedShootingCommand(DoubleSupplier shooterTargetVelocityMetersPerSecond, boolean isDelivery) {
-        final IndexerConstants.IndexerState indexerState = isDelivery
-                ? IndexerConstants.IndexerState.LOAD_FOR_DELIVERY
-                : IndexerConstants.IndexerState.LOAD_FOR_SHOOTING;
-
-        final LoaderConstants.LoaderState loaderState = isDelivery
-                ? LoaderConstants.LoaderState.LOAD_FOR_DELIVERY
-                : LoaderConstants.LoaderState.LOAD_FOR_SHOOTING;
-
-        return new ParallelCommandGroup(
-                IndexerCommands.getSetTargetStateCommand(indexerState),
-                LoaderCommands.getSetTargetStateCommand(loaderState)
+    private static Command getLoadForFixedShootingCommand(boolean isDelivery) {
+        return new ConditionalCommand(
+                new ParallelCommandGroup(
+                        IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_DELIVERY),
+                        LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_DELIVERY)
+                ),
+                new ParallelCommandGroup(
+                        IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
+                        LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.LOAD_FOR_SHOOTING)
+                ),
+                () -> isDelivery
         );
     }
 
