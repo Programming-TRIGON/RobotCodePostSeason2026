@@ -46,7 +46,7 @@ public class ShootingCommands {
         return new ParallelCommandGroup(
                 HoodCommands.getDebuggingCommand(),
                 LoaderCommands.getDebuggingCommand(),
-                ShooterCommands.getDebuggingCommand(),
+                ShooterCommands.getBoostedDebuggingCommand(),
                 GeneralCommands.runWhen(
                         new ParallelCommandGroup(
                                 IndexerCommands.getDebuggingCommand()
@@ -66,7 +66,7 @@ public class ShootingCommands {
                         getSetTargetShootingLocationCommand(),
                         getSafeSwerveWhileShootingCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimHoodForShootingCommand(),
-                        ShooterCommands.getAimForShootingCommand(),
+                        ShooterCommands.getBoostedAimForShootingCommand(),
                         getIntakeSequenceWhileShootingCommand()
                 )
         ).beforeStarting(
@@ -86,18 +86,18 @@ public class ShootingCommands {
                         new InstantCommand(() -> SHOOTING_CALCULATIONS.setTargetShootingLocation(ShootingCalculations.TargetShootingLocation.HUB)),
                         getAimSwerveCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetFieldRelativeYaw()),
                         getAimHoodForShootingCommand(),
-                        ShooterCommands.getAimForShootingCommand()
+                        ShooterCommands.getBoostedAimForShootingCommand()
                 )
         );
     }
 
     public static Command getFixedShootingAtHubCommand() {
         return new ParallelCommandGroup(
+                ShooterCommands.getBoostedSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 getLoadForFixedShootingAtHubWhenReadyCommand(),
                 LoaderCommands.getAimForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedShootingAtHub())),
                 getAimHoodForFixedShootingCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetPitch),
-                ShooterCommands.getSetTargetVelocityCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetShootingVelocityMetersPerSecond),
 //                GeneralCommands.getContinuousConditionalCommand(
 //                        SwerveCommands.getLockSwerveCommand(),
 //                        getAimSwerveWithOverrideCommand(() -> TARGET_FIXED_SHOOTING_AT_HUB_STATE.targetFieldRelativeYaw.get()),
@@ -124,11 +124,11 @@ public class ShootingCommands {
 
     public static Command getFixedDeliveryShootingCommand() {
         return new ParallelCommandGroup(
+                ShooterCommands.getBoostedSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
                 getLoadForFixedDeliveryWhenReadyCommand(),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedDelivery())),
                 getAimHoodForFixedShootingCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
                 LoaderCommands.getAimForFixedShootingCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
-                ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
 //                getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
                 getIntakeSequenceWhileShootingCommand()
         );
@@ -197,10 +197,10 @@ public class ShootingCommands {
                         TrenchDetection::isHoodInTrenchZone
                 ),
                 LoaderCommands.getSetTargetVelocityCommand(() -> getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond),
-                ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond),
+                ShooterCommands.getBoostedSetTargetVelocityCommand(() -> getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond),
                 GeneralCommands.getContinuousConditionalCommand(
                         IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
-                                IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST),
+                        IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST),
                         () -> RobotContainer.HOOD.atAngle(getAutonomousBasicPosition().targetPitch) &&
                                 RobotContainer.SHOOTER.atVelocity(getAutonomousBasicPosition().targetShootingVelocityMetersPerSecond)
                 )
@@ -220,7 +220,7 @@ public class ShootingCommands {
                         TrenchDetection::isHoodInTrenchZone
                 ),
                 LoaderCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
-                ShooterCommands.getSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
+                ShooterCommands.getBoostedSetTargetVelocityCommand(() -> getAutonomousDoubleSwipePosition().targetShootingVelocityMetersPerSecond),
                 GeneralCommands.getContinuousConditionalCommand(
                         IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.LOAD_FOR_SHOOTING),
                         IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST),
@@ -273,21 +273,24 @@ public class ShootingCommands {
 
     private static Command getLoadForFixedShootingAtHubWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(() -> false).until(SHOULD_STOP_FIXED_SHOOTING_AT_HUB.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
+                getLoadForShootingCommand(() -> false)
+                        .until(SHOULD_STOP_FIXED_SHOOTING_AT_HUB.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
                 () -> ShootingCommands.isReadyForFixedShootingAtHub() || OperatorConstants.LOAD_NOW_TRIGGER.getAsBoolean()
         ).repeatedly();
     }
 
     private static Command getLoadForFixedDeliveryWhenReadyCommand() {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(() -> true).until(SHOULD_STOP_FIXED_DELIVERY.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
+                getLoadForShootingCommand(() -> true)
+                        .until(SHOULD_STOP_FIXED_DELIVERY.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
                 () -> ShootingCommands.isReadyForFixedDelivery() || OperatorConstants.LOAD_NOW_TRIGGER.getAsBoolean()
         ).repeatedly();
     }
 
     private static Command getLoadForShootingWhenReadyCommand(BooleanSupplier isDelivery) {
         return GeneralCommands.runWhen(
-                getLoadForShootingCommand(isDelivery).until(SHOULD_STOP_SHOOTING.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
+                getLoadForShootingCommand(isDelivery)
+                        .until(SHOULD_STOP_SHOOTING.and(OperatorConstants.LOAD_NOW_TRIGGER.negate())),
                 () -> isReadyForShooting(isDelivery) || OperatorConstants.LOAD_NOW_TRIGGER.getAsBoolean()
         ).repeatedly();
     }
