@@ -97,7 +97,7 @@ public class Shooter extends MotorSubsystem {
     }
 
     void setBoostedTargetVelocity(double targetVelocityMetersPerSecond) {
-        applyVelocity(targetVelocityMetersPerSecond, 1 + ShooterConstants.SHOOTING_START_VELOCITY_BOOST_MULTIPLIER);
+        applyVelocity(targetVelocityMetersPerSecond, ShooterConstants.SHOOTING_START_VELOCITY_BOOST_MULTIPLIER);
     }
 
     private void applyVelocity(double targetVelocityMetersPerSecond, double velocityMultiplier) {
