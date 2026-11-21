@@ -44,6 +44,7 @@ public class AutonomousGenerator {
 
     private static Command getAutonomousStateSequenceCommand() {
         return new SequentialCommandGroup(
+                Commands.runOnce(() -> GeneralAutonomousCommands.isDeliveryFirstAuto = getStateFromIndex(0) == AutonomousState.COLLECT_FROM_NATURAL_ZONE),
                 getCommandFromState(0),
                 getCommandFromState(1),
                 getCommandFromState(2),
@@ -63,12 +64,12 @@ public class AutonomousGenerator {
         return switch (state) {
             case SCORE -> GeneralAutonomousCommands.getAutonomousScoreCommand();
             case DELIVERY -> GeneralAutonomousCommands.getAutonomousDeliveryCommand();
-            case COLLECT_FROM_NATURAL_ZONE -> Commands.none();
+            case COLLECT_FROM_NATURAL_ZONE -> GeneralAutonomousCommands.getAutonomousCollectFromNaturalZoneCommand();
         };
 
     }
 
-    private static AutonomousState getStateFromIndex(int index) {
+    public static AutonomousState getStateFromIndex(int index) {
         return switch (index) {
             case 0 -> FIRST_AUTONOMOUS_CHOOSER.get();
             case 1 -> SECOND_AUTONOMOUS_CHOOSER.get();

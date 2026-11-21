@@ -132,6 +132,14 @@ public class FieldConstants {
         );
     }
 
+    public static Pose2d mirror(Pose2d pose, Rotation2d headingAngle) {
+        return new Pose2d(
+                pose.getX(),
+                FIELD_WIDTH_METERS - pose.getY(),
+                headingAngle
+        );
+    }
+
     public static boolean isRobotInAllianceZone() {
         return isPoseInAllianceZone(RobotContainer.ROBOT_POSE_ESTIMATOR.getEstimatedRobotPose().getTranslation());
     }
