@@ -30,7 +30,6 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class ShootingCommands {
@@ -126,7 +125,7 @@ public class ShootingCommands {
                 getLoadForFixedDeliveryWhenReadyCommand(),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedDelivery())),
                 getAimHoodForFixedShootingCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
-//            getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
+                getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
                 getIntakeSequenceWhileShootingCommand()
         );
     }
@@ -341,7 +340,7 @@ public class ShootingCommands {
         return GeneralCommands.getContinuousConditionalCommand(
                 GeneralCommands.getFieldRelativeDriveCommand(),
                 getAimSwerveCommand(rotationSupplier),
-                () ->  SHOULD_OVERRIDE_FIXED_SHOOTING_SWERVE_AIM.getAsBoolean()
+                () -> SHOULD_OVERRIDE_FIXED_SHOOTING_SWERVE_AIM.getAsBoolean()
         );
     }
 
@@ -371,11 +370,10 @@ public class ShootingCommands {
 
     private static boolean isReadyForFixedDelivery() {
         final boolean isPitchReady = RobotContainer.HOOD.atAngle(HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH);
-        final boolean isLoaderVelocityReady = RobotContainer.LOADER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND * LoaderConstants.TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY);
         final boolean isShooterVelocityReady = RobotContainer.SHOOTER.atVelocity(ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND);
         final boolean isAngleReady = isSwerveAtAngle(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW);
 
-        return isPitchReady && isLoaderVelocityReady && isShooterVelocityReady && isAngleReady;
+        return isPitchReady && isShooterVelocityReady && isAngleReady;
     }
 
     private static boolean isReadyForFixedShootingAtHub() {
