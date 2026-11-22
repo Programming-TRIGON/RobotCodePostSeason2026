@@ -70,8 +70,8 @@ public class ShooterConstants {
             DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND = 4;
 
     static final double
-            SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS = 1,
-            SHOOTING_START_VELOCITY_BOOST_MULTIPLIER = 1.15;
+            SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS = 1.3,
+            SHOOTING_START_VELOCITY_BOOST_MULTIPLIER = 1.5;
 
     static {
         configureMasterMotor();
