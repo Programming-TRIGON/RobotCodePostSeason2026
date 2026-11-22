@@ -69,6 +69,10 @@ public class ShooterConstants {
             EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 4,
             DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND = 4;
 
+    static final double
+            SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS = 1,
+            SHOOTING_START_VELOCITY_BOOST_MULTIPLIER = 1.15;
+
     static {
         configureMasterMotor();
         configureFollowerMotor();

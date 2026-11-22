@@ -33,10 +33,8 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void robotPeriodic() {
-        Threads.setCurrentThreadPriority(true, 99);
         Phoenix6Inputs.refreshAllInputs();
         commandScheduler.run();
-        Threads.setCurrentThreadPriority(false, 10);
     }
 
     @Override
