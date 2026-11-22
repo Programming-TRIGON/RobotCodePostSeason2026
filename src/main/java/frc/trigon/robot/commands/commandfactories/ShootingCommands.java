@@ -126,8 +126,7 @@ public class ShootingCommands {
                 getLoadForFixedDeliveryWhenReadyCommand(),
                 new RunCommand(() -> Logger.recordOutput("ShootingCalculations/IsReady", isReadyForFixedDelivery())),
                 getAimHoodForFixedShootingCommand(() -> HoodConstants.FIXED_DELIVERY_SHOOTING_HOOD_PITCH),
-                ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND),
-//                getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
+//            getAimSwerveWithOverrideCommand(SwerveConstants.FIXED_DELIVERY_TARGET_FIELD_RELATIVE_YAW::get),
                 getIntakeSequenceWhileShootingCommand()
         );
     }
