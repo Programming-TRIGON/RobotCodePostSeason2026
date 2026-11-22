@@ -31,8 +31,8 @@ public class ShooterConstants {
 
     static final boolean FOC_ENABLED = true;
     public static final double
-            TOP_WHEEL_GEAR_RATIO = 1.416,
-            BOTTOM_WHEEL_GEAR_RATIO = 2;
+            TOP_WHEEL_GEAR_RATIO = 1.5,
+            BOTTOM_WHEEL_GEAR_RATIO = 2.25;
     static final double AVERAGE_GEAR_RATIO = (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
     private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
@@ -83,12 +83,12 @@ public class ShooterConstants {
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.8;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.65;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.19466;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.20615;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.035007;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.29;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.227;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.013309;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : 12.5;
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 30;
@@ -117,7 +117,7 @@ public class ShooterConstants {
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
 
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;

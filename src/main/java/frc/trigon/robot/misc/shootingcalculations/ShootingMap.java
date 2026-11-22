@@ -20,13 +20,14 @@ public class ShootingMap {
     }
 
     private static void addHubPoints() {
-        addPoint(HUB_MAP, 182.34,4.06, Rotation2d.fromDegrees(23), 0.83);
-        addPoint(HUB_MAP, 227.34, 4.06, Rotation2d.fromDegrees(25), 0.93);
-        addPoint(HUB_MAP, 262.34, 4.29, Rotation2d.fromDegrees(26.3), 0.91);
-        addPoint(HUB_MAP, 297.34, 4.45, Rotation2d.fromDegrees(26.3), 0.93);
-        addPoint(HUB_MAP, 332.34, 4.6, Rotation2d.fromDegrees(27.5),0);
+        addPoint(HUB_MAP,1.54,7,Rotation2d.fromDegrees(20),0.85);
+        addPoint(HUB_MAP,2.085 ,7.8, Rotation2d.fromDegrees(20),0.93);
+        addPoint(HUB_MAP, 2.95, 8.4, Rotation2d.fromDegrees(22), 1.23);
+//        addPoint(HUB_MAP, 262.34, 4.29, Rotation2d.fromDegrees(26.3), 0.91);
+//        addPoint(HUB_MAP, 297.34, 4.45, Rotation2d.fromDegrees(26.3), 0.93);
+//        addPoint(HUB_MAP, 332.34, 4.6, Rotation2d.fromDegrees(27.5),0);
 //        addPoint(HUB_MAP, , , , );
-//        addPoint(HUB_MAP, , , , );
+//        addPoint(HUB_MAP, , , , );\][
 //        addPoint(HUB_MAP, , , , );
 //        addPoint(HUB_MAP, , , , );
 //        addPoint(HUB_MAP, , , , );

@@ -36,8 +36,8 @@ public class HoodConstants {
             HOOD_MASS_KILOGRAMS = 2,
             HOOD_LENGTH_METERS = 0.258;
     private static final Rotation2d
-            MAXIMUM_ANGLE = Rotation2d.fromDegrees(59.25),
-            MINIMUM_ANGLE = Rotation2d.fromDegrees(23);
+            MAXIMUM_ANGLE = Rotation2d.fromDegrees(56.25),
+            MINIMUM_ANGLE = Rotation2d.fromDegrees(20);
     private static final boolean SHOULD_SIMULATE_GRAVITY = true;
     private static final SingleJointedArmSimulation SIMULATION = new SingleJointedArmSimulation(
             GEARBOX,
@@ -92,7 +92,7 @@ public class HoodConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 450;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 600;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.054002 : 0;
@@ -104,8 +104,8 @@ public class HoodConstants {
         config.Slot0.GravityArmPositionOffset = 0;
         config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 20 : 3;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 20 : 2;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 20 : 5;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 20 : 4;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
