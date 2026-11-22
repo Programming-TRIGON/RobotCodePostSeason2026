@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
+import frc.trigon.lib.utilities.flippable.FlippablePose2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.commands.commandfactories.autonomous.AutonomousGenerator;
@@ -61,7 +62,35 @@ public class AutonomousConstants {
             LEFT_FIRST_STARTING_HEADING_ANGLE = -90.0,
             LEFT_SECOND_STARTING_HEADING_ANGLE = -90.0,
             LEFT_FIRST_END_HEADING_ANGLE = -90.0,
-            LEFT_SECOND_END_HEADING_ANGLE = -90.0;
+            LEFT_SECOND_END_HEADING_ANGLE = -90.0,
+
+            ENTER_RIGHT_TRENCH_X_POSITION = 12.8,
+            ENTER_RIGHT_TRENCH_Y_POSITION = 7.48,
+            EXIT_RIGHT_TRENCH_X_POSITION = 11.1,
+            EXIT_RIGHT_TRENCH_Y_POSITION = 7.48,
+
+            ENTER_LEFT_TRENCH_X_POSITION = 12.8,
+            ENTER_LEFT_TRENCH_Y_POSITION = 0.65,
+            EXIT_LEFT_TRENCH_X_POSITION = 11.1,
+            EXIT_LEFT_TRENCH_Y_POSITION = 0.65,
+
+            HEADING_ANGLE_FROM_ALLIANCE_ZONE = 180,
+            HEADING_ANGLE_TO_ALLIANCE_ZONE = -180;
+
+    public static final double
+            BLUE_SCORING_TRENCH_ENTRANCE_X = 5.223,
+            BLUE_SCORING_TRENCH_EXIT_X = 4.000,
+            LOWER_TRENCH_Y = 0.64,
+            UPPER_TRENCH_Y = FieldConstants.FIELD_WIDTH_METERS - LOWER_TRENCH_Y;
+
+    private static final double
+            IDLE_SCORING_X_POSITION = 3,
+            IDLE_SCORING_Y_POSITION = 0.65;
+
+    public static final Pose2d
+            IDLE_RIGHT_SCORING_POSE = new Pose2d(IDLE_SCORING_X_POSITION, IDLE_SCORING_Y_POSITION, Rotation2d.kZero),
+            IDLE_LEFT_SCORING_POSE = FieldConstants.mirror(IDLE_RIGHT_SCORING_POSE, Rotation2d.kZero);
+
 
     private final static double
             INTAKE_MAX_VELOCITY_MPS = 1.5,
@@ -89,10 +118,17 @@ public class AutonomousConstants {
             GOTO_INTAKE_MAX_ANGULAR_ACCELERATION_RAD_PER_SEC_SQ
     );
 
-    public static Pose2d END_POSE_FOR_GOTO_FIRST_INTAKE_POSE = new Pose2d(FIRST_STARTING_X_POSITION, FIRST_STARTING_Y_POSITION, Rotation2d.fromDegrees(FIRST_STARTING_HEADING_ANGLE));
-    public static Pose2d END_POSE_FOR_GOTO_SECOND_INTAKE_POSE = new Pose2d(SECOND_STARTING_X_POSITION, SECOND_STARTING_Y_POSITION, Rotation2d.fromDegrees(SECOND_STARTING_HEADING_ANGLE));
-    public static Pose2d END_LEFT_POSE_FOR_GOTO_FIRST_INTAKE_POSE = FieldConstants.mirror(END_POSE_FOR_GOTO_FIRST_INTAKE_POSE, Rotation2d.fromDegrees(LEFT_FIRST_STARTING_HEADING_ANGLE));
-    public static Pose2d END_LEFT_POSE_FOR_GOTO_SECOND_INTAKE_POSE = FieldConstants.mirror(END_POSE_FOR_GOTO_SECOND_INTAKE_POSE, Rotation2d.fromDegrees(LEFT_SECOND_STARTING_HEADING_ANGLE));
+    public static Pose2d END_POSE_FOR_GOTO_FIRST_INTAKE_POSE = new Pose2d(FIRST_STARTING_X_POSITION, FIRST_STARTING_Y_POSITION, Rotation2d.fromDegrees(FIRST_STARTING_HEADING_ANGLE)),
+            END_POSE_FOR_GOTO_SECOND_INTAKE_POSE = new Pose2d(SECOND_STARTING_X_POSITION, SECOND_STARTING_Y_POSITION, Rotation2d.fromDegrees(SECOND_STARTING_HEADING_ANGLE)),
+            END_LEFT_POSE_FOR_GOTO_FIRST_INTAKE_POSE = FieldConstants.mirror(END_POSE_FOR_GOTO_FIRST_INTAKE_POSE, Rotation2d.fromDegrees(LEFT_FIRST_STARTING_HEADING_ANGLE)),
+            END_LEFT_POSE_FOR_GOTO_SECOND_INTAKE_POSE = FieldConstants.mirror(END_POSE_FOR_GOTO_SECOND_INTAKE_POSE, Rotation2d.fromDegrees(LEFT_SECOND_STARTING_HEADING_ANGLE)),
+
+            RIGHT_TRENCH_ENTRANCE_POSE = new Pose2d(ENTER_RIGHT_TRENCH_X_POSITION, ENTER_RIGHT_TRENCH_Y_POSITION, Rotation2d.fromDegrees(HEADING_ANGLE_FROM_ALLIANCE_ZONE)),
+            RIGHT_TRENCH_EXIT_POSE = new Pose2d(EXIT_RIGHT_TRENCH_X_POSITION, EXIT_RIGHT_TRENCH_Y_POSITION, Rotation2d.fromDegrees(HEADING_ANGLE_FROM_ALLIANCE_ZONE)),
+
+            LEFT_TRENCH_ENTRANCE_POSE = new Pose2d(ENTER_LEFT_TRENCH_X_POSITION, ENTER_LEFT_TRENCH_Y_POSITION, Rotation2d.fromDegrees(HEADING_ANGLE_TO_ALLIANCE_ZONE)),
+            LEFT_TRENCH_EXIT_POSE = new Pose2d(EXIT_LEFT_TRENCH_X_POSITION, EXIT_LEFT_TRENCH_Y_POSITION, Rotation2d.fromDegrees(HEADING_ANGLE_TO_ALLIANCE_ZONE));
+
 
     public static final double
             AUTONOMOUS_TIME_SECONDS = 20,
