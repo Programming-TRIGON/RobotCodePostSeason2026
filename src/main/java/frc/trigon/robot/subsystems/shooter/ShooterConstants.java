@@ -39,7 +39,7 @@ public class ShooterConstants {
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
-    private static final double MOMENT_OF_INERTIA = 0.0035;
+    private static final double MOMENT_OF_INERTIA = 0.005;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, AVERAGE_GEAR_RATIO, MOMENT_OF_INERTIA);
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(

@@ -75,10 +75,10 @@ public class HopperConstants {
 
         config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 60;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0.35;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 0.18359375;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 1.6;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0.35;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0.18359375;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 1.6;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 60;
