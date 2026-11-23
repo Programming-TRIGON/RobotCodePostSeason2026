@@ -32,15 +32,16 @@ public class HopperCommands {
     public static Command getResetHopperPositionCommand() {
         return GeneralCommands.getContinuousConditionalCommand(
                 new StartEndCommand(
-                        RobotContainer.HOPPER::applyResetClosedPositionVoltage,
-                        RobotContainer.HOPPER::resetClosedPosition,
+                        () -> RobotContainer.HOPPER.sysIDDrive(HopperConstants.RESET_CLOSED_POSITION_VOLTAGE),
+                        () -> RobotContainer.HOPPER.restPosition(HopperConstants.RESET_CLOSED_POSITION_METERS),
                         RobotContainer.HOPPER
                 ),
                 new StartEndCommand(
-                        RobotContainer.HOPPER::applyResetOpenPositionVoltage,
-                        RobotContainer.HOPPER::resetOpenPosition,
+                        () -> RobotContainer.HOPPER.sysIDDrive(HopperConstants.RESET_OPEN_POSITION_VOLTAGE),
+                        () -> RobotContainer.HOPPER.restPosition(HopperConstants.RESET_OPEN_POSITION_METERS),
                         RobotContainer.HOPPER
                 ),
-                () -> SHOULD_HOPPER_RESET_CLOSED.get());
+                SHOULD_HOPPER_RESET_CLOSED
+        );
     }
 }
