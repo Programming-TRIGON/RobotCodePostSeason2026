@@ -42,6 +42,6 @@ public class HopperCommands {
                         RobotContainer.HOPPER
                 ),
                 SHOULD_HOPPER_RESET_CLOSED
-        );
+        ).ignoringDisable(true);
     }
 }
