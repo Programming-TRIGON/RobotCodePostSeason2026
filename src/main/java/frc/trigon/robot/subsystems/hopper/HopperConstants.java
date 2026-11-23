@@ -5,27 +5,24 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.RobotHardwareStats;
-import frc.trigon.lib.hardware.misc.simplesensor.SimpleSensor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXSignal;
 import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.Conversions;
 import frc.trigon.lib.utilities.mechanisms.ArmElevatorMechanism2d;
 
-import java.util.function.DoubleSupplier;
-
 public class HopperConstants {
-    private static final int MOTOR_ID = 9;
-    private static final String MOTOR_NAME = "HopperMotor";
+    private static final int
+            MOTOR_ID = 9;
+    private static final String
+            MOTOR_NAME = "HopperMotor";
     static final TalonFXMotor MOTOR = new TalonFXMotor(MOTOR_ID, MOTOR_NAME);
 
     static final boolean FOC_ENABLED = true;
-    private static final double GEAR_RATIO = 20.25;
+    private static final double GEAR_RATIO = 11.25;
 
     private static final int MOTOR_AMOUNT = 1;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX44Foc(MOTOR_AMOUNT);
@@ -38,7 +35,7 @@ public class HopperConstants {
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
             Units.Volts.of(1).per(Units.Seconds),
-            Units.Volts.of(1.2),
+            Units.Volts.of(1),
             null
     );
 
@@ -59,8 +56,10 @@ public class HopperConstants {
     static final double DRUM_DIAMETER_METERS = 0.09144;
     static final double TOLERANCE_METERS = 0.01;
     static final double
-            RESET_POSITION_VOLTAGE = 2,
-            RESET_POSITION_METERS = MAXIMUM_LENGTH_METERS;
+            RESET_CLOSED_POSITION_VOLTAGE = -2,
+            RESET_CLOSED_POSITION_METERS = MINIMUM_LENGTH_METERS,
+            RESET_OPEN_POSITION_VOLTAGE = 2,
+            RESET_OPEN_POSITION_METERS = MAXIMUM_LENGTH_METERS;
 
     static {
         configureMotor();
@@ -74,15 +73,15 @@ public class HopperConstants {
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 60;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 50 : 0;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0.35;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0.18359375;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 1.6;
+        config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0.6 : 0;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.0052251 : 0;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 1.0877 : 0;
         config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.026632 : 0;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 60;
+        config.CurrentLimits.StatorCurrentLimit = 30;
 
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Conversions.distanceToRotations(MAXIMUM_LENGTH_METERS, DRUM_DIAMETER_METERS);
@@ -90,8 +89,8 @@ public class HopperConstants {
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Conversions.distanceToRotations(MINIMUM_LENGTH_METERS, DRUM_DIAMETER_METERS);
 
-        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 8 : 5;
-        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 8 : 15;
+        config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 8 : 2;
+        config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 8 : 2;
         config.MotionMagic.MotionMagicJerk = config.MotionMagic.MotionMagicAcceleration * 10;
 
         MOTOR.applyConfiguration(config);

@@ -43,7 +43,7 @@ public class Hopper extends MotorSubsystem {
 
     @Override
     public void sysIDDrive(double targetVoltage) {
-        motor.setControl(voltageRequest.withOutput(targetVoltage));
+        motor.setControl(voltageRequest.withOutput(targetVoltage).withIgnoreSoftwareLimits(true));
     }
 
     @Override
@@ -81,12 +81,8 @@ public class Hopper extends MotorSubsystem {
         return targetState == this.targetState && atPosition(targetState.targetPositionMeters);
     }
 
-    void applyResetPositionVoltage() {
-        motor.setControl(voltageRequest.withOutput(HopperConstants.RESET_POSITION_VOLTAGE).withIgnoreSoftwareLimits(true));
-    }
-
-    void resetPosition() {
-        motor.setPosition(metersToRotations(HopperConstants.RESET_POSITION_METERS));
+    void restPosition(double positionMeters) {
+        motor.setPosition(metersToRotations(positionMeters));
     }
 
     void setTargetState(HopperConstants.HopperState targetState) {
