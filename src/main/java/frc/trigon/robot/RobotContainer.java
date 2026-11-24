@@ -61,7 +61,7 @@ public class RobotContainer {
         buildAutoChooser();
         configureBindings();
 
-//        configureSysIDBindings(INTAKE);
+//        configureSysIDBindings(SHOOTER);
     }
 
     /**

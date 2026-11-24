@@ -35,7 +35,7 @@ public class ShooterConstants {
             BOTTOM_WHEEL_GEAR_RATIO = 2.25;
     static final double AVERAGE_GEAR_RATIO = (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
-    private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
+    private static final double STATOR_CURRENT_LIMIT_AMPS = 80;
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);

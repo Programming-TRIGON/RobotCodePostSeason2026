@@ -34,6 +34,7 @@ public class ShootingMap {
 //        addPoint(HUB_MAP, , , , );
 //        addPoint(HUB_MAP, , , , );
     }
+    //  distance from ball exit point to bumper 0.290144086
 
     private static void addDeliveryPoints() {
         addPoint(DELIVERY_MAP, 2.50, 5.2, Rotation2d.fromDegrees(26.5), 0.68);
