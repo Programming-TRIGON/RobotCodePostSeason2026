@@ -53,8 +53,6 @@ public class LoaderConstants {
     );
 
     static final double MAXIMUM_LOADER_VELOCITY_METERS_PER_SECOND = 10;
-    public static final double EJECT_FROM_INTAKE_VELOCITY = -2;
-    public static final double EJECT_FROM_SHOOTER_VELOCITY = 2;
     public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 1;
     public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
     static final double WHEEL_DIAMETER_METERS = 0.05;
@@ -129,8 +127,8 @@ public class LoaderConstants {
     }
 
     public enum LoaderState {
-        LOAD_FOR_DELIVERY(7),
-        LOAD_FOR_SHOOTING(7),
+        LOAD_FOR_DELIVERY(5),
+        LOAD_FOR_SHOOTING(5),
         PRELOAD(1),
         EJECT_FROM_INTAKE(-3),
         EJECT_FROM_SHOOTER(3),
