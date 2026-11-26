@@ -14,7 +14,7 @@ import java.util.function.DoubleSupplier;
 
 public class ShooterCommands {
     public static LoggedNetworkBoolean SHOULD_SHOOTER_DEFAULT_ON = new LoggedNetworkBoolean("/SmartDashboard/ShouldShooterDefaultOn", true);
-    private static final ShootingCalculations shootingCalculations = ShootingCalculations.getInstance();
+    private static final ShootingCalculations SHOOTING_CALCULATIONS = ShootingCalculations.getInstance();
 
     public static Command getBoostedDebuggingCommand() {
         return new NetworkTablesCommand(
@@ -22,8 +22,7 @@ public class ShooterCommands {
                 false,
                 Set.of(RobotContainer.SHOOTER),
                 "Debugging/ShooterTargetVelocityMetersPerSecond"
-        ).withTimeout(ShooterConstants.SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS)
-                .andThen(getDebuggingCommand());
+        ).withTimeout(ShooterConstants.SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS).andThen(getDebuggingCommand());
     }
 
     public static Command getDebuggingCommand() {
@@ -39,7 +38,7 @@ public class ShooterCommands {
         return GeneralCommands.getContinuousConditionalCommand(
                 getSetTargetVelocityCommand(() -> ShooterConstants.DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND),
                 getStopCommand(),
-                () -> SHOULD_SHOOTER_DEFAULT_ON.get()
+                SHOULD_SHOOTER_DEFAULT_ON
         );
     }
 
@@ -68,10 +67,10 @@ public class ShooterCommands {
     }
 
     public static Command getAimForShootingCommand() {
-        return getSetTargetVelocityCommand(() -> shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond());
+        return getSetTargetVelocityCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond());
     }
 
     public static Command getBoostedAimForShootingCommand() {
-        return getBoostedSetTargetVelocityCommand(() -> shootingCalculations.getTargetShootingState().targetShootingVelocityMetersPerSecond());
+        return getBoostedSetTargetVelocityCommand(() -> SHOOTING_CALCULATIONS.getTargetShootingState().targetShootingVelocityMetersPerSecond());
     }
 }

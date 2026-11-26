@@ -32,7 +32,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 public class CommandConstants {
     private static final XboxController DRIVER_CONTROLLER = OperatorConstants.DRIVER_CONTROLLER;
     private static final double
-            MINIMUM_TRANSLATION_SHIFT_POWER = 0.30,
+            MINIMUM_TRANSLATION_SHIFT_POWER = 0.3,
             MINIMUM_ROTATION_SHIFT_POWER = 0.4;
     private static final double JOYSTICK_ORIENTED_ROTATION_DEADBAND = 0.07;
     private static final double

@@ -31,15 +31,18 @@ public class ShooterConstants {
 
     static final boolean FOC_ENABLED = true;
     public static final double
-            TOP_WHEEL_GEAR_RATIO = 1.416,
-            BOTTOM_WHEEL_GEAR_RATIO = 2;
+            TOP_WHEEL_GEAR_RATIO = 1.5,
+            BOTTOM_WHEEL_GEAR_RATIO = 2.25;
     static final double AVERAGE_GEAR_RATIO = (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
-    private static final double STATOR_CURRENT_LIMIT_AMPS = 60;
+    private static final double
+            STATOR_CURRENT_LIMIT_AMPS = 80,
+            SUPPLY_CURRENT_LIMIT_AMPS = 70,
+            SUPPLY_CURRENT_LOWER_LIMIT_AMPS = 50;
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
-    private static final double MOMENT_OF_INERTIA = 0.0035;
+    private static final double MOMENT_OF_INERTIA = 0.005;
     static final SimpleMotorSimulation SIMULATION = new SimpleMotorSimulation(GEARBOX, AVERAGE_GEAR_RATIO, MOMENT_OF_INERTIA);
 
     static final SysIdRoutine.Config SYSID_CONFIG = new SysIdRoutine.Config(
@@ -56,8 +59,8 @@ public class ShooterConstants {
     );
 
     public static final double
-            TOP_WHEEL_DIAMETER = 0.1016,
-            BOTTOM_WHEEL_DIAMETER = 0.05;
+            TOP_WHEEL_DIAMETER = 0.05,
+            BOTTOM_WHEEL_DIAMETER = 0.1016;
     static final double EFFECTIVE_WHEEL_DIAMETER = AVERAGE_GEAR_RATIO * 0.5 * ((TOP_WHEEL_DIAMETER / TOP_WHEEL_GEAR_RATIO) + (BOTTOM_WHEEL_DIAMETER / BOTTOM_WHEEL_GEAR_RATIO));
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
     public static final Transform3d FUEL_EXIT_SHOOTER_POSE = new Transform3d(
@@ -65,12 +68,13 @@ public class ShooterConstants {
             new Rotation3d(0, 0, Rotation2d.k180deg.getRadians())
     );
     public static final double
-            FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5,
-            EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 2,
-            DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND = 5;
+            FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5 * 0.8725,
+            EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 4 * 0.8725,
+            DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND = 4;
     static final double
-            SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS = 1,
-            SHOOTING_START_VELOCITY_BOOST_MULTIPLIER = 1.15;
+            SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS = 1.3,
+            SHOOTING_START_VELOCITY_BOOST_MULTIPLIER = 1;
+    private static final double FULL_HOPPER_DUMP_TIME_SECONDS = 3;
 
     static {
         configureMasterMotor();
@@ -83,15 +87,15 @@ public class ShooterConstants {
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
 
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.73;
+        config.Slot0.kP = RobotHardwareStats.isSimulation() ? 0.7 : 0.65;
         config.Slot0.kI = RobotHardwareStats.isSimulation() ? 0 : 0;
         config.Slot0.kD = RobotHardwareStats.isSimulation() ? 0 : 0;
-        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.27773;
-        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.21056;
-        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.0090496;
+        config.Slot0.kS = RobotHardwareStats.isSimulation() ? 0.042219 : 0.29;
+        config.Slot0.kV = RobotHardwareStats.isSimulation() ? 0.20542 : 0.227;
+        config.Slot0.kA = RobotHardwareStats.isSimulation() ? 0.0095657 : 0.013309;
 
         config.MotionMagic.MotionMagicCruiseVelocity = RobotHardwareStats.isSimulation() ? 15 : 12.5;
         config.MotionMagic.MotionMagicAcceleration = RobotHardwareStats.isSimulation() ? 60.0 : 30;
@@ -102,6 +106,10 @@ public class ShooterConstants {
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = STATOR_CURRENT_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLowerLimit = SUPPLY_CURRENT_LOWER_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLowerTime = FULL_HOPPER_DUMP_TIME_SECONDS;
 
         MASTER_MOTOR.applyConfiguration(config);
         MASTER_MOTOR.setPhysicsSimulation(SIMULATION);
@@ -120,11 +128,15 @@ public class ShooterConstants {
         config.Audio.BeepOnBoot = false;
         config.Audio.BeepOnConfig = false;
 
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = STATOR_CURRENT_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLowerLimit = SUPPLY_CURRENT_LOWER_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLowerTime = FULL_HOPPER_DUMP_TIME_SECONDS;
 
         FOLLOWER_MOTOR.applyConfiguration(config);
 
