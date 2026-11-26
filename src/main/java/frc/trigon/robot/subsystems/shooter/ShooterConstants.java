@@ -68,8 +68,8 @@ public class ShooterConstants {
             new Rotation3d(0, 0, Rotation2d.k180deg.getRadians())
     );
     public static final double
-            FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5,
-            EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 4,
+            FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5 * 0.8725,
+            EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 4 * 0.8725,
             DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND = 4;
     static final double
             SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS = 1.3,
