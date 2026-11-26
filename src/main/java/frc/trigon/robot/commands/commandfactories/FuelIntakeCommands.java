@@ -2,26 +2,22 @@ package frc.trigon.robot.commands.commandfactories;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.trigon.robot.RobotContainer;
-import frc.trigon.robot.commands.CommandConstants;
 import frc.trigon.robot.subsystems.hopper.HopperCommands;
 import frc.trigon.robot.subsystems.hopper.HopperConstants;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
-import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class FuelIntakeCommands {
     public static LoggedNetworkBoolean SHOULD_INTAKE_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldIntakeDefaultOpen", true);
     public static LoggedNetworkBoolean SHOULD_HOPPER_DEFAULT_OPEN = new LoggedNetworkBoolean("/SmartDashboard/ShouldHopperDefaultOpen", true);
 
-    public static Command getPreloadCommand() {
-        return new ParallelCommandGroup(
-                LoaderCommands.getLoaderPreloadCommand()
-        ).withTimeout(CommandConstants.PRELOAD_TIMER_SECONDS);
-    }
-
-    public static Command getCloseIntakeWhileShootingCommand() {
-        return IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE);
+    public static Command getIntakeCommand() {
+        return new SequentialCommandGroup(
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN)
+                        .until(() -> RobotContainer.INTAKE.atState(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN)),
+                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN)
+        );
     }
 
     public static Command getIntakeDefaultCommand() {
@@ -56,6 +52,10 @@ public class FuelIntakeCommands {
                 getWaitUntilSafeForIntakeToOpenCommand(),
                 IntakeCommands.getSetTargetStateCommand(targetState)
         );
+    }
+
+    public static Command getCloseIntakeWhileShootingCommand() {
+        return IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_CLOSE);
     }
 
     private static Command getWaitUntilSafeForIntakeToOpenCommand() {

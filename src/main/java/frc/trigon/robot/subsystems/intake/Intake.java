@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.trigon.lib.hardware.phoenix6.talonfx.TalonFXMotor;
@@ -24,6 +25,7 @@ public class Intake extends MotorSubsystem {
     ).withEnableFOC(IntakeConstants.FOC_ENABLED);
     private IntakeConstants.IntakeState targetState = IntakeConstants.IntakeState.REST;
     private Rotation2d targetAngle = Rotation2d.fromDegrees(0);
+    private double lastAngleShouldRetractTimestamp = 0;
 
     public Intake() {
         setName("Intake");
@@ -119,6 +121,19 @@ public class Intake extends MotorSubsystem {
     void setTargetAngle(Rotation2d targetAngle) {
         this.targetAngle = targetAngle;
         masterAngleMotor.setControl(positionRequest.withPosition(targetAngle.getRotations()));
+    }
+
+    void foldForShooting() {
+        final double currentTimestamp = Timer.getFPGATimestamp();
+        if (IntakeConstants.IS_ANGLE_MOTOR_STUCK.getAsBoolean()
+                && currentTimestamp - lastAngleShouldRetractTimestamp > IntakeConstants.ANGLE_STUCK_RETRACT_TIME_SECONDS + IntakeConstants.ANGLE_STUCK_PUSH_TIME_SECONDS)
+            lastAngleShouldRetractTimestamp = currentTimestamp;
+
+        setTargetState(
+                currentTimestamp - lastAngleShouldRetractTimestamp < IntakeConstants.ANGLE_STUCK_RETRACT_TIME_SECONDS ?
+                        IntakeConstants.IntakeState.POWERED_OPEN :
+                        IntakeConstants.IntakeState.POWERED_CLOSE
+        );
     }
 
     @AutoLogOutput(key = "Intake/isIntakeStuckOnHopper")

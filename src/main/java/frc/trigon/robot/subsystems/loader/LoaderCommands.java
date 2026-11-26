@@ -28,14 +28,6 @@ public class LoaderCommands {
         );
     }
 
-    public static Command getLoaderPreloadCommand() {
-        return new StartEndCommand(
-                RobotContainer.LOADER::aimForShooting,
-                RobotContainer.LOADER::stop,
-                RobotContainer.LOADER
-        );
-    }
-
     public static Command getAimForFixedShootingCommand(DoubleSupplier shooterTargetVelocityMetersPerSecond) {
         return new ExecuteEndCommand(
                 () -> RobotContainer.LOADER.aimForFixedShooting(shooterTargetVelocityMetersPerSecond.getAsDouble()),

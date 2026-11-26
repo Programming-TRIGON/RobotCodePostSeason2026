@@ -21,7 +21,6 @@ public class LoaderConstants {
     private static final String
             MASTER_MOTOR_NAME = "LoaderMasterMotor",
             FOLLOWER_MOTOR_NAME = "LoaderFollowerMotor";
-
     static final TalonFXMotor
             MASTER_MOTOR = new TalonFXMotor(MASTER_MOTOR_ID, MASTER_MOTOR_NAME),
             FOLLOWER_MOTOR = new TalonFXMotor(FOLLOWER_MOTOR_ID, FOLLOWER_MOTOR_NAME);
@@ -52,13 +51,13 @@ public class LoaderConstants {
             MAXIMUM_DISPLAYABLE_VELOCITY
     );
 
+    static final double WHEEL_DIAMETER_METERS = 0.05;
+    static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
     static final double MAXIMUM_LOADER_VELOCITY_METERS_PER_SECOND = 10;
     public static final double EJECT_FROM_INTAKE_VELOCITY = -2;
     public static final double EJECT_FROM_SHOOTER_VELOCITY = 2;
     public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 1;
     public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
-    static final double WHEEL_DIAMETER_METERS = 0.05;
-    static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
     public static final double TARGET_PERCENTAGE_OF_SHOOTER_VELOCITY = 0.4;
 
     static {
@@ -108,7 +107,7 @@ public class LoaderConstants {
         config.Audio.BeepOnConfig = false;
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 

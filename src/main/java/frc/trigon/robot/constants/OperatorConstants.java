@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.trigon.lib.hardware.misc.KeyboardController;
 import frc.trigon.lib.hardware.misc.XboxController;
-import frc.trigon.robot.RobotContainer;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class OperatorConstants {
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.07;
@@ -16,7 +16,16 @@ public class OperatorConstants {
             DRIVER_CONTROLLER_PORT, DRIVER_CONTROLLER_RIGHT_STICK_EXPONENT, DRIVER_CONTROLLER_LEFT_STICK_EXPONENT, DRIVER_CONTROLLER_DEADBAND
     );
     public static final KeyboardController OPERATOR_CONTROLLER = new KeyboardController();
-    private static final double ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS = 3;
+
+    public static final LoggedNetworkBoolean SHOULD_RUMBLE = new LoggedNetworkBoolean("ShouldRumble", true);
+    public static final double
+            RUMBLE_WHEN_CAMERAS_DISCONNECTED_DEBOUNCE_TIME_SECONDS = 2,
+            TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_START_RUMBLING_SECONDS = 8,
+            TIME_BEFORE_ACTIVE_SHIFT_ENDS_TO_HEAVY_RUMBLE_SECONDS = 3,
+            TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_ONE_RUMBLING_SECONDS = 12,
+            TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_TWO_RUMBLING_SECONDS = 8,
+            TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_THREE_RUMBLING_SECONDS = 5,
+            TIME_BEFORE_ACTIVE_SHIFT_STARTS_TO_START_LEVEL_FOUR_RUMBLING_SECONDS = 3;
 
     public static final double
             POV_DIVIDER = 2,
@@ -36,7 +45,7 @@ public class OperatorConstants {
             BACKWARD_QUASISTATIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.left(),
             FORWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.up(),
             BACKWARD_DYNAMIC_CHARACTERIZATION_TRIGGER = OPERATOR_CONTROLLER.down(),
-            CAMERAS_DISCONNECTED_TRIGGER = new Trigger(() -> !RobotContainer.ROBOT_POSE_ESTIMATOR.hasUpdateFromCameras()).debounce(ARE_CAMERAS_DISCONNECTED_CHECK_DEBOUNCE_SECONDS);
+            RUMBLE_TRIGGER = new Trigger(SHOULD_RUMBLE);
     public static final Trigger
             SHOOTING_TRIGGER = DRIVER_CONTROLLER.rightStick().or(OPERATOR_CONTROLLER.d()),
             SET_TARGET_FIXED_SCORING_BETWEEN_TOWER_AND_HUB_TRIGGER = DRIVER_CONTROLLER.povUp().or(OPERATOR_CONTROLLER.i()),
@@ -60,15 +69,14 @@ public class OperatorConstants {
             PREPARE_FOR_FIXED_SHOOTING_TRIGGER = OPERATOR_CONTROLLER.semicolon().and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             PREPARE_FOR_SHOOTING_TRIGGER = OPERATOR_CONTROLLER.v().and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate());
     public final static Trigger
-            PRELOAD_TRIGGER = (OPERATOR_CONTROLLER.x().or(DRIVER_CONTROLLER.start())).and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             CLOSE_INTAKE_TRIGGER = DRIVER_CONTROLLER.leftStick().or(OPERATOR_CONTROLLER.z()),
-            CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE),
             CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
+            CLOSE_INTAKE_WHILE_SHOOTING_TRIGGER = CLOSE_INTAKE_TRIGGER.and(IS_ANY_SHOOTING_TRIGGER_ACTIVE),
             INTAKE_TRIGGER = (DRIVER_CONTROLLER.leftTrigger().or(OPERATOR_CONTROLLER.b())).and(IS_ANY_SHOOTING_TRIGGER_ACTIVE.negate()),
             TRENCH_ASSIST_TRIGGER = DRIVER_CONTROLLER.rightBumper(),
-            SET_INTAKE_DEFAULT_TO_OPEN_TRIGGER = OPERATOR_CONTROLLER.t(),
-            SET_INTAKE_DEFAULT_TO_CLOSE_TRIGGER = OPERATOR_CONTROLLER.y(),
             SET_HOPPER_DEFAULT_TO_OPEN_TRIGGER = OPERATOR_CONTROLLER.comma(),
             SET_HOPPER_DEFAULT_TO_CLOSE_TRIGGER = OPERATOR_CONTROLLER.period(),
+            SET_INTAKE_DEFAULT_TO_OPEN_TRIGGER = OPERATOR_CONTROLLER.t(),
+            SET_INTAKE_DEFAULT_TO_CLOSE_TRIGGER = OPERATOR_CONTROLLER.y(),
             LOAD_NOW_TRIGGER = OPERATOR_CONTROLLER.w().or(DRIVER_CONTROLLER.leftTrigger());
 }

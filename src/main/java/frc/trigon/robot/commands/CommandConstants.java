@@ -15,7 +15,7 @@ import frc.trigon.lib.utilities.flippable.FlippableRotation2d;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.FieldRelativeRestrictedDriveCommand;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.CustomCenterOfRotationDriveRestriction;
-import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneRestrictionsDrive;
+import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.driverestrictions.ZoneDriveRestriction;
 import frc.trigon.robot.commands.commandclasses.driverestrictedcommand.zonerestrictions.RestrictedZone;
 import frc.trigon.robot.commands.commandfactories.GeneralCommands;
 import frc.trigon.robot.constants.AutonomousConstants;
@@ -35,12 +35,6 @@ public class CommandConstants {
             MINIMUM_TRANSLATION_SHIFT_POWER = 0.30,
             MINIMUM_ROTATION_SHIFT_POWER = 0.4;
     private static final double JOYSTICK_ORIENTED_ROTATION_DEADBAND = 0.07;
-    private static final double
-            INDICATE_CAMERAS_DISCONNECTED_RUMBLE_DURATION_SECONDS = 0.5,
-            INDICATE_CAMERAS_DISCONNECTED_RUMBLE_POWER = 1;
-    private static final double
-            INDICATE_ALLIANCE_SHIFT_RUMBLE_DURATION_SECONDS = 1,
-            INDICATE_ALLIANCE_SHIFT_RUMBLE_POWER = 0.5;
     public static final double PRELOAD_TIMER_SECONDS = 2;
     public static final double
             DEFAULT_SWERVE_SPEED_MULTIPLIER = 1,
@@ -58,10 +52,6 @@ public class CommandConstants {
 
     public static final Command //General Commands
             RESET_HEADING_COMMAND = new InstantCommand(RobotContainer.ROBOT_POSE_ESTIMATOR::resetHeading).ignoringDisable(true),
-            INDICATE_CAMERAS_DISCONNECTED_COMMAND = new InstantCommand(() -> OperatorConstants.DRIVER_CONTROLLER.rumble(
-                    INDICATE_CAMERAS_DISCONNECTED_RUMBLE_DURATION_SECONDS,
-                    INDICATE_CAMERAS_DISCONNECTED_RUMBLE_POWER
-            )),
             SELF_RELATIVE_DRIVE_FROM_DPAD_COMMAND = SwerveCommands.getClosedLoopSelfRelativeDriveCommand(
                     () -> getXPowerFromPov(DRIVER_CONTROLLER.getPov()) / OperatorConstants.POV_DIVIDER / calculateShiftModeValue(MINIMUM_TRANSLATION_SHIFT_POWER),
                     () -> getYPowerFromPov(DRIVER_CONTROLLER.getPov()) / OperatorConstants.POV_DIVIDER / calculateShiftModeValue(MINIMUM_TRANSLATION_SHIFT_POWER),
@@ -94,7 +84,7 @@ public class CommandConstants {
                     new CustomCenterOfRotationDriveRestriction(INTAKE_CENTER_OF_ROTATION)
             ),
             TRENCH_ASSIST_COMMAND = new FieldRelativeRestrictedDriveCommand(
-                    new ZoneRestrictionsDrive(
+                    new ZoneDriveRestriction(
                             true,
                             getBumpRestrictedZone(getBumpBoundingBox(BLUE_BUMPS_ZONE_CENTER)),
                             getBumpRestrictedZone(getBumpBoundingBox(RED_BUMPS_ZONE_CENTER))

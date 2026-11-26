@@ -20,6 +20,7 @@ public class AprilTagCameraIO {
 
     @AutoLog
     public static class AprilTagCameraInputs {
+        public boolean isConnected = false;
         public boolean hasResult = false;
         public boolean hasConstrainedResult = false;
         public double latestResultTimestampSeconds = 0;

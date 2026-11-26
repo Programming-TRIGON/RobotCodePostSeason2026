@@ -21,6 +21,14 @@ public class Loader extends MotorSubsystem {
     private final MotionMagicVelocityVoltage velocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(LoaderConstants.FOC_ENABLED);
     private double targetVelocityMetersPerSecond = 0;
 
+    static double rotationsToMeters(double rotations) {
+        return Conversions.rotationsToDistance(rotations, LoaderConstants.WHEEL_DIAMETER_METERS);
+    }
+
+    static double metersToRotations(double meters) {
+        return Conversions.distanceToRotations(meters, LoaderConstants.WHEEL_DIAMETER_METERS);
+    }
+
     public Loader() {
         setName("Loader");
     }
@@ -32,9 +40,9 @@ public class Loader extends MotorSubsystem {
 
     @Override
     public void updateLog(SysIdRoutineLog log) {
-        log.motor("LoaderMotor")
+        log.motor("LoaderMasterMotor")
                 .angularPosition(Units.Rotations.of(masterMotor.getSignal(TalonFXSignal.POSITION)))
-                .angularVelocity(Units.RotationsPerSecond.of(masterMotor.getSignal(TalonFXSignal.VELOCITY)))
+                .angularVelocity(Units.RotationsPerSecond.of(getCurrentVelocityRotationsPerSecond()))
                 .voltage(Units.Volts.of(masterMotor.getSignal(TalonFXSignal.MOTOR_VOLTAGE)));
     }
 
@@ -61,7 +69,9 @@ public class Loader extends MotorSubsystem {
     @Override
     public void updatePeriodically() {
         masterMotor.update();
+        LoaderConstants.FOLLOWER_MOTOR.update();
 
+        Logger.recordOutput("Loader/TargetVelocityMetersPerSecond", targetVelocityMetersPerSecond);
         Logger.recordOutput("Loader/TargetVelocityMetersPerSecond", targetVelocityMetersPerSecond);
     }
 
@@ -77,6 +87,10 @@ public class Loader extends MotorSubsystem {
 
     public boolean atVelocity(double targetVelocityMetersPerSecond) {
         return Math.abs(getCurrentVelocityMetersPerSecond() - targetVelocityMetersPerSecond) < LoaderConstants.VELOCITY_TOLERANCE_METERS_PER_SECOND;
+    }
+
+    public double getCurrentVelocityRotationsPerSecond() {
+        return masterMotor.getSignal(TalonFXSignal.VELOCITY);
     }
 
     void aimForShooting() {
@@ -102,13 +116,5 @@ public class Loader extends MotorSubsystem {
     @AutoLogOutput(key = "Loader/TargetProfiledVelocityMetersPerSecond")
     private double getTargetProfiledVelocityMetersPerSecond() {
         return rotationsToMeters(masterMotor.getSignal(TalonFXSignal.CLOSED_LOOP_REFERENCE));
-    }
-
-    static double rotationsToMeters(double rotations) {
-        return Conversions.rotationsToDistance(rotations, LoaderConstants.WHEEL_DIAMETER_METERS);
-    }
-
-    static double metersToRotations(double meters) {
-        return Conversions.distanceToRotations(meters, LoaderConstants.WHEEL_DIAMETER_METERS);
     }
 }

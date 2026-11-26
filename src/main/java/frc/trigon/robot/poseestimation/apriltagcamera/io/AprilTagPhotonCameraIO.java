@@ -37,6 +37,7 @@ public class AprilTagPhotonCameraIO extends AprilTagCameraIO {
     @Override
     protected void updateInputs(AprilTagCameraInputsAutoLogged inputs) {
         final PhotonPipelineResult latestResult = getLatestPipelineResult();
+        inputs.isConnected = photonCamera.isConnected();
 
         inputs.hasResult = latestResult != null && latestResult.hasTargets();
         if (inputs.hasResult) {

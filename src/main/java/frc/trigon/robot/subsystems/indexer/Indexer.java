@@ -3,6 +3,7 @@ package frc.trigon.robot.subsystems.indexer;
 import com.ctre.phoenix6.controls.VoltageOut;
 import frc.trigon.lib.hardware.phoenix6.talonfxs.TalonFXSMotor;
 import frc.trigon.lib.hardware.phoenix6.talonfxs.TalonFXSSignal;
+import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 
 public class Indexer extends MotorSubsystem {
@@ -35,6 +36,15 @@ public class Indexer extends MotorSubsystem {
 
     void setTargetState(IndexerConstants.IndexerState targetState) {
         setTargetVoltage(targetState.targetVoltage);
+    }
+
+    void loadForShooting(boolean isDelivery) {
+        setTargetState(
+                RobotContainer.LOADER.getCurrentVelocityRotationsPerSecond() < IndexerConstants.LOADER_MAXIMUM_VELOCITY_ROTATIONS_PER_SECOND_FOR_UNJAM ?
+                        IndexerConstants.IndexerState.UNJAM :
+                        isDelivery ? IndexerConstants.IndexerState.LOAD_FOR_DELIVERY : IndexerConstants.IndexerState.LOAD_FOR_SHOOTING
+        );
+
     }
 
     void setTargetVoltage(double targetVoltage) {

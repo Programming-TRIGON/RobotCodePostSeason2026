@@ -90,6 +90,10 @@ public class AprilTagCamera {
                 inputs.distancesFromTags[0] < AprilTagCameraConstants.MAXIMUM_DISTANCE_FROM_TAG_FOR_ACCURATE_RESULT_METERS;
     }
 
+    public boolean isConnected() {
+        return inputs.isConnected;
+    }
+
     /**
      * Solve PNP is inaccurate the further the camera is from the tag.
      * Because of this, there are some things we might want to do only if we are close enough to get an accurate enough result.
