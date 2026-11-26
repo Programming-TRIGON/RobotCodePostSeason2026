@@ -9,11 +9,13 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.trigon.lib.hardware.RobotHardwareStats;
 import frc.trigon.lib.utilities.LocalADStarAK;
 import frc.trigon.lib.utilities.flippable.Flippable;
 import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandfactories.AutonomousCommands;
+import frc.trigon.robot.commands.commandfactories.FuelIntakeCommands;
 import frc.trigon.robot.commands.commandfactories.ShootingCommands;
 import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
@@ -81,7 +83,7 @@ public class AutonomousConstants {
     }
 
     private static void registerCommands() {
-        NamedCommands.registerCommand("CollectCommand", IntakeCommands.getSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN));
+        NamedCommands.registerCommand("CollectCommand", FuelIntakeCommands.getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState.POWERED_OPEN));
         NamedCommands.registerCommand("FirstCollectCommand", IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.AUTONOMOUS_INTAKE));
         NamedCommands.registerCommand("DoubleSwipeShootCommand", AutonomousCommands.getTimedScoreCommand(AUTONOMOUS_SHOOTING_DURATION_SECONDS));
         NamedCommands.registerCommand("DoubleSwipePrepareForShootCommand", ShootingCommands.getPrepareForDoubleSwipeFixedAutonomousShootingCommand());
@@ -92,12 +94,14 @@ public class AutonomousConstants {
         NamedCommands.registerCommand("InitializeDriveCommand", new InstantCommand(() -> RobotContainer.SWERVE.initializeDrive(true)));
         NamedCommands.registerCommand(
                 "WaitForIntakeToOpenCommand",
-                (IntakeCommands.getAutonomousSafeSetTargetStateCommand(IntakeConstants.IntakeState.POWERED_OPEN
-                ).alongWith(SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
+                new ParallelCommandGroup(
+                        FuelIntakeCommands.getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState.POWERED_OPEN),
+                        SwerveCommands.getClosedLoopFieldRelativeDriveCommand(
                                 () -> 0,
                                 () -> 0,
                                 () -> 0
                         )
-                )).until(RobotContainer.INTAKE::atTargetState));
+                ).until(RobotContainer.INTAKE::atTargetState)
+        );
     }
 }

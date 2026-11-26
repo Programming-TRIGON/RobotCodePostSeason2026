@@ -9,7 +9,7 @@ import frc.trigon.robot.RobotContainer;
 import frc.trigon.robot.commands.commandclasses.rumblecommands.RumbleCommands;
 import frc.trigon.robot.commands.commandclasses.rumblecommands.rumbleconfigurations.RumbleConfiguration;
 import frc.trigon.robot.constants.OperatorConstants;
-import frc.trigon.robot.misc.matchTracker.MatchTracker;
+import frc.trigon.robot.misc.matchtracker.MatchTracker;
 
 /**
  * A class that contains command factories for assisting the operator/driver's control of the robot, such as indication or debugging commands.

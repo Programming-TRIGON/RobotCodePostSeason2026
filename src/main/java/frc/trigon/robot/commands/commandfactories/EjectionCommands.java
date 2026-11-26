@@ -7,7 +7,6 @@ import frc.trigon.robot.subsystems.hood.HoodCommands;
 import frc.trigon.robot.subsystems.hood.HoodConstants;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
-import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
 import frc.trigon.robot.subsystems.loader.LoaderConstants;
@@ -20,8 +19,8 @@ public class EjectionCommands {
     public static Command getEjectFromIntakeCommand() {
         return new ParallelCommandGroup(
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_INTAKE),
-                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.EJECT_FROM_INTAKE),
-                IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN)
+                LoaderCommands.getSetTargetVelocityCommand(() -> LoaderConstants.EJECT_FROM_INTAKE_VELOCITY),
+                FuelIntakeCommands.getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState.REVERSE_POWERED_OPEN)
         );
     }
 
@@ -30,7 +29,7 @@ public class EjectionCommands {
                 getLoadForEjectFromShooterWhenReadyCommand(),
                 ShooterCommands.getSetTargetVelocityCommand(() -> ShooterConstants.EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND),
                 HoodCommands.getSetTargetAngleCommand(() -> HoodConstants.EJECT_FROM_SHOOTER_PITCH),
-                FuelIntakeCommands.getIntakeSequenceWhileShootingCommand());
+                ShootingCommands.getIntakeSequenceWhileShootingCommand());
     }
 
     private static Command getLoadForEjectFromShooterWhenReadyCommand() {
@@ -43,7 +42,7 @@ public class EjectionCommands {
     private static ParallelCommandGroup getLoadForEjectFromShooterCommand() {
         return new ParallelCommandGroup(
                 IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.EJECT_FROM_SHOOTER),
-                LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.EJECT_FROM_SHOOTER)
+                LoaderCommands.getSetTargetVelocityCommand(() -> LoaderConstants.EJECT_FROM_SHOOTER_VELOCITY)
         );
     }
 

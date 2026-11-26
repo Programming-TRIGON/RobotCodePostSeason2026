@@ -24,6 +24,8 @@ import frc.trigon.robot.poseestimation.robotposeestimator.RobotPoseEstimator;
 import frc.trigon.robot.subsystems.MotorSubsystem;
 import frc.trigon.robot.subsystems.hood.Hood;
 import frc.trigon.robot.subsystems.hood.HoodCommands;
+import frc.trigon.robot.subsystems.hopper.Hopper;
+import frc.trigon.robot.subsystems.hopper.HopperCommands;
 import frc.trigon.robot.subsystems.indexer.Indexer;
 import frc.trigon.robot.subsystems.indexer.IndexerCommands;
 import frc.trigon.robot.subsystems.indexer.IndexerConstants;
@@ -32,7 +34,6 @@ import frc.trigon.robot.subsystems.intake.IntakeCommands;
 import frc.trigon.robot.subsystems.intake.IntakeConstants;
 import frc.trigon.robot.subsystems.loader.Loader;
 import frc.trigon.robot.subsystems.loader.LoaderCommands;
-import frc.trigon.robot.subsystems.loader.LoaderConstants;
 import frc.trigon.robot.subsystems.shooter.Shooter;
 import frc.trigon.robot.subsystems.shooter.ShooterCommands;
 import frc.trigon.robot.subsystems.swerve.Swerve;
@@ -42,11 +43,14 @@ import java.util.List;
 
 public class RobotContainer {
     public static final RobotPoseEstimator ROBOT_POSE_ESTIMATOR = new RobotPoseEstimator(
-            CameraConstants.RIGHT_APRIL_TAG_CAMERA,
-            CameraConstants.LEFT_APRIL_TAG_CAMERA
+            CameraConstants.BACK_LEFT_APRIL_TAG_CAMERA,
+            CameraConstants.BACK_RIGHT_APRIL_TAG_CAMERA,
+            CameraConstants.SIDE_LEFT_APRIL_TAG_CAMERA,
+            CameraConstants.SIDE_RIGHT_APRIL_TAG_CAMERA
     );
     public static final Swerve SWERVE = new Swerve();
     public static final Hood HOOD = new Hood();
+    public static final Hopper HOPPER = new Hopper();
     public static final Indexer INDEXER = new Indexer();
     public static final Intake INTAKE = new Intake();
     public static final Loader LOADER = new Loader();
@@ -78,15 +82,17 @@ public class RobotContainer {
     private void bindDefaultCommands() {
         SWERVE.setDefaultCommand(GeneralCommands.getFieldRelativeDriveCommand());
         HOOD.setDefaultCommand(HoodCommands.getRestCommand());
+        HOPPER.setDefaultCommand(FuelIntakeCommands.getHopperDefaultCommand());
         INDEXER.setDefaultCommand(IndexerCommands.getSetTargetStateCommand(IndexerConstants.IndexerState.REST));
-        INTAKE.setDefaultCommand(IntakeCommands.getDefaultCommand());
-        LOADER.setDefaultCommand(LoaderCommands.getSetTargetStateCommand(LoaderConstants.LoaderState.REST));
-        SHOOTER.setDefaultCommand(ShooterCommands.getStopCommand());
+        INTAKE.setDefaultCommand(FuelIntakeCommands.getIntakeDefaultCommand());
+        LOADER.setDefaultCommand(LoaderCommands.getStopCommand());
+        SHOOTER.setDefaultCommand(ShooterCommands.getShooterDefaultCommand());
     }
 
     private void bindControllerCommands() {
         OperatorConstants.RESET_HEADING_TRIGGER.onTrue(CommandConstants.RESET_HEADING_COMMAND);
         OperatorConstants.RESET_HOOD_TRIGGER.whileTrue(HoodCommands.getResetHoodCommand());
+        OperatorConstants.RESET_HOPPER_TRIGGER.whileTrue(HopperCommands.getResetHopperPositionCommand());
         OperatorConstants.TOGGLE_BRAKE_TRIGGER.onTrue(GeneralCommands.getToggleBrakeCommand());
         OperatorConstants.DEBUGGING_TRIGGER.whileTrue(GeneralCommands.getDebuggingCommand());
         OperatorConstants.SHOOTING_MAP_CALIBRATION_TRIGGER.whileTrue(ShootingCommands.getShootingMapCalibrationCommand());
@@ -114,11 +120,14 @@ public class RobotContainer {
         OperatorConstants.EJECT_FROM_SHOOTER_TRIGGER.whileTrue(EjectionCommands.getEjectFromShooterCommand());
         OperatorConstants.ENABLE_OVERRIDE_FIXED_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getEnableFixedOverrideSwerveAimCommand());
         OperatorConstants.DISABLE_OVERRIDE_FIXED_SWERVE_AIM_TRIGGER.onTrue(ShootingCommands.getDisableFixedOverrideSwerveAimCommand());
+
         OperatorConstants.INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(FuelIntakeCommands.getIntakeCommand());
         OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
         OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
-        OperatorConstants.OPEN_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_STAY_OPEN.set(true)));
-        OperatorConstants.CLOSE_INTAKE_DEFAULT_COMMAND.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_STAY_OPEN.set(false)));
+        OperatorConstants.SET_INTAKE_DEFAULT_TO_OPEN_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(true)));
+        OperatorConstants.SET_INTAKE_DEFAULT_TO_CLOSE_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_INTAKE_DEFAULT_OPEN.set(false)));
+        OperatorConstants.SET_HOPPER_DEFAULT_TO_OPEN_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(true)));
+        OperatorConstants.SET_HOPPER_DEFAULT_TO_CLOSE_TRIGGER.onTrue(new InstantCommand(() -> FuelIntakeCommands.SHOULD_HOPPER_DEFAULT_OPEN.set(false)));
     }
 
     /**
@@ -138,6 +147,10 @@ public class RobotContainer {
         };
 
         CommandScheduler.getInstance().getDefaultButtonLoop().bind(rumbleCommandScheduler);
+        OperatorConstants.INTAKE_TRIGGER.and(OperatorConstants.SHOOTING_TRIGGER.negate()).whileTrue(FuelIntakeCommands.getOpenIntakeWhenHopperReadyCommand(IntakeConstants.IntakeState.POWERED_OPEN)).and(CommandConstants::shouldUseIntakeAssist).whileTrue(CommandConstants.INTAKE_CENTER_OF_ROTATION_COMMAND);
+        OperatorConstants.CLOSE_INTAKE_WITHOUT_SHOOTING_TRIGGER.whileTrue(IntakeCommands.getSetTargetStateCommand(IntakeConstants.IntakeState.CLOSE));
+        OperatorConstants.TRENCH_ASSIST_TRIGGER.whileTrue(CommandConstants.TRENCH_ASSIST_COMMAND);
+
     }
 
     private void configureSysIDBindings(MotorSubsystem subsystem) {

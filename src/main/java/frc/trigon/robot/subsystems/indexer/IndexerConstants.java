@@ -14,7 +14,7 @@ import frc.trigon.lib.hardware.simulation.SimpleMotorSimulation;
 import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class IndexerConstants {
-    private static final int MOTOR_ID = 13;
+    private static final int MOTOR_ID = 14;
     private static final String MOTOR_NAME = "IndexerMotor";
     static final TalonFXSMotor MOTOR = new TalonFXSMotor(MOTOR_ID, MOTOR_NAME);
 
@@ -43,7 +43,6 @@ public class IndexerConstants {
     );
     public static final double LOAD_FOR_SHOOTING_VOLTAGE_THRESHOLD = 1;
     public static final double EJECT_FROM_INTAKE_VOLTAGE_THRESHOLD = -1;
-
     static final double LOADER_MAXIMUM_VELOCITY_ROTATIONS_PER_SECOND_FOR_UNJAM = 1;
 
     static {

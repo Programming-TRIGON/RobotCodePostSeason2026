@@ -20,8 +20,8 @@ import frc.trigon.lib.utilities.mechanisms.SpeedMechanism2d;
 
 public class ShooterConstants {
     private static final int
-            MASTER_MOTOR_ID = 16,
-            FOLLOWER_MOTOR_ID = 17;
+            MASTER_MOTOR_ID = 17,
+            FOLLOWER_MOTOR_ID = 18;
     private static final String
             MASTER_MOTOR_NAME = "ShooterMasterMotor",
             FOLLOWER_MOTOR_NAME = "ShooterFollowerMotor";
@@ -64,8 +64,13 @@ public class ShooterConstants {
             new Translation3d(-0.160855914, 0, 0.462125568),
             new Rotation3d(0, 0, Rotation2d.k180deg.getRadians())
     );
-    public static final double FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5;
-    public static final double EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 2;
+    public static final double
+            FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5,
+            EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 2,
+            DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND = 5;
+    static final double
+            SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS = 1,
+            SHOOTING_START_VELOCITY_BOOST_MULTIPLIER = 1.15;
 
     static {
         configureMasterMotor();

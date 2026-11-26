@@ -84,6 +84,11 @@ public class Intake extends MotorSubsystem {
         IntakeConstants.INTAKE_MOTOR_MECHANISM.setTargetVelocity(0);
     }
 
+    @AutoLogOutput(key = "Intake/isPastMinimumAngleForHopperToClose")
+    public boolean isPastMinimumAngleForHopperToClose() {
+        return isPastAngle(IntakeConstants.MINIMUM_ANGLE_FOR_HOPPER_START_CLOSING);
+    }
+
     public boolean atState(IntakeConstants.IntakeState targetState) {
         return targetState == this.targetState && atTargetState();
     }
@@ -131,6 +136,11 @@ public class Intake extends MotorSubsystem {
         );
     }
 
+    @AutoLogOutput(key = "Intake/isIntakeStuckOnHopper")
+    boolean isIntakeStuckOnHopper() {
+        return masterAngleMotor.getSignal(TalonFXSignal.STATOR_CURRENT) > IntakeConstants.INTAKE_ASSIST_CURRENT_THRESHOLD;
+    }
+
     private void scalePositionRequestSpeed(double speedScalar) {
         positionRequest.Velocity = IntakeConstants.DEFAULT_MAXIMUM_VELOCITY * speedScalar;
         positionRequest.Acceleration = IntakeConstants.DEFAULT_MAXIMUM_ACCELERATION * speedScalar;
@@ -147,5 +157,9 @@ public class Intake extends MotorSubsystem {
                 new Rotation3d(0, IntakeConstants.MAXIMUM_ANGLE.minus(getCurrentAngle()).getRadians(), 0)
         );
         return IntakeConstants.INTAKE_VISUALIZATION_ORIGIN_POINT.transformBy(pitchTransform);
+    }
+
+    private boolean isPastAngle(Rotation2d angle) {
+        return getCurrentAngle().getDegrees() > angle.getDegrees();
     }
 }

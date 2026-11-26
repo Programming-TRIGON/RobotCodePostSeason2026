@@ -1,4 +1,4 @@
-package frc.trigon.robot.misc.matchTracker;
+package frc.trigon.robot.misc.matchtracker;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
