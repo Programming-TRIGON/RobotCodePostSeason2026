@@ -35,7 +35,10 @@ public class ShooterConstants {
             BOTTOM_WHEEL_GEAR_RATIO = 2.25;
     static final double AVERAGE_GEAR_RATIO = (TOP_WHEEL_GEAR_RATIO + BOTTOM_WHEEL_GEAR_RATIO) / 2.0;
     private static final MotorAlignmentValue FOLLOWER_ALIGNMENT_TO_MASTER = MotorAlignmentValue.Opposed;
-    private static final double STATOR_CURRENT_LIMIT_AMPS = 80;
+    private static final double
+            STATOR_CURRENT_LIMIT_AMPS = 80,
+            SUPPLY_CURRENT_LIMIT_AMPS = 70,
+            SUPPLY_CURRENT_LOWER_LIMIT_AMPS = 50;
 
     private static final int MOTOR_AMOUNT = 2;
     private static final DCMotor GEARBOX = DCMotor.getKrakenX60Foc(MOTOR_AMOUNT);
@@ -56,8 +59,8 @@ public class ShooterConstants {
     );
 
     public static final double
-            TOP_WHEEL_DIAMETER = 0.1016,
-            BOTTOM_WHEEL_DIAMETER = 0.05;
+            TOP_WHEEL_DIAMETER = 0.05,
+            BOTTOM_WHEEL_DIAMETER = 0.1016;
     static final double EFFECTIVE_WHEEL_DIAMETER = AVERAGE_GEAR_RATIO * 0.5 * ((TOP_WHEEL_DIAMETER / TOP_WHEEL_GEAR_RATIO) + (BOTTOM_WHEEL_DIAMETER / BOTTOM_WHEEL_GEAR_RATIO));
     static final double VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.2;
     public static final Transform3d FUEL_EXIT_SHOOTER_POSE = new Transform3d(
@@ -65,13 +68,13 @@ public class ShooterConstants {
             new Rotation3d(0, 0, Rotation2d.k180deg.getRadians())
     );
     public static final double
-            FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5,
-            EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 4,
+            FIXED_DELIVERY_SHOOTING_SHOOTER_VELOCITY_METERS_PER_SECOND = 8.5 * 0.8725,
+            EJECT_FROM_SHOOTER_TARGET_VELOCITY_METERS_PER_SECOND = 4 * 0.8725,
             DEFAULT_SHOOTER_VELOCITY_METERS_PER_SECOND = 4;
-
     static final double
             SHOOTING_START_VELOCITY_BOOST_DURATION_SECONDS = 1.3,
-            SHOOTING_START_VELOCITY_BOOST_MULTIPLIER = 1.5;
+            SHOOTING_START_VELOCITY_BOOST_MULTIPLIER = 1;
+    private static final double FULL_HOPPER_DUMP_TIME_SECONDS = 3;
 
     static {
         configureMasterMotor();
@@ -103,6 +106,10 @@ public class ShooterConstants {
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = STATOR_CURRENT_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLowerLimit = SUPPLY_CURRENT_LOWER_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLowerTime = FULL_HOPPER_DUMP_TIME_SECONDS;
 
         MASTER_MOTOR.applyConfiguration(config);
         MASTER_MOTOR.setPhysicsSimulation(SIMULATION);
@@ -126,6 +133,10 @@ public class ShooterConstants {
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = STATOR_CURRENT_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLowerLimit = SUPPLY_CURRENT_LOWER_LIMIT_AMPS;
+        config.CurrentLimits.SupplyCurrentLowerTime = FULL_HOPPER_DUMP_TIME_SECONDS;
 
         FOLLOWER_MOTOR.applyConfiguration(config);
 

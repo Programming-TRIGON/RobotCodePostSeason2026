@@ -68,6 +68,9 @@ public class HopperConstants {
     private static void configureMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration();
 
+        config.Audio.BeepOnBoot = false;
+        config.Audio.BeepOnConfig = false;
+
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 

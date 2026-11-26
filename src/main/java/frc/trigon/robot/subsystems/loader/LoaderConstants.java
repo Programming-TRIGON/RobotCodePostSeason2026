@@ -53,8 +53,6 @@ public class LoaderConstants {
     );
 
     static final double MAXIMUM_LOADER_VELOCITY_METERS_PER_SECOND = 10;
-    public static final double EJECT_FROM_INTAKE_VELOCITY = -2;
-    public static final double EJECT_FROM_SHOOTER_VELOCITY = 2;
     public static final double LOAD_FOR_SHOOTING_VELOCITY_THRESHOLD = 1;
     public static final double EJECT_FROM_INTAKE_VELOCITY_THRESHOLD = -1;
     static final double WHEEL_DIAMETER_METERS = 0.05;
